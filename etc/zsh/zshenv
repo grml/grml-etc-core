@@ -1,0 +1,76 @@
+# Filename:      zshenv
+# Purpose:       system-wide .zshenv file for zsh(1)
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Sam Sep 23 14:20:25 CEST 2006 [mika]
+################################################################################
+# This file is sourced on all invocations of the shell.
+# If the -f flag is present or if the NO_RCS option is
+# set within this file, all other initialization files
+# are skipped.
+#
+# This file should contain commands to set the command
+# search path, plus other important environment variables.
+# This file should not contain commands that produce
+# output or assume the shell is attached to a tty.
+#
+# Global Order: zshenv, zprofile, zshrc, zlogin
+################################################################################
+
+# language settings (read in /etc/environment before /etc/default/locale as
+# the latter one is the default on Debian nowadays)
+  [ -r /etc/environment    ] && source /etc/environment
+  [ -r /etc/default/locale ] && source /etc/default/locale
+  [ -n "$LANG" ]          && export LANG        || export LANG="en_US.iso885915"
+  [ -n "$LC_ALL" ]        && export LC_ALL #     || export LC_ALL="$LANG"
+  [ -n "$LC_MESSAGES" ]   && export LC_MESSAGES
+
+  [ -r /etc/sysconfig/keyboard ] && source /etc/sysconfig/keyboard
+
+# set environment variables (important for autologin on tty)
+  [ -n "$HOSTNAME" ] || export HOSTNAME=`hostname`
+  [ -z "$USER" ]     && export USER=`id -un`
+
+  [[ $LOGNAME == LOGIN ]] && LOGNAME=$(id -un)
+
+# workaround for live-cd mode as $HOME is not set via rungetty
+  if [ -f /etc/grml_cd ] ; then
+    if (( EUID == 0 )); then
+       export HOME=/root
+    else
+       export HOME=/home/$USER
+    fi
+  fi
+
+# set $PATH
+# gentoo users have to source /etc/profile.env
+  if [ -r /etc/gentoo-release ] ; then
+     [ -r /etc/profile.env ] && source /etc/profile.env
+       if (( EUID != 0 )); then
+          PATH="$HOME/bin:/bin/:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/usr/NX/bin:$PATH"
+       else
+          PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/local/sbin:/usr/local/bin:/usr/NX/bin:$PATH"
+       fi
+  else
+    # support extra software in special directory outside of squashfs environment in live-cd mode
+    if [ -f /etc/grml_cd ] ; then
+       [ -d /cdrom/addons/ ] && ADDONS=':/cdrom/addons/'
+    fi
+    if (( EUID != 0 )); then
+      PATH="$HOME/bin:/bin/:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/usr/NX/bin$ADDONS"
+    else
+      PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/local/sbin:/usr/local/bin:/usr/NX/bin$ADDONS"
+    fi
+#  fi
+  fi
+
+# less (:=pager) options:
+#  export LESS=C
+  export LESSOPEN="|lesspipe.sh %s"
+  export READNULLCMD=${PAGER:-/usr/bin/pager}
+  export DISTCC_HOSTS="+zeroconf"
+# MAKEDEV should be usable on udev as well by default:
+  export WRITE_ON_UDEV=yes
+
+## END OF FILE #################################################################

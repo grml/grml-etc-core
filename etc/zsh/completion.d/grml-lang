@@ -1,0 +1,2 @@
+  _grml-lang() { compadd at ch de us ; }
+  compdef _grml-lang grml-lang

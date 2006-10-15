@@ -1,0 +1,705 @@
+# Filename:      zshrc
+# Purpose:       config file for zsh (z shell)
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Son Okt 08 01:46:31 CEST 2006 [mika]
+################################################################################
+# This file is sourced only for interactive shells. It
+# should contain commands to set up aliases, functions,
+# options, key bindings, etc.
+#
+# Global Order: zshenv, zprofile, zshrc, zlogin
+################################################################################
+
+# {{{ check for version/system
+# check for versions (compatibility reasons)
+  is4(){
+    if [[ $ZSH_VERSION == 4.* ]]; then
+        return 0
+    else
+        return 1
+    fi
+  }
+
+# current release
+  is42(){
+    if [[ $ZSH_VERSION == 4.<2->* ]]; then
+        return 0
+    else
+        return 1
+    fi
+  }
+
+# grml specific stuff
+  isgrml(){
+    if [ -f /etc/grml_version ] ; then
+        return 0
+    else
+        return 1
+    fi
+  }
+
+  isgrmlcd(){
+    if [ -f /etc/grml_cd ] ; then
+        return 0
+    else
+        return 1
+    fi
+  }
+
+# check for user, if not running as root set $SUDO to sudo
+ (( EUID != 0 )) && SUDO='sudo' || SUDO=''
+
+# change directory to home on first invocation of zsh
+# important for rungetty -> autologin
+# Thanks go to Bart Schaefer!
+  isgrml && checkhome() {
+  if [[ -z "$ALREADY_DID_CD_HOME" ]]; then
+     export ALREADY_DID_CD_HOME=$HOME
+     cd
+  fi
+  }
+# }}}
+
+# {{{ set some variables
+  [[ -z "$EDITOR" ]] && export EDITOR='vim'
+  [[ -z "$SHELL"  ]] && export SHELL='/bin/zsh'
+  [[ -z "$MAIL"   ]] && export MAIL="/var/mail/$USER"
+  [[ -f ~/.terminfo/m/mostlike ]] && MYLESS='LESS=C TERMINFO=~/.terminfo TERM=mostlike less' || MYLESS='less'
+  [[ -x /usr/bin/dircolors ]] && eval `dircolors -b`
+
+# Search path for the cd comman
+#  cdpath=(.. ~)
+
+# automatically remove duplicates from these arrays
+  typeset -U path cdpath fpath manpath
+# }}}
+
+# {{{ keybindings
+ if [[ "$TERM" != emacs ]]; then
+  [[ -z "$terminfo[kdch1]" ]] || bindkey -M emacs "$terminfo[kdch1]" delete-char
+  [[ -z "$terminfo[khome]" ]] || bindkey -M emacs "$terminfo[khome]" beginning-of-line
+  [[ -z "$terminfo[kend]"  ]] || bindkey -M emacs "$terminfo[kend]"  end-of-line
+  [[ -z "$terminfo[kdch1]" ]] || bindkey -M vicmd "$terminfo[kdch1]" vi-delete-char
+  [[ -z "$terminfo[khome]" ]] || bindkey -M vicmd "$terminfo[khome]" vi-beginning-of-line
+  [[ -z "$terminfo[kend]"  ]] || bindkey -M vicmd "$terminfo[kend]"  vi-end-of-line
+  [[ -z "$terminfo[cuu1]"  ]] || bindkey -M viins "$terminfo[cuu1]"  vi-up-line-or-history
+  [[ -z "$terminfo[cuf1]"  ]] || bindkey -M viins "$terminfo[cuf1]"  vi-forward-char
+  [[ -z "$terminfo[kcuu1]" ]] || bindkey -M viins "$terminfo[kcuu1]" vi-up-line-or-history
+  [[ -z "$terminfo[kcud1]" ]] || bindkey -M viins "$terminfo[kcud1]" vi-down-line-or-history
+  [[ -z "$terminfo[kcuf1]" ]] || bindkey -M viins "$terminfo[kcuf1]" vi-forward-char
+  [[ -z "$terminfo[kcub1]" ]] || bindkey -M viins "$terminfo[kcub1]" vi-backward-char
+  # ncurses stuff:
+  [[ "$terminfo[kcuu1]" == "O"* ]] && bindkey -M viins "${terminfo[kcuu1]/O/[}" vi-up-line-or-history
+  [[ "$terminfo[kcud1]" == "O"* ]] && bindkey -M viins "${terminfo[kcud1]/O/[}" vi-down-line-or-history
+  [[ "$terminfo[kcuf1]" == "O"* ]] && bindkey -M viins "${terminfo[kcuf1]/O/[}" vi-forward-char
+  [[ "$terminfo[kcub1]" == "O"* ]] && bindkey -M viins "${terminfo[kcub1]/O/[}" vi-backward-char
+  [[ "$terminfo[khome]" == "O"* ]] && bindkey -M viins "${terminfo[khome]/O/[}" beginning-of-line
+  [[ "$terminfo[kend]"  == "O"* ]] && bindkey -M viins "${terminfo[kend]/O/[}"  end-of-line
+  [[ "$terminfo[khome]" == "O"* ]] && bindkey -M emacs "${terminfo[khome]/O/[}" beginning-of-line
+  [[ "$terminfo[kend]"  == "O"* ]] && bindkey -M emacs "${terminfo[kend]/O/[}"  end-of-line
+fi
+
+## keybindings (run 'bindkeys' for details, more details via man zshzle)
+# use emacs style per default
+  bindkey -e
+# use vi style:
+# bindkey -v
+
+#if [[ "$TERM" == screen ]]; then
+  bindkey '\e[1~' beginning-of-line       # home
+  bindkey '\e[4~' end-of-line             # end
+  bindkey "^[[A"  up-line-or-search       # cursor up
+  bindkey "^[[B"  down-line-or-search     # <ESC>-
+  bindkey '^x'    history-beginning-search-backward # alternative ways of searching the shell history
+# bindkey -s '^L' "|less\n"             # ctrl-L pipes to less
+# bindkey -s '^B' " &\n"                # ctrl-B runs it in the background
+# if terminal type is set to 'rxvt':
+  bindkey '\e[7~' beginning-of-line       # home
+  bindkey '\e[8~' end-of-line             # end
+#fi
+
+#  bindkey '\eq' push-line-or-edit
+# }}}
+
+# {{{ autoloading
+  autoload -U zmv    # who needs mmv or rename?
+  autoload history-search-end
+
+  # we don't want to quote/espace URLs on our own...
+  # avoid 'url-quote-magic: function definition file not found' on some older boxes
+  if [ -f /usr/share/zsh/$ZSH_VERSION/functions/Zle/url-quote-magic ] ; then
+     autoload -U url-quote-magic
+     zle -N self-insert url-quote-magic
+  fi
+
+  alias run-help >&/dev/null && unalias run-help
+  autoload run-help # use via 'esc-h'
+
+  is4 && autoload -U compinit && compinit # completition system
+  is4 && autoload -U zed                  # use ZLE editor to edit a file or function
+
+  is4 && zmodload -i zsh/complist
+  is4 && zmodload -i zsh/deltochar
+  is4 && zmodload -i zsh/mathfunc
+# autoload zsh modules when they are referenced
+  is4 && zmodload -a zsh/stat stat
+  is4 && zmodload -a zsh/zpty zpty
+  is4 && zmodload -a zsh/zprof zprof
+  is4 && zmodload -ap zsh/mapfile mapfile
+
+  is4 && autoload -U insert-files && \
+  zle -N insert-files && \
+  bindkey "^Xf" insert-files # C-x-f
+
+  bindkey ' '   magic-space    # also do history expansion on space
+  bindkey '\ei' menu-complete  # menu completion via esc-i
+
+# press esc-e for editing command line in $EDITOR or $VISUAL
+  is4 && autoload -U edit-command-line && \
+  zle -N edit-command-line && \
+  bindkey '\ee' edit-command-line
+
+# press "ctrl-e d" to insert the actual date in the form yyyy-mm-dd
+  _bkdate() { BUFFER="$BUFFER$(date '+%F')"; CURSOR=$#BUFFER; }
+  bindkey '\C-ed' _bkdate
+  zle -N _bkdate
+
+# press esc-m for inserting last typed word again (thanks to caphuso!)
+  insert-last-typed-word() { zle insert-last-word -- 0 -1 }; \
+  zle -N insert-last-typed-word; bindkey "\em" insert-last-typed-word
+
+# set command prediction from history, see 'man 1 zshcontrib'
+#  is4 && autoload -U predict-on && \
+#  zle -N predict-on         && \
+#  zle -N predict-off        && \
+#  bindkey "^X^Z" predict-on && \
+#  bindkey "^Z" predict-off
+
+# put job into foreground via ctrl-z:
+  bindkey -s '^z' "fg\n"
+
+# press ctrl-q to quote line:
+#  mquote () {
+#        zle beginning-of-line
+#        zle forward-word
+#        # RBUFFER="'$RBUFFER'"
+#        RBUFFER=${(q)RBUFFER}
+#        zle end-of-line
+#  }
+#  zle -N mquote && bindkey '^q' mquote
+
+# run command line as user root via sudo:
+  _sudo-command-line() {
+    [[ $BUFFER != sudo\ * ]] && LBUFFER="sudo $LBUFFER"
+  }
+  zle -N sudo-command-line _sudo-command-line
+  bindkey "^Os" sudo-command-line
+# }}}
+
+# {{{ set some important options
+  umask 022
+
+# history:
+  setopt append_history       # append history list to the history file (important for multiple parallel zsh sessions!)
+  is4 && setopt SHARE_HISTORY # import new commands from the history file also in other zsh-session
+  setopt extended_history     # save each command's beginning timestamp and the duration to the history file
+  is4 && setopt histignorealldups # If  a  new  command  line being added to the history
+                              # list duplicates an older one, the older command is removed from the list
+  setopt histignorespace      # remove command lines from the history list when
+                              # the first character on the line is a space
+#  setopt histallowclobber    # add `|' to output redirections in the history
+#  setopt NO_clobber          # warning if file exists ('cat /dev/null > ~/.zshrc')
+  setopt auto_cd              # if a command is issued that can't be executed as a normal command,
+                              # and the command is the name of a directory, perform the cd command to that directory
+  setopt extended_glob        # in order to use #, ~ and ^ for filename generation
+                              # grep word *~(*.gz|*.bz|*.bz2|*.zip|*.Z) ->
+                              # -> searches for word not in compressed files
+                              # don't forget to quote '^', '~' and '#'!
+  setopt notify               # report the status of backgrounds jobs immediately
+  setopt hash_list_all        # Whenever a command completion is attempted, make sure \
+                              # the entire command path is hashed first.
+  setopt completeinword       # not just at the end
+# setopt nocheckjobs          # don't warn me about bg processes when exiting
+  setopt nohup                # and don't kill them, either
+# setopt printexitvalue       # alert me if something failed
+# setopt dvorak               # with spelling correction, assume dvorak kb
+  setopt auto_pushd           # make cd push the old directory onto the directory stack.
+  setopt nonomatch            # try to avoid the 'zsh: no matches found...'
+  setopt nobeep               # avoid "beep"ing
+
+  MAILCHECK=30       # mailchecks
+  REPORTTIME=5       # report about cpu-/system-/user-time of command if running longer than 5 secondes
+  watch=(notme root) # watch for everyone but me and root
+
+# define word separators (for stuff like backward-word, forward-word, backward-kill-word,..)
+#  WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' # the default
+#  WORDCHARS=.
+#  WORDCHARS='*?_[]~=&;!#$%^(){}'
+#  WORDCHARS='${WORDCHARS:s@/@}'
+
+# only slash should be considered as a word separator:
+  slash-backward-kill-word() {
+    local WORDCHARS="${WORDCHARS:s@/@}"
+    # zle backward-word
+    zle backward-kill-word
+  }
+  zle -N slash-backward-kill-word
+  bindkey 'v' slash-backward-kill-word # press esc-v to delete a word until its last '/' (not the same as ctrl-w!)
+# }}}
+
+# {{{ history
+  export ZSHDIR=$HOME/.zsh
+  HISTFILE=$HOME/.zsh_history
+  isgrmlcd && HISTSIZE=500  || HISTSIZE=5000
+  isgrmlcd && SAVEHIST=1000 || SAVEHIST=10000 # useful for setopt append_history
+# }}}
+
+# {{{ display battery status on right side of prompt via running 'BATTERY=1 zsh'
+  if [ -n "$BATTERY" ] ; then
+     if [ -x =acpi ] ; then
+        PERCENT="${(C)${(s| |)$(acpi 2>/dev/null)}[4]}"
+        [ -z "$PERCENT" ] && PERCENT='acpi not present'
+        if [ "${PERCENT%%%}" -lt 20 ] ; then
+           PERCENT="warning: ${PERCENT}%"
+        fi
+     fi
+  fi
+# }}}
+
+# {{{ set prompt
+  autoload promptinit ; promptinit # people should be able to use their favourite prompt
+  # precmd() => a function which is executed just before each prompt
+  # precmd () { setopt promptsubst; [[ -o interactive ]] && jobs -l;
+  # run 'NOPRECMD=1 zsh' to disable the precmd + preexec commands
+  is4 && ! [[ -n "$NOPRECMD" ]] && precmd () {
+      if [ -n "$BATTERY" ] ; then
+        RPROMPT="%(?..:()% ${PERCENT}${SCREENTITLE}"
+      else
+        RPROMPT="%(?..:()% ${SCREENTITLE}"
+      fi
+      # adjust title of xterm
+      # see http://www.faqs.org/docs/Linux-mini/Xterm-Title.html
+      case $TERM in (xterm*|rxvt)
+        print -Pn "\e]0;%n@%m: %~\a"
+        ;;
+      esac
+  }
+
+  # chpwd () => a function which is executed whenever the directory is changed
+
+  # preexec() => a function running before every command
+  is4 && ! [[ -n "$NOPRECMD" ]] && preexec () {
+  # set screen window title if running in a screen
+  # get the name of the program currently running and hostname of local machine
+      local HOSTNAME=$(hostname)
+      if [[ "$HOSTNAME" != grml ]] ; then
+         NAME="@$HOSTNAME"
+      fi
+      if [[ "$TERM" == screen* ]]; then
+#          local CMD=${1[(wr)^(*=*|sudo|ssh|-*)]}       # dont't use hostname
+          local CMD="${1[(wr)^(*=*|sudo|ssh|-*)]}$NAME" # use hostname
+          echo -ne "\ek$CMD\e\\"
+      fi
+  # set the screen title to "zsh" when sitting at the command prompt:
+      if [[ "$TERM" == screen* ]]; then
+           SCREENTITLE=$'%{\ekzsh\e\\%}'
+      else
+           SCREENTITLE=''
+      fi
+  # adjust title of xterm
+      case $TERM in (xterm*|rxvt)
+        print -Pn "\e]0;%n@%m: $1\a"
+        ;;
+      esac
+  }
+
+  EXITCODE="%(?..%?%1v )"
+  local BLUE="%{[1;34m%}"
+  local RED="%{[1;31m%}"
+  local GREEN="%{[1;32m%}"
+  local CYAN="%{[1;36m%}"
+  local WHITE="%{[1;37m%}"
+  local NO_COLOUR="%{[0m%}"
+  PS2='`%_> '       # secondary prompt, printed when the shell needs more information to complete a command.
+  PS3='?# '         # selection prompt used within a select loop.
+  PS4='+%N:%i:%_> ' # the execution trace prompt (setopt xtrace). default: '+%N:%i>'
+
+# set variable debian_chroot if running in a chroot with /etc/debian_chroot
+  if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+  fi
+
+# don't use colors on dumb terminals (like emacs):
+  if [[ "$TERM" == dumb ]] ; then
+    PROMPT="${EXITCODE}${debian_chroot:+($debian_chroot)}%n@%m %40<...<%B%~%b%<< %# "
+  else
+    # only if $GRMLPROMPT is set (e.g. via 'GRMLPROMPT=1 zsh') use the extended prompt
+    # set variable identifying the chroot you work in (used in the prompt below)
+    if [[ -n "$GRMLPROMPT" ]]; then
+      PROMPT="${RED}${EXITCODE}${CYAN}[%j running job(s)] ${GREEN}{history#%!} ${RED}%(3L.+.) ${BLUE}%* %D
+${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
+    else
+      if (( EUID != 0 )); then
+        PROMPT="${RED}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# " # primary prompt string
+      else
+        PROMPT="${BLUE}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${RED}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# " # primary prompt string
+      fi
+    fi
+  fi
+
+# if we are inside a grml-chroot set a specific prompt theme
+  if [ -n "$GRML_CHROOT" ] ; then
+     PROMPT="%{$fg[red]%}(CHROOT) %{$fg_bold[red]%}%n%{$fg_no_bold[white]%}@%m %40<...<%B%~%b%<< %\# "
+  fi
+# }}}
+
+# {{{ 'hash' some often used directories
+  hash -d deb=/var/cache/apt/archives
+  hash -d doc=/usr/share/doc
+  hash -d linux=/lib/modules/$(command uname -r)/build/
+  hash -d log=/var/log
+  hash -d slog=/var/log/syslog
+  hash -d src=/usr/src
+  hash -d templ=/usr/share/doc/grml-templates
+  hash -d tt=/usr/share/doc/texttools-doc
+  hash -d www=/var/www
+# }}}
+
+# {{{ some aliases
+  if [ $UID = 0 ] ; then
+     [ -r /etc/grml/screenrc ] && alias screen='/usr/bin/screen -c /etc/grml/screenrc'
+  elif [ -r $HOME/.screenrc ] ; then
+     alias screen="/usr/bin/screen -c $HOME/.screenrc"
+  else
+     [ -r /etc/grml/screenrc_grml ] && alias screen='/usr/bin/screen -c /etc/grml/screenrc_grml'
+  fi
+
+  if ls --help 2>/dev/null |grep -- --color= >/dev/null && [ "$TERM" != dumb ] ; then
+     alias ls='ls -b -CF --color=auto' # do we have GNU ls with color-support?
+     alias la='ls -la --color=auto'
+     alias ll='ls -l --color=auto'
+     alias lh='ls -hAl --color=auto'
+     alias l='ls -lF --color=auto'
+  else
+     alias ls='ls -b -CF'
+     alias la='ls -la'
+     alias ll='ls -l'
+     alias lh='ls -hAl'
+     alias l='ls -lF'
+  fi
+
+  alias cp='nocorrect cp'         # no spelling correction on cp
+  alias mkdir='nocorrect mkdir'   # no spelling correction on mkdir
+  alias mv='nocorrect mv'         # no spelling correction on mv
+  alias rm='nocorrect rm'         # no spelling correction on rm
+
+  alias rd='rmdir'
+  alias md='mkdir'
+
+  alias swspeak="setopt singlelinezle ; unsetopt prompt_cr ; export PS1='%m%# ' ; speechd-up" # set up software synth.
+
+# truecrypt; use e.g. via 'truec /dev/ice' /mnt/ice' or 'truec -i'
+  if [ -x /usr/sbin/truecrypt ] ; then
+     alias truec='truecrypt --mount-options "rw,sync,dirsync,users,uid=1000,gid=users,umask=077" '
+  fi
+
+  zsh-help(){print "$bg[white]$fg[black]
+zsh-help - hints for use of zsh on grml
+=======================================$reset_color
+
+Main configuration of zsh happens in /etc/zsh/zshrc (global)
+and /etc/skel/.zshrc which is copied to \$HOME/.zshrc once.
+The files are part of the package grml-etc, if you want to
+use them on a non-grml-system just get the tar.gz from
+http://grml.org/repos/
+
+If you want to stay in sync with zsh configuration of grml
+run 'ln -sf /etc/skel/.zshrc \$HOME/.zshrc' and configure
+your own stuff in \$HOME/.zshrc.local. System wide configuration
+without touching configuration files of grml can take place
+in /etc/zsh/zshrc.local.
+
+If you want to use the configuration of user grml also when
+running as user root just run 'zshskel' which will source
+the file /etc/skel/.zshrc.
+
+For information regarding zsh start at http://grml.org/zsh/
+
+Take a look at grml's zsh refcard:
+% xpdf =(zcat /usr/share/doc/grml-docs/zsh/grml-zsh-refcard.pdf.gz)
+
+Check out the main zsh refcard:
+% $BROWSER http://www.bash2zsh.com/zsh_refcard/refcard.pdf
+
+And of course visit the zsh-lovers:
+% man zsh-lovers
+
+You can adjust some options through environment variables when
+invoking zsh without having to edit configuration files.
+Basically meant for bash users who are not used to the power of
+the zsh yet. :)
+
+  \"NOCOR=1    zsh\" => deactivate automatic correction
+  \"NOMENU=1   zsh\" => do not use menu completion (note: use strg-d for completion instead!)
+  \"NOPRECMD=1 zsh\" => disable the precmd + preexec commands (set GNU screen title)
+  \"BATTERY=1  zsh\" => activate battery status (via acpi) on right side of prompt
+$bg[white]$fg[black]
+Please report wishes + bugs to the grml-team: http://grml.org/bugs/
+Enjoy your grml system with the zsh!$reset_color"
+}
+
+# debian stuff
+  if [ -r /etc/debian_version ] ; then
+    alias acs="apt-cache search"
+    alias acsh="apt-cache show"
+    alias adg="$SUDO apt-get dist-upgrade"
+    alias agi="$SUDO apt-get install"
+    alias ag="$SUDO apt-get upgrade"
+    alias au="$SUDO apt-get update"
+    alias dbp="dpkg-buildpackage"
+    alias ge="grep-excuses"
+
+    isgrmlcd && alias su="sudo su"          # change to user root
+    alias tlog="tail -f /var/log/syslog"    # take a look at the syslog
+    alias zshskel="source /etc/skel/.zshrc" # source skeleton zshrc
+  fi
+
+# if cdrecord is a symlink (to wodim) or isn't present at all warn:
+  if [ -L /usr/bin/cdrecord -o ! -x =cdrecord ] ; then
+     if [ -x =wodim ] ; then
+        alias cdrecord="echo 'cdrecord is not provided under its original name by Debian anymore.
+See #377109 in the BTS of Debian for more details.
+
+Please use the wodim binary instead' ; return 1"
+     fi
+  fi
+
+# }}}
+
+# {{{ Use hard limits, except for a smaller stack and no core dumps
+  unlimit
+  limit stack 8192
+  limit core 0      # important for a live-cd-system
+  limit -s
+# }}}
+
+# {{{ completion stuff
+
+# Where to look for autoloaded function definitions
+  if [ -d /etc/zsh/completion.d ] ; then
+    local comp=/etc/zsh/completion.d
+    for func in $comp/*(N-.:t); . ${comp}/${func}
+  fi
+
+# called later (via is4 && grmlcomp)
+# notice: use 'zstyle' for getting current settings
+#         press ^Xh (control-x h) for getting tags in context; ^X? (control-x ?) to run complete_debug with trace output
+grmlcomp() {
+## completion system
+  zstyle ':completion:*:approximate:'    max-errors 'reply=( $((($#PREFIX+$#SUFFIX)/3 )) numeric )' # allow one error for every three characters typed in approximate completer
+  zstyle ':completion:*:complete:-command-::commands' ignored-patterns '*\~' # don't complete backup files as executables
+  zstyle ':completion:*:correct:*'       insert-unambiguous true             # start menu completion only if it could find no unambiguous initial string
+  zstyle ':completion:*:corrections'     format $'%{\e[0;31m%}%d (errors: %e)%{\e[0m%}' #
+  zstyle ':completion:*:correct:*'       original true                       #
+  zstyle ':completion:*:default'         list-colors ${(s.:.)LS_COLORS}      # activate color-completion(!)
+  zstyle ':completion:*:descriptions'    format $'%{\e[0;31m%}completing %B%d%b%{\e[0m%}'  # format on completion
+  zstyle ':completion:*:*:cd:*:directory-stack' menu yes select              # complete 'cd -<tab>' with menu
+  zstyle ':completion:*:expand:*'        tag-order all-expansions            # insert all expansions for expand completer
+  zstyle ':completion:*:history-words'   list false                          #
+  zstyle ':completion:*:history-words'   menu yes                            # activate menu
+  zstyle ':completion:*:history-words'   remove-all-dups yes                 # ignore duplicate entries
+  zstyle ':completion:*:history-words'   stop yes                            #
+  zstyle ':completion:*:*:linda:*'       file-patterns '*.deb'               # complete debian packages for command 'linda'
+  zstyle ':completion:*:*:lintian:*'     file-patterns '*.deb'               # complete debian packages for command 'lintian'
+  zstyle ':completion:*'                 matcher-list 'm:{a-z}={A-Z}'        # match uppercase from lowercase
+  zstyle ':completion:*:matches'         group 'yes'                         # separate matches into groups
+  if [[ -z "$NOMENU" ]] ; then
+    zstyle ':completion:*'               menu select=5                       # if there are more than 5 options allow selecting from a menu
+  else
+    setopt no_auto_menu # don't use any menus at all
+  fi
+  zstyle ':completion:*:messages'        format '%d'                         #
+  zstyle ':completion:*:options'         auto-description '%d'               #
+  zstyle ':completion:*:options'         description 'yes'                   # describe options in full
+  zstyle ':completion:*:processes'       command 'ps -au$USER'               # on processes completion complete all user processes
+  zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters        # offer indexes before parameters in subscripts
+  zstyle ':completion:*'                 verbose true                        # provide verbose completion information
+  zstyle ':completion:*:warnings'        format $'%{\e[0;31m%}No matches for:%{\e[0m%} %d' # set format for warnings
+  zstyle ':completion:*:*:zcompile:*'    ignored-patterns '(*~|*.zwc)'       # define files to ignore for zcompile
+  zstyle ':completion:correct:'          prompt 'correct to: %e'             #
+  zstyle ':completion::(^approximate*):*:functions' ignored-patterns '_*'    # Ignore completion functions for commands you don't have:
+
+# complete manual by their section
+  zstyle ':completion:*:manuals' separate-sections true
+  zstyle ':completion:*:man:*' menu yes select
+
+## correction
+# run rehash on completion so new installed program are found automatically:
+  _force_rehash() {
+      (( CURRENT == 1 )) && rehash
+         return 1 # Because we didn't really complete anything
+    }
+# some people don't like the automatic correction - so run 'NOCOR=1 zsh' to deactivate it
+  if [[ -n "$NOCOR" ]] ; then
+    zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete
+    setopt nocorrect # do not try to correct the spelling if possible
+  else
+#    zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete _correct _approximate
+    setopt correct  # try to correct the spelling if possible
+    zstyle -e ':completion:*' completer '
+        if [[ $_last_try != "$HISTNO$BUFFER$CURSOR" ]]; then
+          _last_try="$HISTNO$BUFFER$CURSOR"
+          reply=(_complete _match _prefix)
+        else
+          if [[ $words[1] = (rm|mv) ]]; then
+            reply=(_complete)
+          else
+            reply=(_oldlist _expand _force_rehash _complete _correct _approximate)
+          fi
+        fi'
+  fi
+# zstyle ':completion:*' completer _complete _correct _approximate
+# zstyle ':completion:*' expand prefix suffix
+
+# command for process lists, the local web server details and host completion
+  hosts=(`hostname` grml.org)
+  zstyle '*' hosts $hosts
+  zstyle ':completion:*:urls' local 'www' '/var/www/' 'public_html'
+
+# caching
+  [ -d $ZSHDIR/cache ] && zstyle ':completion:*' use-cache yes && \
+                          zstyle ':completion::complete:*' cache-path $ZSHDIR/cache/
+
+# use ~/.ssh/known_hosts for completion [does not work with hashing of new ssh versions anymore]
+  if [ -f "$HOME/.ssh/known_hosts" ] ; then
+    hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*})
+    zstyle ':completion:*:hosts' hosts $hosts
+  fi
+
+# use generic completion system for programs not yet defined:
+  compdef _gnu_generic tail head feh cp mv gpg df stow uname ipacsum fetchipac
+
+# see upgrade function in this file
+  compdef _hosts upgrade
+}
+# }}}
+
+# {{{ grmlstuff
+grmlstuff() {
+# people should use 'grml-x'!
+  function startx() {
+    if [ -e /etc/X11/xorg.conf ] ; then
+       [ -x /usr/bin/startx ] && /usr/bin/startx || /usr/X11R6/bin/startx
+    else
+      echo "Please use the script \"grml-x\" for starting the X Window System
+because there does not exist /etc/X11/xorg.conf yet.
+If you want to use startx anyway please call \"/usr/bin/startx\"."
+      return -1
+    fi
+  }
+
+  function xinit() {
+    if [ -e /etc/X11/xorg.conf ] ; then
+       [ -x /usr/bin/xinit ] && /usr/bin/xinit || /usr/X11R6/bin/xinit
+    else
+      echo "Please use the script \"grml-x\" for starting the X Window System.
+because there does not exist /etc/X11/xorg.conf yet.
+If you want to use xinit anyway please call \"/usr/bin/xinit\"."
+      return -1
+    fi
+  }
+
+  if [ -x /usr/sbin/915resolution ] ; then
+     alias 855resolution='echo -e "Please use 915resolution as resolution modify tool for Intel graphic chipset."; return -1'
+  fi
+
+  alias grml-version='cat /etc/grml_version'
+
+  if [ -x /usr/sbin/rebuildfstab ] ; then
+     local fstabuser=$(getent passwd 1000 | cut -d: -f1)
+     alias grml-rebuildfstab="rebuildfstab -v -r -u $fstabuser -g $fstabuser"
+  fi
+}
+# }}}
+
+# {{{ now run the functions
+  isgrml && checkhome
+  is4    && isgrml    && grmlstuff
+  is4    && grmlcomp
+# }}}
+
+# {{{ keephack
+  [ -r /etc/zsh/keephack ] && is4 && source /etc/zsh/keephack
+# }}}
+
+# {{{ wonderful idea of using "e" glob qualifier by Peter Stephenson
+# You use it as follows:
+# $ NTREF=/reference/file
+# $ ls -l *(e:nt:)
+# This lists all the files in the current directory newer than the reference file.
+# You can also specify the reference file inline; note quotes:
+# $ ls -l *(e:'nt ~/.zshenv':)
+  is4 && nt() {
+    if [[ -n $1 ]]; then
+      local NTREF=${~1}
+    fi
+    [[ $REPLY -nt $NTREF ]]
+  }
+# }}}
+
+# shell functions {{{
+  setenv()  { typeset -x "${1}${1:+=}${(@)argv[2,$#]}" }  # csh compatibility
+  freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
+  manzsh()  {  /usr/bin/man zshall |  vim -c "se ft=man| se hlsearch" +/"$1" - ; }
+#  manzsh()  { man zshall | $MYLESS -p $1 ; }
+#  manzsh() {  /usr/bin/man zshall |  most +/"$1" ; }
+
+# use "dchange <package-name>" to view Debian's changelog of the package:
+  dchange() { most /usr/share/doc/${1}/changelog.Debian.gz ; }
+  _dchange() { _files -W /usr/share/doc -/ }
+  compdef _dchange dchange
+
+# use "uchange <package-name>" to view upstream's changelog of the package:
+  uchange() { most /usr/share/doc/${1}/changelog.gz ; }
+  _uchange() { _files -W /usr/share/doc -/ }
+  compdef _uchange uchange
+
+# edit alias via zle:
+  edalias() {
+    [ -z "$1" ] && { echo "Usage: edalias <alias_to_edit>" ; return 1 } || vared aliases'[$1]' ;
+  }
+  compdef _aliases edalias
+
+# edit function via zle:
+  edfun() {
+    [ -z "$1" ] && { echo "Usage: edfun <function_to_edit>" ; return 1 } || zed -f "$1" ;
+  }
+  compdef _functions edfun
+
+# use it e.g. via 'Restart apache2'
+ if [ -d /etc/init.d ] ; then
+  for i in Start Restart Stop Reload ; do
+    eval "$i() { $SUDO /etc/init.d/\$1 ${i:l} $2 ; }"
+  done
+# now the completion for this:
+  compctl -g "$(echo /etc/init.d/*(:t))" Start Restart Stop Reload
+ fi
+# }}}
+
+# source another config file if present {{{
+  if [ -r /etc/zsh/zshrc.local ]; then
+   source /etc/zsh/zshrc.local
+  fi
+# }}}
+
+# "persistent history" {{{
+# just write important commands you always need to ~/.important_commands
+  if [ -r ~/.important_commands ] ; then
+     fc -R ~/.important_commands
+  fi
+# }}}
+
+## END OF FILE #################################################################
+# vim:foldmethod=marker

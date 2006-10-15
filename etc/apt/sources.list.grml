@@ -1,0 +1,243 @@
+# Filename:      sources.list
+# Purpose:       specify ressources for debian's package management system
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Don Sep 28 15:02:09 CEST 2006 [mika]
+################################################################################
+# Notice: because of ressource limits some lines might have been commented
+#         out on the grml live CD system. Just uncomment lines containing
+#         '#1#' at the beginning to get a "full featured" debian system on your
+#         hard disc.
+#
+# See sources.list(5) for more information, especialy
+# Remember that you can only use http, ftp or file URIs
+# CDROMs are managed through the apt-cdrom tool.
+#
+# Also check out
+#      http://www.apt-get.org/
+#      http://www.debianforum.de/wiki/WoodyBackports
+#      http://www.backports.org/
+##############################################################################
+
+# main grml repository:
+  deb     http://grml.org/repos/ ./
+  deb-src http://grml.org/repos/ ./
+
+# Unstable:
+# TU Graz mirror
+#  deb     http://ftp.tu-graz.ac.at/mirror/debian        unstable        main contrib non-free
+#  deb-src http://ftp.tu-graz.ac.at/mirror/debian        unstable        main contrib non-free
+# Use mirror from VC-Graz without authentication:
+#  deb     http://10.0.0.5/mirror/debian                 unstable        main contrib non-free
+
+# AT/DE mirror:
+  deb     http://ftp.de.debian.org/debian        unstable        main contrib non-free
+  deb-src http://ftp.de.debian.org/debian/       unstable        main contrib non-free
+#  deb     http://ftp.at.debian.org/debian        unstable        main contrib non-free
+#  deb-src http://ftp.at.debian.org/debian/       unstable        main contrib non-free
+
+# http://volatile.debian.net/
+#  deb     http://ftp2.de.debian.org/debian-volatile stable/volatile main
+#  deb-src http://ftp2.de.debian.org/debian-volatile stable/volatile main
+
+# Experimental:
+#1#  deb     http://ftp.de.debian.org/debian/ experimental main contrib non-free
+#1#  deb-src http://ftp.de.debian.org/debian/ experimental main contrib non-free
+#  deb     http://ftp.tu-graz.ac.at/mirror/debian        experimental        main contrib non-free
+#  deb-src http://ftp.tu-graz.ac.at/mirror/debian        experimental        main contrib non-free
+
+# Security updates:
+#1#  deb     http://security.debian.org stable/updates main contrib non-free
+#1#  deb-src http://security.debian.org stable/updates main contrib non-free
+
+# gebi's packages for grml (grml-terminalserver, grml-vpn, grml-crypt,...):
+#1#  deb     http://einsteinmg.dyndns.org/debian unstable/
+#1#  deb-src http://einsteinmg.dyndns.org/debian unstable/
+
+# jimmy's packages for grml (gcom):
+#1#  deb     http://debian.g-tec.co.at/ unstable main
+#1#  deb-src http://debian.g-tec.co.at/ unstable main
+
+# unofficial debian packages:
+#1#  deb     http://ftp.debian-unofficial.org/debian sarge main contrib non-free restricted
+#1#  deb-src http://ftp.debian-unofficial.org/debian sarge main contrib non-free restricted
+
+# MPEG, divx...:
+#1#  deb     http://www.debian-multimedia.org sid main
+#1#  deb-src http://www.debian-multimedia.org sid main
+
+# kwtools:
+#  deb     ftp://ftp.berlios.de/pub/netzworkk/scripts/kwtools/Debian/stable/ ./
+#  deb-src ftp://ftp.berlios.de/pub/netzworkk/scripts/kwtools/Debian/stable/ ./
+#1#  deb     ftp://server.mamemu.de/pub/kwtools/Debian/unstable/ ./
+#1#  deb-src ftp://server.mamemu.de/pub/kwtools/Debian/unstable/ ./
+#1#  deb     ftp://server.mamemu.de/pub/kwtools/Debian/stable/ ./
+#1#  deb-src ftp://server.mamemu.de/pub/kwtools/Debian/stable/ ./
+
+# cpm
+#1#  deb     http://debian.harry-b.de/ binary/
+
+# ara, pcopy,...:
+#1#  deb     ftp://ftp.uni-sofia.bg/debian-addons-bg ./
+#1#  deb-src ftp://ftp.uni-sofia.bg/debian-addons-bg ./
+
+# tex-refs:
+#1#  deb     http://www.miwie.org/ ./
+
+# bkp:
+#1#  deb     http://opensource.polytechnique.org/debian/ ./
+#1#  deb-src http://opensource.polytechnique.org/debian/ ./
+
+# camgrab update-apt:
+#1#  deb     http://www.steve.org.uk/apt     sarge main contrib non-free
+#1#  deb-src http://www.steve.org.uk/apt     sarge main contrib non-free
+
+# olsr:
+#1#  deb     http://www.skyhub.de/debian/ unstable main
+#1#  deb-src http://www.skyhub.de/debian/ unstable main
+
+# ext3rminator:
+#1#  deb     http://web.glandium.org/debian/repository/experimental/ ./
+#1#  deb-src http://web.glandium.org/debian/repository/experimental/ ./
+
+# kenny
+#1#  deb     http://www.cgarbs.de/stuff ./
+#1#  deb-src http://www.cgarbs.de/stuff ./
+
+# synctree:
+#1#  deb     http://www.knizefamily.net/russ/software/debian/ ./
+#1#  deb-src http://www.knizefamily.net/russ/software/debian/ ./
+
+# musepack-decoder musepack-encoder musepack-replaygain
+# be careful with libfaad2 <-> mplayer!
+##1#  deb http://www.rarewares.org/debian/packages/unstable/ ./
+
+################################################################################
+# Diff stuff:
+# ===========
+#
+# get specific debian package:
+#  deb http://snapshot.debian.net/archive/2005/03/27/debian unstable main contrib non-free
+#  deb http://snapshot.debian.net/archive/date/last-week/debian unstable main contrib non-free
+#  deb http://snapshot.debian.net/archive pool packagename1 packagename2
+
+# Backports:
+#  deb     http://www.backports.org/debian stable package1 ...
+#  deb-src http://www.backports.org/debian stable package1 ...
+
+# mentors:
+#  deb-src http://mentors.debian.net/debian unstable main contrib non-free
+
+# apt-build:
+#  deb file:/var/cache/apt-build/repository apt-build main
+
+# cd-rom:
+#  deb cdrom:[Debian GNU/Linux 2.2 r3 _Potato_ - Official i386 Binary-1 (20010427)]/ unstable contrib main
+
+# Stable:
+#  deb     http://ftp.de.debian.org/pub/debian stable main contrib non-free
+#  deb-src http://ftp.de.debian.org/pub/debian stable main contrib non-free
+
+# Testing:
+#  deb     http://ftp.de.debian.org/pub/debian testing main contrib non-free
+#  deb-src http://ftp.de.debian.org/pub/debian testing main contrib non-free
+
+# Testing Sources
+#  deb-src http://ftp.de.debian.org/pub/debian testing main contrib non-free
+#  deb http://security.debian.org testing/updates main contrib non-free
+
+# Debian Cluster Components - http://dcc.irb.hr/ (apt-get install dcc-front debconf-dcc):
+#  deb ftp://ftp.irb.hr/pub/irb/dcc ./
+
+# jEdit Debian packages (make sure you have Java first):
+#  deb http://dl.sourceforge.net/sourceforge/jedit ./
+#  deb-src http://dl.sourceforge.net/sourceforge/jedit ./
+
+# packages for the Debian stable (aka "Sarge") distribution:
+#  deb     http://packages.dotdeb.org stable all
+#  deb-src http://packages.dotdeb.org stable all
+
+# nobses packages:
+#  deb     http://people.debian.org/~nobse/debian/ unstable/
+#  deb-src http://people.debian.org/~nobse/debian/ unstable/
+
+# e17/elive:
+#  deb http://idefix.eup.uva.es/elive elive main efl elive
+#  deb http://www.soulmachine.net/debian/ unstable
+
+# libcairo, libpixman1 (-> wmii):
+#  deb     http://cairographics.org/packages/debian/ unstable/
+#  deb-src http://cairographics.org/packages/debian/ unstable/
+
+# moc / mutt-ng:
+#  deb     http://www.lxtec.de/debarchiv binary-i386/
+#  deb-src http://www.lxtec.de/debarchiv sources/
+
+# debian.pkgs.cpan.org -- debified CPAN packages:
+#  deb http://debian.pkgs.cpan.org/debian unstable main
+
+# Very latest bleeding edge XFCE releases
+# To include the signing key use this command,
+# wget -O - http://www.corsac.net/corsac.asc | sudo apt-key add -
+#
+#  deb http://xfce.corsac.net      sid        main
+#  deb http://xfce.corsac.net      unstable   main
+#  deb-src http://xfce.corsac.net  unstable   main
+
+# centericq (4.9.12-4) by Julien Lemoine:
+#  deb     http://debian.speedblue.org ./
+#  deb-src http://debian.speedblue.org ./
+# centericq-cvs (out of date - 20041120):
+#  deb     http://debian.parsed.net unstable main
+#  deb-src http://debian.parsed.net unstable main
+# centericq by Marc Thoben (includes quote/ask-quit patches @cicq 4.9.10-8):
+#  deb     http://ipxserver.dyndns.org/debian unstable centericq
+
+# opengroupware:
+#  deb     http://download.opengroupware.org/nightly/packages/debian/dists/sid/trunk/binary-i386/ ./
+
+# bitlbee devel-version:
+#  deb http://get.bitlbee.org/devel/ ./
+
+# kanotix-packages:
+#  deb     http://kanotix.com/files/debian/ ./
+#  deb-src http://kanotix.com/files/debian/ ./
+
+# kde 3.5:
+#  deb http://pkg-kde.alioth.debian.org/3.5.3/ ./
+
+# http://xoomer.virgilio.it/flavio.stanchina/debian/fglrx-installer.html
+#  deb     http://www.stanchina.net/~flavio/debian/ ./
+#  deb-src http://www.stanchina.net/~flavio/debian/ ./
+
+# opera:
+#  deb http://deb.opera.com/opera/ unstable non-free
+
+# silc-client:
+#  deb     http://silcnet.org/download/client/deb ./
+#  deb-src http://silcnet.org/download/client/deb ./
+# silc-server:
+#  deb     http://silcnet.org/download/server/deb ./
+#  deb-src http://silcnet.org/download/server/deb ./
+
+# Joey Hess's bleeding edge repository (get any of his packages, before they hit Incoming)
+#  deb http://kitenet.net/~joey/debian/unstable/ ./
+
+# remaster:
+#  deb http://debian.tu-bs.de/knoppix/remaster/ ./
+
+# Ubuntu (releases: warty / hoary / breezy / dapper / edgy):
+#  deb http://archive.ubuntu.com/ubuntu/ hoary main restricted universe multiverse
+#  deb http://archive.ubuntu.com/ubuntu/ hoary main universe
+#  deb http://archive.ubuntu.com/ubuntu/ breezy main restricted universe multiverse
+#  deb     http://security.ubuntu.com/ubuntu/ hoary-security main restricted
+#  deb-src http://security.ubuntu.com/ubuntu/ hoary-security main restricted
+
+# acx100 firmware:
+#  deb http://stef.tvk.rwth-aachen.de/~nazgul/debian acx100/
+
+# c't project
+#  deb ftp://ftp.heise.de/pub/ct/projekte/vdr/sarge/testing/binary base/
+
+### END OF FILE ################################################################

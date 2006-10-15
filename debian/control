@@ -1,0 +1,17 @@
+Source: grml-etc-core
+Section: grml
+Priority: optional
+Maintainer: Michael Prokop <mika@grml.org>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.2
+
+Package: grml-etc-core
+Architecture: all
+Conflicts: grml-etc (<< 0.8-11), grml-autoconfig (<< 0.5-7)
+Depends: vim | nvi, zsh
+Description: core ecetera files for the grml system
+ This package includes some /etc files for the
+ grml system. Whereas the main grml-etc package is
+ meant for use on grml systems this package can be
+ used on plain Debian (stable/testing/unstable)
+ systems as well.

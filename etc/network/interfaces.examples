@@ -1,0 +1,106 @@
+# /etc/network/interfaces -- configuration file for ifup(8), ifdown(8)
+
+# The loopback interface
+# automatically added when upgrading
+auto lo
+iface lo inet loopback
+
+# Sample entries:
+# ===============
+
+# static entry:
+# auto eth1
+# iface eth1 inet static
+#        address 192.168.0.1
+#        netmask 255.255.255.0
+#        network 192.168.0.0
+#        broadcast 192.168.0.255
+#        gateway 192.168.0.1
+#        dns-search foo.example
+#        dns-nameservers 192.168.0.10 192.168.0.20
+#
+# vconfig:
+# auto eth0.1
+# iface eth0.1 inet manual
+#        pre-up vconfig add eth0.1
+#        up ifconfig eth0 0.0.0.0 promisc up
+#        post-down vconfig rem eth0.1
+
+# Ad-hoc WLAN Network:
+# auto eth1
+# iface eth1 inet static
+#        address 192.168.0.1
+#        netmask 255.255.255.0
+#        wireless_mode ad-hoc
+#        wireless_essid foobar
+#        wireless_channel 11
+
+# WLAN:
+# auto eth1
+# iface eth1 inet dhcp
+#        wireless_essid   foo
+#        wireless_nick    bar
+#        wireless_key     11111111111111111111111111
+#        wireless_keymode restricted
+#        wireless_keymode open
+#        wireless_mode managed
+
+# DSL Interface
+# allow-hotplug dsl
+# iface dsl inet manual
+#   up ip link set $IFACE up
+#   up ip -6 addr flush dev $IFACE || true
+#   down ip link set $IFACE down
+
+# Mapping - bring up via e.g. 'ifup eth0=dhcp':
+# iface dhcp inet dhcp
+
+# Mapping - bring up via e.g.  'ifup -v eth0=home':
+# auto eth1
+# iface home inet dhcp
+#        wireless_essid   foo
+#        wireless_nick    bar
+#        wireless_key     11111111111111111111111111
+#        wireless_keymode restricted
+
+# More complex mapping-setup:
+# auto eth0
+# mapping eth0
+#	script /etc/network/ping-places.sh
+#	map 192.168.0.90/24 192.168.0.42 home
+#	map 129.27.140.238/24 129.27.140.241 spsc
+#	map 192.168.0.90/24 192.168.0.100 sevian7
+#	map 192.168.0.90/24 192.168.0.1 annenhof
+#	map 195.177.251.50/255.255.255.224 195.177.251.33 kunstlabor
+#
+# iface home inet static
+#	address 192.168.0.90
+#	netmask 255.255.255.0
+#	gateway 192.168.0.42
+#	mtu 1400
+#
+#	up cp /etc/apt/sources.list.home /etc/apt/sources.list
+#	up cp /etc/resolv.conf.home /etc/resolv.conf
+#
+#
+# iface spsc inet static
+#	address 129.27.140.238
+#	netmask 255.255.255.0
+#	gateway 129.27.140.1
+#
+#	up cp /etc/apt/sources.list.spsc /etc/apt/sources.list
+#	up cp /etc/resolv.conf.spsc /etc/resolv.conf
+#
+# iface annenhof inet static
+#	address 192.168.0.90
+#	netmask 255.255.255.0
+#	gateway 192.168.0.1
+#
+#	up cp /etc/resolv.conf.annenhof /etc/resolv.conf
+#
+# iface sevian7 inet dhcp
+#
+# iface kunstlabor inet dhcp
+#	up cp /etc/apt/sources.list.kunstlabor /etc/apt/sources.list
+
+# EOF

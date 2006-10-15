@@ -1,0 +1,12 @@
+# who is allowed to connect via multiuser-mode?
+addacl root,grml
+
+# allow multiuser-mode
+multiuser on
+
+# redefine C-a
+defescape ^Bb
+escape ^Bb
+
+# no nag-screen, please
+startup_message off
