@@ -1,3 +1,10 @@
+grml-etc-core (0.1-20) unstable; urgency=low
+
+  * Add /etc/zsh/site-functions/_hg, zsh completion for mercurial
+    and set according $FPATH in /etc/zsh/zshrc.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 15 Oct 2006 23:19:03 +0200
+
 grml-etc-core (0.1-19) unstable; urgency=low
 
   * /etc/grml/screenrc: activated

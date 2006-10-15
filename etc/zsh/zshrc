@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Okt 08 01:46:31 CEST 2006 [mika]
+# Latest change: Son Okt 15 23:20:08 CEST 2006 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -71,6 +71,9 @@
 
 # Search path for the cd comman
 #  cdpath=(.. ~)
+
+# Support our own site-functions
+  [ -d /etc/zsh/site-functions ] && export FPATH=/etc/zsh/site-functions:$FPATH
 
 # automatically remove duplicates from these arrays
   typeset -U path cdpath fpath manpath
