@@ -1,3 +1,10 @@
+grml-etc-core (0.1-21) unstable; urgency=low
+
+  * /etc/zsh/zshrc: added some more checks so the config works
+    on AIX (powerpc-ibm-aix5.2.0.0) as well.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 17 Oct 2006 12:12:52 +0200
+
 grml-etc-core (0.1-20) unstable; urgency=low
 
   * Add /etc/zsh/site-functions/_hg, zsh completion for mercurial

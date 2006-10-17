@@ -132,15 +132,23 @@ fi
 
   # we don't want to quote/espace URLs on our own...
   # avoid 'url-quote-magic: function definition file not found' on some older boxes
-  if [ -f /usr/share/zsh/$ZSH_VERSION/functions/Zle/url-quote-magic ] ; then
-     autoload -U url-quote-magic
-     zle -N self-insert url-quote-magic
+  if [ -f "/usr/share/zsh/$ZSH_VERSION/functions/Zle/url-quote-magic" ] ; then
+     autoload -U url-quote-magic && zle -N self-insert url-quote-magic
+  else
+     print 'Notice: no url-quote-magic available :('
   fi
 
   alias run-help >&/dev/null && unalias run-help
   autoload run-help # use via 'esc-h'
 
-  is4 && autoload -U compinit && compinit # completition system
+# completion system
+  is42 && if autoload -U compinit && [ -f "/usr/share/zsh/$ZSH_VERSION/functions/Completion/compinit" ] ; then
+    compinit
+   else
+     print 'Notice: no compinit available :('
+     function zstyle { }
+     function compdef { }
+  fi
   is4 && autoload -U zed                  # use ZLE editor to edit a file or function
 
   is4 && zmodload -i zsh/complist
@@ -272,7 +280,11 @@ fi
 # }}}
 
 # {{{ set prompt
-  autoload promptinit ; promptinit # people should be able to use their favourite prompt
+  if [ -f "/usr/share/zsh/$ZSH_VERSION/functions/Prompts/promptinit" ] ; then
+     autoload promptinit && promptinit # people should be able to use their favourite prompt
+  else
+     print 'Notice: no prompiinit available :('
+  fi
   # precmd() => a function which is executed just before each prompt
   # precmd () { setopt promptsubst; [[ -o interactive ]] && jobs -l;
   # run 'NOPRECMD=1 zsh' to disable the precmd + preexec commands
