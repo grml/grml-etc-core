@@ -342,7 +342,7 @@
         if [[ $NBFILES > 0 ]]; then
                 print $FILES
                 local ans
-                echo -n "Remove this files? [y/n] "
+                echo -n "Remove these files? [y/n] "
                 read -q ans
                 if [[ $ans == "y" ]]
                 then

@@ -15,37 +15,25 @@
 # {{{ check for version/system
 # check for versions (compatibility reasons)
   is4(){
-    if [[ $ZSH_VERSION == 4.* ]]; then
-        return 0
-    else
-        return 1
-    fi
+    [[ $ZSH_VERSION == 4.* ]] && return 0
+    return 1
   }
 
 # current release
   is42(){
-    if [[ $ZSH_VERSION == 4.<2->* ]]; then
-        return 0
-    else
-        return 1
-    fi
+    [[ $ZSH_VERSION == 4.<2->* ]] && return 0
+    return 1
   }
 
 # grml specific stuff
   isgrml(){
-    if [ -f /etc/grml_version ] ; then
-        return 0
-    else
-        return 1
-    fi
+    [ -f /etc/grml_version ] && return 0
+    return 1
   }
 
   isgrmlcd(){
-    if [ -f /etc/grml_cd ] ; then
-        return 0
-    else
-        return 1
-    fi
+    [ -f /etc/grml_cd ] && return 0
+    return 1
   }
 
 # check for user, if not running as root set $SUDO to sudo
@@ -63,9 +51,9 @@
 # }}}
 
 # {{{ set some variables
-  [[ -z "$EDITOR" ]] && export EDITOR='vim'
-  [[ -z "$SHELL"  ]] && export SHELL='/bin/zsh'
-  [[ -z "$MAIL"   ]] && export MAIL="/var/mail/$USER"
+  export EDITOR=${EDITOR:-vim}
+  export SHELL=${SHELL:-/bin/zsh}
+  export MAIL=${MAIL:-/var/mail/$USER}
   [[ -f ~/.terminfo/m/mostlike ]] && MYLESS='LESS=C TERMINFO=~/.terminfo TERM=mostlike less' || MYLESS='less'
   [[ -x /usr/bin/dircolors ]] && eval `dircolors -b`
 
@@ -151,14 +139,19 @@ fi
   fi
   is4 && autoload -U zed                  # use ZLE editor to edit a file or function
 
-  is4 && zmodload -i zsh/complist
-  is4 && zmodload -i zsh/deltochar
-  is4 && zmodload -i zsh/mathfunc
+  is4 && \
+  for mod in complist deltochar mathfunc ; do
+    zmodload -i zsh/${mod}
+  done
 # autoload zsh modules when they are referenced
-  is4 && zmodload -a zsh/stat stat
-  is4 && zmodload -a zsh/zpty zpty
-  is4 && zmodload -a zsh/zprof zprof
-  is4 && zmodload -ap zsh/mapfile mapfile
+  is4 && \
+  for opt mod in a  stat    \
+                 a  zpty    \
+                 a  zprof   \
+                 ap mapfile ; do
+    zmodload -${opt} zsh/${mod} ${mod}
+  done
+  unset opt mod
 
   is4 && autoload -U insert-files && \
   zle -N insert-files && \
@@ -171,6 +164,9 @@ fi
   is4 && autoload -U edit-command-line && \
   zle -N edit-command-line && \
   bindkey '\ee' edit-command-line
+
+## menu selection: pick item but stay in the menu (press esc-return)
+  is4 && bindkey -M menuselect '\e^M' accept-and-menu-complete
 
 # press "ctrl-e d" to insert the actual date in the form yyyy-mm-dd
   _bkdate() { BUFFER="$BUFFER$(date '+%F')"; CURSOR=$#BUFFER; }
@@ -530,6 +526,7 @@ grmlcomp() {
   zstyle ':completion:*:*:lintian:*'     file-patterns '*.deb'               # complete debian packages for command 'lintian'
   zstyle ':completion:*'                 matcher-list 'm:{a-z}={A-Z}'        # match uppercase from lowercase
   zstyle ':completion:*:matches'         group 'yes'                         # separate matches into groups
+  zstyle ':completion:*'                 group-name ''
   if [[ -z "$NOMENU" ]] ; then
     zstyle ':completion:*'               menu select=5                       # if there are more than 5 options allow selecting from a menu
   else
@@ -547,8 +544,9 @@ grmlcomp() {
   zstyle ':completion::(^approximate*):*:functions' ignored-patterns '_*'    # Ignore completion functions for commands you don't have:
 
 # complete manual by their section
-  zstyle ':completion:*:manuals' separate-sections true
-  zstyle ':completion:*:man:*' menu yes select
+  zstyle ':completion:*:manuals'    separate-sections true
+  zstyle ':completion:*:manuals.*'  insert-sections   true
+  zstyle ':completion:*:man:*'      menu yes select
 
 ## correction
 # run rehash on completion so new installed program are found automatically:

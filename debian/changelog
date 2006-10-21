@@ -1,3 +1,10 @@
+grml-etc-core (0.1-24) unstable; urgency=low
+
+  * Code improvements to /etc/zsh/zshrc and /etc/skel/.zshrc,
+    thanks for the patch - Frank Terbeck!
+
+ -- Michael Prokop <mika@grml.org>  Sat, 21 Oct 2006 19:29:59 +0200
+
 grml-etc-core (0.1-23) unstable; urgency=low
 
   * Fix typo in /etc/zsh/zshrc.
