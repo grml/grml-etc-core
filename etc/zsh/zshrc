@@ -706,6 +706,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
        echo "No changelog for package $1 found, sorry."
        return 1
     fi
+  }
   _uchange() { _files -W /usr/share/doc -/ }
   compdef _uchange uchange
 
