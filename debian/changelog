@@ -1,3 +1,10 @@
+grml-etc-core (0.1-22) unstable; urgency=low
+
+  * /etc/zsh/zshrc: update functions dchange and uchange - check
+    whether changelogs exist before trying to display them.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 21 Oct 2006 16:20:40 +0200
+
 grml-etc-core (0.1-21) unstable; urgency=low
 
   * /etc/zsh/zshrc: added some more checks so the config works

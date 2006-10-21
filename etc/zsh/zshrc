@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Okt 15 23:20:08 CEST 2006 [mika]
+# Latest change: Sam Okt 21 16:20:30 CEST 2006 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -578,6 +578,17 @@ grmlcomp() {
 # zstyle ':completion:*' completer _complete _correct _approximate
 # zstyle ':completion:*' expand prefix suffix
 
+# automatic rehash? Credits go to Frank Terbeck
+# function my_accept () {
+#   local buf
+#   [[ -z ${BUFFER} ]] && zle accept-line && return
+#   buf=( ${(z)BUFFER}  )
+#   [[ -z ${commands[${buf[1]}]} ]] && rehash
+#   zle accept-line
+# }
+# zle -N my_accept
+# bindkey "^M" my_accept
+
 # command for process lists, the local web server details and host completion
   hosts=(`hostname` grml.org)
   zstyle '*' hosts $hosts
@@ -672,12 +683,29 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 #  manzsh() {  /usr/bin/man zshall |  most +/"$1" ; }
 
 # use "dchange <package-name>" to view Debian's changelog of the package:
-  dchange() { most /usr/share/doc/${1}/changelog.Debian.gz ; }
+  dchange() {
+    if [ -r /usr/share/doc/${1}/changelog.Debian.gz ] ; then
+       most /usr/share/doc/${1}/changelog.Debian.gz
+    else
+       if [ -r /usr/share/doc/${1}/changelog.gz ] ; then
+	  most /usr/share/doc/${1}/changelog.gz
+       else
+	  echo "No changelog for package $1 found, sorry."
+	  return 1
+       fi
+    fi
+  }
   _dchange() { _files -W /usr/share/doc -/ }
   compdef _dchange dchange
 
 # use "uchange <package-name>" to view upstream's changelog of the package:
-  uchange() { most /usr/share/doc/${1}/changelog.gz ; }
+  uchange() {
+    if [ -r /usr/share/doc/${1}/changelog.gz ] ; then
+       most /usr/share/doc/${1}/changelog.gz ; }
+    else
+       echo "No changelog for package $1 found, sorry."
+       return 1
+    fi
   _uchange() { _files -W /usr/share/doc -/ }
   compdef _uchange uchange
 
