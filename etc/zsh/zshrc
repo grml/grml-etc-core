@@ -701,7 +701,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 # use "uchange <package-name>" to view upstream's changelog of the package:
   uchange() {
     if [ -r /usr/share/doc/${1}/changelog.gz ] ; then
-       most /usr/share/doc/${1}/changelog.gz ; }
+       most /usr/share/doc/${1}/changelog.gz
     else
        echo "No changelog for package $1 found, sorry."
        return 1

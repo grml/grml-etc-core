@@ -1,3 +1,9 @@
+grml-etc-core (0.1-23) unstable; urgency=low
+
+  * Fix typo in /etc/zsh/zshrc.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 21 Oct 2006 16:36:54 +0200
+
 grml-etc-core (0.1-22) unstable; urgency=low
 
   * /etc/zsh/zshrc: update functions dchange and uchange - check
