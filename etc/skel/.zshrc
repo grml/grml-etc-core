@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mon Sep 18 18:54:28 CEST 2006 [mika]
+# Latest change: Son Okt 22 21:25:17 CEST 2006 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -814,7 +814,23 @@
        fi
     fi
   }
+# }}}
 
+# mercurial related stuff {{{
+  if type -p hg >/dev/null 2>&1 ; then
+  # gnu like diff for mercurial
+  # http://www.selenic.com/mercurial/wiki/index.cgi/TipsAndTricks
+    hgdi() {
+      for i in `hg status -marn "$@"` ; diff -ubwd <(hg cat "$i") "$i"
+    }
+
+  # diffstat for specific version of mercurial
+  #   hgstat      => display diffstat between last revision and tip
+  #   hgstat 1234 => display diffstat between revision 1234 and tip
+    hgstat() {
+      [ -n "$1" ] && hg diff -r $1 -r tip | diffstat || hg export tip | diffstat
+    }
+  fi
 # }}}
 
 # some useful commands often hard to remember - let's grep for them {{{

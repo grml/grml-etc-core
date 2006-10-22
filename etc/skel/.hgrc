@@ -1,0 +1,91 @@
+# Filename:      $HOME/.hgrc
+# Purpose:       configuration file for mercurial
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Mon Okt 23 00:06:34 CEST 2006 [mika]
+################################################################################
+
+# See 'man 5 hgrc' and http://www.selenic.com/mercurial/hgrc.5.html
+# for more details about possibilities for configuration of mercurial.
+
+[ui]
+username = Michael Prokop <mika@grml.org>
+# debug = true
+# verbose = true
+# merge = hgmergevim
+
+# useful for patchbomb extension (e.g.: 'hg email -t grml@localhost tip')
+[email]
+from = grml User <grml@localhost>
+method = /usr/sbin/sendmail
+
+# Extension stuff, see /etc/mercurial/hgrc.d/hgext.rc
+# and http://www.selenic.com/mercurial/wiki/index.cgi/ExtensionHowto
+
+[extensions]
+
+# Hooks to control commit access to parts of a tree.
+# acl=/usr/share/python-support/mercurial/hgext/acl.py
+
+# Update Bugzilla bugs when changesets mention them (> 0.9-1).
+# bugzilla = /home/grml/mercurial-snapshot/hgext/bugzilla.py
+
+# Graph amount of code changed per author over time (> 0.9-1).
+# churn = /home/grml/mercurial-snapshot/contrib/churn.py
+# churn =
+
+# Extension for using an external program to diff repository (or
+# selected files). Available in 0.9.1.
+# extdiff=/usr/share/python-support/mercurial/hgext/extdiff.py
+hgext.extdiff=
+
+# Convenience wrapper for pulling and merging.
+# fetch =
+
+# Extension that provides commands to help working with trees
+# composed of many Mercurial repositories. See
+# http://www.terminus.org/hg/hgforest
+# forest =
+
+# Extension for signing and checking signatures.
+# gpg=/usr/share/python-support/mercurial/hgext/gpg.py
+# gpg=
+
+# Extension for binary searching in O(log2(n)) for the changeset
+# introducing a (mis)feature, see
+# http://www.selenic.com/mercurial/wiki/index.cgi/UsingBisect
+# hbisect=/usr/share/python-support/mercurial/hgext/hbisect.py
+
+# Graphical gitk-like repository browser, invoked with hg view.
+# hgk=/usr/share/python-support/mercurial/hgext/hgk.py
+
+# Mercurial Queue management extension - see
+# http://www.selenic.com/mercurial/wiki/index.cgi/MqExtension
+# mq=/usr/share/python-support/mercurial/hgext/mq.py
+
+# Template-driven email notifications, see
+# http://www.selenic.com/mercurial/wiki/index.cgi/NotifyExtension
+# notify=/usr/share/python-support/mercurial/hgext/notify.py
+# hgext.notify = 
+
+# Extension providing the hg email command for sending a collection of
+# Mercurial changesets as a series of patch emails.
+# patchbomb=/usr/share/python-support/mercurial/hgext/patchbomb.py
+
+# Cherry-picking, rebasing and changeset rewriting - see
+# http://www.selenic.com/mercurial/wiki/index.cgi/TransplantExtension
+# transplant =
+
+# Extension for line ending conversion filters for the Windows platform.
+# win32text=/usr/share/python-support/mercurial/hgext/win32text.py
+
+[extdiff]
+# DirDiff script for Vim: http://www.vim.org/scripts/script.php?script_id=102
+# wget http://www.vim.org/scripts/download_script.php?src_id=5306 -O ~/.vim/plugin/DirDiff.vim
+# Notice: opts.* works only in Mercurial >0.9.1, use hgvimdiff as wrapper therefore
+cmd.vimdiff=/usr/bin/hgvimdiff
+# cmd.vimdiff=/usr/bin/vim.basic
+# opts.vimdiff=-f '+next' '+execute "DirDiff" argv(0) argv(1)'
+
+# vim: ft=config

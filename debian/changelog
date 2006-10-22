@@ -1,3 +1,13 @@
+grml-etc-core (0.1-25) unstable; urgency=low
+
+  * /etc/skel/.zshrc: add functions for mercurial
+  * Added /etc/skel/.hgrc - configuration file for mercurial.
+  * Added /etc/skel/.vim/plugin/DirDiff.vim (plugin to diff and merge
+    two directories recursively), taken from
+    http://www.vim.org/scripts/script.php?script_id=102
+
+ -- Michael Prokop <mika@grml.org>  Sun, 22 Oct 2006 21:24:39 +0200
+
 grml-etc-core (0.1-24) unstable; urgency=low
 
   * Code improvements to /etc/zsh/zshrc and /etc/skel/.zshrc,
