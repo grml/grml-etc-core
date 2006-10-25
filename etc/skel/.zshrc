@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Okt 22 21:25:17 CEST 2006 [mika]
+# Latest change: Don Okt 26 00:50:18 CEST 2006 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -836,21 +836,22 @@
       cd mercurial-tree
       echo "Running hg pull for retreiving latest version..."
       hg pull
-      echo "Finished update. Building tree now..."
+      echo "Finished update. Building mercurial"
       make local
       echo "Setting \$PATH to $PWD:\$PATH..."
       export PATH="$PWD:$PATH"
     else
+      echo "Downloading mercurial via hg"
       hg clone http://selenic.com/repo/hg mercurial-tree
       cd mercurial-tree
+      echo "Building mercurial"
       make local
       echo "Setting \$PATH to $PWD:\$PATH..."
       export PATH="$PWD:$PATH"
-      # echo "Setting \$PYTHONPATH to PYTHONPATH=\${HOME}/lib/python,"
       echo "make sure you set it permanent via ~/.zshrc if you plan to use it permanently."
+      # echo "Setting \$PYTHONPATH to PYTHONPATH=\${HOME}/lib/python,"
       # export PYTHONPATH=${HOME}/lib/python
     fi
-    setopt LOCAL_OPTIONS
   }
 
   fi # end of check whether we have the 'hg'-executable
@@ -859,20 +860,23 @@
   gethgsnap() {
     setopt local_options
     setopt errreturn
-    echo "Downloading mercurial snapshot"
-    wget http://www.selenic.com/mercurial/mercurial-snapshot.tar.gz
+    if [ -f mercurial-snapshot.tar.gz ] ; then
+       echo "mercurial-snapshot.tar.gz exists already, skipping download."
+    else
+      echo "Downloading mercurial snapshot"
+      wget http://www.selenic.com/mercurial/mercurial-snapshot.tar.gz
+    fi
+    echo "Unpacking mercurial-snapshot.tar.gz"
     tar zxf mercurial-snapshot.tar.gz
     cd mercurial-snapshot/
+    echo "Installing required build-dependencies"
     $SUDO apt-get update
     $SUDO apt-get install python2.4-dev
+    echo "Building mercurial"
     make local
-    # make install-home-bin
     echo "Setting \$PATH to $PWD:\$PATH..."
     export PATH="$PWD:$PATH"
-    # echo "Setting \$PYTHONPATH to PYTHONPATH=\${HOME}/lib/python,"
-    # export PYTHONPATH=${HOME}/lib/python
     echo "make sure you set it permanent via ~/.zshrc if you plan to use it permanently."
-    # echo "Notice: make sure \$HOME/bin is inside \$PATH!"
   }
 # }}}
 
