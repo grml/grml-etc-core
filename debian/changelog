@@ -13,8 +13,10 @@ grml-etc-core (0.1-26) unstable; urgency=low
       function (thanks, Frank Terbeck!)
     - use zsh's color capabilities if the module is present
       (thanks, Frank Terbeck!)
+    - don't export $SHELL anymore
   * /etc/zsh/zshenv:
     - set /bin instead of /bin/ in $PATH
+    - some minor code style improvements
   * /etc/skel/.zshrc: 
     - updated alias fbmplayer (thanks, wuehlmaus!)
     - added function gex (google exact search, thanks wuehlmaus!)

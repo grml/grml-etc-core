@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Sep 23 14:20:25 CEST 2006 [mika]
+# Latest change: Don Okt 26 00:04:38 CEST 2006 [mika]
 ################################################################################
 # This file is sourced on all invocations of the shell.
 # If the -f flag is present or if the NO_RCS option is
@@ -23,15 +23,14 @@
   [ -r /etc/environment    ] && source /etc/environment
   [ -r /etc/default/locale ] && source /etc/default/locale
   [ -n "$LANG" ]          && export LANG        || export LANG="en_US.iso885915"
-  [ -n "$LC_ALL" ]        && export LC_ALL #     || export LC_ALL="$LANG"
+  [ -n "$LC_ALL" ]        && export LC_ALL
   [ -n "$LC_MESSAGES" ]   && export LC_MESSAGES
 
   [ -r /etc/sysconfig/keyboard ] && source /etc/sysconfig/keyboard
 
 # set environment variables (important for autologin on tty)
-  [ -n "$HOSTNAME" ] || export HOSTNAME=`hostname`
-  [ -z "$USER" ]     && export USER=`id -un`
-
+  [ -z "$HOSTNAME" ]      && export HOSTNAME=`hostname`
+  [ -z "$USER" ]          && export USER=`id -un`
   [[ $LOGNAME == LOGIN ]] && LOGNAME=$(id -un)
 
 # workaround for live-cd mode as $HOME is not set via rungetty
