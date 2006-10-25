@@ -1,3 +1,29 @@
+grml-etc-core (0.1-26) unstable; urgency=low
+
+  The "Frank Terbeck is my zsh hero" release.
+
+  * Update /etc/zsh/site-functions/_hg to latest version from
+    http://hg.intevation.org/mercurial/crew
+  * Added /etc/zsh/site-functions/_grmlinitd for better completion
+    of "Start Restart Stop Reload" with initscripts, thanks - Frank
+    Terbeck!
+  * /etc/zsh/zshrc:
+    - use is-at-least for is4[2]-functions if possible
+    - bugfix for $2 in initscripts "Start Restart Stop Reload"
+      function (thanks, Frank Terbeck!)
+    - use zsh's color capabilities if the module is present
+      (thanks, Frank Terbeck!)
+  * /etc/zsh/zshenv:
+    - set /bin instead of /bin/ in $PATH
+  * /etc/skel/.zshrc: 
+    - updated alias fbmplayer (thanks, wuehlmaus!)
+    - added function gex (google exact search, thanks wuehlmaus!)
+    - added gethgsnap and gethgclone for retrieving mercurial
+    - use $SUDO in the whole file instead of $RUNASROOT
+    - use 'setopt errreturn' in some functions
+
+ -- Michael Prokop <mika@grml.org>  Tue, 24 Oct 2006 20:35:29 +0200
+
 grml-etc-core (0.1-25) unstable; urgency=low
 
   * /etc/skel/.zshrc: add functions for mercurial

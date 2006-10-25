@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Okt 21 16:20:30 CEST 2006 [mika]
+# Latest change: Mit Okt 25 23:44:27 CEST 2006 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -14,16 +14,19 @@
 
 # {{{ check for version/system
 # check for versions (compatibility reasons)
-  is4(){
-    [[ $ZSH_VERSION == 4.* ]] && return 0
-    return 1
-  }
-
-# current release
-  is42(){
-    [[ $ZSH_VERSION == 4.<2->* ]] && return 0
-    return 1
-  }
+  if autoload is-at-least && is-at-least ; then
+     is4() { is-at-least 4 }
+     is42() { is-at-least 4.2 }
+  else
+    is4(){
+      [[ $ZSH_VERSION == 4.* ]] && return 0
+      return 1
+    }
+    is42(){
+      [[ $ZSH_VERSION == 4.<2->* ]] && return 0
+      return 1
+    }
+  fi
 
 # grml specific stuff
   isgrml(){
@@ -326,13 +329,24 @@ fi
       esac
   }
 
+# set colors
+  if autoload colors && colors ; then
+     BLUE="%{${fg[blue]}%}"
+     RED="%{${fg_bold[red]}%}"
+     GREEN="%{${fg[green]}%}"
+     CYAN="%{${fg[cyan]}%}"
+     WHITE="%{${fg[white]}%}"
+     NO_COLOUR="%{${reset_color}%}"
+  else
+     BLUE="%{[1;34m%}"
+     RED="%{[1;31m%}"
+     GREEN="%{[1;32m%}"
+     CYAN="%{[1;36m%}"
+     WHITE="%{[1;37m%}"
+     NO_COLOUR="%{[0m%}"
+  fi
+
   EXITCODE="%(?..%?%1v )"
-  local BLUE="%{[1;34m%}"
-  local RED="%{[1;31m%}"
-  local GREEN="%{[1;32m%}"
-  local CYAN="%{[1;36m%}"
-  local WHITE="%{[1;37m%}"
-  local NO_COLOUR="%{[0m%}"
   PS2='`%_> '       # secondary prompt, printed when the shell needs more information to complete a command.
   PS3='?# '         # selection prompt used within a select loop.
   PS4='+%N:%i:%_> ' # the execution trace prompt (setopt xtrace). default: '+%N:%i>'
@@ -723,12 +737,15 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 # use it e.g. via 'Restart apache2'
  if [ -d /etc/init.d ] ; then
   for i in Start Restart Stop Reload ; do
-    eval "$i() { $SUDO /etc/init.d/\$1 ${i:l} $2 ; }"
+    eval "$i() { $SUDO /etc/init.d/\$1 ${i:l} \$2 ; }"
   done
 # now the completion for this:
   compctl -g "$(echo /etc/init.d/*(:t))" Start Restart Stop Reload
  fi
 # }}}
+
+# make sure our environment is clean regarding colors
+  for color in BLUE RED GREEN CYAN WHITE ; unset $color
 
 # source another config file if present {{{
   if [ -r /etc/zsh/zshrc.local ]; then

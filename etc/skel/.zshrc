@@ -144,7 +144,8 @@
 
 # console stuff
   alias cmplayer='mplayer -vo fbdev'
-  alias fbmplayer='mplayer -vo fbdev'
+#  alias fbmplayer='mplayer -vo fbdev'
+  alias fbmplayer='mplayer -vo fbdev -fs -zoom'
   alias fblinks='links2 -driver fb'
 
 # ignore ~/.ssh/known_hosts entries
@@ -155,7 +156,7 @@
   [ -d ~/.terminfo/ ] && alias man='TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man'
 
 # check whether Debian's package management (dpkg) is running
-  alias check_dpkg_running="sudo dpkg_running"
+  alias check_dpkg_running="$SUDO dpkg_running"
 # }}}
 
 ## useful functions {{{
@@ -196,6 +197,8 @@
   wikien()  { ${=BROWSER} http://en.wikipedia.org/wiki/"$*" }
   wodeb ()  { ${=BROWSER} "http://packages.debian.org/cgi-bin/search_contents.pl?word=$1&version=${2:-unstable}" }
 
+  which google >/dev/null 2>&1 && gex () { google "\"[ $1]\" $*" } # exact search at google
+
 # Function Usage: doc packagename
   doc() { cd /usr/share/doc/$1 && ls }
   _doc() { _files -W /usr/share/doc -/ }
@@ -204,17 +207,17 @@
 # debian upgrade
   upgrade () {
     if [ -z $1 ] ; then
-        sudo apt-get update
-        sudo apt-get -u upgrade
+        $SUDO apt-get update
+        $SUDO apt-get -u upgrade
     else
-        ssh $1 sudo apt-get update
+        ssh $1 $SUDO apt-get update
         # ask before the upgrade
         local dummy
-        ssh $1 sudo apt-get --no-act upgrade
+        ssh $1 $SUDO apt-get --no-act upgrade
         echo -n "Process the upgrade ?"
         read -q dummy
         if [[ $dummy == "y" ]] ; then
-            ssh $1 sudo apt-get -u upgrade --yes
+            ssh $1 $SUDO apt-get -u upgrade --yes
         fi
     fi
   }
@@ -544,19 +547,13 @@
   suidfind() { ls -latg $path/*(sN) }
 
 # See above but this is /better/ ... anywise ..
-#  Note: Add $USER and 'find' with "NOPASSWD" in your /etc/sudoers or run it
-#        as root (UID == 0)
   findsuid() {
-    if [ UID != 0 ] ; then
-      print 'Not running as root. Trying to run via sudo...'
-      RUNASROOT=sudo
-    fi
-        print 'Output will be written to ~/suid_* ...'
-        $RUNASROOT find / -type f \( -perm -4000 -o -perm -2000 \) -ls > ~/suid_suidfiles.`date "+%Y-%m-%d"`.out 2>&1
-        $RUNASROOT find / -type d \( -perm -4000 -o -perm -2000 \) -ls > ~/suid_suiddirs.`date "+%Y-%m-%d"`.out 2>&1
-        $RUNASROOT find / -type f \( -perm -2 -o -perm -20 \) -ls > ~/suid_writefiles.`date "+%Y-%m-%d"`.out 2>&1
-        $RUNASROOT find / -type d \( -perm -2 -o -perm -20 \) -ls > ~/suid_writedirs.`date "+%Y-%m-%d"`.out 2>&1
-        print 'Finished'
+    print 'Output will be written to ~/suid_* ...'
+    $SUDO find / -type f \( -perm -4000 -o -perm -2000 \) -ls > ~/suid_suidfiles.`date "+%Y-%m-%d"`.out 2>&1
+    $SUDO find / -type d \( -perm -4000 -o -perm -2000 \) -ls > ~/suid_suiddirs.`date "+%Y-%m-%d"`.out 2>&1
+    $SUDO find / -type f \( -perm -2 -o -perm -20 \) -ls > ~/suid_writefiles.`date "+%Y-%m-%d"`.out 2>&1
+    $SUDO find / -type d \( -perm -2 -o -perm -20 \) -ls > ~/suid_writedirs.`date "+%Y-%m-%d"`.out 2>&1
+    print 'Finished'
   }
 
 # Reload functions.
@@ -696,57 +693,57 @@
 
 # get x-lite voip software
   getxlite() {
-   [ -d ~/tmp ] || mkdir ~/tmp
-   cd ~/tmp
-   echo "Downloading http://www.counterpath.com/download/X-Lite_Install.tar.gz and storing it in ~/tmp:"
-   if wget http://www.counterpath.com/download/X-Lite_Install.tar.gz ; then
-     unp X-Lite_Install.tar.gz && echo done || echo failed
-   else
-     echo "Error while downloading." ; return 1
-   fi
-   if [ -x xten-xlite/xtensoftphone ] ; then
-     echo "Execute xten-xlite/xtensoftphone to start xlite."
-   fi
+    setopt errreturn
+    [ -d ~/tmp ] || mkdir ~/tmp
+    cd ~/tmp
+    echo "Downloading http://www.counterpath.com/download/X-Lite_Install.tar.gz and storing it in ~/tmp:"
+    if wget http://www.counterpath.com/download/X-Lite_Install.tar.gz ; then
+       unp X-Lite_Install.tar.gz && echo done || echo failed
+    else
+       echo "Error while downloading." ; return 1
+    fi
+    if [ -x xten-xlite/xtensoftphone ] ; then
+       echo "Execute xten-xlite/xtensoftphone to start xlite."
+    fi
    }
 
 # get skype
   getskype() {
-   echo "Downloading debian package of skype."
-   echo "Notice: If you want to use a more recent skype version run 'getskypebeta'."
-   wget http://www.skype.com/go/getskype-linux-deb
-   # mkdir skype.install
-   # dpkg-deb --extract skype_*.deb skype.install/
-   # dpkg-deb --control skype_*.deb skype.install/DEBIAN
-   # sed -i 's/libqt3c102-mt/libqt3-mt/' skype.install/DEBIAN/control
-   # dpkg --build skype.install
-   sudo dpkg -i skype_debian-*.deb && echo "skype installed."
+    setopt errreturn
+    echo "Downloading debian package of skype."
+    echo "Notice: If you want to use a more recent skype version run 'getskypebeta'."
+    wget http://www.skype.com/go/getskype-linux-deb
+    $SUDO dpkg -i skype_debian-*.deb && echo "skype installed."
   }
 
 # get beta-version of skype
   getskypebeta() {
-   echo "Downloading debian package of skype (beta version)."
-   wget http://www.skype.com/go/getskype-linux-beta-deb
-   sudo dpkg -i skype-beta*.deb && echo "skype installed."
+    setopt errreturn
+    echo "Downloading debian package of skype (beta version)."
+    wget http://www.skype.com/go/getskype-linux-beta-deb
+    $SUDO dpkg -i skype-beta*.deb && echo "skype installed."
   }
 
 # get gzimo (voicp software)
   getgizmo() {
+    setopt errreturn
     echo "gconf2-common and libgconf2-4 have to be available. Installing therefor."
-    sudo apt-get update
-    sudo apt-get install gconf2-common libgconf2-4
+    $SUDO apt-get update
+    $SUDO apt-get install gconf2-common libgconf2-4
     wget $(lynx --dump http://www.gizmoproject.com/download-linux.html | awk '/\.deb/ {print $2" "}' | tr -d '\n')
-    sudo dpkg -i libsipphoneapi*.deb bonjour_*.deb gizmo-*.deb && echo "gizmo installed."
+    $SUDO dpkg -i libsipphoneapi*.deb bonjour_*.deb gizmo-*.deb && echo "gizmo installed."
   }
 
 # get AIR - Automated Image and Restore
   getair() {
+    setopt errreturn
     [ -w . ] || { echo 'Error: you do not have write permissions in this directory. Exiting.' ; return 1 }
     local VER='1.2.8'
     wget http://puzzle.dl.sourceforge.net/sourceforge/air-imager/air-$VER.tar.gz
     tar zxf air-$VER.tar.gz
     cd air-$VER
-    INTERACTIVE=no sudo ./install-air-1.2.8
-    [ -x /usr/local/bin/air ] && [ -n "$DISPLAY" ] && sudo air
+    INTERACTIVE=no $SUDO ./install-air-1.2.8
+    [ -x /usr/local/bin/air ] && [ -n "$DISPLAY" ] && $SUDO air
   }
 
 # get specific git commitdiff
@@ -830,7 +827,53 @@
     hgstat() {
       [ -n "$1" ] && hg diff -r $1 -r tip | diffstat || hg export tip | diffstat
     }
-  fi
+
+  # get current mercurial tip via hg itself and install it in $HOME
+  gethgclone() {
+    setopt local_options
+    setopt errreturn
+    if [ -f mercurial-tree/.hg ] ; then
+      cd mercurial-tree
+      echo "Running hg pull for retreiving latest version..."
+      hg pull
+      echo "Finished update. Building tree now..."
+      make local
+      echo "Setting \$PATH to $PWD:\$PATH..."
+      export PATH="$PWD:$PATH"
+    else
+      hg clone http://selenic.com/repo/hg mercurial-tree
+      cd mercurial-tree
+      make local
+      echo "Setting \$PATH to $PWD:\$PATH..."
+      export PATH="$PWD:$PATH"
+      # echo "Setting \$PYTHONPATH to PYTHONPATH=\${HOME}/lib/python,"
+      echo "make sure you set it permanent via ~/.zshrc if you plan to use it permanently."
+      # export PYTHONPATH=${HOME}/lib/python
+    fi
+    setopt LOCAL_OPTIONS
+  }
+
+  fi # end of check whether we have the 'hg'-executable
+
+  # get and install current mercurial snapshot in $HOME
+  gethgsnap() {
+    setopt local_options
+    setopt errreturn
+    echo "Downloading mercurial snapshot"
+    wget http://www.selenic.com/mercurial/mercurial-snapshot.tar.gz
+    tar zxf mercurial-snapshot.tar.gz
+    cd mercurial-snapshot/
+    $SUDO apt-get update
+    $SUDO apt-get install python2.4-dev
+    make local
+    # make install-home-bin
+    echo "Setting \$PATH to $PWD:\$PATH..."
+    export PATH="$PWD:$PATH"
+    # echo "Setting \$PYTHONPATH to PYTHONPATH=\${HOME}/lib/python,"
+    # export PYTHONPATH=${HOME}/lib/python
+    echo "make sure you set it permanent via ~/.zshrc if you plan to use it permanently."
+    # echo "Notice: make sure \$HOME/bin is inside \$PATH!"
+  }
 # }}}
 
 # some useful commands often hard to remember - let's grep for them {{{

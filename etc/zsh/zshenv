@@ -48,7 +48,7 @@
   if [ -r /etc/gentoo-release ] ; then
      [ -r /etc/profile.env ] && source /etc/profile.env
        if (( EUID != 0 )); then
-          PATH="$HOME/bin:/bin/:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/usr/NX/bin:$PATH"
+          PATH="$HOME/bin:/bin:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/usr/NX/bin:$PATH"
        else
           PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/local/sbin:/usr/local/bin:/usr/NX/bin:$PATH"
        fi
@@ -58,7 +58,7 @@
        [ -d /cdrom/addons/ ] && ADDONS=':/cdrom/addons/'
     fi
     if (( EUID != 0 )); then
-      PATH="$HOME/bin:/bin/:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/usr/NX/bin$ADDONS"
+      PATH="$HOME/bin:/bin:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/usr/NX/bin$ADDONS"
     else
       PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/local/sbin:/usr/local/bin:/usr/NX/bin$ADDONS"
     fi
