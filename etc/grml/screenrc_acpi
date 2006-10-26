@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Mai 27 23:16:23 CEST 2006 [mika]
+# Latest change: Don Okt 26 11:20:22 CEST 2006 [mika]
 ################################################################################
 
   backtick 1 60 60 /usr/bin/cpu-screen
@@ -34,7 +34,7 @@
 # fix the "screen.linux" terminal problem (see Debian BTS #238355 + #239776)
 #  term linux
 
-  shell                 zsh
+  shell                 /bin/zsh
 
 # "sorendition": set the colors for
 # the "messages" and "text marking"
