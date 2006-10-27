@@ -113,10 +113,8 @@ binary-arch: build install
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/mailhops.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/make_chroot_jail.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/mkdosswapfile.1.gz
-	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/modemlink.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/myip.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/ndiswrapper.sh.1.gz
-	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/netcardconfig.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/noeject.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/noprompt.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/osd_server.py.1.gz
@@ -126,7 +124,6 @@ binary-arch: build install
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/PrintAnalyzer.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/runit.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/say.1.gz
-	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/scanmodem.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/search.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/sepdate.pl.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/sepdate.rb.1.gz
