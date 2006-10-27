@@ -1,0 +1,6 @@
+grml-scripts: shell-script-fails-syntax-check ./usr/bin/grml-lock
+grml-scripts: shell-script-fails-syntax-check ./usr/sbin/grml-nessus
+grml-scripts: shell-script-fails-syntax-check ./usr/sbin/grml-pptp-vcgraz
+grml-scripts: executable-not-elf-or-script ./usr/bin/tinyp2p.py
+grml-scripts: executable-not-elf-or-script ./usr/bin/wwwis
+grml-scripts: executable-not-elf-or-script ./usr/bin/exifinfo

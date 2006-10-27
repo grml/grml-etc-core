@@ -1,0 +1,4766 @@
+#!/bin/bash
+echo
+NOTE="  ONLY use scanModem downloaded as: http://linmodems.technion.ac.il/packages/scanModem.gz"
+UPDATE="2005_June_02"
+cat<<END>/dev/null
+
+ Browse http://linmodems.technion.ac.il   and 
+ download scanModem.gz . Within a Linux partition only:
+    gunzip scanModem.gz
+ To make it executable:
+    chmod +x scanModem
+ Run diagnositics with:
+    ./scanModem
+
+This following is admittedly a hodge podge of historically entered code bits and diverse contributions.
+The maintainers weekly updates are based on User's problems and Other's expert advice. 
+These are in the  Archives at http://www.linmodems.org with 
+a searchable copy at http://linmodems.technion.ac.il/
+Maintainer Marvin Stodolsk y  (MarvS) does occassionally simplify this informal code heap.
+
+Outputs are written to a newly created folder Modem/  
+The ModemData.txt therein has the major diagnostic output.  
+It is overly VERBOSE by design, so that all information Potentially Usefull is presented.  
+This enables more experienced discuss@linmodems.org Volunteers
+to pick out the bits cogent to a Novices query, without having to search elsewhere.
+Thus help queries from Novices can be quickly returned with minimal effort. 
+
+scanPCI written by Chris Hebeisen is the predecessor of scanModem.  It was written to serve
+within the ltmodem software support packages at http://ltmodem.heby.de .  The role is now
+fullfilled  by this this script, but called by name "scanmodem", to limit non-relevant output in 
+the ltmodem package environment.
+
+END
+
+echo UPDATE=$UPDATE
+# BaseName can be inherited from the ltmodem script ./build_module or Installers or checkout
+if test -z "$BN" ; then  BN=`basename $0` ; fi
+if [ "$BN" = "scanModem" ] ; then  echo $NOTE ; fi
+
+# for script testing, with $2 and $3 format  VendorID:DeviceID
+if [ "$1" = "test" ] ; then
+  TST=1
+  PCIDEV="$2"
+  SUBSYS="$3"
+  DISTR="$4"
+  SYS="$5"
+  GCCmajor="$6"
+  CPU="$7"
+fi
+
+# Short term files have names 0tmpfile.1 2 3 etc.
+if test -z "$TMPM" ; then
+  if test -d /dev/shm ; then
+    # use /dev/shm RAM space if possible for transient writes
+    SHM=`ls -dl /dev/shm | cut -d' ' -f1`
+    if [ "$SHM" = "drwxrwxrwt" ] ; then 
+      TMPM=/dev/shm/0tmpfile
+    else
+      TMPM=0tmpfile
+    fi  
+  fi
+else
+  TMPM=0tmpfile
+fi
+echo > $TMPM
+echo 
+# conditional when scanmodem is used in ltmodem.deb or .rpm installation
+#  with stops disabled
+mkdir -p Modem
+if ! [ "$BN" = "scanModem" ] ; then
+  FAST=yes
+  RECORD2=/dev/null
+else
+  RECORD2=Modem/YourModem.txt
+  echo  $0 should ONLY be run within a Linux/UNIX partition.
+  echo  If within a MicroSoft/DOS partition, abort with Ctrl-C now !!!
+  echo  Copy scanModem.gz to your Linux partition and restart.
+  echo
+fi
+if [ "`pwd`" = "/" ] && ! [ "$ENVIR" = "rpm" ] ; then
+  cat<<END
+
+ $0 should NOT be run in the / directory!!
+ Copy scanModem to /root/ or /tmp/ of some /home/User/ folder.
+ Exiting now
+
+END
+  exit
+fi
+
+if test -z "$RECORD" ; then
+  mkdir -p Modem
+  RECORD=Modem/ModemData.txt
+  echo > $RECORD
+else
+  echo ------------ beginning SCANMODEM section ------ >>$RECORD
+fi
+echo > $RECORD2
+
+# Defining other needed variables, there may be testing inputs
+if test -z "$SYS" ; then
+  SYS=`uname -r`
+fi
+FILTER="$SYS"_
+# FILTER needed for Debian style distros
+
+# SYS=2.6.8.1-3-686
+MAJOR=`echo $SYS | cut -d. -f1-2`
+Ktest1=`echo $SYS | cut -d- -f1`
+Ktest2=`echo $Ktest1 | cut -d. -f4`
+KERNEL_RELEASE=`echo $SYS | cut -d. -f3-`
+KERNEL_RELEASE_NUM=`echo $KERNEL_RELEASE | sed 's/^\([0-9][0-9]*\).*/\1/'`
+if test -n "$Ktest2" ; then
+  KVER=`echo $SYS | cut -d. -f1-3`
+  KEXT=.$Ktest2
+  BASE=`echo $SYS | cut -d- -f1`
+  LOCAL=`echo $SYS | cut -d- -f2-`
+  PVER="$BASE"_"$LOCAL"
+else
+  KVER=`echo  $SYS | cut -d- -f1`
+  KEXT=`echo  $SYS | cut -d- -f2-`
+  PVER="$KVER"_"$KEXT"
+fi
+# PVER needed for rpm underscore syntax
+
+if test -z "$CPU" ; then
+  CPU=`uname -m`
+fi
+# CPU=i686
+# Define version, currently 8.26a9, within ltmodem CVS maintained by Mark Spieth
+LT_VERSION=8.31a10
+
+if test -z "$DISTR" ; then
+  STEM=`cat /etc/issue | cut -c 2- | cut -d' ' -f1`
+  distro=`ls /etc/* | grep $STEM | grep version | cut -d_ -f1 | cut -d- -f1 | cut -d/ -f3`
+ # Acquire distribution data
+  DISTRO_FILES="redhat-release SuSE-release mandrake-release conectiva-release  \
+   bluepoint-release  slackware-version  gentoo-release debian_version knoppix-version \
+   fedora-release xandros-desktop-version "
+   # redhat MUST proceed mandrake in this listing as Mandrake has an /etc/redhat-release
+ for i in $DISTRO_FILES
+ do
+  if [ -a /etc/$i ] ; then
+    DISTRO=$i
+    # generating short name
+    if [ -n "$DISTRO" ] && [ "$DISTRO" = "fedora-release" ] ; then
+      FEDORA=1
+    else
+      DISTR=`ls /etc/$i | cut -d/ -f3 | cut -d"-" -f1`
+    fi
+    if [ "$DISTR" = "debian_version" ] ; then
+       DISTR=debian
+    fi
+    DVERSION=`cat /etc/$i`
+  fi
+  done
+fi
+
+if [ -z "$DISTRO" ] && [ -z "$DISTR" ]  ; then
+  DISTR="Not_identified"
+fi # DISTR
+if [ -f /etc/issue ] ; then 
+  ISSUE=`cat /etc/issue | cut -d' ' -f1-2`
+fi
+if [ "$BN" = "scanModem" ] ; then
+  cat<<END>Modem/UNSUBSCRIBE.txt
+   For instructions to UNSUBSCRIBE from discuss@linmodems.org,
+   send an email to:   discuss-help@linmodems.org
+END
+  cat<<END>>$RECORD
+
+ DO use the following line as the email Subject Line, to alert cogent experts:
+      $BN, $ISSUE kernel $SYS
+ Occassionally reponses are blocked by an Internet Providers mail filters.
+ So do in a day also check the Archived responses at DISCUSS@linmodems.org
+Code updated on:  $UPDATE
+------------ --------------  System information ------------------------
+`cat /etc/issue | cut -d'\' -f1`
+ distro=$distro
+ on System with processor: $CPU
+ currently under kernel:   $SYS
+END
+fi
+if [ "$DISTR" = "slackware" ] ; then
+    echo "  m.mohr@laposte.net will help with Slackware problems" >>$RECORD
+fi 
+if [ "$CPU" = "x86_64" ] || [ "$CPU" = "x86_64-smp" ] ; then
+  cat<<END>>$RECORD
+  
+ See success reports on a softmodem installation on AMD Athlon 64 system
+ http://linmodems.technion.ac.il/archive-fourth/msg02592.html -  slmodem compatible
+ http://linmodems.technion.ac.il/archive-fourth/msg03581.html -   Conexant hsfmodem
+
+END
+fi
+if [ "$MAJOR" == "2.6" -a $KERNEL_RELEASE_NUM -ge 10 ]; then
+  cat<<END>>$RECORD
+
+There are emerging complications under 2.6.10 and later kernels.  Concerning code for:
+Smartlink slmodem :
+   slmodem-2.9.9d.tar.gz at http://linmodems.technion.ac.il/packages/smartlink/
+      has the current fixes.  Related messages are:
+   http://www.datiku.com/documents/2610_migration.php
+   http://www.ussg.iu.edu/hypermail/linux/kernel/0409.3/0345.html 
+   http://linmodems.technion.ac.il/archive-fourth/msg03736.html .
+   http://linmodems.technion.ac.il/packages/smartlink/  has an upgrab-winmodem.tar.gz,
+       providing a driver to alleviate inappropriate capture of a winmodem by a serial port driver. 
+Lucent/Agere DSP/ltmodem:
+  http://linmodems.technion.ac.il/archive-fourth/msg03733.html 
+Concerning Intel-536ep and 537
+   http://www.ubuntulinux.org/wiki/IntelFiveThreeSixEPModemHowto/ 
+   http://linmodems.technion.ac.il/archive-fifth/msg00280.html
+   http://linmodems.technion.ac.il/archive-fifth/msg00881.html
+   
+END
+fi
+
+ls /boot/config* &> $TMPM
+if grep config $TMPM >/dev/null ; then
+  if grep "CONFIG_REGPARM=y" /boot/config*>/dev/null ; then
+    cat<<END>>$RECORD
+
+ The kernel-$SYS was compiled with CONFIG_REGPARM, providing more compact and faster code.
+
+END
+  fi
+fi
+if [ "$SYS" = "2.4.25-1-multimedia-686" ] ; then
+   cat<<END>>$RECORD
+   
+ For the Debian derived DeMudi multimedia distribution, the kernel-headers do Not faithfully
+ represent the installation kernel  version 2.4.25-1-multimedia-686.  This may block compilation
+ of certain drivers.  To compile auxiliary drivers,
+ update to a more recent Debian kernel and matching kernel-headers. Subsequently compile
+ modem drivers under the new kernel.  For the Lucent/AgereSystems DSP modem, a driver pair
+ and instructions are included in  ltmodem-2.4.25-1-multimedia-686.tar.gz
+ at http://linmodems.technion.ac.il/packages/ltmodem/Demudi/
+ 
+END
+fi
+
+GCC_INPUT=`cat /proc/version |  sed -e 's/)/ /g' | sed -e 's/(/ /g'`
+# sed to remove (  and  )
+GCC_PC=`for i in $GCC_INPUT ; do echo $i ; done | grep -A2 gcc | grep -A1 ersion | grep -v  ersion` 
+# Picks our version following gcc
+echo " The kernel was assembled with compiler:  $GCC_PC">> $RECORD
+GCC_TEST=`echo $GCC_PC | cut -d. -f1`
+echo $GCC_TEST > $TMPM
+if grep "-" $TMPM >/dev/null ; then
+  GCCmajor=`echo $GCC_TEST | cut -d- -f2`
+else
+  GCCmajor=$GCC_TEST
+fi
+
+if test -z "$GCC" ; then
+  # could be test input
+  GCC=`gcc -dumpversion`
+  GCCs=`echo $GCC | cut -d. -f 1-2`
+fi
+if test -z "$GCC" ; then
+  echo " a $GCCmajor package must be installed to support driver compiling">>$RECORD
+  GCC=none
+else
+  echo " with current System compiler GCC=$GCC">>$RECORD
+  GCCsys=`echo $GCC  | cut -d. -f1-`
+  if [ -L /usr/bin/gcc ] ; then
+    echo "    /`ls -l /usr/bin/gcc | cut -d/ -f2-`" >>$RECORD
+  fi
+fi
+echo >>$RECORD
+echo "Checking for kernel-headers needed for compiling.">>$RECORD
+SRCS=`ls -d /usr/src/lin* /usr/src/ker*  /lib/modules/$SYS/build  2>/dev/null`
+if test -n "$SRCS" ; then
+  for d in $SRCS
+  do
+    if test -f $d/include/linux/version.h ; then
+      if grep $SYS $d/include/linux/version.h >/dev/null ; then
+        echo " kernel-headers have base folder $d">>$RECORD
+      fi
+    fi
+  done
+else
+  cat<<END>>$RECORD
+Kernel-header resources are not evident.
+Within your Linux distributions' installation CD or online resource (and mirrows), search for :
+  Distribution  PackageName			OnLine
+  ----------------------------------------------------------------------
+ Debian  		kernel-headers-$SYS    	http://www.debian.org/distrib/packages or install CD
+ Ubuntu 		linux-headers-$SYS		http://http://packages.ubuntu.com/ or install CD
+    Debian & Ubuntu will also require installation of kernel-kbuild package 
+ Mandrake 	kernel-source-$SYS	   If not present on install CDs search
+ 	http://mirror.switch.ch/ftp/mirror/mandrake/official/10.0/i586/Mandrake/RPMS/ 
+	http://rpms.mandrakeclub.com/rpms/mandrake/official/LByName.html, or other mirrors.
+  SuSE		kernel-source-$SYS		 , kernels are named k_deflt
+One of which must be installed if compiling drivers to match kernel $SYS proves necessary.
+Within the output Modem/ folder, read CompilingDrivers.txt for details.
+  
+END
+fi
+echo >>$RECORD
+
+# Check for /dev/modem link
+if [ -L /dev/modem ] ; then
+  echo " Modem symbolic link is:  /`ls -l /dev/modem | cut -d/ -f2-`" >>$RECORD
+else
+  echo " A /dev/modem symbolic link is not set.">>$RECORD
+fi
+
+if test -d /dev/tts ; then
+   echo " Checking for /dev/tts/  devices" >> $RECORD
+   ls -l /dev/tts/ >> $RECORD
+   echo >> $RECORD
+fi
+if test -f  /proc/bus/usb/devices ; then
+   if grep odem /proc/bus/usb/devices>/dev/null ; then
+       grep odem /proc/bus/usb/devices  >> $RECORD
+       # S:  Product=U.S. Robotics 56K Faxmodem USB
+       if grep "USB  HSF Modem" /proc/bus/usb/devices>/dev/null ; then
+          echo "  Download the hsfmodem package from http://www.linuxant.com/drivers">> $RECORD 
+       fi
+   else
+      echo " USB modem not detected.">> $RECORD 
+   fi
+else
+   echo "   /proc/bus/usb/devices file not present, barring USB modem query.  ">> $RECORD 
+fi
+echo >> $RECORD
+
+PNP=`dmesg | grep "IRQ XX" `
+if test -n "$PNP"  ;  then
+  cat<<END>> $RECORD
+
+  If after boot up
+# dmesg  | grep "IRQ XX" 
+displays:
+    IRQ XX nobody cared
+ a change in the bootup BIOS may be necessary to a non-PNP choice is likely necessary.
+ 
+END
+fi
+
+if [ "$DISTR" = "mandrake"  ] ; then
+   cat<<END |  tee -a $RECORD
+   
+   For Mandrake 9.1 later, installation of the pciutils.rpm  package providing  lspci is necessary.
+   The installed utility   lspcidrake  is NOT an adequate alternate for scanModem support.
+
+END
+fi
+
+LSPCI_PATH="/bin /usr/bin /sbin"
+for i in $LSPCI_PATH
+do
+  if test -x $i/lspci
+  then
+    LSPCI=$i/lspci
+  fi
+done
+if test -z $LSPCI
+then
+  echo "+----------------------------------------------+"
+  echo "|    WARNING: lspci not found  - exiting       |"
+  echo "|    Please install the package:  pciutils     |"
+  echo "+----------------------------------------------+"
+  echo
+  exit 1
+  echo
+else
+  if ! $LSPCI &>/dev/null
+  then
+    echo "WARNING: $LSPCI returned error - not checking for modem"
+    echo
+    echo Exiting
+    echo
+    exit 1
+  fi
+fi
+# ending lspci test section
+
+# Acquire PCI bus slots.
+echo Modem > $TMPM
+echo modem >> $TMPM
+echo "erial controller" >> $TMPM
+# filering for modem
+PCIBUS=`$LSPCI 2>/dev/null  | grep -f $TMPM | cut -d' ' -f1`
+BUS2=`$LSPCI -n 2>/dev/null | grep " 07..: " | cut -d' ' -f1`
+# add CLass 07 devices if not already recognized
+echo "$PCIBUS" > $TMPM.1
+if ! [ "$BUS2" = "" ]  ; then
+  for i in $BUS2
+  do
+  if ! $LSPCI 2>/dev/null  | grep $i | grep "FIR Port" >/dev/null ; then
+    # exclude Infrared controllers
+    if ! grep $i $TMPM.1 >/dev/null ; then
+      # exclude already captured PCIBUS
+      PCIBUS="$PCIBUS $i"
+    fi
+  fi
+  done
+fi
+if test -n "$TST" ; then
+  PCIBUS=`echo $PCIBUS | cut -d' ' -f1`
+fi
+
+if test -z "$PCIBUS" && [ -z "$PCIDEV" ] ; then
+  # Display all PCI devices only if no candidates.
+  echo --------- lspci scan ---------------- >>$RECORD
+  echo " PCI_bus">>$RECORD
+  $LSPCI 2>/dev/null >>$RECORD
+  echo ------------------------------------- >>$RECORD
+
+# if no modem candidates AND not PCIDEV input test
+  if  $LSPCI 2>/dev/null  | grep "udio controller" | grep M5451 >/dev/null ; then
+    AUDIO=`$LSPCI 2>/dev/null  | grep "udio controller" | cut -d' ' -f2-`
+    cat<<END>>$RECORD
+
+ Though not displayed, an embedded soft modem may reside in this Audio card:
+    $AUDIO
+ which sadly is not yet supported under Linux.  However a low level driver may 
+ in the future become available, which provide access to the higher level COMM
+ functions already avialable in the SmartLink slmodemd. 
+ Browse the Modem/Slmodem.txt for some details. 
+
+END
+  fi
+  
+  cat<<END>>$RECORD
+
+ A modem was not detected among the above PCI devices.
+ This indicates that the modem, if present has a non-standard or ISA bridge.
+ Please follow the directions in Modem/SoftModem.txt  for identifying the modem properties
+ when booting under Microsoft Windows. Also access any documentation sources
+ on yourchipset.  Guidance can only be provided AFTER
+ the chipset and/or its drivers have been identified.
+ 
+ The IBM mwave modem does have a driver within 2.6.n kernel+module releases.  If is at:
+ 	 /lib/modules/$AYA/kernel/drivers/char/mwave/mwave.ko
+and can be loaded only if Mwave hardware is present  Test with:	
+ #  su - root
+ followed by
+ # modprobe wmave
+ If successful see: 
+ 	http://tedfelix.com/Mwave/
+ 	http://www.linuxdocs.org/HOWTOs/mini/ACP-Modem/   , section 2.4 and later.
+ 	http://www.freenetpages.co.uk/hp/mjbou/dwtpul.html
+	http://tedfelix.com/Mwave/
+	
+ A failure response has output like:
+ 	FATAL: Error inserting mwave (/lib/modules/2.6.10-1-686/kernel/drivers/char/mwave/mwave.ko): Input/output error
+indicating absence of an Mwave modem
+
+END
+else
+
+$LSPCI | grep audio >>$RECORD
+echo >>$RECORD
+# The 2nd Table in Modem/SoftModem.txt is parsed if a soft modem controller is resident
+cat<<END>Modem/SoftModem.txt
+    
+                  Soft Modem Information
+
+The earlier generations of modems had chips with digital signal processing (DSP) capability in which
+most of the total modem effort proceeded.  The "soft modem" is a generic name for modems 
+which lack DSP.  Rather, the CPU does almost all the signal processing as directed by software code. 
+There are a few soft modems which are fully identified by the primary PCI ID of the modem card, 
+such as the Agere Systems 11c1:048(a,b,c,d) series.
+
+The larger family is more troublesome, for identification of supporting software. 
+They are comprised of a primary modem controller which can host a variety of Subsystems. 
+Both the primary PCI ID and "mc97 codec"  written in a Subsystem firmware chip are required,
+for assessing support under Linux.  Only subsequently is the Subsystem PCI ID useful, for record keeping.  
+
+The scanModem script contains five routines for acquiring  the critical mc97 codec identification:
+1) a modem driver independent test, only usefull for some of the earliest soft modems,
+   described at the end of this file;
+2) a test using modem drivers already on your System,  as part of  the ALSA (Advanced Linux Sound
+ Architecture) software package ; See Slmodem-ALSA.txt for details.
+3) a test requiring the SmartLink slamr.ko driver:  see Slmodem.txt ;
+4) comparison with PCI IDs with codecs historically gathered and stored within scanModem;
+5) In case 1-4 are not adequate, there are the following instructions for running ATI queries under Microsoft windows.
+Chipset information may be obtained under Microsoft Windows through:
+ 1) Start > Settings > Control Panel > Classical View (for WinXP) > Modem  , or alternatively,
+   Start > Settings > Control Panel > Classical View (for WinXP) > System > Devices > Modem
+   Do the modem diagnostics test, if available, looking for manufacturer chipset,
+   It is within information output in lines:  ATI - specifications
+      Try to identify the modem setup file, with name perhaps MODEM.INF
+ 2) Open a COMM console, and send ATI commands to the modem (ATI, ATI1, ATI2, etc)
+   which may elicit chipset and driver information. Here is an example
+       ATI3 - Agere SoftModem Version 2.1.22
+       ATI5 - 2.1.22, AMR Intel MB, AC97 ID:SIL REV:0x27
+   successfully identifying an Agere SoftModem chipset, both by name and through
+   the:softmodem SIL ID:              AC97 ID:SIL REV:0x27
+ 
+ The IBM mwave modem cannot be detected by scanModem.  
+ But the mwave driver is included in 2.6.n kernel releases.  So try
+ # modprobe mwave
+ Either the module will load, or the absence of the modem will be indicated by:
+FATAL: Error inserting mwave (/lib/modules/2.6.10-1-686/kernel/drivers/char/mwave/mwave.ko): Input/output error
+See http://www.linuxdocs.org/HOWTOs/mini/ACP-Modem/  for details on this modem.
+
+Subsystems for softmodems are primarily made by Silicon Labs (SIL), 
+under contract to companies like Intel, Agere Systems, Motorola  etc.
+In the Table below,
+The ChipMadeBy does NOT imply software support directly from that manufacturer.
+
+The chart of information below is largely harvested from messages to discuss@linmodems.org.
+ A codec_indent  like REV:0x27 is reported by diagnostics under Microsoft, as illustrated above. 
+The matching designation like SIL27 are translations under Linux, 
+    output by a diagnostic of the slamr.ko driver, from the SmartLink slmodem software. 
+The SIL is an abbreviation for  Silicon Laboratorys Inc., which provides Subsystems for many total modem assemblies. 
+SML is used below as abbreviation for SmartLink Inc.,  with official driver resources at
+       http://www.smlink.com/main/index1.php?ln=en&main_id=40  and recent patches provided at:
+       http://linmodems.technion.ac.il/packages/smartlink/ 
+
+   codec_ident    ID translation     driver sources 
+---------------------  ------------------      -------------------------       
+ 0x21      SIL21   PCTel     for 2.4.n kernels, pctel-2.7.9 at http://linmodems.technion.ac.il/pctel-linux,
+                                             and SML for  2.4.n or 2.6.n kernels
+ 0x23      SIL23   PCtel      same as SIL21               
+ 0x22      SIL22   SML              
+ 0x24      SIL24   Broadcom, use   SML drivers
+ ????      BCM64  Broadcom, use   SML in ALSA mode,  but only under the Intel ICH modem controllers.
+0x25      SIL25   Intel 537AA		"  or SML
+????        INT65   Intel 537EA	http://linmodems.technion.ac.il/packages/Intel/537/ or SML
+0x26      SIL26    Silicon Integrated Systems (SiS), use SML drivers
+0x27      SIL27   AgereSystems(AS), use  SML  needed under 2.6.n kernels,
+                             but for  2.4.n, there are also AS drivers through  http://www-3.ibm.com/pc/support/site.wss/document.do?lndocid=MIGR-52698  
+ ????       CXT(21,22,23,29,41  and others)   Conexant -   	http://www.linuxant.com/drivers, the hsfmodem package      
+ -------------------------------------------------------------------------------- 
+  If a novel identifier is displayed during diagnostics, please report to discuss@linmodems.org
+ 
+A rough/practical guide is first given, with some qualifications and exceptions to follow:
+     SILnm  (n,m digits) are SML supportable;
+     CXTnm are ONLY supported by the  http://www.linuxant.com/drivers, the hsfmodem package ;
+     INTnm  are supported by Intel drivers and perhaps slmodemd with ALSA support;
+     BCMnm, INT65  (and similar name styles) have had successes with SmartLink slmodem in ALSA mode.
+     See the companion Slmodem-ALSA.txt for details.
+Qualifications  to the Table below relate to Linux software support for soft modem controllers.
+In particular,  no software package provides support for all soft modem controllers.
+    	     
+Primary              
+PCI_IDs           Name	                   Possible support by:
+---------------  -----------------------------  -------------------------
+8086:1080 ac97 controller 				i . 
+8086:2416 82801AA ICHAA >  		+ A a  p c .
+8086:2426 82801AB ICHAB > 		+ A a .
+8086:7186 >				        			c .
+8086:7196 82440 Banister  >     	+ A a      c .
+8086:2446 82801BA ICH2  > 		+ A a p c .
+8086:2486 82801CA/CAM ICH3 > 	+ A a p c i .
+8086:24c6 82801DB ICH4 > 		+ A a   c i b .
+8086:24d6 82801EB ICH5 > 		+ A     c i .
+8086:266d 82801EB ICH6> 	        +	c .
+8086:xxxx types above are from Intel   
+
+1039:7013  SIS 630 >               		+ a p c i .
+1039:7018  SIS 960 >               		+       i .
+10de:01c1  Nvidia Corp >          		+       i .
+10de:00d9  Nvidia Corp >			    A      c   .
+1106:3068  VIA >			+ a p c i .
+1022:7446  AMD AC_LINK >		+ .
+10b9:5450  ALI 5450 >                     
+10b9:5451  ALI 5451 >                     
+10b9:5453  ALI 5453 AC-Link  >	      	p c .
+1025:5453  ALI 5453 AC-Link  > 		    c .
+10b9:5457  ALI 5457 AC-Link > 	+    p   c i .
+1025:5457  ALI 5457 AC-Link  >        	     c .                   .
+e159:0001  TigerJet >			          		i .
+1002:434d  ATI >					  T  a    c i .
+1543:3052  SI3052 >                               		i .
+10ec:8197  RealTek >                     	 + .
+  --------------------------------------------------------
+The following letters indicate compatibility for the modem controller,
+BUT do NOT gaurantee support by the software. 
+Support MUST be ascertained by identifing the soft modem codec.
+
+  +   SmartLink (SML) - http://www.smlink.com,  the slmodem-2.9.9 series
+  A   SML slmodem-2.9.9d-alsa software supporting the ALSA intel8x0m-modem driver
+      Soft modems with the Broadcom codec BCM64 should thus be served. 
+  T   SML slmodem-2.9.9d-alsa software supporting the ALSA snd-atiixp-modem driver
+With the above SML software, port creation is controlled by a daemon, slmodemd,
+rather than being a static feature of the /dev/ files.
+  a   AgereSystems only under 2.4.n
+  p   PCtel support at http://pctelcompdb.sourceforge.net/
+  c   Conexant/Rockwell - http://www.linuxant.com
+  i   Intel - http://www.intel.com
+  b   Broadcom, under 2.4.n kernels, with ALSA code under 2.6.n
+  for details on A and T slmodem implementations, see Modem/ALSA.txt
+ ===========================================================
+
+To achieve codec readouts for SmartLink (SML) compatible modem controllers listed above,
+follow the directions in Slmodem.txt.
+
+The 1) driver independent test, some details
+During bootup, kernel diagnostics on the System are stored for later display by:
+ 	dmesg
+This information may include a SIL_id of modems under AC97/MC97 Controllers,
+depending upon the type of bridging of the modem card to the motherboard.
+The scanModem script processes dmesg output to capture AC97 modem information,
+parses it into a SIL_id if possible, and then displays of modem chipset information.
+Guidance to sources of modem supporting software may thus be obtained.
+
+The transfer of the AC97 information to the dmesg buffer requires that modules supporting
+both the digital audio card and the ac97_codec be loaded during bootup:
+   modprobe ac97_codec
+   modprobe audio_drivers  (such as i810_audio)
+This can be checked after bootup with:
+   lsmod
+
+This script can also be used by entering a test block with nomenclature:
+        $0 SILtest
+with SILtest a text file in This Folder
+containing a section of a dmesg output or /var/log/messages like:
+
+  i810: Intel ICH 82801AA found at IO 0xdc00 and 0xd800, IRQ 11
+  i810_audio: Audio Controller supports 2 channels.
+  ac97_codec: AC97 Audio codec, id: 0x4144:0x5340 (Analog Devices AD1881)
+  i810_audio: AC97 codec 0 Unable to map surround DAC's (or DAC's not present), total channels = 2
+  ac97_codec: AC97 Modem codec, id: 0x5349:0x4c22 (Silicon Laboratory Si3036)
+
+which does include a line beginning with:   ac97_codec: AC97 Modem codec, id:
+ 
+END
+  # detected modem devices
+
+   echo "Modem candidates are at PCI_buses:  $PCIBUS">>$RECORD
+   echo PCIBUS=$PCIBUS
+fi 
+#  Start modem displays
+for i in $PCIBUS
+do
+  if $LSPCI -n 2>/dev/null  | grep $i | grep Class >/dev/null ; then
+    CLASS0=`$LSPCI -n 2>/dev/null  | grep $i | cut -d' ' -f3-4`
+  else
+    CLASS0=`$LSPCI -n 2>/dev/null  | grep $i | cut -d' ' -f2-3`
+  fi 
+  # $LSPCI -n 2>/dev/null  | grep $i | cut -d' ' -f2-4 > $TMPM
+  # echo "0000:00:02.6 0703: 1039:7013 (rev a0)" > $TMPM
+  CLASS="Class $CLASS0"
+  NAME=`$LSPCI -v 2>/dev/null | grep $i | cut -d' ' -f2-`
+  if test -n "$TST" ; then
+    echo Using the test inputs.
+    cat<<END | tee -a $RECORD
+
+    Substituted test inputs:
+ PCIDEV=$PCIDEV
+ SUBSYS=$SUBSYS
+
+END
+  else     
+    PCIDEV=`echo $CLASS | cut -d' ' -f3`
+    cat<<END | tee -a $RECORD 
+    
+Providing detail for device at  $i
+  with vendor-ID:device-ID
+	    ----:----
+$CLASS   $NAME
+END
+  fi
+  Vendor=`echo $PCIDEV | cut -d: -f1`
+  Device=`echo $PCIDEV | cut -d: -f2`
+  # Now Subsystem info
+  # It would be more elegant in the above queries to select  -s PCI_bus.
+  # But for older lspci versions, there is failure of    lspci -s PCI_bus
+  # when the PCIBUS has an "f" as on some Acer motherboards with a PCI slot   00:1f.6
+  SUBNAME=`$LSPCI -v 2>/dev/null  | grep -A1 $i | grep Subsystem | cut -d: -f2-`
+  if test -n "$TST" ; then
+    echo "Using test  $SUBSYS   Subsystem"
+    # skip if test SUBSYS was input
+  else
+    SUBSYS=`$LSPCI -nv  2>/dev/null  | grep -A1 $i | grep Subsystem: | cut -d' ' -f2`
+    echo "  SubSystem $SUBSYS  $SUBNAME" | tee -a $RECORD
+    $LSPCI -nv 2>/dev/null | grep -A2 $i | grep -v Class | grep -v Subsystem: | tee -a $RECORD
+    IRQ0=`$LSPCI -v 2>/dev/null  | grep -A2 $i | grep IRQ | grep "IRQ 0"`
+    if test -n "$IRQ0" ; then
+      cat<<END>>$RECORD
+
+ The modem will NOT function because of interrupt assignment: IRQ 0
+ Possible corrections are:
+   1) to access the  the boot up BIOS change to a non-PNP mode.
+   Instructions for accessing BIOS are at:
+      http://linmodems.technion.ac.il/resources.html within:  Additional Resourcces.
+   2) Within some BIOS setups, IRQ assignments can be changed.
+   3) On non-laptop systems moving the modem card to another slot has helped.
+   4) Sometimes upgrading the kernel changes IRQ assignment.
+
+END
+    fi
+  fi
+  if test -n "$SUBSYS" ; then
+    SUBven=`echo $SUBSYS | cut -d: -f1`
+    SUBdev=`echo $SUBSYS | cut -d: -f2`
+  fi
+  cat<<END | tee -a $RECORD
+  
+                  -----PCI_IDs-------                    --CompilerVer- 
+    Feature List:  Primary  Subsystem Distr  KernelVer   kernel default  CPU
+ ./scanModem test $PCIDEV $SUBSYS $DISTR $SYS  $GCC_PC $GCC    $CPU
+
+END
+    ## Checking for major chipset types
+  if grep  $PCIDEV Modem/SoftModem.txt >/dev/null ; then
+    # Check for support under the Controller of the unknown Subsystem chip
+    CNTRL=`grep $PCIDEV Modem/SoftModem.txt | cut -d">" -f1`
+    cat<<END | tee -a $RECORD
+       
+ The soft modem Subsystem operates under a controller
+   $CNTRL
+ capable of supporting under Linux AT LEAST modem Subsystem chips from manufacturers:
+END
+echo >>$RECORD
+    if grep $PCIDEV Modem/SoftModem.txt | grep "p " >/dev/null ; then
+       echo "	Pctel"  | tee -a $RECORD
+       SOFT=PCTEL
+    fi
+    if grep $PCIDEV Modem/SoftModem.txt | grep "b " >/dev/null ; then
+       echo "	Broadcom"  | tee -a $RECORD
+       SOFT=$SOFT" BRD"
+    fi
+    if grep $PCIDEV Modem/SoftModem.txt | grep "a " >/dev/null ; then
+       echo "	AgereSystems"  | tee -a $RECORD
+       SOFT=$SOFT" AGR"
+       AGR=1
+    fi
+    if grep $PCIDEV Modem/SoftModem.txt | grep "c " >/dev/null ; then
+       echo "	Conexant" | tee -a $RECORD
+       SOFT=$SOFT" CNX"
+       CNX=1
+    fi 
+    if grep $PCIDEV Modem/SoftModem.txt | grep "i " >/dev/null ; then
+       echo "	Intel"  | tee -a $RECORD
+       SOFT=$SOFT" INTEL537"
+       AAEA=1
+       INTEL537=1
+    fi
+    echo $SOFT>$TMPM.soft
+    if grep $PCIDEV Modem/SoftModem.txt | grep "+ " >/dev/null ; then
+       echo "	Smartlink"  | tee -a $RECORD
+        SMLok=" Driver slamr from the SmartLink slmodem package can identify the soft modem codec."
+    smart=may
+    fi
+    if grep $PCIDEV Modem/SoftModem.txt | grep "A " >/dev/null ; then
+       echo >> $RECORD
+       echo "	Smartlink software in ALSA mode may support this modem "  >> $RECORD
+       Smart=ALSA
+    fi
+     # finished softmodem chip candidates  
+    if grep $PCIDEV Modem/SoftModem.txt>/dev/null ; then
+       SOFT=1
+    fi    
+    # Decisive Subsystem IDENTS
+    echo >$TMPM.3 
+    if [ "$SUBven" = "134d" ]  ||  [ "$SUBven" = "14e4" ] ; then
+       echo Use the SmartLink slmodem software for support. |  tee -a $RECORD
+       IDENT=PCTEL
+       if [ "$SUBven" = "14e4" ] ; then
+          IDENT=BCM64
+	  echo For this Broadcom subsystem modem,  the slmodemd daemon must be used in ALSA mode |  tee -a $RECORD 
+	  echo  "	slmodemd --alsa --country=YOURS modem:1"  |  tee -a $RECORD
+       fi	
+    elif [ "$SUBven" = "14f1" ] ; then
+       # Conexant HSF
+        echo ONLY the hsfmodem software from http://www.linuxant.com/drivers  can support this Conexant subsystem soft modem |  tee -a $RECORD
+        IDENT=CXT
+     else
+        echo " The Subsystem PCI id does not itself identify the modem Codec.">>$RECORD
+     fi
+     
+     # Choose driver for codec test
+     if [ "$PCIDEV"  = "1002:434d" ]  ; then
+        MODULE=snd-atiixp-modem 
+	MCONFIG=ATIIXP_MODEM
+     elif [ "$PCIDEV"  = "1106:3068" ]  ; then
+        MODULE=snd-via82xx-modem 
+	MCONFIG=VIA82XX_MODEM
+     else
+        MODULE=snd-intel8x0m 
+	MCONFIG=INTEL8X0M
+     fi 
+     MOD_=`echo $MODULE | sed -e 's/-/_/g'`
+     MPLACE=`find /lib/modules/$SYS/ -name $MODULE.ko`
+     #  Rhywek <rhywek@o2.pl>
+     
+#     case $PCIDEV in
+#	"1002:434d") MODULE=snd-atiixp-modem ;;
+#	"1106:3068") MODULE=snd-via82xx-modem ;;
+#	*) MODULE=snd-intel8x0m ;;
+#    esac
+
+    # Check for driver in kernel or modules    
+    echo  >>$RECORD
+    if grep $MCONFIG /boot/config-$SYS | grep "=y" > /dev/null ; then
+       echo  "  Driver $MODULE is included in the kernel. "  >>$RECORD
+       ASOUND=1
+    elif   test -n "$MPLACE" ; then
+       echo  "  Driver $MODULE  may enable codec acquisition "  >>$RECORD
+       if grep $MOD_  /proc/modules >/dev/null ; then
+         ASOUND=1  
+      elif [ "$UID" = "0" ]  ;  then
+	 /sbin/modprobe $MODULE
+	 ASOUND=1
+      else   
+	  echo This line is strangely necessary >/dev/null 
+          cat<<END
+	    
+ To enable capture of codec information, please briefly login as Root:
+ 	 su - root
+  Load $MODULE with:
+  	 modprobe $MODULE
+  Exit Root status
+	 exit
+  and rerun
+  	./scanModem
+       
+END
+         exit
+      fi
+    else
+       echo  "  $MODULE  support not included in $SYS  kernel+modules " >>$RECORD
+    fi
+   
+# I guess you mean '/proc/asound/cardN/codec97#0/mc97*'.
+# If it does not exist after intel8x0m loading this may indicate that device
+# was not initialized, for instance because it is in use by other driver,
+# like hsf*, slamr or even serial - device has 0703 pci class - COMMUNICATION_MODEM.
+    if test -n "$ASOUND" ; then 
+       MC97=`find /proc/asound -name "mc97*" | grep -v regs`
+       #  MC97=`find /proc/asound -name 'mc97#[0-3]-[0-3]'`    # Sasha's alternate
+       if !  test -n "$MC97" ; then
+          echo "  /proc/asound lacks an mc97 codec file.">>$RECORD	  
+       else	  
+          echo "  === Begin mc97 codec query  ===">>$RECORD
+       for codec in $MC97     
+#Also note there are new modems in the wild equipped by SiLabs 3054/5 codec,
+#it works with ALSA drivers, but many of such codecs encode codec vendorid1,
+# vendorid2 registers not with "traditional" "SILXX", but with other values
+#(few "AGRXX" was reported already, and "BCM64" is from this group too)     
+       do
+       if grep  0x42434d64  $codec >/dev/null ; then
+         echo  " $SUBSYS has a Broadcom BCM64 codec" >>$RECORD
+	 IDENT1=BCM64
+	 elif  grep   Conexant  $codec >/dev/null ; then
+	 NM=`grep Conexant  $codec | cut -d' ' -f2-`  
+	 grep  Si3036 $codec >>$RECORD
+	 echo  " $SUBSYS has a $NM" >>$RECORD     
+	 IDENT1=CXT
+	 elif  grep   "Si3036/8 rev "  $codec >/dev/null ; then
+	   grep  Si3036 $codec >>$RECORD
+	   revision=`for i in $INPUT ; do echo $i ; done | grep  -A1 rev`
+	   REV=`echo $revision | cut -d" " -f2`
+	   echo  " Subsystem $SUBSYS has a SIL2$REV codec"  >>$RECORD   
+	   IDENT1=SIL2$REV
+	   elif  grep   "Motorola (rev 4 IIRC)"  $codec >/dev/null ; then  
+	   echo  " $SUBSYS has a Motorola codec " >>$RECORD     
+	   IDENT1=ALSA       
+	   cat<<END>/dev/null
+
+> RE:new modems in the wild equipped by SiLabs 3054/5
+> Should slmodem in ALSA mode should be recommended for these cases uniformly?
+
+Yes, but note that vendor's drivers (if exist) may work too, at least I think
+that Agere driver supports 'AGRxx' codecs.  
+END
+	else
+	  echo File $codec >>$RECORD
+	  echo " --------" >>$RECORD
+	  cat $codec >>$RECORD
+	  echo " --------" >>$RECORD	
+	  if grep 3054/5 $codec >/dev/null && grep snd_intel8x0m >/dev/null ; then
+	    # for non SILnm codecs such as AGRnm and INT65
+	    echo " Try using slmodemd in ALSA mode with driver snd-intel8x0m"  >>$RECORD
+	  fi
+	fi
+	codec=
+      done
+      echo "  === End mc97 codec query  ===">>$RECORD
+      fi  # codec aquisition 
+    fi  # module loaded
+   
+echo >$TMPM
+echo >$TMPM.1
+echo >> $RECORD
+echo " Beginning check for older ac97_codec modems." >> $RECORD
+echo audio > $TMPM
+echo ac97 >> $TMPM
+# for grep filter
+dmesg | grep -f $TMPM > $TMPM.3
+# first check for audio_codec, needed later
+if grep "AC97 Modem codec" $TMPM.3 > /dev/null ; then
+    ac97_codec=1
+    echo " ----- Raw output ------" >> $RECORD 
+    # unusual case:   ac97_codec: AC97 Modem codec, id: CXT41 (Unknown)
+    grep "AC97 Modem codec" $TMPM.3  | tee -a  $RECORD
+fi
+# manual test
+if [ "$1" = "SILtest" ] ; then
+  cp SILtest  $TMPM.3
+fi
+codec_id=`cat $TMPM.3 | sed -n -e '/^ac97_codec: AC97 Modem codec, id: /s/^ac97_codec: AC97 Modem codec, id: \(.*\)(.*)$/\1/p'`
+# codec_id=0x5349:0x4c22  # for testing
+if test -n "$codec_id" ; then
+for codec_id in $codec_id ; do
+  echo $codec_id | grep -e '^SIL[0-9].*$' > /dev/null
+  if [ $? -ne 0 ] ; then
+    # < linux-2.4.20
+    codec_cid=`echo $codec_id | sed -n -e '/0x5349:0x4c/s/^0x5349:0x4c\(2[1-7]\)$/\1/p'`
+    # echo codec_cid=$codec_cid
+    if [ -n "$codec_cid" ] ; then
+      codec_id=`printf "SIL%d" 0x$codec_cid`
+      CODEC=$codec_id
+    else
+      SIL_id=$codec_id not processed
+    fi
+  else
+    SIL_id=$codec_id
+  fi
+  if test -f $TMPM.3 ; then
+    cat<<END  >>$RECORD
+
+--- processed from dmesg -----
+`cat  $TMPM.3`
+------------------------------
+ SIL_id=$SIL_id
+
+END
+  fi # TMPM.3
+done  # end of for
+fi # codec_id
+if test -z "$SIL_id" ; then
+  echo " An older ac97_modem codec was not detected.">>$RECORD
+  echo >>$RECORD
+else
+  echo " An ac97_modem codec was detected.">>$RECORD
+fi # SIL_id
+
+# slamr.ko test
+if [ -x /bin/dmesg ] ; then
+  DMESG=/bin/dmesg
+  SLAMR=`find /lib/modules/ -name slamr.* -mindepth 3 -maxdepth 5 | grep $SYS` 
+fi
+
+if test -n "$DMESG" -a -n "$SLAMR" -a -n "$smart" ; then
+   echo > $TMPM
+  $DMESG | grep -v "SmartLink AMRMO modem" | grep slamr > $TMPM
+  ###  typical output
+# slamr: SmartLink AMRMO modem.
+# slamr: probe 8086:24c6 ICH4 card...
+# slamr: mc97 codec is SIL27
+# slamr: slamr0 is ICH4 card.
+  if grep slamr $TMPM >/dev/null ; then
+     SLAMRout=1
+  elif [ "$UID"  = "0" ] ; then
+     /sbin/modprobe -r slamr
+     /sbin/modprobe slamr
+     $DMESG | grep -v "SmartLink AMRMO modem" | grep slamr > $TMPM   
+     if grep slamr $TMPM >/dev/null ; then
+        SLAMRout=1
+     fi 
+  else
+     cat<<END  | tee -a $RECORD
+     
+ Please rerun scanModem after login as 
+ #  su - root
+ WithIn Modem/Slmodem.txt, see the slamr test for an explanation.
+ 
+END
+  sleep 3
+  fi   
+  if test -n "$SLAMRout" ; then  
+    echo " ------ dmesg slamr filtered -------">>$RECORD
+    cat $TMPM >>$RECORD     
+    CODEC=`$DMESG | grep slamr | grep codec | cut -d' ' -f5`
+    if test -n "$CODEC" ; then
+    COD=`echo $CODEC | cut -b-3`
+    echo " The softmodem Codec is:  $CODEC">>$RECORD
+    fi
+  fi  
+  $DMESG | grep HSF: > $TMPM
+  if grep HSF: $TMPM>/dev/null ; then
+    $DMESG | grep HSF: >>$RECORD
+  fi
+fi 
+    ##ARCHIVEbegin
+    # Used as backup to a CODEC acquisition
+    rm $TMPM.2 &>/dev/null
+    echo " Checking through information gathered from LinModem ARCHIVES">>$RECORD
+    if  [ "$PCIDEV"  =  "8086:1080" ] ; then
+        cat<<EOF>$TMPM.2
+INTEL537EP 8086:1000 8086:1007 8086:1008 8086:100A 1028:1000
+EOF
+    elif [ "$PCIDEV" = "8086:2416" ] ; then
+    # 8086:2416 82801AA ICHAA 
+      cat<<EOF>$TMPM.2
+CXT 107b:0012
+SIL22 14c0:0012 COMPAL Electronics Inc Smartlink
+EOF
+# cat $TMPM.2
+    elif [ "$PCIDEV" = "8086:2426" ] ; then
+    # 8086:2426 82801AB ICHAB
+      cat<<END>TMPM.2
+SIL21 134d:4c21
+Unknown 107b:9019 Gateway
+END
+    elif [ "$PCIDEV" = "8086:7196" ] ; then
+    # 8086:7196 82440 Banister ICH1
+      cat<<EOF>$TMPM.2
+Unknown 10cf:10d2 Fujitsu Limited
+EOF
+    elif [ "$PCIDEV" = "8086:2446" ] ; then
+    # 8086:2446 82801BA ICH2
+      cat<<EOF>$TMPM.2
+CXT 104d:80df 
+SIL21 10cf:10d2 CitiCorp
+Unknown 1025:1027 Acer 
+EOF
+    elif [ "$PCIDEV" = "8086:2486" ] ; then
+    # 8086:2486 82801CA/CAM AC97 CAM AC'97 ICH3
+      cat<<END>$TMPM.2
+CXT   1668:5421 CXT21, 14f1:5421 MD56ORD V.92 MDC Modem
+SIL27 103b:0757 Tatung Co , 1014:0223 IBM , 1179:0001 , 144d:2115   Samsung, 1014:0227 
+BCM64 14e4:4d64 
+SIL22 14c0:0012 COMPAL Electronics Inc
+Unknown 1558:1800 CLEVO/KAPOK Computer , 104d:813c Sony, CMedia CXT?, 1014:0503
+END
+    elif [ "$PCIDEV" = "8086:24c6" ] ; then
+    # 8086:24c6 82801DB ICH4 AC'97 Modem Controller
+    cat<<END>$TMPM.2
+SIL27 152d:0706 QUANTA Computer, 144d:2115 Samsung , 1019:d551 1179:0001 1734:1033  1854:0005 1014:0227 0e11:0860  1014:0524 1014:0525 mc97 , 1025:0061 Acer, 1025:003d  107b:0200 1025:0071  1014:0544  10cf:10d1
+SIL21 1071:8050  134d:4c21 4c21:5349 1071:8160  1734:1055  
+SIL22 1734:102a  
+CXT 104d:8129 Sony , 104d:818c CXT23 , 104d:816a , 1014:055a , 104d:80fa , 14f1:5422 , 1043:1826  , 103c:3084  1025:0064  CXT30,  1014:0559  CXT23
+BCM64 14e4:4d64  
+SIL24 144f:1050 Askey Comp. with BroadCom, 
+Unknown 104d:816a 1509:2970 
+END
+    elif [ "$PCIDEV" = "8086:24d6" ] ; then
+    # 8086:24d6 82801EB ICH5
+      cat<<END>$TMPM.2
+SIL27 1179:0001  104d:8128
+BCM64 14e4:4d64 
+CXT   103c:006a
+END
+    elif [ "$PCIDEV" = "8086:266d" ] ; then
+      echo " The 8086:266d modems may be supported by hsfmodem OR slmodem-2.9.9c ,but not both" >>$RECORD
+      cat<<END>$TMPM.2
+SIL27 1509:3670
+CXT 14f1:5423 CXT23 no /proc/asound/mc97* ,
+END
+    elif [ "$PCIDEV" = "1039:7013" ] ; then
+    # 1039:7013  SIS 630 
+      cat<<EOF>$TMPM.2  
+SIL27 1043:1736 , 104d:8129 17c0:1059 , 1033:8216 1028:0195
+SIL23 1039:7013
+CXT 104d:814e Sony CXT23, 1043:1816 CXT22
+SIL22 1631:3003  NorthBridge , 1584:4003 ,  1734:105f ,1558:2202 CLEVO/KAPOK Computer: HAMR,http://linmodems.technion.ac.il/archive-fourth/msg01957.html
+SIL21 Pctel 1039:7013 1849:9739  13bd:102f
+Unknown 1019:0a01  1558:4201 , 1509:2470 First Int. Comp. ,  1734:105f with AMD64 processor, 1509:2470 , 1043:1456  Asustek
+EOF
+ 
+    elif [ "$PCIDEV" = "1039:7018" ] ; then  
+    # 1039:7018  SIS 960
+      cat<<EOF>$TMPM.2
+none
+EOF
+    elif [ "$PCIDEV" = "10de:01c1" ] ; then
+    # 10de:01c1  Nvidia Corp 
+      cat<<EOF>$TMPM.2
+none
+EOF
+    elif [ "$PCIDEV" = "10de:00d9" ] ; then
+    # 10de:01d9  Nvidia Corp
+     Smart=ALSA
+      cat<<EOF>$TMPM.2
+CXT 1043:1856 Asustek
+SIL27 103c:006d HP ,  
+EOF
+    elif [ "$PCIDEV" = "1106:3068" ] ; then 
+    # 1106:3068  VIA
+      cat<<EOF>$TMPM.2
+SIL27 1102:0033 CreativeLabs , 1025:0046 Acer , 1025:0033 , 1734:1078 
+SIL22 1743:1032 , 10cf:118e , 1734:1054 , 1462:309e , 1631:e004 , 1543:4c22 , 161f:2032 1584:4005 
+SIL21 10cf:118e , 13bd:1022 , 1543:4c21 1071:8375
+CXT 104d:8143 104d:80f6 , 1025:0030 CXT41 ,
+Unknown 1584:4005 Uniwell, 1025:0030 Acer 104d:80f6CXT?
+EOF
+    elif [ "$PCIDEV" = "1022:7446" ] ; then
+    # 1022:7446  AMD AC_LINK
+      cat<<EOF>$TMPM.2
+none
+EOF
+    elif [ "$PCIDEV" = "10b9:5453" ] ; then
+    # 10b9:5453  ALI 5453
+      cat<<EOF>$TMPM.2
+none
+EOF
+    elif [ "$PCIDEV" = "1543:3053" ] ; then
+    # Silicon Inst
+      cat<<EOF>$TMPM.2
+Unknown 1543:3052
+EOF
+    elif [ "$PCIDEV" = "e159:0001" ] ; then
+    # Tiger Jet
+      cat<<EOF>$TMPM.2
+INTEL537 8086:0003
+EOF
+    elif [ "$PCIDEV" = "1543:3052" ] ; then
+    # SILabs  SI3052 
+      cat<<END>$TMPM.2
+none
+END
+    elif [ "$PCIDEV" = "10b9:5457" ] ; then 
+    # 10b9:5457  ALI 5457
+      cat<<EOF>$TMPM.2
+SIL27 1179:0001 , 1033:81f3
+CXT 103c:002a CXT21, 103c:0024 CXT41 ,  103c:0029
+Unknown 0e11:005a 5457 Compaq
+EOF
+    elif [ "$PCIDEV" = "10b9:5459" ] ; then 
+    # 10b9:5457  ALI 5457
+      cat<<EOF>$TMPM.2
+SIL26 10a5:5459   Smart Link Ltd.
+EOF
+    elif [ "$PCIDEV" = "1002:434d" ] ; then
+      # 1002:434d  ATI Technologies Inc:
+      IDENT=ATI
+      Smart=ALSA 
+      ALSA=1002:434d
+      cat<<EOF>$TMPM.2 
+SIL27 103c:006b HP, 1179:0001 Toshiba ,  1025:0052 Acer
+EOF
+    ##ARCHIVEend
+    else
+      cat<<EOF | tee -a $RECORD
+ This combination of softmodem controller and Subsystem:
+	Primary   $PCIDEV
+	SubSystem $SUBSYS
+ has not been previously reported.
+
+EOF
+    fi
+    # Analysis of Archival info 
+    if test -f $TMPM.2 ; then
+      CODECp=`grep $SUBSYS $TMPM.2 | cut -d' ' -f1`
+      if test -z "$CODECp" ; then
+        echo " Modem codec information on Subsystem $SUBSYS is not in the records.">>$RECORD      
+      elif [ "$CODECp" = "Unknown" ] ; then
+          echo " A codec for this Subsystem record under controller $PCIDEV was not been reported".>>$RECORD        
+        if [ -n "$CODEC" ] ; then 
+	  echo " Please report this New assignment to Discuss@linmodems.org : $PCIDEV $SUBSYS  $CODEC" | tee -a $RECORD
+        fi
+      else
+        echo " From prior reports, the modem codec type of the Subsystem is: $CODECp">>$RECORD
+      fi
+    fi 
+
+    # This section compares diagnostis from slamr test and Archival records:
+    if [ -z "$CODEC" ] ; then
+	 # echo " Using archived information for soft modem codecs.">>$RECORD	
+	 CODEC=$CODECp
+	 CODECnone=1
+         COD=`echo $CODEC | cut -b-3`
+    elif [ "$CODEC" = "$ ALG10" ] ; then
+	 echo " ALG10 is an audio codec, the modem hardware has not been properly accessed.">>$RECORD
+    elif [ "$COD" = "CXT" ] && [ "$CODECp" = "CXT" ] ; then
+	 CODEC=$COD
+	 echo " Agreement between slamr diagostic and Archive.">>$RECORD
+    elif [ "$CODECp" = "$CODEC" ] ; then
+	 echo " Agreement between slamr diagostic and Archive.">>$RECORD
+    elif ! [ "$CODECp" = "$CODEC" ] ; then 
+         echo " DisAgreement between slamr diagostic and Archive.  Using slamr diagnostic: CODEC=$CODEC">>$RECORD  
+	 CODECp=$CODEC
+    else
+	 echo "All cases should be covered">/dev/null
+    fi
+
+    # Case by case of CODEC
+    if test -n "$CODEC" && ! [ "$CODEC" = "Unknown" ] ; then 
+      if   [ "$CODECp" = "INTEL537" ] ; then
+         echo   " The modem has an Intel 537 chipset"  | tee -a $RECORD
+	 echo  "  Use driver resource Intel-537-MostRecentVersion.tgz" >>$RECORD
+	 IDENT=INTEL537
+      elif   [ "$CODECp" = "INTEL537EP" ] ; then
+         echo   " The modem has an Intel 537EP chipset"  | tee -a $RECORD
+	 echo  "  Use driver resource Intel-537EP-MostRecentVersion.tgz" >>$RECORD
+	 IDENT=INTEL537EP
+      elif [ "$COD" = "CXT" ] ; then
+        CXT=yes
+        Smart=
+	smart=
+	echo " The modem has a Conexant codec: $CODEC" | tee -a $RECORD
+	if test -z "$CNX" ; then
+	   echo "   BUT $CNTRL is not yet supported by Linuxant code." | tee -a $RECORD
+	else
+	  IDENT=CXT
+          cat<<END | tee -a $RECORD
+ and there is support for the modem controller: $CNTRL
+ Some Linux Distributions include the hsfmodem driver.
+ Search your packages information for "hsfmodem" and "Conexant".
+ If not found there, download a hsfmodem package from http://www.linuxant.com .
+ 
+ For 2.4.n kernels, If there is not an exact match your kernel version: `uname -r`
+ then kernel-sources must be prepared as described in Modem/DriverCompiling.txt
+ before the hsfmodem driver compiling can be successfull. 
+ For recent  kernel-source-2.4.6 ,configuration steps are not necessary.
+ 
+END
+         fi
+      elif [ "$CODEC" = "SIL22" ] ; then
+        echo " The Subsystem has the a SmartLink codec" | tee -a $RECORD
+        if [ "$smart" = "may" ] ; then
+          echo " with a supported $PCIDEV modem controller" | tee -a $RECORD
+	  IDENT=SMART
+        else
+           echo " but sadly, support is lacking for the $PCIDEV modem controller." | tee -a $RECORD
+        fi
+      elif [ "$CODEC" = "BCM64" ] || [ "$CODEC" = "SIL24" ] ; then
+        IDENT=$CODEC
+        echo " The Subsystem has a Broadcom codec $CODEC" | tee -a $RECORD
+      elif [ "$CODEC" = "INT65" ] || [ "$CODECp" = "SIL25" ] ; then
+        IDENT=$CODEC
+        Smart=yes
+	       cat<<END>>$RECORD
+	       
+ The Subsystem has the INTEL codec $CODEC	       
+ The Intel_secure-537AA driver and possibly the SmartLink driver support the modem.
+ Details below and read Modem/Slmodem.txt
+END
+      elif [ "$CODEC" = "SIL24" ] || [ "$CODEC" = "SIL26" ] ; then
+        echo " The Subsystem has a Broadcom codec $CODEC" | tee -a $RECORD
+	IDENT=SMART
+      elif [ "$CODEC" = "SIL21" ] ; then
+        IDENT=Smart
+        echo " The Subsystem has a PCTel codec $CODEC" | tee -a $RECORD	
+	if [ "$MAJOR" = "2.4" ] ; then
+	  IDENT=PCTEL
+	  echo "The pctel-0.97 drivers may support this modem.">>$RECORD
+	fi
+      elif [ "$CODEC" = "SIL23" ] ; then
+         IDENT=Smart
+         echo " The Subsystem has Silicon Integrated Systems (SiS) codec $CODEC" | tee -a $RECORD	
+      elif  [ "$CODEC" = "SIL27" ] ; then
+        echo " The Subsystem has an Agere Systems codec $CODEC" | tee -a $RECORD
+	if [ "$MAJOR" = "2.4" ]  && [ -n "$AGR" ] ; then
+	  IDENT=AGR
+	  echo " Under 2.4.n kernels, there are AgereSoftModem drivers">>$RECORD	
+	else
+	  IDENT=Smart
+	fi
+      else
+	  echo " Please report this new SIL type to Discuss@linmodems.org "
+      fi 
+      if [ "$smart" = "may" ] && ! [ "$COD" = "CXT" ] && ! [ "$IDENT" = "ATI" ] ; then
+        Smart=may
+        echo " SmartLink software should support this modem">>$RECORD
+	if [ "$CODEC" = "BCM64" ] ; then
+	  Smart=ALSA
+	  echo " Only the SmartLink slmodem-2.9.9d-alsa software supports this modem">>$RECORD
+	fi
+      fi      
+    else
+      echo " There are the following routes toward support:">>$RECORD
+      echo "	Follow instructions in Modem/SoftModem.txt for identifying the modem under a Microsoft boot.">>$RECORD
+      if [ "$smart" = "may" ] ; then
+      	if [ "$DISTR" = "SuSE" ] && [ "$MAJOR" = "2.6" ] ; then
+	  cat<<END | tee -a $RECORD
+	  
+ SuSE has a slamr driver.  Please run the diagnostic:
+ # su - root
+ # modprobe slamr
+ # dmseg | grep slamr
+ and report the results to discuss@linmodems.org.  
+ Read Modem/Slmodem.txt for details.
+END
+        else
+          echo "	Read Modem/Slmodem.txt instruction for doing the slamr diagnostic.">>$RECORD
+	fi
+      fi
+      if test -n "$CNX" ; then
+         echo "  Test the effectiveness of the hsfmodem package from http://www.linuxant.com/drivers/hsf/index.php.">>$RECORD
+      fi
+    # Distro specific issues
+      if [ "$DISTR" = "debian" ]  ||   [ "$DISTR" = "Ubuntu" ]   ||  [ "$DISTR" = "knoppix" ] && ! [ "$IDENT" = "ATI" ] ; then
+	cat<<END>>$RECORD
+
+ The $DISTR Linux includes sl-modem packages with Smartlink drivers
+   Install the kernel-headers-$SYS.deb
+   If necessary, set a symbolic link needed for slmodem compiling:
+     # ln -s /usr/src/kernel-headers-$SYS /lib/modules/$SYS/build
+     as described in Modem/DriverCompiling.txt
+   Then install the two sl-modem/slmodem packages and follow their directions.
+   Thereafter the above slamr diagnositic can be run.
+
+END
+      elif [ "$DISTR" = "SuSE" ] && ! [ "$PCIDEV" = "1002:434d" ] && ! [ "$CODECp" = "CXT" ] && !  [ "$CODECp" = "BCM64" ] ; then
+	    cat<<END>>$RECORD
+	    
+ Install kernel-source package, the slmodem and km_slmodem packages.
+ If necessary, set a symbolic link needed for slmodem compiling:
+ # ln -s /usr/src/linux-$SYS /lib/modules/$SYS/build
+ Then install the packages and compile the drivers.
+ The compiling process is described in:
+   http://linmodems.technion.ac.il/archive-fourth/msg00176.html
+
+END
+      elif [ "$DISTR" = "Mandrake" ] && [ "$MAJOR" = "2.6" ] ; then
+	cat<<END>>$RECORD
+ Current Mandrake installations have slmodem packages.    
+ http://linmodems.technion.ac.il/packages/smartlink/
+
+END
+      else
+	 echo  Leaving space for expansion >/dev/null
+      fi # Distros specific
+    fi # CODECnot 
+  fi # soft
+  echo >$TMPM.2
+  if test -z "$IDENT" ; then
+    cat<<END>$TMPM.2
+ 4005:0308  Avance ALS-300plus sound+softmodem combo PCI card (obsolete).
+ 1055:9178  STANDARD_MICROSYSTEM
+ 10b9:545a  ALI545A SL1801
+ 10b9:5459  ALI 5459 SmartPCI561
+ 10b9:5459  Subsystem: 10a5:5459  ALi Corporation SmartLink SmartPCI561 56K Modem (NetoDragon)
+ 10ec:8197  PCI SmartLAN56 (RealTek ether/modem combo)
+ 1131:3400  SmartPCI56 (Philips UCB1500)
+ 10a5:3052  Racal Interlan SL1900
+ 10a5:5459  Racal Interlan SmartPCI561 SL1900
+ 163c:5459  SmartLink SmartPCI561 SL1900
+ 2000:2800  Gateway SL2800
+ 2003:8800  SmartLink  SL2800
+END
+  fi
+  # marv
+  if grep $PCIDEV $TMPM.2>/dev/null  ; then
+    IDENT=SMART
+    SMT=`grep $PCIDEV $TMPM.2`
+    cat<<END | tee -a $RECORD
+
+ SmartLink drivers support this modem:
+   $SMT
+END
+    if [ "$PCIDEV" = "2003:8800" ] ; then
+      echo " But version slmodem-2.9.10 or later is necessary." | tee -a $RECORD
+    fi
+  elif [ "$Vendor"  = "11c1" ] ; then
+    IDENT=AGERE
+  elif [ "$Vendor" = "115d" ] ; then
+    IDENT=XIRCOM
+  elif [ "$v" = "127a" ] ||  [ "$v" = "14f1" ] ||  [ "$v" = "148d" ] || [ "$PCIDEV" = "158b:0001" ] || [ "$PCIDEV" = "158b:0005" ] || [ "$PCIDEV" = "158b:0015" ]  ; then 
+    IDENT=CXT
+    # Intel 536EP & 537 secton
+  elif [ "$PCIDEV" = "e159:0001" ] && [ "$SUBSYS" = "8086:0003" ] ; then
+    echo "	Use driver resource Intel-537-MostRecentVersion.tgz">>$RECORD
+    IDENT=INTEL537
+  elif [ "$PCIDEV" = "8086:1040" ] ; then
+    if [ "$SUBSYS" = "8086:1005" ] ; then
+      echo SUBSYS=$SUBSYS
+      echo "	Use driver resource Intel-537SP-MostRecentVersion.tgz">> $RECORD
+      IDENT=INTEL537SP
+    fi
+    if [ "$SUBSYS" = "8086:1000" ] ; then
+      IDENT=INTEL536ep
+      echo " Use driver resource Intel-536ep-MostRecentVersion.tgz ">>$RECORD
+      # no SMP      http://linmodems.technion.ac.il/archive-third/msg00855.html
+    fi
+  elif grep $PCIDEV Modem/SoftModem.txt >/dev/null && $LSPCI -v 2>/dev/null | grep "Intel 537" >/dev/null ; then
+   # 1st line, because of mistakes in the PCI id databset
+    echo "	Due to a PCI ID database error, the Intel 537 designation is commonly incorrect." | tee -a $RECORD
+    AMBIG=537
+  else
+    echo No definitive Intel 537 soft modem>/dev/null
+  fi
+  echo $IDENT >$TMPM
+
+  echo > $TMPM.soft
+  if test -z "$IDENT" ; then
+  # Special cases
+   if $LSPCI -v 2>/dev/null | grep CM8738 >/dev/null ; then
+     IDENT=CM8738
+   elif $LSPCI -v 2>/dev/null | grep "Intel 536"  >/dev/null ; then
+   # because Intel 536 may have PCI_IDs assigned by modem assemblers, not Intel
+     IDENT=INTEL536ep
+   elif $LSPCI -v 2>/dev/null | grep "Subsystem: Conexant" >/dev/null ; then
+   # because the PCI_IDs may be assigned by modem assemblers, not Conexant
+     IDENT=CXT
+   else
+     echo "probably not a Conexant modem" >/dev/null
+   fi
+   
+      if $LSPCI -v 2>/dev/null | grep "Smart Link HAMR5600"  >/dev/null ; then
+       # because the PCI_IDs may be assigned by modem assemblers, not SmartLink
+       #  and mistakes in the PCI ID database
+       AMBIG=$AMBIG" HAMR5600"
+       #XX some misidentified softmodem
+      fi
+    fi 
+  
+    if test -z "$IDENT" ; then
+      AMBIG=
+      cat<<END>>$RECORD
+      
+ Information on several modem chipset providers is provided below,
+ because ambiguities remain on the correct choice of supporting software.
+            
+END
+    fi
+    PRIMARY=
+    if test -n "$SOFT" ; then
+      VEND="$SUBven $Vendor"
+      if [ "$Vendor" = "$SUBven" ] ; then
+        VEND=$Vendor
+      fi
+    else
+      VEND="$Vendor"
+      # SUBven not important if not softmodem
+    fi
+    for v in $VEND
+    do
+      echo " == Checking PCI IDs through modem chip suppliers ==">>$RECORD 
+
+    if [ "$Vendor" = "1002" ] && ! [ "$ATI" = "done" ] ; then
+        ATI=done
+	smart=1
+      cat<<END>>$RECORD
+
+ Vendor 1002 is ATI Technolgies, http://www.ati.com, producing video cards, motherboard and
+ a 1002:434d  ATI soft modem controller with a variety of Subsystems.
+  There is a modem driver, snd-atiixp_modem.ko , becoming available through http://www.alsa-project.org ,
+ with complementary port creation through the SmartLink slmodem-2.9.9d-alsa
+ For history see:  http://website.lineone.net/~bryanrpoole/atiixp-modem.htm
+ For details on setup and testing, see Modem/ATI.txt
+ 
+END
+    fi
+    if [ "$Vendor"  = "151f" ] ; then
+      IDENT=Topic
+      cat<<END>>$RECORD
+      
+ Vendors $v is TOPIC SEMICONDUCTOR Corp.
+ Class 0780 151f:0000 is a controller chipset modem using the standard drivers.
+ See http://www.math.sunysb.edu/~comech/tools/PCImodems.html
+
+END
+    fi
+    if [ "$v" = "10de" ] ; then
+      cat<<EOF>>$RECORD
+      
+ Vendor 10de is Nvidia, producing the video cards and 
+ two softmodem controllers: 10de:01c1 and 10de:00d9
+ For subsystems with SILnm codecs,
+     slmodem-2.9.n software in ALSA mode provides support.
+      
+EOF
+    fi 
+    if [ "$PCIDEV" = "10de:00d9" ] ; then 
+       cat<<EOF>>$RECORD
+       
+ At least some of the 10de:00d9 chipset modems have a Conexnant codec, with support by the hsfmodem package from http://www.linuxant.com/drivers/hsf.   
+ After installation of the software, an edit may be necessary in the file:
+   /usr/lib/hsfmodem/mod_mc97ich.c
+ Search for "0x01C1" , which will reveal a line beginning:
+    { 0x10DE, 0x01C1, PCI_ANY_ID,  PCI_ANY_ID,   
+ and change to: 
+    { 0x10DE, 0x00D9, PCI_ANY_ID,  PCI_ANY_ID,    
+    
+EOF
+    fi    
+    if [ "$v" = "e159" ] ; then
+      cat<<END>>$RECORD
+
+ Vendor $v is Tiger Jet (TJ).
+  $v:0001  translates PCI commands to the serial link used by
+     the silabs DAA from the si3034, si3044 and si3056 family.
+  $v:0001  8086:0003  TJ320 v2.0 , with subsystem 8086:0003 is an Intel-537 soft modem
+     supported by:  Intel-537-MostRecentVersion.tgz
+  $v:0001  0359:0003  TJ320 v3.1
+
+END
+    fi
+    if [ "$v" = "1106" ]  ; then
+      VIA=1
+      cat<<END>>$RECORD
+
+ Vendor $v is VIA  Technologies Inc.,producing diverse bridges including devices:
+    1106:3068    VT82C686/686A/686B AC97 Modem Codec
+ Under the later, the  10cf:118e  the "Intel 537" is partially supported
+   by the SmartLink slmodem-2.7.10 software
+    Subsystem 1102:0033 has an AgereSystems soft modem chip
+
+END
+    fi
+    if [ "$v" = "13f6" ] ; then
+      PCTEL=13f6
+      cat<<END>>$RECORD
+
+ Vendor $v is C-Media Electronics, which produced modem:
+     13f6:0211  C-Media Electronics Inc CM8738,
+     13f6:0211  subsystem HSP56 Audiomodem Riser
+ supported under 2.4.n kernels by PCTEL software.
+ BUT there is no support under 2.6.n kernels.
+
+END
+    fi
+    if [ "$v" = "14e4" ] || [ -n "$BRD" ] ; then
+      cat<<END>>$RECORD
+
+ Vendor 14e4 is BroadCom 
+   14e4:4212   is a  BCM V.90 56k modem
+ There is a driver for 2.2.n kernels called  BCOM_WAN_V20.
+    Search for it at http://www.dell.com 
+ However the code has not been updated for some time.
+ For  2.4 kernels, fix by Giacomo Comes must be used. See :
+   http://linmodems.technion.ac.il/archive-third/msg01652.html
+ When serving under softmodem controllers like the Intel ICH series,
+ the Broadcom Subsystem 14e4:4d64 has mc97 codec BCM64.
+ For 2.6.n kernels, see success reports:
+   http://linmodems.technion.ac.il/archive-fourth/msg03690.html
+   http://oboc.ucdavis.edu/Marik/inspiron/ 
+   The support is achieved through a combination of:
+   1) the snd-intel8x0m.ko of 2.6.n kernel releases, which provides a low level interface with the modem;
+   2) an slmodemd daemon which creates ports and provides higher level functions.
+   Get the slmodem-2.9.9d-alsa.tar.gz from  http://linmodems.technion.ac.il/packages/smartlink/
+   To compile the slmodemd, it is first Necessary to install a libasound2-dev package, providing alsa headers.
+   3) After compilation and installation of slmodemd, initiate service with:
+   # modprobe  snd-intel8x0m
+   # slmodemd --alsa --country=YOURCOUNTRY hw:1
+   Read the slmodem documentation for details and Modem/Slmodem.txt
+
+END
+    fi
+    if [ "$v" = "104d" ]; then
+      cat<<END>>$RECORD
+
+ Vendor 104d is Sony. Subsystem 104d:8129 under a 8086:2486 Intel modem controller
+ has a Conexant chip in a Sony Vaio grx560 laptop. 
+ A bootup "acpi=on" was required for IRQ acquisition.
+END
+    fi
+    if [ "$v" = "1039" ] ; then
+      echo " Vendor $v is SiS, Silicon Integrated System, producing  soft modem controllers and subsystems.">>$RECORD
+    fi
+    if [ "$v" = "1014" ] ; then
+      echo Vendor=1014 is IBM.>>$RECORD
+      if test -n "$SOFT" ; then
+        cat<<END>>$RECORD
+
+ Some thinkPad laptops have soft modem Subsystems with AgereSystems codec: 1014:0227 and 1014:0524. 
+ Software access is through IBM:
+       http://www-3.ibm.com/pc/support/site.wss/document.do?lndocid=MIGR-52698
+END
+      fi
+    fi #beginESS
+    if [ "$v" = "125d" ] ; then
+      IDENT=ESS
+      cat<<END>>$RECORD
+
+ Vendor=$v is ESS Technologies, making devices:
+ There has been no formal support for Linux since kernels 2.2.2
+ Some kludges are of fading utility as the 2.4.n Linux kernels and hardware evolves:
+   http://linmodems.technion.ac.il/archive-fourth/msg00317.html   (2004Feb08)
+   http://andrew.cait.org/ess/
+   http://sidlo.penguin.cz/ES2838/index_en.html
+   http://tx.technion.ac.il/~raindel/
+   http://phep2.technion.ac.il/linmodems/archive/msg04424.html
+      
+ There is no hope for support under 2.6.n kernels.
+
+END
+    fi
+    if [ "$v" = "1025" ] ; then
+      cat<<END>>$RECORD
+
+ Vendor=$v is Acer, http://global.acer.com/ PC and latop manufacturer with devices including:
+  1025:5453   M5453 AC-Link Controller Modem Device
+  1025:0038   an AC97 link modem.
+
+END
+    fi
+    # beginMotorola
+    if [ "$v" = "1057" ] || [ "$v" = "11d4" ] ; then
+      IDENT=Motorola
+      cat<<END>>$RECORD
+
+ -----------------------------
+ Vendor=1057 is Motorola with service provided through vendor=11d4 Analog Devices Inc.
+ Installers are available at: http://www.motorola.com/softmodem/sm56_download.htm
+as RPM packages containing binary images of drivers 
+applicable for installation on the following systems:
+* RedHat 7.3 (kernel version 2.4.18-3, sm56-06.05.00-1.rh7.i386.rpm)
+* RedHat 8.0 (kernel version 2.4.18-14, sm56-06.05.00-1.rh8.i386.rpm)
+* RedHat 9.0 (kernel version 2.4.20-8, sm56-06.05.00-1.rh9.i386.rpm)
+* Mandrake Linux 9.2 (kernel version 2.4.22-10mdk, sm56-06.05.02-1.mdk.i586.rpm)
+* Mandrake Linux 10.0 (kernel version 2.6.3-7mdk, sm56-06.05.02-2.mdk10_263-7.i586.rpm)
+* Suse Linux 9.0 (kernel version 2.4.21, sm56-06.05.02-1.suse90-020421-99.athlon.rpm)
+* Suse Linux 9.0 (kernel version 2.4.21, sm56-06.05.02-1.suse90-020421-99.i586.rpm)
+ There is also available a Legacy driver - SM56_5.1_I386.rpm for 2.4.n kernels ONLY
+ for which the advice at http://www.sm56.tk/ may be effective.
+ 
+ Jan Ibanez  <jmibanez@gmail.com> is our expert on Motorola problems
+ 
+ Achieving function with these drivers is often difficult.
+ If you computer alternatively boots Linux and Microsoft OS,
+ do a complete PowerOff before starting Linux. 
+ Otherwise there may be an error during following Motorola usage:
+     SM_DisplayFatalError
+
+ Some guidance for particular cases is:
+   http://linmodems.technion.ac.il/archive-fourth/msg01751.html
+   http://linmodems.technion.ac.il/archive-fourth/msg01749.html
+   http://linmodems.technion.ac.il/archive-fourth/msg01750.html
+   http://linmodems.org/cgi-bin/ezmlm-cgi?1:mss:13952:200405:enbjmmngagmdejkemacc
+   http://users.volja.net/kutulu/sm56.tar.gz
+ There is a volunteer Motorola site: http://www.sm56.tk/
+ The installation creates a driver sm56.o , the character devices
+      /dev/motomem
+      /dev/sm56
+         with symbolic link  /dev/modem --> /dev/sm56
+  the /etc/modules.conf lines:
+      alias char-major-24 sm56
+      options sm56 country=1
+  and documentation in  usr/share/doc/HTML/en/sm56/  and "man sm56"
+  An additional line in /etc/modules.conf
+      alias /dev/modem /dev/sm56
+  would beneficially aid driver autoloading, without which there may be a failure of the wvdial functionality test:
+  # /etc/wvdialconf /etc/wvdial.conf
+ --------------------------------- End Motorola ------------------
+
+END
+    fi # begin3com
+    if [ "$v" = "10b7" ] || [ "$v" = "12b9" ] ; then
+      smart=
+      IDENT=3COM
+      cat<<END>>$RECORD
+
+ 10b7 is 3COM
+       :1006    0038TA <- AC101 - TF Mini-PCI 56K V.90 WinModem  no Linux support
+       :1007    3C556 V.90 Mini-PCI 	WinModem  no Linux support
+ 12b9 is US Robotics. acquired by 3COM
+       :0062    erk41926a-0.6 usr 56k internal modem
+       ;1006    3cp803598  Voice          WinModem  no Linux support
+       :1007    ERL3263A-0 DF GWPCI PC99  WinModem  no Linux support
+       :1008    3cp803598  is Supported by the standard:  serial.o
+ The following may be supported  by Conexant drivers at   http://www.linuxant.com
+   14f1:2f12 (3COM/USR model 3094-3095)
+   14f1:2f13 (USR OEM)
+   14f1:2f14 3COM/USR
+ though they carry USR labels.
+
+END
+    fi
+    if [ "$v" = "1543" ] ; then
+echo >>$RECORD
+echo  "Vendor 1543 is Silicon Laboratories (SIL).  SIL produces "blanks" for soft modem Subsystems"  >>$RECORD
+echo  which subsequent acquire the Subsystem PCI ID from the final Subsystem assembler. >>$RECORD
+echo  Subsystems for soft modems are also produced. >>$RECORD
+echo >>$RECORD
+    fi    
+    if [ "$v" = "10b9" ] ; then
+          cat<<END>>$RECORD
+
+ Vendor 10b9 is Acer Labs, producing highly integrated motherboards and Ali components.
+ The tight integration unfortunately ofter blocks identification of the modem chipset.
+ Desired information may be gained by using a COMM console under MS Windows,
+   and using ATI commands to elicit chipset and driver information.
+ 10b9:5450  ALI 5450 and  10b9:5451  ALI 5451 are controllers for unsupported "sound  modems"
+ 
+END
+      if [ "$Device" = "545a" ] || [ "$Device" = "5459" ] ; then
+        cat<<END>>$RECORD
+ $PCIDEV ALI545A SL1801 and $PCIDEV  ALI 5459 SmartPCI561 have SmartLink chipsets.
+
+END
+      fi
+
+      if [ "$Device" = "5457" ] || [ "$Device" = "5459" ] ; then
+	cat<<END>>$RECORD
+
+ These messages may aid setup of soft modems under $v:M5457 controllers:
+   http://linmodems.technion.ac.il/archive-third/msg02518.html
+   http://linmodems.technion.ac.il/archive-third/msg02100.html
+ The slmodem-2.9.9 support was developed for $v:5459,
+   but there a range of reports the related $v:5457 modemd controllers:
+     fully functional;
+     functional only after a power on reboot from Microsoft windows;
+     hang/crash upon initiation of modem usage.
+ 
+ 10b9:5457   Modem: ALi Corporation [M5457 AC-Link Modem] 
+ SubSystem 1179:0001   Toshiba America Info Systems: Unknown device 0001
+ has an AgereSoftModem chip which may be supported by the Smartlink slmodem-2.9.9 driver 
+     
+END
+      fi
+    fi # beginPctel
+
+    if ! [ "$PCTEL" = "DONE" ] ; then
+      if [ -z "$IDENT" ] || [ "$IDENT" = "PCTEL" ] || [ "$IDENT" = "CM8738" ] ; then
+        if [ "$v" = "134d" ] || [ "$v" = "134c" ] || [ -n "$CM8738" ] || [ "$PCTEL" = "13f6" ] || [ "$CODECp" = "SIL21" ] ; then
+	  if [ "$CODECp" = "SIL21" ] ; then
+            cat<<END>>$RECORD
+
+ For Pctel AMR under $CNTRL,
+ the SmartLink slmodem-2.9.n  software can serve.
+ The advantage is current updates, extending into the 2.6.n kernels.
+
+END
+              smart=1
+          fi
+	  echo " Read ModemData.txt  and Pctel.txt in the new sub-folder Modem/" | tee -a $RECORD
+	  if [ "$PCIDEV" = "134d:2189" ] ; then   
+            echo " The 134d:2189 is a PCTel 688T modem which is currently NOT supported see:" >>$RECORD
+            echo "	http://linmodems.technion.ac.il/archive-fifth/msg00057.html" >>$RECORD	    
+	  fi
+	           cat<<END> Modem/Pctel.txt
+
+ Vendor=134d is PCTel and Vendor=134c is Chori Joho System Co. Ltd, 
+ producing idenitcal devices including deviceIDs. For supported PCtel modems
+  The PCTel Inc., modem sector has been sold to Conexant. 
+  Thus official updates for Linux support are unlikely!!
+  
+  Through volunteer efforts, there are  code releases are at 
+      http://linmodems.technion.ac.il/pctel-linux .
+  Download the pctel-0.9.7-9.tar.gz
+  Do the following preliminary steps:
+	  Unpack with command :       tar zxvf pctel-0.9.7-9.tar.gz
+  	Change directory:                 cd pctel-0.9.7-9
+  	Read README file	           less README   (space bar goes to next page)
+ 	Is a compiler installed?  Test with:           gcc 
+  	If not found, install it from your Linux distribution.
+  	Become root:               su  root
+  	Seeing lspci?             	 lspci    
+	  If not, install the package   pciutils .
+	Now you can follow instructions in README
+      
+  For guidance on compiling and installing the pctel drivers, read the  PCTel minHOWTO: 
+      http://www.peacefulaction.org/sayamindu/docs.php
+  and the remainder of this file
+
+ The ISA card pct388p modem is not supported by the current driver series see:
+       http://linmodems.technion.ac.il/archive-fifth/msg00166.html
+ The PCI ID 134d:2189 modem is a PCTel 688T modem which is currently NOT supported see:
+     http://linmodems.technion.ac.il/archive-fifth/msg00057.html 
+ There are No success reports under current 2.6.nn kernels using PCTel code,
+   though volunteer efforts are in progress to achieve support under 2.6.n kernels.
+ The slmodem Smartlink code can however support the AMR PCtel modems under 2.4.n and 2.6.n kernels.
+ 
+ During PCtel code installations, the node made is character device /dev/ttyS15  c 62 69
+ Check with:
+     ls -l dev/ttyS15
+     
+ There is a pre-compiled binary component in the Pctel code which was assembled with a gcc 2.95 compiler
+ A consequence is the loading fails under kernels compiled with gcc 3.n , unless forcing (-f) is used:
+ 	# insmod -f pctel
+	 # insmod ptserial
+This can be automated by adding the following lines to /etc/modules.conf
+ 
+####### for pctel modem ######
+alias char-major-62 pctel
+alias /dev/modem ptserial
+install pctel /sbin/insmod "-f" "pctel"
+post-install pctel /sbin/insmod ptserial
+
+# country code for pctel modem, for USA
+options ptserial country_code=1
+######## pctel end ####
+
+then run:
+# depmod -a
+to inform the System and thereafter
+# modprobe ptserial
+will load both drivers,
+
+ For some Systems, PCTel function requires disablement of apmd power monitoring function.
+
+ System problems of various severity have been reported after modem usage.
+ These may be alleviated by the following steps after a modem usage session.
+ Log into a console as:
+ # su - root
+ # lsmod 
+ to display loaded modules.
+ # modprobe -r ptserial
+ # lsmod
+
+ For a case of a 134d:7897 modem on a VIA686 motherboard PCTEL drivers compiled with
+     hal=via686
+  did NOT provide effective drivers while the drivers were effective when compiled with
+     hal=pct789 
+     
+ For pctel-0.9.7-9 with variant hal=via686a, a fix is needed:
+   # cd src
+   # make clean
+   # ./configure -auto
+Search the Makefile for a line containing DAUDIO.  Edit that line into:
+   AUDIOROUTING=-DVIA
+Then:  
+   # make
+   # make install
+    
+END
+        fi
+      PCTEL=DONE
+     fi
+    fi # IDENT
+    
+    if [ "$v" = "158b" ] ; then
+      cat<<END>>$RECORD
+
+ echo Vendor 158b is Allied Data Technologies, http://
+ 158b:0001 and 158b:0005 have Conexant HSF chipsets.
+ 158b:0015 has a Conexant HCF chipset.
+ There are 158b:xxxx modems with the Intel 536ep chipset.
+
+END
+    INTEL536ep=1
+    fi
+    if  [ "$v" = "1013" ] ; then
+      cat<<END>>$RECORD
+
+ There is no CURRENT SUPPORT for the Vendor=1013 chipsets of CML, Cirrus Logic Modems,
+  with modem business acquired by Intel, Inc.
+ See message: http://linmodems.org/cgi-bin/ezmlm-cgi?1:mss:9448:200210:fbhcoigfcimgkjdedjad
+
+END
+    fi
+    if [ "$v" = "1813" ] ; then
+      cat<<END>>$RECORD
+
+ Vendor=1813 Ambient Tech was acquired by Intel with its HaM (Host assisted Modem) chipsets.
+ Intel-v92ham-453.tgz ifor 2.4.n kernels is FINAL update for HaM modems, available at:
+    http://linmodems.technion.ac.il/packages/Intel/ham/ 
+    http://developer.intel.com/design/modems/support/drivers.htm
+    It is NOT functional when compiled under 2.6.n kernels and will NOT be updated to support
+    the 2.6.n kernels, Intel maintainer Dorian Araneda has reported.
+ But under the 2.4.nn kernels, all HaM chipsets are supported,
+     with a single EXCEPTION: the odd PCI_ID 1813:4100 modems.  For the explanation, see message:
+     http://linmodems.org/cgi-bin/ezmlm-cgi?1:mss:9448:200210:fbhcoigfcimgkjdedjad
+
+END
+    fi 
+    # beginCXT
+    if test -z "$Dcnx" ; then 
+      Dcnx=done
+      echo "148d 158b 141a 127a 14f1 1024" > $TMPM
+      # hcfpciconfig
+      if [ "$IDENT" = "CXT" ] || grep $v  $TMPM >/dev/null  ;  then
+         # Conexant HSF, adapted from www.linuxant.com   HSF page
+cat<<END>$TMPM
+
+   HSFi tyes
+ -----------
+ 14f1:2f00, Subsystem ID 2002:14f1
+ 14f1:2f00, Subsystem ID 2003:14f1
+ 14f1:2f00, Subsystem ID 2004:14f1
+ 14f1:2f01
+ 14f1:2f02
+ 14f1:2f03
+ 14f1:2f04
+  
+   HSF types
+ ----------
+ 14f1:2013
+ 14f1:2014
+ 14f1:2015
+ 14f1:2016
+ 14f1:2f10
+ 14f1:2f11
+ 14f1:2f12
+ 14f1:2f13
+ 14f1:2f14
+ 14f1:4311 (RIPTIDE - sound not supported)
+ 127a:2013
+ 127a:2014
+ 127a:2015
+ 127a:2016
+ 127a:4311 (RIPTIDE - sound not supported)
+ 127a:2114
+
+ Basic2 / SmartDAA types
+ --------------------------
+ 14f1:2043
+ 14f1:2044
+ 14f1:2045
+ 14f1:2046
+ 14f1:2443
+
+  Athens (Yukon)
+ -----------------
+ 14f1:1631
+ 14f1:1636
+ 14f1:1637
+
+ 8086:2486 104d:8129 SoftK56 CModem in a Sony Vaio grx560 laptop required a bootup "acpi=on" for IRQ acquisition.
+ 
+END
+
+if [ "$PCIDEV" = "14f1:2f00" ] ; then
+  echo $Vendor:2002 > $TMPM.0
+  echo $Vendor:2003 >> $TMPM.0
+  echo $Vendor:2004 >> $TMPM.0
+#  cat $TMPM.0
+  if grep 14f1:2f00 $TMPM | cut -dD -f2- | grep -f $TMPM.0 >/dev/null ; then
+    HSF=1
+  fi
+fi
+if grep $Vendor $TMPM >/dev/null ; then
+  grep $Vendor $TMPM > $TMPM.1
+  if grep $Vendor:$Device $TMPM.1 >/dev/null ; then
+    HSF=1
+  fi
+fi
+if test -n "$HSF" ; then
+   echo "  $PCIDEV is a Conexant HSF modem." | tee -a $RECORD
+fi
+# END Conexant HSF
+# the four set  127a,14f1:1025,2005 can be HCF and HSF and are included in the following HCF section
+
+# www.linuzant.com HCF page adaptation
+cat<<END>$TMPM
+# Vendor:-------devices-----  of HCF List
+ 127a:1002:1003:1004:1005:1006 (71DP v90)
+ 14f1:1002:1003:1004:1005:1006 (71DP v90)
+ 127a:1022:1023:1024:1026
+ 14f1:1022:1023:1024:1026
+ 127a:1025:1085:2005 (if it doesn't work: try HSF driver)
+ 14f1:1025:1085:2005 (if it doesn't work: try HSF driver)
+ 127a:2004:2006
+ 14f1:2004:2006
+ 127a:1032:1033:1034:1035:1036
+ 14f1:1032:1033:1034:1035:1036
+ 127a:14f1:4321 (RIPTIDE)
+ 14f1:10b3:10b4:10b5:10b6
+ 127a:1802:1804:1805 (LAN/Modem combo)
+ 14f1:1813:1815 (LAN/Modem combo)
+ 14f1:1f10:1f11:1f14:1f15
+ 14f1:1053:1054:1055:1056 (Smart HCF board rev 3)
+ 14f1:1052:1057:1059 (Smart HCF board rev 4)
+ 14f1:1063:1064:1065:1066 (Smart HCF US-only: Dell)
+ 14f1:1453:1454:1455:1456 (Smart HCF mini-PcI board rev 3)
+ 14f1:1452:1457:1459 (Smart HCF mini-PcI board rev 4)
+ 1024:1024 (Zenith Data Systems)
+ 148d:1003 (DIGICOM Systems)
+ 158b:0015 (Allied Data Technologies Tornado VfM56x-PRc)
+ 141a:1035 (Apache Micro)
+
+END
+if grep " $Vendor:" $TMPM >/dev/null ; then
+  grep " $Vendor:" $TMPM > $TMPM.1
+  if grep :$Device $TMPM.1>/dev/null ; then
+  #for the four set  127a,14f1:1025,2005
+    if grep $Vendor:1025:1085:2005 $TMPM.1 >/dev/null ; then
+       echo " $PCIDEV could be either an HSF or an HCF Conexant modem" | tee -a $RECORD
+    else
+       echo "  $PCIDEV is a Conexant HCF modem." | tee -a $RECORD 
+    fi 
+  fi 
+fi
+          cat<<END>>$RECORD
+
+ Vendors 127a and 14f1 are Conexant, inheritor of  Rockwell modem  technology. There are also Conexant chipsets
+ in some modems from vendors 158b - Allied Data Tech., 1024 - Zenith ,141a - Apache Micro and 148d Digicom Systems.
+ With respect to software support there are two main types, hcfpcimodem* and hsfmodem* .
+ Download drivers from http://www.Linuxant.com/drivers/
+ 
+ At   http://linmodems.technion.ac.il/resources.html#conexant  , there are scripts aiding installation:
+      For HSF modems.
+      For HCF modems.
+ There is additional Conexant information written to Modem/Conexant.txt 
+ 
+END
+ 
+   cat<<END> Modem/Conexant.txt 
+   
+  Linuxant Inc.  provides Linux drivers for Conexant chipset modems
+  Go to http://www.linuxant.com/drivers
+-Find the HCF or HSF menu in the left part of the screen.
+-Read README.
+-Read INSTALLATION.
+-Click DOWNLOAD.
+-Accept conditions.
+-Find text: "You can download HCF (or HSF) modem packages from the driver
+            download page." and click there.
+-Look for your distribution, your processor, and your kernel.
+-Download the matching file.
+-Read again and, if you do this under Windows, print the installation
+ instructions matching the kind of driver file which you downloaded.
+-Now just follow these instructions.
+
+http://www.linuxant.com/drivers/hsf/downloads-patches.php has patches
+    that may be necessary for recent kernels. 
+
+ A detailed software installation example is provided at:
+   http://linmodems.technion.ac.il/archive-fourth/msg00350.html
+   
+ The HCF (Host Controller Free) modems which have a digital signal processsing (DSP) chipset,
+ while the HSF in the soft modem family without a DSP.
+ HSF support is included with SuSE 9.0 and later releases
+ Modems with the following PCI_IDs also have Conexant HCF (Controller free) chipsets.
+  1024:1024 (Zenith Data Systems)
+  148D:1003 (DIGICOM Systems)
+  158B:0015 (Allied Data Technologies Tornado  VFM56x-PRC)
+  141A:1035 (Apache Micro)
+ The following six may be either HCF of HSF modems. Test the HSF package first
+  (127a,14f1):(1025,1085, 2005)
+  Should a HCF driver installation fail to serve among there,
+  then uninstall and instead try the HSF driver resource.
+ Subsystem HSF Conexant soft modems serve under AC97 or MC97 controllers. These include:
+  14f1:(5422 2002) , plus many others with vendors assigned PCI IDs.
+ 
+ After loading of HSF drivers, there will be displayed by command: /sbin/lsmod
+Module                  Size  Used by    Tainted: P
+hsfich                119116   0  (autoclean)
+hsfserial              26388   0  (autoclean)
+hsfengine            1126348   0  (autoclean) [hsfserial]
+hsfosspec              35328   0  (autoclean) [hsfich hsfserial hsfengine]
+     plus many others not modem related.
+ While drivers are pre-compiled for some Linux distributions,
+   the installation of the HCF/HSF packages DOES in general require kernel-source/ preparation,
+   as described in Modem/DriverCompiling.txt.
+   
+ There is a conflict between modules snd-intel8x0m and  hsfmc97ich.
+ The snd-intel8x0m Must be loaded first or the system may hang upon hsfmc97ich insertion.
+      http://linmodems.technion.ac.il/archive-fourth/msg03027.html
+      
+ A post install suggestion for adjusting PCI latency is:
+         http://phep2.technion.ac.il/linmodems/archive/msg05210.html
+
+END
+      fi 
+    fi # cnxt # beginIntel
+
+    echo $IDENT>$TMPM
+    if [ -z "$Dintel" ] ; then
+      if grep INTEL $TMPM >/dev/null || [ "$v" = "8086" ]  || [ "$v" = "1813" ] || [ "$AMBIG" = "INTEL537" ] || [ "$CODECp" = "INT" ]; then
+        Dintel=done
+        cat<<END>>$RECORD
+
+ Vendor=8086 is Intel, Inc. producing HaM and 536ep host controller free (HCF) modems, 537 soft modem
+ and AC97 and MC97 controllers managing a varierty of non-Intel soft modem Subsystems.
+ These subSystems often have PCI_IDs assigned by the modem assembler, rather than the chip provider.
+ Download available drivers through:  http://developer.intel.com/design/modems/support/drivers.htm  with Intel-537 types at:
+ http://downloadfinder.intel.com/scripts-df/Filter_Results.asp?selCat=all&strOSs=39&ProductID=1230&page_nbr=2
+ Also check at: http://linmodems.technion.ac.il/packages/Intel/537/  
+ for beta releases and perhaps Already compiled drivers for some Linux distributions
+ A very detailed installation report cogent to 537 type modems is at:
+                  http://linmodems.technion.ac.il/archive-fifth/msg00541.html
+ Setup call id with:
+ 	Type 1 : When the phone line is not in use                    at+vcid=1
+	Type 2 : When the phone line is already in use on a call      at+pcw=0
+ ---------------------
+END
+        if [ "$IDENT" = "INTEL536ep" ] ; then
+	    cat<<END>>$RECORD
+:
+ The older 2.4.n driver pair have a dependency on one other.
+ with result that these messages may be seen upon driver loading:
+        depmod****Unable to resolve symbol in 536ep.o
+        depmod****Unable to resolve symbol in 536epcore.o
+ but function is NOT affected.
+ Bur when the message is any longer, the drivers probably have not been properly compiled.
+   In which case carefully read Modem/DriverCompiling.txt
+
+ A problem maintaining CONNECT under the version 4.62 drivers was resolved
+ by dropping back to the 4.60 version. See:
+    http://linmodems.technion.ac.il/archive-third/msg02127.html
+
+  The Intel-537SP-MostRecentVersion.tgz driver package may alternatively provide support.
+  
+  For Debian like distros, a modified install script is:  
+http://members.lycos.co.uk/persianlinux/downloads/intel536ep/Intel536_inst_debian
+
+END
+	fi # 536ep
+	if [ "$AMBIG" = "INTEL537" ] || [ "$CODECp" = "INT" ] ; then
+	   echo "  Recent Intel-537 fixes are  related in http://linmodems.technion.ac.il/archive-fifth/msg00013.html ,   http://linmodems.technion.ac.il/archive-fifth/msg00166.html">>$RECORD
+	  if [ "$DISTR" = "SuSE" ] ; then
+            cat<<END>>$RECORD
+
+  Within http://linmodems.technion.ac.il/packages/Intel
+  there are packages with compiled Intel 537 drivers for 2.4.nn kernels with name formats like:
+          intel-537EP_SuSE-9.0_2.4.21-99-default_ONLY.tgz
+
+END
+          fi
+	  if [ "$AMBIG" = "INTEL537" ] ; then
+	      cat<<END>>$RECORD
+ The installer code candidate is:
+	Intel_secure-537AA-MostRecentVersion.tgz 
+ But the Intel 537 readout needs confirmation !!
+ Sadly there are a few mis-designations in the pciids dataset, which $0 relies on
+ Too many modems are being labeled Intel537 types.
+   http://linmodems.technion.ac.il/archive-third/msg02463.html
+   http://linmodems.technion.ac.il/archive-third/msg02476.html
+ This includes the distinct Agere, Conexant and SmartLink chipsets types. Conseqeuntly
+ YOU must manually obtain further information under Microsoft Windows through modem ATI tests/queries
+ as instructed in $RECORD2  Please include this information in any report to discuss@linmodems.org
+
+END
+          fi
+        cat<<END>>/dev/null
+
+ There are Five types of Intel 537 chipsets sold to a variety of modem assemblers,
+    though they may are all called out as Intel 537  by the LSPCI tool used in $0.
+    Intel 537, a 8086:0003 subsystem PCI card  modem with TigerJet PCI Controller - e159:0001
+       The installer is:  Intel-537-MostRecentVersion.tgz 
+    Intel 537EP, an Intel PCI modem  si3052 chip(Intel 537EP(G)), si=Silicon Instruments
+       8086:1080 Intel AC97 controller with modem  subSystem 8086:100[7,8,A,0] with
+       with installer is intel-537EP_MostRecentVersion.tgz
+         at http://downloadfinder.intel.com/scripts-df/Product_Search.asp?Prod_nm=537ep
+    Intel 537SP (was known as MD5690) a PCI modem with dsp on board but disabled.
+       8086:1040 Intel AC97 controller, with modem subsyst 8086:1005
+       with installer intel-537SP-MostRecentVersion.tgz
+    There are ambiguities in identification of modems with two Intel537 AA and EA chipset types
+       http://linmodems.technion.ac.il/archive-third/msg02463.html
+       http://linmodems.technion.ac.il/archive-third/msg02476.html
+     Intel 537AA/EA, MDC/AC97 controller  with si3054 modem chip
+       currently supported AC97 controllers - Intel (ICH3,4,5), VIA, NVIDIA, SIS, Realtek, ALI, ATI
+       with installer  intel-537AA_secure-MostRecentVersion.tgz
+    serving also Intel 537EA, CNR controller with  si3038 modem chip
+
+END
+	fi # IDENT
+      fi # End Intel section
+    fi # DONE
+# EOF    
+    # Lucent or Xircom DSP
+    if [ "$IDENT" = "AGERE" ] || [ "$IDENT" = "XIRCOM" ] ; then
+     DEVICES="0x11c1:0x0440-0x045c"
+     DEVICES=$DEVICES" 0x115d:0x0000-0x000f"
+     DEVICES=$DEVICES" 0x115d:0x0440-0x045c"
+     DEVICES=$DEVICES" 0x115d:0x0010-0x03ff"
+     DEVVEN=$(( 0x`echo $PCIDEV | cut -d':' -f1` + 0 ))
+     DEVNUM=$(( 0x`echo $PCIDEV | cut -d':' -f2` + 0 ))
+     for DEV in $DEVICES
+     do
+      VENDOR=$(( `echo $DEV | cut -d':' -f1` + 0 ))
+      DEVMIN=$(( `echo $DEV | cut -d':' -f2 | cut -d'-' -f1` + 0 ))
+      DEVMAX=$(( `echo $DEV | cut -d':' -f2 | cut -d'-' -f2` + 0 ))
+      FOUND=
+      if test $DEVVEN -eq $VENDOR && test $DEVNUM -ge $DEVMIN && test $DEVNUM -le $DEVMAX
+      then
+        FOUND="yes"
+        PCI_ID="$PCIDEV"
+        MODEM_VENDOR=0x`echo $PCIDEV | cut -d':' -f1`
+        MODEM_DEVICE=0x`echo $PCIDEV | cut -d':' -f2`
+        if [ "$MODEM_VENDOR" = "0x11c1" ] ; then
+          VENDED=LUCENT
+        else
+          VENDED=XIRCOM
+        fi
+        if test -n "$PCI_ID" ; then
+          DSP=1
+          cat<<END  |  tee -a $RECORD
+
+ The modem has a supported Lucent/Agere DSP (digital signal processing) chipset
+  with primary PCI_ID:  $PCI_ID
+ DSP=1
+        
+ Agere Systems, Inc provides periodic software releases for there DSP modems,
+ which are made more Newbie friendly by volunteers.  There are some installer packages
+ and also resources for compiling drivers:
+ http://ltmodem.heby.de  is a repository for installers for later 2.4.2n and early 2.6.n  kernels.
+      Packages below are for compiling drivers:
+            ResourceName                Use for kernel ranges
+        --------------------------------------------------------------------------------------------------	    
+        ltmodem-8.26a.tar.gz         kernels 2.4.21 and earlier
+        ltmodem-8.30a3.tar.gz       kernels 2.4.21 and subsequent 2.4.2n kernels
+        ltmodem-8.31a10.tar.gz     beginnig with 2.4.21 through and into 2.6.n  kernels 
+ 
+ http://linmodems.technion.ac.il/packages/ltmodem/
+        has installers for older 2.4.n kernels moved from http://ltmodem.heby.de 
+        and subfolder kernel-2.6/  for 2.6.n  kernel support.  The latest resouce is:
+	ltmodem-2.6-7-alk-7.tar.bz2  from Alex Kondratenko
+	ltmodem-2.6-7alk.src.rpm is a repackaging for by Stephan Puck.  After installation
+	    of a kernel-source package (not necessary for fedora releases) use by:
+	    rpmbuild --rebuild ltmodem-2.6-7alk.src.rpm  , which will deposit an installer at:
+	        /usr/src/rpm/RPMS/i586/ltmodem-kv_YourVersion.rpm 	   Check with  
+            # ls -l   /usr/src/rpm/RPMS/i586/ltmodem*
+	    Then install with:
+	    # rpm -i /usr/src/rpm/RPMS/i586/ltmodem-kv_YourVersion.rpm
+
+Support is effective at least into  2.6.11-1.14_FC3.	    
+PCMCIA ltmodem support is still being  ported from 2.4.n to 2.6.n, as of May 2005
+	 
+ http://dag.wieers.com/packages/kernel-module-ltmodem/ for some 2.4.n installers     
+ SuSE/Novell has some ltmodem installers at their repositories and newer install CDs.
+ More related output is below.
+ 
+END
+
+          cat<<EOF>>$RECORD2
+
+    VENDOR $MODEM_VENDOR         DEVICE $MODEM_DEVICE
+   ------------------------------------------
+    LUCENT 0x11c1          0x0440-0x045c
+    XIRCOM 0x115d          0x0000-0x000F
+    XIRCOM 0x115d          0x0440-0x045c
+    XIRCOM 0x115d          0x0010-0x03ff
+  -------------------------------------------
+ Driver installer and and their predecessor driver compiler kits are available through:
+       http://ltmodem.heby.de/  and  http://linmodems.technion.ac.il/packages/ltmodem/
+
+EOF
+        else
+          cat<<END > $TMPM
+
+ While ISA and PCMCIA card modems would not be detected,
+ if the modem is a PCI type it will not be served by these
+ drivers for Lucent/Agere digital signal processor modems.
+
+END
+          PCI_ID=
+        cat $TMPM
+        cat $TMPM >>$RECORD
+        fi
+      fi
+     done
+    fi # end Lucent DSP section
+    ## begin LUCENT
+    if [ -z "$IDENT" ] || [ "$IDENT" = "AGR" ] || [ "$IDENT" = "AGERE" ] || [ -n "$DSP" ] && ! [ "$ALSA" = "snd-atiixp-modem" ] && [ -z "$ADONE" ] ; then
+      ADONE=1
+      if [ "$v" = "11c1" ] || [ "$CODEC" = "SIL27" ] || [ -n "$AGR" ] && ! [ "$SMART" = "only" ]  ; then
+	  cat<<END>>$RECORD
+
+ Vendor 11c1 corresponds to Lucent Technologies or subsidiary Agere Systems, Inc.
+ Information is at:  http://www.agere.com/client/modem_dsp.html. Produced are both:
+   1) modems identifiable from their primary PCI IDs and 
+   2) soft modem Subystem chips requiring identification through codec readouts.
+ 
+END
+        fi
+	if  [ "$CODECp" = "SIL27" ] || [ -n "$AGR" ] ; then
+	  Smart=AGR
+          cat<<END>>$RECORD
+ AgereSoftModem drivers only support AC97 or MC97 modem controllers with codecs charcterized by one of:
+   SIL_id = 39 
+   mc97 codec is SIL27 
+   0x27 , as output by modem diagnostics under Microsoft Windows
+ If uncertain, identity the softmodem codec through tests described in Modem/SoftModem.txt
+ Support is currently ONLY for 2.4.n kernels and the following modem controllers:
+   8086:(2416 2426 2446 7196 2486 24C6)  , with 8086 == Intel
+   1039:7013  SIS
+   1106:3068  VIA
+ Access the soft modem software through code sponsor IBM at:
+   http://www-3.ibm.com/pc/support/site.wss/document.do?lndocid=MIGR-52698
+ The SmartLink slmodem-2.9.9 may serve for modems not served by this AgereSystems software.
+ 
+ If may be necessary to add -DMODVERSIONS to the compile flags, 
+ depending on whether your kernel was thus compiled. See
+ http://linmodems.technion.ac.il/archive-fourth/msg01408.html
+
+END
+        elif [ "$Device" = "0462" ] ; then
+          cat<<END>>$RECORD
+
+ 56K.V90/ADSL Wildfire Modem with PCI_ID 11c1:0462
+   http://www.lucent.com/press/0598/980505.mea.html
+ currently lacks support under Linux.
+
+END
+        elif [ "$Device" = "048c" ] || [ "$Device" = "048e" ] || \
+        [ "$Device" = "048f" ] ||  [ "$Device" = "0600" ] ; then
+         smart=
+	 SMART=
+         cat<<END>>$RECORD
+
+  Class 0703:  $v:$Device is still NOT supported under Linux, as of $UPDATE
+  It is a "software" modem without a digital signal processing (DSP) chipset.
+  The ltmodem drivers from http://ltmodem.heby.de resources for DSP modems do NOT provide support,
+    A dialout terminates with "No Carrier" or a Hang if usage of the ltmodem drivers is attempted.
+
+END
+        elif  [ "$Device" = "0480" ] ; then
+          echo " The Venus controller chipset 1673JV7 modems use the serial.o driver." >>$RECORD
+        elif test -n "$DSP" ; then
+          echo " Call waiting specified by, +pcw=1, is not implmented in the ltmodem drivers." >>$RECORD
+	  echo  Configuration with forcing is described in:   http://linmodems.technion.ac.il/archive-fifth/msg00055.html >> $RECORD
+# Setting up board.info for grepping MODEL_DATA
+          cat<<END > $TMPM.2
+ 0x0440 -- Mars 2 - data/fax/voice
+ 0x0441 -- Mars 2 - data/fax only
+ 0x0442 -- Mars 2 - data/fax/tam only
+ 0x0448 -- Mars 2 Global Board - data/fax/voice
+ 0x0449 -- Mars 2 Global Board - data/fax only
+ 0x044a -- Mars 2 Global Board - data/fax/tam only
+ 0x0444 -- Apollo 2 data/fax only : Modem/LAN combo board Apollo behind an Intel 82559
+ 0x0445 -- Apollo 2 Global Board data/fax only : Modem/LAN combo board Apollo behind an Intel 82559
+ 0x0446 -- Apollo 2 data/fax/voice : Modem/LAN combo board Apollo behind an Intel 82559
+ 0x0447 -- Apollo 2 Global Board data/fax/voice : Modem/LAN combo board Apollo behind an Intel 82559
+ 0x044c -- Mars 3 Perseus data/fax only:North America and Global board
+ 0x044e -- Mars 3 Mercury data fax only
+ 0x0450 -- Mars 3 Mercury data fax Global board
+ 0x0451 -- Mars 3 Mercury data/fax/voice
+ 0x0452 -- Mars 3 Mercury data/fax/voice Global board
+ 0x0455 -- Mars 3 Perseus data/fax/voice: North America and Global board
+ 0x0458 -- Mars 3 Mercury data/fax/tam only.
+ 0x0459 -- Mars 3 Mercury data/fax/tam only. Global board.
+ 0x045a -- Mars 3 Perseus data/fax/tam only.: North America and Global board
+ 0x045b -- Apollo 3 Perseus data/fax only : Modem/LAN combo board Apollo behind an Intel 82559
+ 0x045c -- Apollo 3 Mercury data/fax only : Modem/LAN combo board Apollo behind an Intel 82559
+ 0x045d -- Mars 3 Mercury data/fax/tam only. Global board for Cardbus modem product.
+ 0x044c -- Mars 3.2 Mercury data fax only when no eeprom is present, North America DAA
+##############
+END
+          if grep $MODEM_DEVICE $TMPM.2 > /dev/null ; then
+            grep $MODEM_DEVICE $TMPM.2   >>$RECORD
+          fi
+	  if [ "$MAJOR" = "2.6"  ] ; then
+            if [ "$SYS" = "2.6.3-4mdk" ] ; then
+              cat<<END>>$RECORD
+
+ There are ltmodem packages in Mandrake. Search for ltmodem in the package lists
+ and check for installation already with:
+	rpm -qa ltmodem
+ There is also a ltmodem-2.6.3-4mdk.tgz at
+    at http://linmodems.technion.ac.il/packages/ltmodem/kernel-2.6  
+
+END
+            fi
+	    if [ "$KVER" = "2.6.8.1" ] ; then
+	      cat<<END>>$RECORD
+
+ Drivers compiled with ltmodem-2.6-alk-6.tar.bz2 have been effective with Mandrake 10
+ kernel versions $KVER-* . See within http://linmodems.technion.ac.il/packages/ltmodem/
+ ltmodem-2.6.8.1-10mdk.tar.gz  
+  
+END
+	    fi
+          fi
+          if [ "$DISTR" = "SuSE" ] ; then
+            cat<<END>>$RECORD
+
+  SuSE has a ltmodem packages for with pre-compiled drivers, beginning with the 8 releases 
+  For the SuSE 9.1 release, there is an update improving bootup automation. 
+  A failure had been reported for the 9.3 release ltmodem package, 
+  but the ltmodem-2.6-7-alk-7.tar.bz2  resource gave effective drivers.
+
+END
+          fi
+          if [ "$Device" = "0442" ] ; then
+    echo "The device=$Device  modems have an electro-optical coupling" >>$RECORD
+    echo "which in some hardware is Not adequately supported by these drivers." >>$RECORD
+    echo >>$RECORD
+          fi
+	fi #DSP  
+    fi # IDENT2
+      
+    if [ "$v" = "115d" ]  || [ "$PCIDEV" = "11c1:0420" ] ; then
+      cat<<END>>$RECORD
+
+ Vendor=115d corresponds to Xircom, now an Intel subsidiary.
+   http://www.intel.com/support/peripherals/xc/modems/index.htm
+   http://appsr.intel.com/scripts-df/support_intel2.asp
+   http://support.intel.com/
+                          Device ID Range
+                            -------------
+    XIRCOM 0x115d          0x0000-0x000F
+    XIRCOM 0x115d          0x0440-0x045c
+    XIRCOM 0x115d          0x0010-0x03ff
+   --------------------------------------
+ are supported by the resources at http://ltmodem.heby.de/
+
+ Some other Xircom modems and Lucent 11c1:0420 modems
+    MAY BE accessed by Insertion Options
+ Download from http://ltmodem.heby.de/  the:   ltmodem-$LT_VERSION.tar.gz
+ Open with:    tar zxvf  ltmodem-$LT_VERSION.tar.gz
+ Within the ltmodem/DOCs/  folder read the Insertion-param files
+ and for fun, the history:   andreas.txt
+
+ To get a recommendation for an Installer kit, run
+    $0  kit
+
+END
+      if test -z "$DSP" ; then
+        echo " The ltmodem drivers do NOT support this modem.">>$RECORD
+      fi
+    fi # Xircom
+
+    if [ -z "$ALT" ] ; then
+    # SmartLink section
+      ALT=1
+      
+       if [ "$Smart" = "ALSA" ] ; then
+                cat<<END>>$RECORD
+
+ Under the controller $CNTRL,
+ with modem subSystem $SUBSYS 
+ Only ALSA mode usage of slmodem-2.9.n  code may provide support.
+ 
+END
+       fi
+
+       if  [ -n "$Smart" ] && ! [ "$Vendor" = "163c" ] && [ -n "$CNTRL" ] && ! [ "$IDENT" = "ATI" ] && ! [ "$Smart" = "ALSA" ] ; then
+
+          cat<<END>>$RECORD
+
+ Under the controller $CNTRL,
+ with modem subSystem $SUBSYS     
+ Alternative supporting packages are the SmartLink slmodem-2.9.n using its proprietary slamr driver, 
+ or dependent on  $CNTRL, an  Open Source driver from the  ALSA package.
+ See Modem/Slmodem-ALSA.txt for details.
+  
+ For SuSE 9.2 users, there is an update  for driver slamr.ko loading during bootup. 
+ To find it easily, search for "slamr" within  http://www.novell.com/linux/download/updates/92_i386.html
+     
+END
+       fi
+    fi #ALT
+
+    if [ -z "$SMDONE"  ] && [ -z "$DSP" ] && ! [ "$PCIDEV" = "8086:1040" ] ; then
+      echo "163c 2000 2003 2004" > $TMPM
+      # make all KERNEL_VER=2.6.0-test7  , due to lack of  kernel-headers
+      if grep $v $TMPM>/dev/null || [ -n "$smart" ] || [ -n "$SMART" ] || [ "$IDENT" = "SMART" ] && [ -z "$CXT" ] && ! [ "$IDENT" = "ATI" ] ; then
+        cat<<END>>$RECORD
+
+ SmartLink at http://www.smlink.com/ owns vendor IDs 163c, 2000, 2003, and 2004
+ The official download site is:  http://www.smlink.com/main/index1.php?ln=en&main_id=40 ,
+  but http://linmodems.technion.ac.il/packages/smartlink/ has older packages and new fixes.
+      For the emerging 2.6.10 kernels, use the slmodem-2.9.9d.tar.gz  therefrom.
+      Also DO download the ungrab-winmodem.tar.gz
+ For details read Slmodem.txt,  Slmodem-ALSA.txt  and 
+    http://linmodems.technion.ac.il/slmodem-serial.html
+   
+END
+      # a HowTo http://www.raspberry.co.za/michael/slmodem.html
+        SMART=
+        smart=
+      fi
+      SMDONE=1
+    fi
+    done
+    # with Vendor and SUBven
+    echo  >>$RECORD  
+
+if [ -n "$DSP" ] ; then
+  # || [ "$1" = "kit" ] ||
+  if ! [ "$DISTR" = "Not_identified" ] ; then
+    # No use if the distribution is not known
+    if [ "$DISTR" = "slackware" ] ; then
+      echo Installers are not available for Slackware Linux  >>$RECORD
+    fi
+    if [ "$DISTR" = "gentoo" ] ; then
+      cat<<END>>$RECORD
+
+ LTmodem packages are within the Gentoo package system, so you can just run "emerge ltmodem".
+  This will download the source, configure, compile, and install the driver modules.
+
+END
+    fi
+    # DISTR=mandrake
+    # echo DISTR=$DISTR
+    # pick out the Distro section
+    echo >  $TMPM
+    if [ "$DISTR" = "conectiva" ] ; then
+      if ! [ "$GCCmajor" = "3" ] ; then
+        cat<<EOF>$TMPM
+
+ltmodem-kv_2.4.18_586-6.28a8-1.i386.rpm
+ltmodem-kv_2.4.19_1U80_13cl-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.19_1U80_2cl-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.19_1U80_5cl-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.19_1U80_8cl-8.26a9-1.i386.rpm
+
+EOF
+
+      else
+        cat<<EOF>$TMPM
+
+ltmodem-kv_2.4.21_28872cl-8.26a9-1.i386.rpm
+
+EOF
+      fi
+    fi
+    if [ "$DISTR" = "debian" ] ; then
+      cat<<END>>$RECORD
+
+ Add either of the following lines to the Debian  /etc/apt/sources.list
+ to enable automatic updates on installer availability:
+   deb http://www.physcip.uni-stuttgart.de/heby/ltmodem/dists/debian/ ./
+   deb http://www.sfu.ca/~cth/ltmodem/dists/debian/ ./
+
+END
+      if ! [ "$GCCmajor" = "3" ] ; then
+        cat<<EOF > $TMPM
+ltmodem-2.2.20-compact_6.00c2_i386.deb
+ltmodem-2.2.20-idepci_6.00c2_i386.deb
+ltmodem-2.2.20-reiserfs_6.00c_i386.deb
+ltmodem-2.2.20_6.00c2_i386.deb
+ltmodem-2.2.21-compact_6.00c2_i386.deb
+ltmodem-2.2.21-idepci_6.00c2_i386.deb
+ltmodem-2.2.22_6.00c_i386.deb
+ltmodem-2.2.22-compact_6.00c_i386.deb
+ltmodem-2.2.22-idepci_6.00c_i386.deb
+ltmodem-2.2.25_6.00c_i386.deb
+ltmodem-2.2.25-compact_6.00c_i386.deb
+ltmodem-2.2.25-idepci_6.00c_i386.deb
+
+ltmodem-2.4.17-386_8.00a3_i386.deb
+ltmodem-2.4.17-586tsc_8.00a3_i386.deb
+ltmodem-2.4.17-686-smp_8.00a3_i386.deb
+ltmodem-2.4.17-686_8.00a3_i386.deb
+ltmodem-2.4.17-bf2.4_8.00a3_i386.deb
+ltmodem-2.4.17-k6_8.00a3_i386.deb
+ltmodem-2.4.17-k7_8.00a3_i386.deb
+ltmodem-2.4.17_8.00a3_i386.deb
+ltmodem-2.4.18-386_8.00a3_i386.deb
+ltmodem-2.4.18-586tsc_8.00a3_i386.deb
+ltmodem-2.4.18-686-smp_8.00a3_i386.deb
+ltmodem-2.4.18-686_8.00a3_i386.deb
+ltmodem-2.4.18-bf2.4_8.00a3_i386.deb
+ltmodem-2.4.18-k6_8.00a3_i386.deb
+ltmodem-2.4.18-k7_8.00a3_i386.deb
+ltmodem-2.4.18_8.00a3_i386.deb
+
+ltmodem-2.4.19-386_8.26a9_i386.deb
+ltmodem-2.4.19-586tsc_8.26a9_i386.deb
+ltmodem-2.4.19-686-smp_8.26a9_i386.deb
+ltmodem-2.4.19-686_8.26a9_i386.deb
+ltmodem-2.4.19-k6_8.26a9_i386.deb
+ltmodem-2.4.19-k7_8.26a9_i386.deb
+ltmodem-2.4.19-k7-smp_8.26a9_i386.deb
+ltmodem-2.4.19_8.26a9_i386.deb
+
+ltmodem-2.4.20_8.26a9_i386.deb
+ltmodem-2.4.20-speakup_8.26a9_i386.deb
+ltmodem-2.4.20-1-386_8.26a9_i386.deb 
+ltmodem-2.4.20-1-586tsc_8.26a9_i386.deb
+ltmodem-2.4.20-1-686_8.26a9_i386.deb  
+ltmodem-2.4.20-1-k6_8.26a9_i386.deb
+ltmodem-2.4.20-1-k7_8.26a9_i386.deb 
+ltmodem-2.4.20-1-k7-smp_8.26a9_i386.deb
+
+ltmodem-2.4.18-k7_8.26a9_i386.deb
+
+EOF
+      else
+      cat<<EOF>$TMPM
+
+ltmodem-2.4.21-5-386_8.26a9_i386.deb
+ltmodem-2.4.21-5-586tsc_8.26a9_i386.deb
+ltmodem-2.4.21-5-686_8.26a9_i386.deb
+ltmodem-2.4.21-5-686-smp_8.26a9_i386.deb
+ltmodem-2.4.21-5-k6_8.26a9_i386.deb
+ltmodem-2.4.21-5-k7-smp_8.26a9_i386.deb
+ltmodem-2.4.21-5-k7_8.26a9_i386.deb
+ltmodem-2.4.21-5_8.26a9_i386.deb
+
+ltmodem-2.4.22-1-386_8.26a9_i386.deb
+ltmodem-2.4.22-1-586tsc_8.26a9_i386.deb
+ltmodem-2.4.22-1-686_8.26a9_i386.deb
+ltmodem-2.4.22-1-686-smp_8.26a9_i386.deb
+ltmodem-2.4.22-1-k6_8.26a9_i386.deb
+ltmodem-2.4.22-1-k7-smp_8.26a9_i386.deb
+ltmodem-2.4.22-1-k7_8.26a9_i386.deb
+ltmodem-2.4.22-speakup_8.26a9_i386.deb
+ltmodem-2.4.22-1-386_8.31a3_i386.deb
+ltmodem-2.4.22-1-586tsc_8.31a3_i386.deb
+ltmodem-2.4.22-1-686_8.31a3_i386.deb
+ltmodem-2.4.22-1-686-smp_8.31a3_i386.deb
+ltmodem-2.4.22-1-k6_8.31a3_i386.deb
+ltmodem-2.4.22-1-k7-smp_8.31a3_i386.deb
+ltmodem-2.4.22-1-k7_8.31a3_i386.deb
+ltmodem-2.4.22-speakup_8.31a3_i386.deb
+
+ltmodem-2.4.25-1-686_8.30a3_i386.deb
+ltmodem-2.4.25-586tsc_8.30a3_i386.deb
+ltmodem-2.4.25-686-smp_8.30a3_i386.deb
+ltmodem-2.4.25-k6_8.30a3_i386.deb
+ltmodem-2.4.25-k7-smp_8.30a3_i386.deb
+ltmodem-2.4.25-k7_8.30a3_i386.deb
+
+ltmodem-2.4.26-1_8.31a3_i386.deb
+ltmodem-2.4.26-1-386_8.31a3_i386.deb
+ltmodem-2.4.26-1-586tsc_8.31a3_i386.deb
+ltmodem-2.4.26-1-686-smp_8.31a3_i386.deb
+ltmodem-2.4.26-1-686_8.31a3_i386.deb
+ltmodem-2.4.26-1-k6_8.31a3_i386.deb
+ltmodem-2.4.26-1-k7-smp_8.31a3_i386.deb
+ltmodem-2.4.26-1-k7_8.31a3_i386.deb
+ltmodem-2.4.26-speakup_8.31a3_i386.deb
+
+ltmodem-2.6.8-1-686_8.31a8_1.i686.deb
+EOF
+      fi
+    fi
+    if [ "$DISTR" = "mandrake" ] ; then
+      if ! [ "$GCCmajor" = "3" ] ; then
+        cat<<EOF > $TMPM
+
+ Only installers compiled with gcc = 3.n are stored at http://ltmodem.heby.de
+ Older packages are at  http://linmodems.technion.ac.il/
+
+EOF
+      else
+        cat<<EOF> $TMPM
+
+ltmodem-kv_2.4.21_0.11mdk-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.21_0.13mdk-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.21_0.13mdk-8.30a3-1.i586.rpm
+ltmodem-kv_2.4.21_0.18mdk-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.21_0.25mdk-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.21_0.25mdk-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.21_0.26mdk-8.26a9-1.i586.rpm
+
+ltmodem-kv_2.4.22_10mdk-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.22_21mdk-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.22_26mdk-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.22_28mdk-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.22_29mdk-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.22_30mdk-8.26a9-1.i586.rpm
+
+ltmodem-kv_2.4.22_32mdk-8.30a3-1.i686.rpm
+ltmodem-kv_2.4.22_36mdk-8.30a3-1.i686.rpm
+ltmodem-kv_2.4.25_6mdk-8.30a3-1.i686.rpm
+ltmodem-kv_2.4.25_7mdk-8.30a3-1.i686.rpm
+
+EOF
+      fi
+    fi
+
+    if [ "$DISTR" = "redhat" ] ; then
+            echo " Many installers for RedHat are available at  http://dag.wieers.com/packages/kernel-module-ltmodem ">>$RECORD
+      if [ -n "$FEDORA" ] ; then
+        cat<<EOF>$TMPM
+
+ltmodem-kv_2.4.22_1.2115.nptl-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.22_1.2115.nptl-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.22_1.2129.nptl-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.22_1.2129.nptl-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.22_1.2135.nptl-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.22_1.2138.nptl-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.22_1.2138.nptl-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.22_1.2140.nptl-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.22_1.2140.nptl-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.22_1.2166.nptl-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.22_1.2174.nptl-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.22_1.2174.nptl-8.30a1-1.i686.rpm
+ltmodem-kv_2.4.22_1.2174.nptl-8.30a1-1.i686.rpm
+ltmodem-kv_2.4.22_1.2197.nptl-8.31a5-1.i686.rpm
+ltmodem-kv_2.6.6_1.427-8.31a7-1.i686.rpm
+ltmodem-kv_2.6.6_1.435-8.31a7-1.i686.rpm
+ltmodem-kv_2.6.7_1.494.2.2-8.31a8-1.i686.rpm
+ltmodem-kv_2.6.8_1.521-8.31a8-1.i686.rpm
+
+EOF
+      else
+        cat<<EOF>$TMPM
+
+ltmodem-kv_2.4.20_2.2-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.20_2.2-8.26a9-1.i486.rpm
+ltmodem-kv_2.4.20_2.2-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.20_2.2-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.20_6-8.26a9-1.athlon.rpm
+ltmodem-kv_2.4.20_8-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.20_8-8.26a9-1.i486.rpm
+ltmodem-kv_2.4.20_8-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.20_8-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.20_9-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.20_9-8.26a9-1.i486.rpm
+ltmodem-kv_2.4.20_9-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.20_9-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.20_13.8-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.20_13.9-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.20_13.9-8.26a9-1.i486.rpm
+ltmodem-kv_2.4.20_13.9-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.20_13.9-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.20_18.9-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.20_18.9-8.26a9-1.i486.rpm
+ltmodem-kv_2.4.20_18.9-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.20_18.9-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.20_19.9-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.20_19.9-8.26a9-1.i486.rpm
+ltmodem-kv_2.4.20_19.9-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.20_19.9-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.20_20.7-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.20_20.8-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.20_20.8-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.20_20.9-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.20_20.9-8.26a9-1.i486.rpm
+ltmodem-kv_2.4.20_20.9-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.20_20.9-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.20_24.7-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.20_24.8-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.20_24.9-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.20_24.9-8.26a9-1.i486.rpm
+ltmodem-kv_2.4.20_24.9-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.20_24.9-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.20_27.9-8.26a9-1.athlon.rpm
+ltmodem-kv_2.4.20_27.9-8.26a9-1.i386.rpm
+ltmodem-kv_2.4.20_27.9-8.26a9-1.i486.rpm
+ltmodem-kv_2.4.20_27.9-8.26a9-1.i586.rpm
+ltmodem-kv_2.4.20_27.9-8.26a9-1.i686.rpm
+ltmodem-kv_2.4.20_30.9-8.26a9-1.i686.rpm
+
+ltmodem-kv_2.4.21_4.EL-8.30a1-1.athlon.rpm
+ltmodem-kv_2.4.21_4.EL-8.30a1-1.i686.rpm
+
+EOF
+      fi
+    fi
+
+    if [ "$DISTR" = "SuSE" ] ; then
+      cat<<END>$TMPM
+ltmodem-kv_2.4.20_4GB-8.26a9-1.i386.rpm,  SuSE 8.2
+
+END
+
+    fi
+
+################### Listing from http://ltmodem.heby.de/ ends
+
+    fi #  Done choosing DISTR block
+    echo >>$RECORD
+    echo "  The desired installer name is like:" >>$RECORD
+    echo "========================================"  >>$RECORD
+    # echo Checking for suitable ltmodem Installers
+    if [ "$DISTR" = "debian" ] ; then
+      echo ltmodem-"$FILTER""8.nn"_i386.deb >>$RECORD
+      # FILTER=2.4.18-6_
+      if grep $FILTER $TMPM > /dev/null ; then
+        grep $FILTER $TMPM > $TMPM.1
+        BEST=$TMPM.1
+      fi
+    else
+      # conectiva mandrake redhat SuSE, fedora  all .rpm
+      if [ "$DISTR" = "mandrake" ] || [ "$DISTR" = "redhat" ] ; then
+        echo ltmodem-kv-$PVER-$LT_VERSION-1.$CPU.rpm >>$RECORD
+	# http://linmodems.technion.ac.il/archive-fourth/msg03230.html Marv
+      fi
+      if [ "$DISTR" = "conectiva" ] || [ "$DISTR" = "SuSE" ] ; then
+        echo "ltmodem-kv-$PVER-$LT_VERSION-i386.rpm" >>$RECORD
+      fi
+      grep $PVER $TMPM  > $TMPM.2
+      grep $CPU $TMPM.2 >  $TMPM.1
+      if grep "ltmodem-" $TMPM.1 >/dev/null ; then
+        BEST=$TMPM.1
+      elif grep "ltmodem-" $TMPM.2 >/dev/null ; then
+        BEST=$TMPM.2
+      else
+        BEST=
+      fi
+    fi
+    # AGERES=`echo $LT_VERSION | cut -da -f1`
+    AGERES=8.nn
+    cat<<END>>$RECORD
+----------------------------------------
+ ltmodem-kv-Kernel_FL-LTver--.CPU.rpm   explains the versioning.
+ For your System
+            `echo Kernel_FL is  $SYS , the full kernel version displayed by:  uname -r`
+                      `echo LTver is $LT_VERSION, the release of the compiler kit`
+                               `echo $AGERES is the Agere core code designation.`
+       The proccesor type or CPU is:  $CPU      dispayed by:  uname -m
+ used in compiling and assembling driver packages.
+
+END
+
+    # Results
+    if [ "$DISTR" = "redhat" ] && [ -n "$FEDORA" ] ; then
+      DISTR=fedora
+      echo " For usage with the udev file system of fedora core 3, see  http://linmodems.technion.ac.il/archive-fifth/msg01177.html">>$RECORD
+      # changed back to redhat after this message section
+    fi
+    if [ "$SYS" = "2.6.8.1-12mdk" ]  ||  [ "$SYS" = "2.6.8.1-10mdk" ]  &&  [ "$DISTR" = "mandrake" ]  ; then
+     cat<END >> $RECORD
+     
+ At  http://linmodems.technion.ac.li/packages/ltmodem/kernel-2.6/
+ there is an installer  ltmodem-"$SYS".tar.gz
+ Unpack under Linux with: 
+     tar zxvf ltmodem-2.6.8.1-12mdk.tar.gz
+
+END
+    elif [ "$BEST" = "$TMPM.1" ] ; then
+        cat<<END > $TMPM.3
+  A suitable Installer is at    http://ltmodem.heby.de/
+    in the section:	$DISTR
+       `cat $BEST`
+
+END
+    cat $TMPM.3 >>$RECORD
+    cat $TMPM.3
+    elif [ "$BEST" = "$TMPM.2" ] ; then
+        cat<<END > $TMPM.3
+ Installers that may suffice are at http://ltmodem.heby.de/
+ in the section:	$DISTR
+------------------------------------------------------
+ `cat $BEST`
+------------------------------------------------------
+ The closest match to your   $CPU=CPU   is recommended.
+ For example replacements in order of preference for an
+    i686 would be i586, i486 and i386
+ The Kernel_FLavor section MUST match.
+ If not the ltmodem-$LT_VERSION.tar.gz compiler MUST BE USED.
+
+END
+    cat $TMPM.3 >>$RECORD
+    cat $TMPM.3
+    else
+     echo >/dev/null
+      cat<<END>>$RECORD
+      
+ A suitable installer is not available as of this $UPDATE update.
+ Check in the section $DISTR at  http://ltmodem.heby.de/
+   for a subsequent Installer submission.
+ Older releases have been archived at:
+   http://linmodems.technion.ac.il/packages/ltmodem/archive/
+ Also there is a RPM search engine at:   http://rpm.pbone.net
+ The closest match to your   $CPU=CPU   is recommended.
+   The closest match to your   $CPU=CPU   is recommended.
+   For example replacements in order of preference for an
+     i686 would be i586, i486 and i386
+ If not present use the  ltmodem-$LT_VERSION.tar.gz compiler kit.
+
+ The list of available Installers for $DISTR as of this $UPDATE
+ is inserted into to $RECORD2
+END
+# RC2
+      cat<<END>>$RECORD2
+
+GCCmajor=$GCCmajor
+-----------Installer list for $DISTR --------
+`cat $TMPM`
+------- end Installer List ------------------
+END
+    fi
+  fi # DISTR not recognized
+  if [ "$DISTR" = "fedora" ] ; then
+    DISTR=redhat
+  # changed back to redhat after above message section
+  fi
+  if grep smp $TMPM >/dev/null ; then
+########### RC2
+cat<<END>/dev/null
+
+   Symmetric Multi Processors (SMP) issues
+----------------------------------------------------------------------------------
+  Beginning with the Agere version 8.00 core code, the ltmodem drivers are
+  functional on Systems with SMP kernels such as your kernel-$SYS ,
+  so far as supporting dialout and initiation of ppp.
+  However these dialout sessions  inevitable stall,
+  evidently because of inadequate interrupt handling by the core ltmodem code.
+  This problem can be bypassed with some loss of performance by
+  using the bootup option: noacpi
+
+  The November 2004  AgereSystems 8.30 release is SMP proficient.
+
+END
+############
+
+fi # DSP
+  done
+ #  TESTS
+echo "  ======= PCI_ID checking completed ====== ">>$RECORD
+## RC2
+cat<<END>>$RECORD2
+
+ If the Primary and Subsystem Vendor information was not adeqaute,
+ it may be useful to search at  http://www.pcidatabase.com/
+
+END
+
+# Just to be sure the Update is reported:
+echo " Update=$UPDATE">>$RECORD
+
+# echo Scanning for a PCI bridge to a CardBus with:  "$LSPCI 2>/dev/null  | grep CardBus"
+echo ---------------------------------------- > $TMPM
+$LSPCI 2>/dev/null  | grep -E CardBus | cut -d' ' -f1 >$TMPM.1
+if grep 0000: $TMPM.1 >/dev/null; then
+  CARDBUS=`cat $TMPM.1 | cut -d: -f2-`
+else
+  CARDBUS=`cat $TMPM.1`
+fi
+
+if test -z "$CARDBUS" ; then
+   echo A PCMCIA CardBus is not detected on this System. >> $RECORD
+else
+    port=0
+    for i in $CARDBUS ; do
+    	echo  >> $RECORD
+        echo Analyzing information for PCMCIA device at PCI Bus $i >> $RECORD
+        $LSPCI -s $i -v 2>/dev/null >> $TMPM
+        echo "GREPping for an inserted PCMCIA modem with filter:        ommunication"  >> $RECORD
+        MODEM=`$LSPCI -v 2>/dev/null | grep ommunication`
+        if test -n "$MODEM" ; then
+            port=1
+        fi
+    done
+    if test $port -gt 0 ; then
+      echo " A PCMCIA modem is detected." | tee -a $RECORD
+      cat<<END>>$RECORD
+      
+ The stardard ltmodem resources should suffice for modem support:
+     http://ltmodem.heby.de/
+ if the modem has a Lucent/Agere digital processing chipset.
+ 
+END
+    else
+       cat<<END>>$RECORD
+ If a PCMCIA modem is currently inserted and the sockets activated by
+    /etc/init.d/pcmcia start
+ then the PCMCIA bridge is NOT transparent.
+
+ If the modem is known to have a Lucent digital signal processing chipset,
+ then PCMCIA.tar.gz variant assembled by Joern Wustenfeld is necessary,
+ rather than the standard ltmodem-$LT_VERSION.tar.gz at  http://ltmodem.heby.de/
+END
+     fi
+     echo
+fi
+
+# gcc problem
+if [ "$GCCmajor" = "3" ] ; then
+  echo GCCversion=$GCC >>$RECORD
+#########
+  cat<<END>>$RECORD2
+
+ ---------------------------------------------------------------------------------------------
+ The proprietary Binary component of the some current winmodem drivers were compiled with
+ version 2.9n gcc compiler.  Red Hat 8.0 and Mandrake 9.0 releases utilize
+ version 3.nn gcc compilers.  This currently is causing difficulties either
+ in compiling and/or insertion of updated winmodem drivers.
+
+ The gcc compiler version of this System is:   $GCC
+ It will likely be necessary to force (-f) insertion of winmodem drivers, with credit to
+ Jos Vos: http://phep2.technion.ac.il/linmodems/archive/msg04510.html
+
+ For the ltmodem drivers with proprietary binary provided by Agere Systems,
+ compiling with versions gcc=3.nn is successful.
+ A minor edit required to compile PCTEL drivers has also been reported:
+     http://phep2.technion.ac.il/linmodems/archive/msg04684.html
+
+  Simple driver insertion fails in these cases with a message like:
+----begin error----
+% insmod lt_modem
+Using /lib/modules/2.4.18-14/ltmodem/lt_modem.o
+/lib/modules/2.4.18-14/ltmodem/lt_modem.o: The module you are trying to
+load (/lib/modules/2.4.18-14/ltmodem/lt_modem.o) is compiled with a gcc
+version 2 compiler, while the kernel you are running is compiled with
+a gcc version 3 compiler. This is known to not work.
+-----end error-----
+
+ It is necessary as Root to force (-f) loading with commands like:
+     insmod -f pctel
+
+ respecting the dependency ordering of the drivers.
+ Then check for insertion with:
+    lsmod
+
+ If driver insertion is successful, the forcing can be automated
+ by putting the lines (credit to Bhaskaran Raman)  like the following,
+    install pctel  /sbin/insmod --force pctel
+
+ In order of preference depending on your particular Linux installation.
+ Put these lines into ONLY ONE of the following files,
+ within any modem loading subsection if present:
+    /etc/modutils/ltmodem
+    /etc/modutils/aliases
+    /etc/modules.conf
+
+ Then inform your System of the edit for Debian like Systems with
+    update-modules
+ which rewrites and reads /etc/modules.conf . For other System types
+    depmod -a
+ re-reads the edited      /etc/modules.conf .
+
+ Thereafter module loading should behave as previously.
+ For the ltmodem drivers loading,
+ it should suffice to either start a ppp session or
+    modprobe ptserial
+
+END
+###############
+fi
+
+if test -d /etc/udev ; then
+   cat<<END>>$RECORD
+   
+For information on modem port creation under the UDEV device file system see:
+   http://linmodems.technion.ac.il/archive-fourth/msg03299.html  for Conexnant modems
+   http://linmodems.technion.ac.il/archive-fifth/msg01177.html  for Lucent/Agere DSP modems
+   
+END
+
+fi
+
+# A general Advisory
+ETHER=`$LSPCI 2>/dev/null  | grep Ether | cut -d' ' -f1`
+if test -n "$ETHER" ; then
+  #RC2
+  cat<<END>>$RECORD2
+
+  -----------------------------------------------------
+  The System has Ethernet capability. If not expert, 
+  shut down ethernet before initiated modem usage with:
+  # ifconfig eth0 down
+
+END
+  #RC2
+  $LSPCI -s $ETHER -v 2>/dev/null >>$RECORD2
+  echo >>$RECORD2
+fi
+if [ "$MAJOR" = "2.6" ] ; then
+  MODCONF=/etc/modprobe.*
+else
+  MODCONF=/etc/modules.conf
+fi
+############
+
+  cat<<END >>$RECORD
+The following information blocks just query some ppp support items.
+
+====================================================
+   grep -rs ppp $MODCONF
+-------------------------------------
+`grep -rs ppp $MODCONF`
+-------------------------------------
+END
+# Check for unziped drivers
+if [ "$MAJOR" = "2.4" ] || [ "$MAJOR" = "2.2" ] ; then
+  SUF=o
+else
+  SUF=ko
+fi 
+Modules="bsd_comp. ppp_async. ppp_generic. slhc ppp_deflate. zlib_deflate."
+for i in $Modules
+do
+  find /lib/modules/ -name $i* 2>/dev/null  >> $TMPM
+  if ! grep $i $TMPM>/dev/null ; then
+    echo " PPP support module  $i$SUF  not found!">>$RECORD
+  fi
+done
+if grep "o.gz" $TMPM > /dev/null ; then
+  cat<<END>>$RECORD
+
+  The following ppp related modules should be unpacked by root with:
+# gunzip PathTo/ModuleName.$SUF.gz
+`cat $TMPM`
+
+ On most Systems, this will driven by installing the wvdial.rpm
+ and the package providing the KPPP graphical dialing interface.
+
+END
+else
+  echo " Resident PPP support modules are properly uncompressed .">>$RECORD
+fi
+if test -x /sbin/ifconfig ; then
+  if /sbin/ifconfig | grep Link | grep -v Loopback >/dev/null ; then
+    echo "----active COMM services are ------------">>$RECORD
+    /sbin/ifconfig | grep Link | grep -v Loopback >>$RECORD
+    echo "This COMM mode should be closed before using the modem, or DNS services may fail.">>$RECORD
+  else
+    echo " COMM services are not active">>$RECORD
+  fi
+fi
+
+if ! grep ppp $MODCONF >/dev/null ; then
+  echo
+  echo Be sure to read the section about ppp related modules and aliases in $RECORD2 >>$RECORD
+
+  cat<<END>>$RECORD2
+
+ Within /lib/modules/You_Kernel_Version/kernel/drivers/net/
+ at least the following modules needed for communication should be found
+   ppp_deflate.o
+   zlib_inflate.o 
+   zlib_deflate.o 
+   bsd_comp.o
+   ppp_async.o
+   ppp_generic.o
+   slhc.o
+ BUT they may be present instead as ModuleName.o.gz
+ If so unpack them with a commands like:
+   # gzip /lib/modules/You_Kernel_Version/kernel/drivers/net/ModuleName.o.gz
+ Alternatively, installing the dialer package KPPP may force their unpacking.
+ 
+ Following a dialout attempt, display loaded modules with:
+# /sbin/lsmod
+ If there are not displayed lines like:
+
+ppp_deflate             3512   1  (autoclean)
+zlib_inflate           18980   0  (autoclean) [ppp_deflate]
+zlib_deflate           18648   0  (autoclean) [ppp_deflate]
+bsd_comp                4440   0  (autoclean)
+ppp_async               7744   1  (autoclean)
+ppp_generic            16380   3  (autoclean) [ppp_deflate bsd_comp ppp_async]
+slhc                    5264   1  (autoclean) [ppp_generic
+
+addition of the following lines to $MODCONF or $MODCONF.d/ folders may be needed:
+
+### automate ppp modules loading ###
+alias /dev/ppp          ppp_generic
+alias char-major-108    ppp_generic
+alias tty-ldisc-3       ppp_async
+alias tty-ldisc-14      ppp_synctty
+alias ppp-compress-21   bsd_comp
+alias ppp-compress-24   ppp_deflate
+alias ppp-compress-26   ppp_deflate
+### end ppp block ####
+
+ After any edit of $MODCONF or $MODCONF.d/ folders ,
+ inform the System by logging into a console with
+ # su - root
+ and running the update command:
+ #  depmod -a
+ which re-reads /etc/modules.conf and parses all the modules dependencies.
+ Debian like Distros should instead use:
+   update-modules
+
+END
+fi
+# ethernet and isdn can hinder DNS acquisition
+if test -x /sbin/ifconfig ; then
+  /sbin/ifconfig | grep Link> $TMPM
+  #RC2
+    cat<<END>> $RECORD2
+
+  Attempted or effective networking links are displayed by command:
+  #  /sbin/ifconfig
+  A block with "lo" is an internal loopback test and harmless.
+  However, ethernet "eth0" can be problematic for PPP connections,
+  because of competition for DNS (domain name service).
+  The default is to use the DNS specified for etherenet and
+  without expert configuration, this will block browser naviagation through PPP.
+  ========== ifconfig test =============
+  `cat $TMPM`
+
+  If is wisest to disable bootup establishment of ethernet in your Control Center.
+  Depending on your Linux distribution,
+      one of the following Root commands way alternatively be effective:
+  # ifdown eth0
+  # ifconfig eth0 down
+  # /etc/init.d/network stop
+  # /etc/init.d/networking stop
+
+END
+  if  grep eth $TMPM>/dev/null ; then
+    echo " Be sure to read the Ethernet section of $RECORD2 " >>$RECORD
+  fi
+  if grep tap $TMPM>/dev/null ; then
+    echo ISDN function should be stopped before initiating modem usage>>$RECORD
+    echo >>$RECORD
+  fi   
+fi
+
+if test -e /dev/ppp ; then
+  DEVPPP=`ls -l /dev/ppp`
+  echo DEVPPP=$DEVPPP  >>$RECORD
+else
+  cat<<END>>$RECORD
+
+  A port needed for the PPP protocol is absent!!!
+  echo "  crw-------    1 root     root     108,   0 Dec 31  1969 /dev/ppp"
+
+END
+fi
+
+if test -e /dev/.devfsd ; then
+  DEVFS=active
+  echo DEVFS=$DEVFS >>$RECORD
+# Check for /dev/modem link
+elif [ -L /dev/modem ] ; then
+  MODEM=`ls -l /dev/modem | cut -d'>' -f2- | cut -d" " -f2-`
+  cat<<END>> $RECORD
+
+  The current modem symbolic link is: /dev/modem -> $MODEM
+  The ports /dev/ttyS0 or 1,2,3 are for standard Controller chip modems
+
+END
+else
+  echo A /dev/modem symbolic link is not present >>$RECORD
+fi
+
+if test -f /etc/devfsd.conf ; then
+  DEVFSD=/etc/devfsd.conf
+elif test -f /etc/devfs/devfsd.conf ; then
+  DEVFSD=/etc/devfs/devfsd.conf
+else
+  cat<<END>>$RECORD
+
+ No devfsd.conf file found, indicated absense of the devfsd daemon package
+ for device file system (devfs) symbolic link support.
+
+END
+fi
+echo DEVFSD=$DEVFSD>>$RECORD
+
+if ! [ "$DEVFSD" = "" ] ; then
+  DEVFSD_PPP=`grep PPP $DEVFSD` >>$RECORD
+  echo tts/0 > $TMPM
+  echo tts/1 >> $TMPM
+  echo tts/2 >> $TMPM
+  echo tts/3 >> $TMPM
+  echo
+  MODEM=`grep -f $TMPM $DEVFSD`
+  if test -z "$MODEM" ; then
+    if test -d /etc/devfs ; then
+      MODEM=`grep -rs modem /etc/devfs/ | grep -f $TMPM | grep :REGISTER`
+    fi
+  fi
+  if test -n "$MODEM" ; then
+    FILE=`grep -rs modem /etc/devfs/ | grep -f $TMPM | grep :REGISTER | cut -d: -f1`
+#    echo $FILE
+    cat<<EOF>>$RECORD
+
+ Supporting /dev/modem symbolic link:
+ $FILE
+------------------------------
+`cat $FILE`
+------------------------------
+
+EOF
+    cat<<END>>$RECORD2
+
+ Supporting /dev/modem symbolic link:
+ $FILE
+------------------------------
+`cat $FILE`
+------------------------------
+ is for device file system support of Controller chip modems
+ and will conflict with usages of any other modem requiring a
+ symbolic link:  /dev/modem --> /dev/SomeNode
+
+ It will for example conflict with support for the Lucent chip modems
+ with support file /etc/devfs/conf.d/ltmodem.conf
+---------------------------------
+### /dev/modem symbolic link to /dev/tts/LT0
+REGISTER        ^tts/LT0$       CFUNCTION GLOBAL symlink $devname modem
+UNREGISTER      ^tts/LT0$       CFUNCTION GLOBAL unlink modem
+---------------------------------
+ Thus unless use of a Controller chip modem is anticipated,
+ either comment out those lines with a leading #
+ or move $FILE somewhere else, say /root/
+ to avoid conflict with other modems!!
+
+ Inform the devfsd (device file system) daemon of the edit with
+ # killall -HUP devfsd
+ See http://linmodems.technion.ac.il/archive-third/msg00869.html
+
+END
+  fi
+fi
+echo acpi>$TMPM
+echo disabled>>$TMPM
+echo APM>>$TMPM
+echo apm>>$TMPM
+echo " ---- dmesg queries -------" >> $RECORD
+dmesg | grep -f $TMPM  >> $RECORD
+
+
+#   cat /etc/Redhat   displays:  Fedora Core release 1 (Yarrow)
+if  grep Fedora $RECORD >/dev/null || [ -n "$FEDORA" ] ; then
+  if [ "$MAJOR" = "2.4" ] ; then
+    cat<<END>>$RECORD
+
+ For usage of winmodems with the kernel-2.4.nn Fedora releases   a change in the serial-like driver code of WinModems  is necessary.
+ See for guidance:  http://hepunx.rl.ac.uk/~wmurray/pctel/pctel.html
+ Basically , the line:
+     if ((tty->count == 1) && (state->count != 1)) {
+  should be changed into:
+     if (atomic_read(&tty->count) == 1 && state->count != 1) {
+  This works in the ltmodem code too. See
+     http://linmodems.technion.ac.il/archive-third/msg02360.html
+  An error about "rs_close" during compiling is a signature that the fedora fix is needed
+
+END
+  fi
+  if [ "$MAJOR" = "2.6" ] ; then
+    cat<<END>>$RECORD
+
+  Beginning with Fedora 2  kernel-2.6.6-1.427, kernel-headers needed 
+  for compiling drivers are provide at: /lib/modules/kernel-version/build/
+  Thus upgrading above kernel 2.6.5-1.358 to 2.6.6-* is Stongly Recommended
+  
+  pppd version 2.4.2 may not be fully compatible with 2.6.8 kernel releases.
+  If an initial CONNECT is achieved without PPP being subsequently established,
+  drop back to a 2.4.1 version.  This has worked for PCTEL AMR modem users,
+  supported by the http://www.smlink.com  slmodem software.
+  Check pppd version with:
+    pppd --version
+  See  http://linmodems.technion.ac.il/archive-fourth/msg03167.html
+    
+END
+  fi
+fi
+### DISTR specific information.
+if [ "$DISTR" = "redhat" ] ; then
+  cat<<END>>$RECORD
+  
+ For kernel-version 2.4.20-8 , a failure in utomatic loading of PPP related modules 
+ has been reported. It was necessary to manually load with:
+  /sbin/modprobe /lib/modules/2.4.20-8/kernel/drivers/net ppp_generic 
+  /sbin/modprobe /lib/modules/2.4.20-8/kernel/drivers/net ppp_deflate 
+  /sbin/modprobe /lib/modules/2.4.20-8/kernel/drivers/net ppp_synctty 
+  /sbin/modprobe /lib/modules/2.4.20-8/kernel/drivers/net ppp_async 
+ or dialout efforts failed.
+  
+  The Internet Configuration Wizard writes a configuration file:
+    /etc/wvdial.conf
+  containing a line default line
+    Stupid Mode = yes
+  Better dialup performance may be achieved by commenting out this line as:
+    # Stupid Mode = yes
+  Also non-USA Users may need to add to the [Modem0] block:
+    Init2 = AT+GCI=hexadecimal_country_code
+  but test without it first.
+
+END
+fi
+if [ "$DISTR" = "SuSE" ] ; then
+  cat<<END>>$RECORD
+
+  SuSE 9.0 has pre-compiled drivers supporting the following modem chipsets:
+     Intel HaM and 536ep
+     Conexant HSF (but not the HCF)
+     Lucent/AgereSystems ltmodem (Digital Siggnal Processing type)
+     IBM wmave
+     Smart Link soft modems
+  Unfortunately only the  Intel HaM and 536ep are on the  3 CD Personal set, pending an update.
+  Locations on the 6 CD Professional set are:
+     CD4/suse/i586/smartlink-softmodem-2.7.9-89.i586.rpm  - the slmodemd daemon
+     CD3/suse/i586/km_smartlink-softmodem-2.7.9-89.i586.rpm - slmodem driver compiling
+     CD4/suse/i586/hsfmodem-5.03.27mbsibeta02122600-92.i586.rpm - softmodem configuration
+     CD4/suse/i586/km_hsfmodem-5.03.27mbsibeta02122600-92.i586.rpm -softmodem driver code
+        installation report -  http://linmodems.technion.ac.il/archive-fourth/msg00350.html
+     CD4/suse/i586/ltmodem-8.26a-54.i586.rpm - a patch from SuSE may be needed for function
+        installation report - http://linmodems.technion.ac.il/archive-fourth/msg00458.html
+     CD4/suse/i586/Intel-536ep-4.51-200.i586.rpm
+     CD4/suse/i586/Intel-v92ham-4.51-244.i586.rpm
+     CD4/suse/i586/mwavem-1.0.4-110.i586.rpm
+Some pre-compiled SuSE 9.0 packages for the 2.4.21-99-default kernel are available at:
+      http://linmodems.technion.ac.il/packages/SuSE-9.0/
+  including AgereSoftModem and the Intel537 modems
+
+  IMPORTANT - The kernel-source-144/README.SuSE informs that the pre-assembled kernel-headers installed
+  from the 9.0 kernel-source-99 have some flaws.  Upgrading to a later kernel, such as 2.4.21-144 with matching kernel-source is the simplest may of avoiding problems.
+  
+  SuSE 9.1 comes with a SmartLink slamr.ko driver installed,
+  aiding identification of softmodem codecs by:
+    dmesg | grep slamr
+ 
+  For the 9.1 Personal (single CD installation) winmodem packages
+  have be downloaded from the SuSE 9.1 repository
+  Should compiling drivers may be necessary,  the following additional packages
+  will have to be downloaded and installed:
+  	make, glibc-devel, gcc-3.3.3 and kernel-source.
+  The kernel-headers are co-installed with the kernel-source.
+  Thus subsequent driver compiling does Not require additional preparations.
+    
+END
+  
+elif [ "$DISTR" = "debian" ] && [ "$Smart" = "may" ] ; then
+  cat<<END>>$RECORD
+
+  There are Debian packages with modem drivers from SmartLink:
+      sl-modem-daemon - SmartLink software modem daemon
+      sl-modem-source - SmartLink software modem driver - module building source
+  MANY modem subSystems serving under AC97/MC97 Controllers are also supported.
+
+END
+elif [ "$DISTR" = "knoppix" ] ; then
+  if [ -n "$DSP" ] || [ -n "$Smart" ] || [ -n "$SMART" ] ; then
+    cat<<END>>$RECORD
+  
+ Packages with precompiled drivers for Lucent/Agere DSP modems
+ and SmartLink supported soft modes are available in
+ http://linmodems.technion.ac.il/packages/Knoppix/
+
+END
+  fi
+  cat<<END>> $RECORD
+
+ The bootable CDs of Knoppix releases 3.4 and 3.6 have boot kernels 2.4.26 and 2.4.27
+ These CDs are currently Hostile to winmodem installations for at least 3 reasons.
+ 1) The kernels were compiled with gcc-2.95.  While there is provided a /usr/bin/gcc-2.95  
+ the default ggc found by compilers is set as:      
+    /usr/bin/gcc --> /usr/bin/gcc-3.3
+ Thus with casual usage of many winmodem driver packages,
+ the drivers will be compiled with gcc-3.3 . Such mismatches between
+ a kernel and driver can cause a system CRASH. 
+ Thus special effort is required to insure that driver compiles utilize the gcc-2.95
+ 2) Winmodem packages typically try to write drivers to /usr/lib/ 
+ and installation files to /usr/sbin/ folders.
+ But these folders are positioned on the ReadOnly CD, and the writes will fail;
+ 3) Since compiled drivers cannot be placed in /lib/modules/, 
+ they are not perceived by a dependencies reading:
+    depmod -a
+ which would enable simple driver loading on demand or with a single:
+    modprobe Last_Modem_Driver
+ A Bug Report/offer to help Knoppix with these problems has been filed.
+ 
+ For Knoppix 3.8.1 the kernel-headers for kernel-version 2.6.11 are defective.
+ A corrected package is available at
+     http://www.linuxant.com/driverloader/wlan/full/archive/scripts-knoppix-3.8.1.tar.gz
+  
+END
+elif [ "$DISTR" = "mandrake" ] ; then
+  cat<<END>>$RECORD
+
+In the Mandrake installation disks do not include the dialer utility wvdial.rpm,
+then get instructions from http://linmodems.technion.ac.il/archive-fifth/msg01480.html
+END
+else
+  echo "  $DISTR is not yet providing pre-compiled drivers for WinModems">>$RECORD
+  echo >>$RECORD
+fi
+
+if ! [ "$BN" = "scanModem" ] ; then
+  /bin/rm -r ./Modem
+  exit 0
+fi
+
+# Output text files
+  cat<<END>Modem/1stRead.txt
+   
+                The files in this Modem/ folder have the following roles:
+
+ModemData.txt - Diagnostics and accumulated information cogent to your modem.
+     If further help is needed, send a description of your problem to:
+ 	    discuss@linmodems.org 
+    with ModemData.txt attached as a PLAIN TEXT file.  Do NOT send other files in this folder Modem/
+    Always send the ENTIRE ModemData.txt,  as It includes subtle diagnostic ouputs needed 
+    to best guide you. If your PC is a laptop, please provide Make and Model information.
+    
+    ModemData.txt with companion files on specific modems/situations may suffice to solve your problems.
+    It recommends sites for needed software, or additional tests You must perform.
+    Always use the most recent update of scanModem accessed ONLY at
+	http://linmodems.technion.ac.il/packages/scanModem.gz 
+    to produce ModemData.txt
+    URLs to cogent advice are regularly updated, so your problem may be solved therein.
+
+YourModem.txt has guidance about operating your particular System.
+It should NOT be sent to Discuss@linmodems.org
+
+Rational.txt - Motivations of this scanModem package.  
+
+DriverCompiling.txt -  Explains the roles of additional files which may have to be installed
+   to support compiling of modem drivers, and the steps to take.   
+             
+SoftModem.txt - Information and instructions about "soft modems".
+     For these modems, additional steps may be necessary for choice of supporting software.
+     The primary PCI ID is that of the "modem controller", which can support diverse Subsystems.
+     It is the "modem codec" of the Subsystem which determines the software needed.
+
+Slmodem.txt - The slmodem software from SmartLink supports a variety of soft modems.
+     However new Users need to be aware of its special port setup features.
+  
+Slmodem-ALSA.txt   About ALSA mode usage for slmodem.
+.
+ModemTesting.txt SHOULD be read, but  after drivers have been installed.
+
+InfoGeneral.txt has general information about the status of winmodem support under Linux,
+    Do read it if ModemData.txt  reports that your current modem is not supported under Linux. 
+  
+ If you are Linux newcomer, please do locate your local Linux group through:
+    http://www.linux.org/groups/index.html  .  If you are not comfortable with English,
+    a local Linux user can often be of substantial assistance in getting you on to the Internet.
+ 
+END
+
+  cat<<END>>Modem/Rational.txt
+
+ This script primarily utilizes the "lspci" utility from the package PCIUTILS.
+ Various component scriptlets interpret the information captured by lspci.
+ For many modems, directions to supporting software and/or more detailed information is enabled.
+ ISA bus modems, 16 bit PCMCIA card modems and USB modems will not be recognized.
+ See the output files for guidance on these cases.
+
+ The script originated as scanPCI written by Chris Hebeisen,
+ to recognize modems with DSP (digital signal processing) chipsets made by Lucent/AgereSystems.
+ It now aspires to provide useful information on other modems as well.
+ For the  Lucent/Agere DSP chip modems, System information is used to recommend Installers,
+ from the Installer list output from the repository:   http://ltmodem.heby.de/
+ For other modem chipsets fully identified, URLs to support sites are given.
+
+ Three types of information are acquired from your System:
+ 1) General system information necessary for your guidance;
+ 2) The PCI_ID of the modem card, or for the increasingly prevalent "soft modems",
+  the PCI_IDs of  its AC97/MC97 controller and its modem subsystem.
+ 3) For soft modems, a SIL_ID of the subsystem is either acquired
+ OR instructions provided for manual agetting it.
+
+ The remainder of $0 is a repository of "modem gossip" or URLs thereto.
+ Only information blocks most relevant to your System will be output into
+ files written to the Modem/ folder
+ Should you need assistance after FIRST following all the advice and/or URLs,
+ 1) Browse the general information at:  http://linmodems.technion.ac.il/ 
+ 2) ONLY thereafter send ModemData.txt to:   discuss@linmodems.org
+ Modem/General.txt  has common information the List need not be bothered with.
+ 3) Also the archive SEARCH ENGINE at  http://linmodems.technion.ac.il/
+ may be useful once PCI or SIL IDs are acquired.
+
+ The scanModem script can be read and word searched with a text browser.
+ Blocks of Information with little code begin and end with #####.
+
+ In case of a failure concerning "lspci", rerun $0 after login to a console with
+ # su - root
+ as Root permission may be necessary for access to lspci.
+
+ Updated on $UPDATE by  Marv Stodolsk for access through:
+     http://linmodems.technion.ac.il/packages/scanModem.gz
+ Please do NOT use a scanModem.gz from any other site!!
+
+END
+  cat<<END > Modem/InfoGeneral.txt
+
+ Do NOT send this  text  with common information to discuss@linmodems.org
+ There are instructions to UNSUBSCRIBE from discuss@linmodems.org at http://www.linmodems.org
+ ==============
+ RATIONAL
+ This $0 service is sadly  necessary because of the pre-compiled format
+ (binary, Closed Source)  of some modem supporting code. Intellectual property
+ is protected within the binary component.  But this prevents compatibility
+ assessments/debugging against Linux Open Source code. Skipping many details,
+ the consequence is that some Linux distributions do not deliver Closed Source code,
+ or tools adequate to fully identify the modem chipset.
+ This script tries to close  this information gap.
+
+  Several sections are included in this file:
+   The Summary of modem Support under Linux
+   description of the soft modem identity tests: SIL ids
+   some output from scanModem specific to your System
+   an explanation of the GCC 2.95 compiler warning
+   ethernet Interference with DNS (domain name service)
+   Please Linux Newbies read carefully, the companion
+   Modem/DriverCompiling.txt and its
+     Followup Modem/DriverTesting.txt section  with dialout examples.
+
+ USB modems will not be detected through the acm.o driver with port /dev/ttyACM0
+   UNTIL proper USB support is installed.
+   See http://www.linux-usb.org/USB-guide/x332.html,
+   Linux_kernel_source/Documentation/usb/acm.txt, and
+   http://www.usb.org/developers/devclass_docs/usbcdc11.pdf (page 15)
+ Among the USB modems with proprietary interfaces, there is support for
+    Conexant HSF modems are supported by the hsfmodem package at http://www.linuxant.com/drivers
+         HSF USB with Vendor:Product IDs -  0572:1300  0572:1301  0572:1302  0572:1303  08E3:0111
+	    with updates at         http://www.linuxant.com/drivers/hsf/index.php
+         HCF Vendor ID: 0572 Product ID: 1290 (Cadmus2 HCF, Conexant) is supported,    
+             but NOT the Cadmus I types:  http://www.linuxant.com/drivers/hcf/faq.php#25
+         HCF USB Vendor ID: 05AC Product ID: 8202 (Cadmus2 HCF, for Apple/Mac and not PCs)
+  SmartUSB56 (ST7554) based modems with ID: 0483:7554  
+    The SWEEX USB modem has the ST7554 chipset
+    Drivers are at http://www.smlink.com/main/index1.php?ln=en&main_id=40
+    http://linmodems.technion.ac.il/archive-fourth/msg00176.html is an installation report.
+    To write out Smartlink information, use the proxy entry
+      ./scanModem test 1131:3400
+
+ PCMCIA card modems can serve if your laptops modem is not supported under Linux.
+   http://freewebhosting.hostdepartment.com/g/gromitkc/pcmcia_list.html
+ The 3COM,Inc 3CXM556 and AgereSystems FM560LK chip modems use the Open Source serial-cs.o driver.
+
+It is the CHIPSET, and Not the modem BrandName which is informative for Linux support.
+ For modems not recognized by $0, chipset information may be obtained under Microsoft Windows through:
+ 1) Start > Settings > Control Panel > Classical View (for WinXP) > Modem  
+ or alternatively under Linux
+# cat  /proc/asound/mc97*
+      Try to identify the modem setup file, with name perhaps MODEM.INF
+ 2) Open a COMM console, and send ATI commands to the modem (ATI, ATI1, ATI2, etc)
+   which may elicit chipset and driver information. Here is an example
+       ATI3 - Agere SoftModem Version 2.1.22
+       ATI5 - 2.1.22, AMR Intel MB, AC97 ID:SIL REV:0x27
+   successfully identifying an Agere SoftModem chipset, both by name and through
+   the:softmodem SIL ID:              AC97 ID:SIL REV:0x27
+
+ SUPPORT SUMMARY - as of $UPDATE
+ -------------------------------------
+ Controller chipsets are used in the most expensive modems and are supported.
+  They utilize the same driver, serial.o , and most commonly the ports /dev/ttyS0 thru 3.
+  Such chipsets are produced by 3Com, AgereSystems (the Venus chipset),
+  Topic Semiconductor Corp., and others. But the same companies may
+  produce unsupported WinModems. Do not depend on the Brand Name.
+  Look for an explicit statement of Linux support
+
+ AVOID the following modem chipsets:
+   ESS -       no formal support since 2.2.2 kernels, though there are kluges:
+      http://andywettstein.home.comcast.net/ess/
+      http://tx.technion.ac.il/~raindel/
+   3Com/US Robotics winmodems - never supported under Linux
+
+ SmartLink - newer chipsets are supported:   http://www.smlink.com
+   ftp://ftp.smlink.com/linux/unsupported/
+   Moreover, the slmodem-2.9.10  drivers will support Many but not all modem Ssubsystems
+   that serve under AC97/MC97 controllers.
+
+ Conexant -  all modems supported with drivers at:  http://www.linuxant.com
+   Testcode for slow 14,400 mH support is free, BUT
+   there is a one time charge for the full speed support.
+
+ Intel Inc. -  http://developer.intel.com/design/modems/support/drivers.htm
+   For early releases check at: http://linmodems.technion.ac.il/resources.html
+    The HaM modem is supported, but code is no longer being updated;
+      there will likely be failures under emerging 2.6 kernels.
+    The 536ep and five Intel537 modem chipset variants are actively supported.
+
+ Lucent /AgereSystems
+   The Venus chipset modem uses the serial.o driver and is thus supported.
+   Modems with digital signal processing (DSP) chipsets are supported:  http:/ltmodem.heby.de
+   For AC97/MC97 soft modems. Initiate software access through code sponsor IBM:
+       http://www-3.ibm.com/pc/support/site.wss/document.do?lndocid=MIGR-52698
+   Coding of support for has Not yet begun PCI soft modems with PCI_IDs 11c1:048?
+    and probably will first be available within 2004.
+
+ Motorola support is at: http://www.motorola.com/softmodem/sm56_download.htm
+   through 2.4.22 kernels.
+
+ PCTel modem business has been sold to Conexant
+   Driver compiler resources are at: http://pctelcompdb.sourceforge.net/
+  However, the pre-compiled binary component is yet to be assembled
+   with the gcc 3.nn used in newer Linux releases,
+   so forced (-f) insertions may be necessary:
+     insmod -f pctel
+   Some of the HSP soft modems are supported by the SmartLink slmodem-2.9.10 drivers.
+
+ Broadcom modems in Dell laptops and PCs - can be made to function under 2.4 kernels, but code has not been updated recently.
+
+ --------- end chipset section ----------------------
+
+  SUPPORT under the current 2.6.nn kernels.
+
+ The more expensive Controller chipset modems are functioning.
+ SmartLink slmodem-2.9.9 drivers are functioning.
+ Conexant has 2.6.n support
+ The Lucent/Agere digital signal processing (DSP) chipsets do have
+   informal service into 2.6.n kernels and an AgereSystems release is soon expected.
+ Intel, Agere Systems and Linuxant are firmly expected to continue support into 2.6.nn,
+   though the Intel HaM software will not be updated to 2.6.n service
+
+ ------------------------------------
+  Preparing winmodem drivers will generally require compiling.
+  If you are not familar with this process DEFINITELY read carefully
+  the Modem/DriverCompiling.txt
+  
+END
+
+cat<<END>Modem/DriverCompiling.txt
+
+ =======================================================
+          COMPILING DRIVERS, for Linux Newbies
+	  
+Within the workshop there is an instruction set, the Makefile, and a few tools.   You command:
+	make clean
+An elf named "make" comes in, reads Makefile and then cleans up any debris of previous efforts.  
+Do ALWAYS command "make clean" as a first step before new driver compilations.
+The major work of compiling drivers and any associated tools is commanded with:
+	make  
+or perhaps  
+       make DriverName
+There only remains to command installation of the modem driver(s) and tools with:
+ 	make install
+Configuration of a dialout utility is done elsewhere, and you can access the Internet.
+
+It is really that simple, once the workshop with tools has been prepared.
+But new drivers have to be compiled with every operaing system update.
+The remainder of this text is thus aids you in the preparations, dealing with a variety of special cases.
+Most  points are covered in much more detail in the Linux Kernel-HOWTO, likely included among the
+HOWTO documentation set installed within /usr/share/doc/ folders.
+
+The core operating system of a PC is comprised of a motherboard, the software kernel, 
+and its auxilliary code modules.  The kernel is the file  /boot/vmlinuz-$SYS. 
+Modules located in subfolders of /lib/modules/$SYS/  .  They can be inserted into or removed 
+from the acting kernel upon demand. This provides adaptablity to the diverse 
+hardware components of PCs and changing requirments. 
+
+Modem drivers are one type of module.  As contrasted to most Linux software, modem driver codes have
+some non-public code components. That is the drivers are not fully Open Source, to protect 
+Intellectual Property of the providing companies.   This has a consequence that many Linux distributions
+will not or cannot legally  supply proprietary  modem drivers.  Rather the Users must get the 
+modem code package and direct  compiling of the code and driver installation.
+
+A complementary resource for compiling is a family of FileNames.h, collectively called kernel-headers.
+They are both code bits themselves and also call for other code bits their functioning depends on.
+Depending on the Linux distribution, kernel-headers may not be automatically installed.
+If not they will always be made available on installation media or some Linux repository.
+They can be searched for by package names including:  kernel-source, linux-source, kernel-headers and linux-headers
+There are always some kernel-headers in afolder /usr/include/.   But these are an INCOMPLETE, too small collection 
+and DO NOT suffice for compiling processes.
+
+In addition some software utilities may have to be installed.  The instructions for compiling are read by make.
+A set of compiler tools are installed as a  gcc-SomeVersion package.  After compiling, the various pieces 
+and linked dynamically together with "ld". Together wiith some simpler software tools, the ld will 
+already be installed on Linux systems.  Systems using the Debian style maintanence system
+additionally require a package "kernel-kbuild-3.n" to properly utilize kernel-headers or 2.6.n kernels.
+
+The  "kernel-headers" are matched with an installed kernel, or must be generated from a kernel-source package. 
+These are provided in different ways by the various Linux distributions, under 2.6.n kernels:
+     Redhat and Fedora - installation is coincident with kernel installation, 
+         with placement of the kernel-header base folder in /lib/modules/$SYS/build/
+    Mandrake and SuSE/Novell - installation as part of a kernel-source or linux-source  packages,
+         with location at /usr/src/kernel-headers-$SYS  or /usr/src/linux-$SYS 
+    Debian and distros using its Package.deb format have names:
+          kernel-headers-$SYS
+	  linux-headers-$SYS  for Ubuntu
+	  and installation is into  /usr/src/
+    Others - ???
+
+For  the prior generation of 2.4.n kernels, there are special cases.  Skip this if your kernel is a 2.6.n or a Debian type.
+For RPM using distros, the kernel-source-$SYS or linux-source-$SYS packages must be installed and configured as described below:
+ 1) SuSE with KernelVersion 2.4.21-144-* or later - install the matching kernel-source package, which does also contain the kernel-headers;
+2) for Fedora II or later, kernel-headers are/were coinstalled with the kernel package;
+3) for all other cases of 2.4.n kernels, the kernel-headers must be prepared from kernel-source.      
+  The preparation can be summarised in a few steps/actions:
+  Install a kernel-source package representing your kernel.
+  Change directory (cd) into its base folder. The kernel-source in general
+  will match only one of several kernels that could have been installed
+  and NOT necessarily yours. Thus clean out any remnants of earlier usages with:
+  	make mrproper
+  Copy in your kernel configuration file and have it read with:
+	make oldconfig
+  If necessary edit ONLY the fourth line of the Makefile, which completes
+  the specification of where drivers will be installed to (details below).
+  The kernel-headers are then assembelled by either: 
+  a) for 2.4.nn kernels by
+	make dep
+  b) for 2.6.n kernels,
+        make bzImage
+which includes an integral "make dep" step. 
+
+Modem related resources may or may not have been installed during the primary Linux installation,
+as WinModem hardware is often NOT recognized.  Search your Distro's package
+descriptions for "modem" to reveal the status of related resources.  Read
+the package description to determine whether pre-compiled modem drivers were provided.
+RESOURCES of a few types are needed to get on line. Do PREFERABLE use your System's
+package maintenance system for the installation. This should guarantee that
+any DEPENDENT packages will be called into the installation process. As a preliminary
+1) Install your distributions package providing the KPPP, WVDIAL and MINICOM dialer utilities.
+Dependencies within such packages will also drive the unpacking of ppp related modules
+from compressed to a functional form :
+   module.o.gz --> modules.o
+or for 2.6.n kernels
+   module.ko.gz --> module.ko
+In addition these dialers will later aid testing and configuration,
+which is to be performed only AFTER, the modem's drivers are installed.
+
+2) Download if necessary and modem driver package specific to your modem hardware.
+3a) Install if necessary your distrbution's kernel-source package, necessary for preparing kernel-headers under 2.4.n kernels
+Or for Debian style distributions,
+3b) install the kernel-header-$SYS.deb package matching your kernel version $SYS.
+
+A KERNEL-SOURCE package must be installed, if a full kernel-header set
+is not otherwise provided. Kernel-source packages are now some 30-40 MB now even in compressed form.
+The package provided by your Linux Distro SHOULD preferentially be used.
+It will usually have some differences from that initially released at http://www.kernel.org .
+Typically the installation process will set two symbolic links:
+  /lib/modules/$SYS/build -->  PATH_to/kernel-source-version/
+  /usr/src/linux --> PATH_to/kernel-source-version/
+These later enable access to the kernel-headers needed during the modem driver compiling. Check with:
+  ls -l /lib/modules/$SYS/build
+  ls -l /usr/src/linux
+The former link is more usefull for Systems with alternative boot kernels,
+and is mandatory for some modem compiler packages.
+
+HIGHLY IMPORTANT: the kernel-source as installed in generally does NOT
+represent your current kernel version, EVEN if the kernel-version is the same.
+Only one of several possible kernels was installed on your System,
+and the unpacked kernel-source need NOT represent it exactly!!!
+For example, in the RedHat Distro there is a set of kernel-configuration files within
+   /usr/src/linux/configs/
+Each is specialized for a different CPU (i586, i686, K6, etc),
+Yet each will be represented by the VERY SAME version name: "uname -r" .
+!!!! Thus a PROPER CONFIGURATION MUST BE DONE by You, before compiling drivers !!!!
+
+Examples provided below are partially customized from your System settings.
+CONFIGURATION is started by moving into the kernel-source folder with one of:
+  cd  /lib/modules/$SYS/build
+  cd /usr/src/linux
+END
+if test -f /lib/modules/`uname -r`/build/Makefile ; then
+  MKFL=/lib/modules/`uname -r`/build/Makefile
+
+elif test -f /usr/src/linux/Makefile ; then
+  MKFL=/usr/src/linux/Makefile
+else
+ echo Makefile not found>/dev/null
+fi
+if test -n "$MKFL" ; then
+  cat<<END>>Modem/DriverCompiling.txt
+
+ There is a Makefile on your System at:  $MKFL
+ with first few lines:
+
+END
+  grep -A3 -m 2 VERSION $MKFL >>Modem/DriverCompiling.txt
+  echo>>Modem/DriverCompiling.txt
+else
+  echo " A kernel-source packages is not evident on your System">>Modem/DriverCompiling.txt
+fi
+cat<<END>>Modem/DriverCompiling.txt
+For your current kernel, the fourth line should be
+   EXTRAVERSION = -$KEXT
+where -$KEXT has been read from your current kernel version: $SYS.
+But it this does not match what is Actually in the Makefile,
+then it represents a Different kernel-header set then that of your kernel!!!
+
+For Mandrake Linux their will generally be an included "mdk", such as:
+ EXTRAVERSION = -3.1mdk
+SuSE 9.0 had:
+ EXTRAVERSION = -99-default
+The first four makefile lines specify that:
+a)  the compiled kernel modules/drivers will have encoded version labels such as:
+   2.4.21-3.1mkd  OR   2.4.21-99-default
+b)  such modules including modem drivers are installed into sub-folders of
+   /lib/modules/2.4.21-3.1mkd/
+   /lib/modules/2.4.21-99-default/
+The major points are that compiled drivers must be both
+kernel-release (the 2.4.21) AND EXTRAVERSION matched with the installed kernel.
+Otherwise they may be installed uselessly and not be detected by the kernel
+OR there will be a failure upon attempted insertion, with message including:
+  a list of "unresolved symbols ".
+
+Kernel-headers may be resident from a prior usage of the kernel-source/.
+Check with:
+  ls include/linux/
+which may display abundant FileNames.h
+The version of these headers will be in the UTS line displayed by
+  cat include/linux/version.h
+     #define UTS_RELEASE "2.4.21-3.1mdk" (as an example)
+
+Next, list completely the contents of the kernel-source  with:
+  ls -a
+Where the " -a " additionally reveals ".dot-prefixed-confguration-files" such as
+    .config  .hdepend .depends
+which may be left over from the prior usage of the kernel-source. Below is an example:
+ -------------------
+    .config  .hdepend .depends
+COPYING        Makefile        Rules.make    init    mm
+CREDITS        README          arch        drivers  ipc     net
+Documentation    conf.vars   fs       kernel  scripts
+MAINTAINERS    REPORTING-BUGS  crypto      include  lib
+
+Configuration of the kernel-source is where almost all the Mistakes occur!!!
+Here is a way to do it correctly (but read through EXCEPTIONAL CASES below).
+1)Within kernel-source/ folder, browse the README file for general guidance.
+It will relate that the command:
+#    make mrproper
+cleans up leftovers from any previous usage .dot-files and the include/linux/ folder.
+Additionally you may need to do an edit within Makefile, but ONLY that 4th line.
+2) If necessary to edit, FIRST make a backup:
+  cp Makefile Makefile.backup
+then edit ONLY the 4th line of Makefile to match the EXTRAVERSION of $SYS
+   EXTRAVERSION = -$EXT
+NEVER change anything else within the Makefile.
+
+3) Set the dependencies of the current kernel.
+For SuSE 9.0 and later, there is a command which does the following steps
+   #  make cloneconfig && make dep
+   Also browse the excellent README.SuSE in the kernel-source/ folder
+For other Distros, the following steps are necessary, within the kernel-source/ folder
+  copy the kernel-config file to  .config
+          and DO SPECIFY that " . "
+But where is it? For many Distros, it will be the file like
+   /boot/config-$SYS
+matching the output of:
+  uname -r
+Or it may be the target of a symbolic link:  /boot/config -->
+So
+  cp /boot/config-$SYS .config
+For SuSE 8.0 and earlier versions it is:
+  cp /boot/vmlinuz.config  .config
+PLEASE do not omit that "." in  .config as it is crucially necessary.
+View .config with a text browser.
+It is simply a listing of the code components used in the kernel and its modules:
+  #
+  # Automatically generated make config: don't edit
+  #
+  CONFIG_X86=y
+  # CONFIG_SBUS is not set
+  CONFIG_UID16=y
+etc.
+
+4) The  .config file will be read during
+#  make oldconfig
+which feeds its specifications through a process specifying
+the SAME inter-dependencies previously used in compiling your kernel,
+and may generate additional .dot-config files . They can be displayed with:
+#   ls -al
+
+5) Though it may be redundant after "make mrproper", it will do no harm to:
+   make clean
+5a) For the SuSe Linux versions 8.0 and previous , there will exist files:
+  /boot/vmlinuz.autoconf.h
+  /boot/vmlinuz.version.h
+They MUST be copied as:
+  cp /boot/vmlinuz.autoconf.h  /usr/src/linux/include/linux/autoconf.h
+  cp /boot/vmlinuz.version.h    /usr/src/linux/include/linux/version.h
+
+6) Now build kernel-headers with:
+	make dep
+for 2.4.n kernels or for 2.6.n kernels
+	make bzImage 
+during which you can walk your dog, take a shower, have tea, etc.
+7) Check for resultant FileNames.h with:
+	ls  include/linux/
+and
+	cat include/linux/version.h
+to verify the version.
+
+COMPILING the MODEM DRIVERS can now finally be done.
+Unpack the compiler kit for your modem drivers,
+cd into its folder, read any README or INSTALL files,
+   make clean
+FINALLY, your modem drivers will compiled by a command like
+   make OR  make ModuleName
+or perhaps
+   make all
+During this process, some of the kernel-header code with be joined
+with the supplied modem specific code, and ModemDrivers.o will be produced.
+Follow and further instructions in the modem code resource
+to install the drivers, often with:
+   make install
+
+		THEORETICAL ISSUES	
+
+WinModem driver packages commonly include:
+1) a readible Open Source component, which can be readily debugged by
+experts in code. This component provides "wrappers" to common
+kernel functions for an already complied, or BINARY format, component of the modem code.
+
+2) A Closed Source component compiled into the binary form, in which
+proprietary information is encrypted. This will include the copyrighted Vn.nn compression algorithms.
+In 2004, pre-compiled modem drivers are beginning to be included
+for a few winmodems by some Linux distributions.
+But the binary format precludes incorporation of the modem drivers in some Linux distributions
+for legal reasons, practical reasons, and/or reasons of principle.
+
+Since almost all the newer PCs are now equipped with WinModems,
+many users will have to compile their own linux modem drivers.
+Exceptions are the more expensive modems with Controller chipsets,
+characteristic of the earliest modems.
+They are supported by Open Source serial code included in Linux
+distributions (Distros hereafter).
+
+Winmodems are less expensive because of greatly reduced hardware costs.
+They lack Controller chips of the earliest modems, and may additionally lack Digital Signal Processor (DSP) chips of second generation modems.
+Functions of Controller based chipsets are replaced by a combination of 
+software code and/or other System hardware.
+
+Modems without a controller chip are referred to as "controllerless modems" and
+modems lacking both a DSP and controller chips are referred to as "soft modems".
+With faster central processor units (CPU), some processing tasks are performed
+by the CPU for the controllerless modems. The CPU does nearly all
+the signal processing for the "soft modems" lacking a DSP. 
+
+AC97 or MC97 soft modems conform to an ac97_codec, and can host a variety of Subsystems It is the CODEC of the Subsystem which determines which software should be utilized!! 
+and any modem controllers can host one of a variety of soft modem Subsystems.
+There are additionally soft PCI modems without such controllers, which still utilize
+the common ac97_modem.o driver. In general it will be YOUR task to identify
+the Subsystem codec and compile the needed driver.
+   
+## end Modem/DriverCompiling.txt
+
+END
+
+  cat<<END> Modem/Slmodem-ALSA.txt
+  
+  The ALSA ( Advanced Linux Sound Architecture)  package includes some modem
+   drivers which provide low level support  for a few soft modem controllers.
+   Pulse dialing (ATDP) is Not supported with these ALSA modem drivers however.
+   
+    As of this update $UPATE there is support for the following soft modem controller types:
+      PCI  ID                  controller name/source          low level Module
+    =======        ===============    ===============
+    8086:xxxx           several Intel ICH types         snd-intel8x0m
+    10de:00d9          Nvidia Corp                                        "
+    1002:434d          ATI                                           snd-atiixp-modem
+    1106:3068          VIA                                           snd-via82xxx-modem
+    10b9:5451          ALI 5451                                  snd-ali5451-modem.ko  (in progress)
+    
+  To use ALSA modem drivers,  the SmartLink slmodem package   must be compiled 
+  with an ALSA support option.    The resultant slmodemd daemon provides for 
+ creation of a port and /dev/pts/N  (N a number) and a symbolic link to it:
+        /dev/ttySL0 --> /dev/pts/N
+  The command seqeunce is:
+                  modprobe Module
+ with Module being one of the four above
+                  /usr/bin/slmodem --country=YourCountry  --alsa  hw:1   &
+  hw is short for hardware port.  hw:0 is typically reserved for the audio card.
+  The & merely puts the daemon function in the backgound, so that the command prompt is recovered.
+  The slmodemd shutdown can later be done by:
+                  fg slmodem
+		  Ctrl-C
+ 
+ This service has the additional requirements:
+ 1) The subsystem must be one of those compatible with slmodemd.
+ Excluded are Conexant Subsystems, which are alternatively supported by the  hsfmodem package from
+       http://www.linuxant.com/drivers/
+       
+  For many other Subsystems, the instructions below on using SmartLink slmodem software 
+  in ALSA mode is cogent.  Slmodem.txt and Testing.txt complement the information herein. 
+  
+2) The modules must be compiled form  ALSA release of at least 1.0.6a or later version. 
+Check your System with
+# alsactl --version
+     alsactl version 1.0.6
+on my Debian 2.6.10 System. So more current code would be necessary.  
+Should your System be less than 1.06a, follow the instructions here in.
+Should a message " error: mixer setup: Off-hook switch not found for card hw:1"
+be delivered while dialing, use at least version  1.0.9rc3 .
+If later, just skip to the next section.
+Download software from http://www.alsa-project.org, The release of May 2006 is 1.08. 
+Download both alsa-lib and alsa-driver packages. Make a folder:
+ 	 mkdir newALSA
+Unpack both packages in the newALSA/
+ Follow the compilation and installation instructions therein, which will 
+install the ALSA modules and complementary software.
+ 
+3) Compilation of slmodemd with ALSA support requires prior installation of
+a package  libasound2-dev, which will be provided by your Linux distrbution.
+It has header files needed for the slmodemd compilation.  For for Mandrake/Mandriva,
+ the package name is  libalsa2-devel .  Use the slmodem-2.9.9d-alsa.tar.gz package
+ downloaded from  http://linmodems.technion.ac.il/packages/smartlink/
+ Also download the ungrab-winmodem.tar.gz which will be necessary for some Systems,
+ providing an upgrab-winmodem.ko modules.  See  http://linmodems.technion.ac.il/slmodem-serial.html
+
+4) Login to a console as;
+# su - root
+Shift into the slmodem-2.9.9d-alsa folder. Look at contents:
+# ls 
+         COPYING  Changes  Makefile  README  drivers  modem  patches  scripts
+Clean up any old remnants with:
+#  make clean
+The slmodemd will be compiled by make:
+# make
+and installed to   /usr/bin/slmodemd by:
+#  make install
+ 
+An initial check for functionality is:
+	 modprobe Module
+with Module being the appropriate ALSA modem driver.
+Should there be a failure, with message "grabbed by serial driver", First
+	modprobe ungrab-winmodem
+before
+	modprobe Module
+	
+Start the daemon with one of:
+	 slmodem --country=YourCountry --alsa  hw:1   &
+	 slmodem --country=YourCountry --alsa  modem:0   &
+	 slmodem --country=YourCountry --alsa  modem:1   &
+When Module is  snd-atiixp-modem  , instead use
+	 slmodem --country=YourCountry --alsa  modem:0   &
+	 
+ Subsequently follow the details in Slmodem.txt  and Testing.txt
+ 
+END
+
+cat<<END>Modem/Testing.txt
+			MODEM TESTING
+			 
+This text is complemented by the Post-Install at http://linmodems.technion.ac.il
+Please so consult it if the following does not suffice.
+
+The wvdial package provides for an automated hardware+driver test.
+This utility searches through ports with syntax: /dev/ttyS*  (i.e. S0, S1, SL0 etc.)
+and also follows a symbolic link:
+	/dev/modem --> /dev/ModemPort
+If your modem port name does not satisfy these requirements already,
+do a console login as:
+	su - root
+Make the symbolic links as:	
+	ln -sf /dev/ModemPort /dev/modem
+	ln -sf /dev/ModemPort /dev/ttyS15
+wherein /dev/ttyS15 is reserved for experimental usage.
+ Should there be problems with wvdial version 1.54.1-1 , drop back to 1.54.0-1 
+
+For recent RedHat and Fedora releases, wvdialconf is used by the Internet Wizard.
+Within the pop-up menus find the Wizard. Its actions will write a configuration file:
+	/etc/wvdial.conf
+For other Linux distros, open a console and login with
+	su - root
+If necessary load the modem drivers:
+	modprobe DriverNames
+Then run the test:
+	wvdialconf /etc/wvdial.conf
+Checks /dev/modem and ports /dev/ttyS*, a success at port /dev/ttySLT0 would be:
+  ttySLT0<*1>: ATQ0 V1 E1 -- OK
+  ttySLT0<*1>: ATQ0 V1 E1 Z -- OK
+  ttySLT0<*1>: ATQ0 V1 E1 S0=0 -- OK
+  ttySLT0<*1>: ATQ0 V1 E1 S0=0 &C1 -- OK
+  ttySLT0<*1>: ATQ0 V1 E1 S0=0 &C1 &D2 -- OK
+  ttySLT0<*1>: ATQ0 V1 E1 S0=0 &C1 &D2 +FCLASS=0 -- OK 
+    etc.
+The /etc/wvdial.conf written looks like:
+ 
+ [Dialer Defaults]
+Modem = /dev/ttySLT0
+Baud = 115200
+Init1 = ATZ
+Init2 = ATQ0 V1 E1 S0=0 &C1 &D2 +FCLASS=0
+ISDN = 0
+Modem Type = Analog Modem
+; Phone = <Target Phone Number>
+; Username = <Your Login Name>
+; Password = <Your Password>
+
+For systems using the SmartLink slmodem drivers,
+the following line should be added to its /etc/wvdial.conf
+  Carrier Check = no
+So after editing in your personal information a functional file is like:
+ 
+ [Dialer Defaults]
+Modem = /dev/ttySLT0
+Baud = 115200
+Init1 = ATZ
+Init2 = ATQ0 V1 E1 S0=0 &C1 &D2 +FCLASS=0
+# if there is problem with dial tone acquisition, add into the above line:
+#    X3
+#	 meaning "dial without waiting"
+ISDN = 0
+Modem Type = Analog Modem
+Phone = DialupPhoneNumber
+Username = Your_Login_Name
+# for MSN.net, use instead
+#  Username = MSN/Your_Login_Name   
+Password = Your_Password
+# if usging the SmartLink slmodem drivers, uncomment:
+#  Carrier Check = no
+
+The lines above beginning with " # " are Comments not read as code.
+Remove the " # " to activate a line.  Then try getting on line with:
+# wvdial
+ 
+The /etc/wvdial.conf generated by the RedHat/Fedora Internet Wizard 
+has a different format, adapted to its own dialer.  This includes a line
+	Stupid Mode = yes
+More informative dialup feedback May be obtained if it is commented out:
+#	Stupid Mode = yes 
+
+ A dialout with wvdial will then display like:
+# wvdial &
+--> WvDial: Internet dialer version 1.53
+--> Initializing modem.
+--> Sending: ATZ
+ATZ
+OK
+--> Sending: ATQ0 V1 E1 M1 S0=0 &C1 &D2 +FCLASS=0
+ATQ0 V1 E1 M1 S0=0 &C1 &D2 +FCLASS=0
+OK
+--> Modem initialized.
+--> Sending: ATDT3019178111
+--> Waiting for carrier.
+ATDT3019178111
+CONNECT 53333 V42bis
+--> Carrier detected.  Waiting for prompt.
+** APX1.LNH.MD.RCN.NET Terminal Server **
+Login:
+--> Looks like a login prompt.
+--> Sending: LoginName
+LoginName
+Password:
+--> Looks like a password prompt.
+--> Sending: (password)
+    Entering PPP Session.
+    IP address is 66.44.1.6
+    MTU is 1006.
+--> Looks like a welcome message.
+--> Starting pppd at Sat Jul 26 13:59:03 2003
+--> pid of pppd: 2404
+: pppd 2.4.1 started by root, uid 0
+: Using interface ppp0
+: Connect: ppp0 <--> /dev/tts/LT0
+Jul 26 13:59:08 stodolsklap kernel: PPP BSD Compression module registered
+Jul 26 13:59:08 stodolsklap kernel: PPP Deflate Compression module registered
+: local  IP address 66.44.1.6
+: remote IP address 208.59.89.132
+: primary   DNS address 207.172.3.8
+
+The & in "wvdial &" puts the process into the background, 
+allowing further usage of the command prompt.  To stop a backgrounded process:
+# fg wvdial
+# Ctrl -C 
+
+TROUBLE SHOOTING
+
+Check for modem driver loading.
+Do FIRST read INSTRUCTIONS files provided with the modem driver resource.
+Some may have installed to /usr/share/doc/Modem_or_Driver_Name/
+For RPM using distros, documentation files will be listed through
+   rpm -q -d packageName (less the version part, sometimes)
+and all directly installed files can be listed by
+   rpm -q -l packageName
+Depending upon your installation, the modem drivers may/may_not be autoloaded.
+Login as Root in a console with:
+# su - root
+# lsmod
+If the modem drivers are not already loaded onto the kernel, insert them with command
+# modprobe ModuleDriver
+If there are multiple drivers such as the lt_modem.o and lt_serial.o pair,
+commanding the serial like driver:
+# modprobe lt_serial
+should autoload all modules it depends on.  Check with:
+# lsmod 
+This proceeds through a reading of dependency files
+written to /lib/modules/$SYS/ during boot up through the "depmod -a" command.
+In constrast
+# insmod lt_serial
+would only attempt loading of that single driver and will FAIL, if its dependency on
+lt_modem.o has been satisfied by prior lt_modem.o insertion.
+ 
+ Do read "man wvdial" and /usr/share/doc/vwdial  documentation
+sometime browse the documentation that is written to /usr/share/doc/wvdial/
+Therein are instructions for setting up alternative dialouts.
+
+%%% This wvdialconf action if successful generates the files:
+ /etc/ppp/peers/wvdial
+ /etc/ppp/peers/wvdial-pipe
+in addition to the /etc/wvdial.conf
+
+Many Users prefer to use the dialout utility KPPP. This is fine.
+But each User MUST run the configuration process separately.
+In principle, different Users on the same Linux System could
+have different Internet providers and/or use different modems.
+The configuration process generates a file:  /home/UserFolder/.kde/share/config/kppprc
+Therein, non-standard modem port names can be entered, such as:
+      [Modem]                 
+      Device=/dev/ttySHSF0
+ for the Conexant hsfmodem port.  
+ 
+
+Preparation for  dialout if other COMM modes are active.
+---------------------------------------------------------------------------
+Concurrent ethernet capability will compete for
+the Domain Name Service (DNS) needed for browser naviagation. So as root:
+# /sbin/ifconfig eth0 down
+before starting a dialout!
+With a Mandrake installation, it will be necessary to:
+# /etc/init.d/network stop
+
+Internet clients such as Netscape, Mozilla, Explorer etc.
+should be CLOSED during your first dial out trials.
+Should a URL on the Internet be specifed as the default URL/connect,
+then the Client may compete with ppp for connectivity functions.
+After PPP functionality has been verified, the effects of opened
+or launched browsers can be checked
+
+If you have installed the DIALD (dial on demand) package, stop it for initial tests:
+# /etc/init.d/diald stop
+Otherwise diald function will be initiated with modem usage,
+and could compilate issues. Test diald only after ppp by itself is fine.
+
+If your internet provider assigns DNS dynamically then add to /etc/ppp/options:
+ usepeerdns
+
+To analyze a dialout attempt, it is useful to display kernel messages with:
+# tail -f /var/log/messages &
+The & puts the commanded process in the "background" allowing recovery of the command prompt.
+
+Some dialer packages (kppp etc) may automate the above steps.
+
+
+Note that for some Linux distributions (Mandrake for one),
+maintain modules in compressed module.gz format, if modem service was not specified
+during the Linux installation. A subsequent installation of any dialer package:
+  wvdial - PPP dialer with built-in intelligence.
+  kppp - PPP dialer for KDE
+  dtmfdial - A DTMF Tone Dialer
+  gkdial - Gtk-based PPP dial-up configuration tool.
+  gkdial-gnome - GNOME-based PPP dial-up configuration tool.
+  masqdialer - daemon for remote control of masqueraded dialup links
+  pppconfig - Debian configuration toolset with command: pppconf
+will stimulate unpacking of ppp related modules during bootup.
+
+The cogent ppp related modules loaded during such a CONNECT are displayed within the output from:
+# lsmod
+ppp_deflate             3512   1  (autoclean)
+zlib_inflate           18980   0  (autoclean) [ppp_deflate]
+zlib_deflate           18648   0  (autoclean) [ppp_deflate]
+bsd_comp                4440   0  (autoclean)
+ppp_async               7744   1  (autoclean)
+ppp_generic            16380   3  (autoclean) [ppp_deflate bsd_comp ppp_async]
+slhc                    5264   1  (autoclean) [ppp_generic
+
+For ealier 2.4.nn kernels, loading of these modules may require the following lines within
+  /etc/module.conf :
+### automate ppp modules loading ###
+alias /dev/ppp          ppp_generic
+alias char-major-108    ppp_generic
+alias tty-ldisc-3       ppp_async
+alias tty-ldisc-14      ppp_synctty
+alias ppp-compress-21   bsd_comp
+alias ppp-compress-24   ppp_deflate
+alias ppp-compress-26   ppp_deflate
+### end ppp block ####
+For more recent kernels with their modutils,
+these lines are no longer needed.
+
+For  potential causes of a NO DIALTONE failure, read the Post-install.html
+at  http://linmodems.technion.ac.il/  Not setting the Country Code may be
+and additional problem.
+
+ COUNTRY CODE Issues
+ ====================
+ The modem which you purchase locally or abroad may not be preset
+ with the proper Country Code setting.  An incorrect setting can
+ hinder acquisition of dial tone.
+ Inclusion of an X3 (dial without wainting) in the modem Init string
+ of under wvdial, including in /etc/wvdial.conf a line
+   Stupid Mode = yes
+
+ Dialtone recognition depends on the setting of country
+ and/or local phone line equipment.
+
+ To properly get dialtone for your country phone experiment use
+ AT+GCI=xx  where xx is country code in hexidecimal format.
+ Theoretically there could be 256 different countries but
+ not all are valid. Tables in manuals are way off date,
+ you have to write a small script to try all combinations
+ for yourself if you can't guess by chance.
+
+ After country select you can check textual name of the country it represents.
+ For example:
+   at+gci=00
+   OK
+   ati9
+   Japan
+
+ If you can't find exact country, choose the nearest one available.
+ Nearby countries tend to have similar equipment and compatible dialtones.
+
+ These comments from:   Emard <emard@softhome.net>
+ =================
+
+8) After a successful CONNECT, the Domain Name Service (DNS) needed
+ for Browser navigation can be checked with:
+# ping corel.com
+PING corel.com (206.47.20.85): 56 data bytes
+64 bytes from 206.47.20.85: icmp_seq=0 ttl=52 time=209.1 ms
+64 bytes from 206.47.20.85: icmp_seq=1 ttl=52 time=189.9 ms
+64 bytes from 206.47.20.85: icmp_seq=2 ttl=52 time=180.0 ms
+64 bytes from 206.47.20.85: icmp_seq=3 ttl=52 time=179.9 ms
+# Ctrl-C
+     aborts ping
+--- corel.com ping statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 179.9/189.7/209.1 ms
+
+# ping 206.47.20.85
+PING 206.47.20.85 (206.47.20.85): 56 data bytes
+64 bytes from 206.47.20.85: icmp_seq=0 ttl=52 time=179.8 ms
+64 bytes from 206.47.20.85: icmp_seq=1 ttl=52 time=190.0 ms
+64 bytes from 206.47.20.85: icmp_seq=2 ttl=52 time=170.0 ms
+# Ctrl-C
+     aborts ping
+
+Should there be a success with:
+# ping 206.47.20.85
+BUT a failure with the named address:
+ping corel.com
+Then DNS has not been acquired.
+Note that failure to stop ethernet service
+# /sbin/ifconfig eth0 down
+before starting a dialout, will commonly block DNS under ppp.
+
+To terminate the wvdial session, bring the action to the foreground (fg):
+# fg wvdial
+  Ctrl-C    to terminate:
+wvdial
+Caught signal #2!  Attempting to exit gracefully...
+: secondary DNS address 207.172.3.9
+: Terminating on signal 15.
+: Connection terminated.
+: Connect time 7.8 minutes.
+--> Disconnecting at Sat Jul 26 14:06:53 2003
+
+The Debian distribution provides a utility:
+# pppconfig
+for setting up a chatscript for ppp initiation.
+Most dialers do use chatscripts and will produce similar records.
+Below is the record of a dial out initiated by:
+
+# pon
+: pppd 2.4.1 started by marv, uid 1000
+: abort on (BUSY)
+: abort on (NO CARRIER)
+: abort on (VOICE)
+: abort on (NO DIALTONE)
+: abort on (NO DIAL TONE)
+: abort on (NO ANSWER)
+: abort on (DELAYED)
+: send (ATZ^M)
+: expect (OK)
+: ATZ^M^M
+: OK
+:  -- got it
+: send (ATQ0V1E1M0S0=0W2&C1&D2+FCLASS=0^M)
+: expect (OK)
+: ^M
+: ATQ0V1E1M0S0=0W2&C1&D2+FCLASS=0^M^M
+: OK
+:  -- got it
+: send (ATDT3019178111^M)
+: expect (CONNECT)
+: ^M
+: ATDT3019178111^M^M
+: CONNECT
+:  -- got it
+: send (\d)
+: Serial connection established.
+: Using interface ppp0
+: Connect: ppp0 <--> /dev/modem
+: kernel does not support PPP filtering
+Jul 26 14:08:39 stodolsklap kernel: PPP BSD Compression module registered
+Jul 26 14:08:39 stodolsklap kernel: PPP Deflate Compression module registered
+: local  IP address 66.44.1.195
+: remote IP address 208.59.89.132
+: primary   DNS address 207.172.3.8
+
+Once your first CONNECT has been established, than in the future if should suffice
+just to use your dialer of choice: wvdial , kppp  .gnomeppp or whatever.
+
+Good surfing to you.
+
+10) GENERAL ITEMS
+
+ If attemped insertion of a modem driver evokes a complaint like:
+         unresolved symbol do_SAK_R9a0bcb74
+ then the kernel-headers using in compiling the modem drivers
+ do not match those of your current kernel whose KernelVersion is displayed by:
+    uname -r
+ and whose kernel config file is often located at /boot/config-KernelVersion
+ The section above "COMPILING DRIVERS, for Newbies" relates how to make corrections.
+
+ There are definitely IPs whose login protocols are Linux hostile.
+ If you cannot achieve a login, try another Internet Provider (IP).
+ or ask for someone on discuss@linmodems.org to test your IP.
+
+ Many driver packages provide for loading modem drivers on bootup.
+ Here is a description on how to set it up, if necessary:
+   http://linmodems.technion.ac.il/archive-fourth/msg00451.html
+
+ PLEASE include the diagnostic output of the following Root command in any problem reports:
+ # setserial -agv /dev/ttyS*
+
+ For instructions on having modem drivers loaded on bootup,
+   particularly the SmartLink slmodem drivers see:
+   http://linmodems.technion.ac.il/archive-fourth/msg00451.html
+ For automated removel of drivers after a PPP session see:
+   http://linmodems.technion.ac.il/archive-fourth/msg00145.html
+
+  For general upto date advice:
+    http://linmodems.technion.ac.il/
+    http://linmodems.technion.ac.il/resources.html
+    available in Russian at  http://linmodems.nm.ru
+ for a general PCI_ID database
+    http://www.pcidatabase.com/
+ the original Linux winmodems URL is:
+    http://linmodems.org
+ with a mailing list on Winmodems:
+    discuss@linmodems.org
+ whose archives can be searched at:
+    http://linmodems.technion.ac.il/ (near bottom of the page)
+ There is an extensive modem database at:
+    http://start.at/modem/
+ Locate your local Linux groups through:
+    http://www.linux.org/groups/index.html
+ USB modem information:  http://www.linux-usb.org/USB-guide/x332.html
+ Laptop users should browse http://tuxmobil.org/modem_linux_add1.html
+ For debugging ppp:
+   http://www.cisco.com/warp/public/471/debug_ppp_negotiation.html
+
+---------- end FOLLOW UP STEPS ---------------
+
+END
+
+	cat<<END>Modem/Slmodem.txt
+               SLMODEM PACKAGE USAGES and TESTING
+
+Summary
+-----------------	       
+SmartLink (SML hereafter, http://www.smlink.com) produces chipsets for PCI card and USB modems
+which are incorporated into a variety of BrandName modems.  The complementary  slmodem software supports these modems, and Very Beneficially, a variety of soft modems with Subsystems 
+from other chipset manufacturers.  The installed software has components:
+	/usr/bin/slmodemd  - a daemon that  provides most services, including dynamic port creation.
+	/dev/slamrN  and /dev/slusbN  (N = 0,1,2 or 3) are proxy devices used by 
+        	slmodemd in port creation  for PCI and USB modems respectively.  The true port is of type 
+		/dev/pts/N  , N a number,  with a symbolic link to it also created:
+	              /dev/ttySL0 --> /dev/pts/N
+	slusb.ko - driver for the USB modems
+	slamr.ko -  a low level driver which accesses the port, 
+	       There are subsititutes for slamr.ko within the Open Source ALSA package
+               (snd-intel8x0m.ko , snd-via82xx-modem.ko  or   snd-atiixp-modem.ko ) working with most
+	       modem hardware, and provided that slmodemd was compiled with ALSA (Advanced
+	       Linux Sound Architecture) support. (See the companion Slmodem-ALSA.txt)
+	the code folder  slmodem-2.9.n/scripts/  contains scripts which can provide  bootup automation
+Details follow.
+
+  Slmodem support
+   -------------------------------
+ The software features support for :
+      FAXing, though not the AT&F command; 
+      SMP (Symmetric MultiProcessor) mother boards;
+      64 bit AMD x86_64 processor mother boards, see
+        http://linmodems.technion.ac.il/archive-fourth/msg02594.html;
+      the SmartUSB56 (ST7554) chipset with vendor/product usb ids  0483:7554, 
+          see report at  http://linmodems.technion.ac.il/archive-fourth/msg03609.htm
+ A few modem hardware types are supported:
+      the USB modems ;
+      several BrandName modems, for which the primary PCI suffices for chipset identification; 
+      many soft modems, for which a "mc97 codec" as well as PCI ID must be acquired, 
+          as described in the companion SoftModem.txt and below.
+Software download sites are:
+    SML -  http://www.smlink.com for slmodem-2.9.10.tar.gz, with license to support only SML 
+        chipset modems.  The slmodem package maintainer is Sasha Khapyorsky.  His quick fixes are at:
+   http://linmodems.technion.ac.il/packages/smartlink/   Currently cogent packages are:
+           ungrab-winmodem.tar.gz  - necessary for some Systems which falsely presume that
+	         the modem is a serial port modem type.  See  http://linmodems.technion.ac.il/slmodem-serial.html
+           slmodem-2.9.9d.tar.gz - providing compiling resources for slmodemd, slamr.ko and slusb.ko
+	   slmodem-2.9.9d-alsa.tar.gz - providing for compilation of slmodemd  with ALSA support, 
+	        so that the ALSA driver alternates described can be utilized.
+	   This  2.9.9x version software is licensed for use with any compatible softmodem.   
+
+The slamr diagnostic
+-----------------------------
+If you have just downloaded the slamr.ko driver matching your kernel, 
+just move into the folder with slamr.ko  and
+# insmod  slamr.ko 
+ will generate a warning about "Tainted kernel", and perhaps about non-SmartLink chips.
+ So long as the driver loads, just ignore them. Read related kernel messages with
+# dmesg | grep slamr
+The output should include a line like:
+      slamr: mc97 codec is CodecName
+  wherein the CodecName is needed to choose the correct software
+  
+Should the be an output like like:
+---------------
+slamr: unsupported module, tainting kernel.
+slamr: module license 'Smart Link Ltd.' taints kernel.
+slamr: SmartLink AMRMO modem.
+slamr: device 10b9:5457 is grabbed by driver serial
+------------
+The "grabbed by driver serial" indicates a compensating driver is needed.
+Use the ungrab-winmodem.tar.gz resource to compile the ungrab-winmodem.ko
+After installation, first do
+# modprobe ungrab-winmodem
+before
+# modprobe slamr
+# dmesg | grep slamr
+
+
+ A slamr.ko driver may already be installed (SuSE/Novell Linux).  Please run the following test sequence:
+ # su - root
+ # modprobe -r slamr
+ Ignore any warning message
+ # modprobe slamr
+Then same as above. Get the CodecName and send the information to Discuss@linmodems.org
+ Explanation and details follow  below.
+
+  Special cases:
+  ---------------------------   
+ For BCM64/Broadcom and ATI softmodem support, only the slmodem-2.9.9d-alsa.tar.gz can serve. 
+ Within the Modem/ folder output by scanModem, browse Slmodem.txt, Slmodem-ALSA.txt and Testing.txt
+ There have been a few reports of problems being solved by using Bootup options:
+              noapci and/or apci=off
+ thus dropping back to the APM power management mode.
+ Solution of a CONNECT problem has been achieved by specifying a slower V32 modulation 
+       see  http://linmodems.technion.ac.il/archive-fifth/msg00137.html
+
+  General installation:
+  -----------------------------
+  If your Linux distribution provides a slmodem package, the package manager will typically
+  install it to  /usr/src/moduels/slmodem-2.9.N   .  But it downloaded as a slmodem-2.9.N.tar.gz,
+  if could be unpacked in a folder of your choice.  The following directions assume installation to:
+         /usr/src/moduels/slmodem-2.9.N
+ Do  a Root login into a command console:
+ #  su -  root
+ # cd   /usr/src/moduels/slmodem-2.9.N
+ Look at contents:
+ # ls
+   COPYING  Changes  Makefile  README  drivers  modem  patches  scripts
+   
+ For Debian related Distros there is an sl-modem-daemon.deb package providing
+ slmodemd and initializaton scripts.  A separate  sl-modem-source.deb packages
+ houses the slamr and slusb driver code.  It is installed as:
+    /usr/src/sl-modem.tar.bz2
+ Unpack by
+  #  cd /usr/src/
+  #  tar jxf sl-modem.tar.bz2
+  which opens into:
+    /usr/src/modules/sl-modem/
+  Move in with:
+  # cd /usr/src/modules/sl-modem/drivers
+  for subsequent steps.
+  
+  The routine compiling steps are:
+  # make clean
+  # make
+  # make install 
+A detaile example is  http://linmodems.technion.ac.il/archive-fourth/msg00176.html
+          
+  Also install the wvdial package if your Distro provides it.
+  The wvdialconf provides a first simple test of Hardware + Software functionality.
+  
+ Afterward a test can be performed:
+ # modprobe slamr
+ See a resulting the kernel report with:
+ # dmesg | grep slamr
+ which may contain a line:
+   slamr:  mc97 codec is CodecName
+ with CodecName being a variable diagnostic output.
+ There are 4 cases:
+  a) codec is SILnm , with n,m numbers
+    there are good prospects for the modem being supported by the slmodem resources.
+  b) codec is INT65
+   The Intel_secure-537AA-CurrentVersion should serve, 
+   with slmodem support an alternative for compatible modem controllers.
+  c) codec is CXTnm
+    the softmodem is a Conexant type.  
+    ONLY hsfmodem drivers from http://www.linuxant.com can be utilized.
+    Do remove the slmodem installation first with:
+      # make uninstall
+    before proceeding further.
+  d) codec is BCM64
+    the soft modem has a Broadcom codec and the slmodem-2.9.9d-alsa MUST be used.
+    See http://oboc.ucdavis.edu/Marik/inspiron/ 
+    But readon first for general information
+    
+
+Testing
+-------------------------------------------         
+To being testing , Watch your kernel messages with:
+# tail -f /var/log/messages  &
+The "&" just  backgrounds the process, or else the command prompt is lost.
+The low level interface driver is loaded with:
+# modprobe  Module
+Then
+# slmodemd --help
+just to see what it provides.  
+
+Check for support
+ of your country with:
+# slmodemd --countrylist
+The default is USA.
+# slmodemd --countrylist &> CL.txt
+will write the list to CL.txt if desirable.
+Use your own COUNTRY from the second column for the port creations command:
+
+Simple usage
+-------------------------
+It may be necessary to
+# modprobe upgrab-winmodem 
+before inserting the low level driver:
+# modprobe Module
+where Module is:
+	slamr  for PCI card modems OR
+	slusb  for a USB modem 
+	one of the ALSA drivers mentioned above
+Start the deamon with corresponding:
+# slmodemd -a --c YourCountry  /dev/slamr0   &
+for the PCI card modems
+# slmodemd -a --c YourCountry  /dev/slusb0   &
+for the USB modes
+# slmodemd -a --c YourCountry  hw:1  &
+when using an ALSA driver, except for the ATI modems use:
+# slmodemd -c YourCountry modem:0   &
+
+These commands will creat the real port  /dev/pts/N and a symbolic link
+    /dev/ttySL0 -->  /dev/pts/N
+and provide higher level functions of the slmodem code
+The first functionality test is:
+# vwdialconf  wvdialtest.txt
+if the modem is thus found prospects are good for success.
+
+1) For Redhat and Fedora, use the Internet Wizard within the popup menus to 
+configure a dialout,  A file /etc/wvdial.conf will be created. 
+
+2) For other Linux distros do:
+# wvdialconf /etc/wvdial.conf
+Edit three lines of your personal information into /etc/wvdial.conf,
+replacing the  <text>,    including the < >
+
+In both cases add to  /etc/wvdial.conf  a line needed by slmodemd
+  Carrier Check = no
+Using other dialer utilties (such as KPPP) is OK, and they will not need the:
+     Carrier Check = no
+     
+ However should a "No carrier" message be returned during a dialout attempt see:
+     http://linmodems.technion.ac.il/archive-fifth/msg00552.html
+
+Then try a dialout, with:
+# wvdial & 
+
+ The discretionary " & " just allows recovery of the command prompt.
+ To stop a command thus started:
+ # fg wvdial
+ puts the process in the foreground, so it can be stopped with
+ # Ctrl-C
+ 
+ Preferably use wvdial for testing if your distribution provides it. Otherwise use Minicom.
+ If there is a failure to acquire a dial tone, add an X3 in the /etc/wvdial.conf line like:
+   Init2 = ATQ0 V1 E1 S0=0 &C1 &D2 +FCLASS=0
+ to:
+   Init2 = ATQ0 X3 V1 E1 S0=0 &C1 &D2 +FCLASS=0
+ For dialers using a chatscript, the edit would be like:
+   ATQ0X3V1E1S0=0&C1&D2+FCLASS=0
+  
+  Read Modem/Testing.txt for further testing guidance,
+  and Modem/Slmodem-ALSA.txt  for details on ALSA mode.
+ If success has been achieved using the slamr driver, after a while
+ it is worth also testing the slmodem-2.9.9d-alsa or later  resource .
+   but do fully UNINSTALL slmodem-2.9.n first!!!
+ Only the slmodemd for creating ports is provided in ALSA mode
+  The complementing Open Source ALSA
+ drivers comes with kernel-image packages.
+ 
+ For the slamr and usb drivers the proxy ports can be displayed with:
+  # ls -l /dev/sl*
+crw-------  1 root root 212, 0 Apr 29  2004 /dev/slamr0
+crw-------  1 root root 212, 1 Apr 29  2004 /dev/slamr1
+crw-------  1 root root 212, 2 Apr 29  2004 /dev/slamr2
+crw-------  1 root root 212, 3 Apr 29  2004 /dev/slamr3
+crw-------  1 root root 213, 0 Apr 29  2004 /dev/slusb0
+crw-------  1 root root 213, 1 Apr 29  2004 /dev/slusb1
+crw-------  1 root root 213, 2 Apr 29  2004 /dev/slusb2
+crw-------  1 root root 213, 3 Apr 29  2004 /dev/slusb3
+  If your System is using the udev file system for devices. A proxy report 
+will NOT be present until the driver is inserted:
+# modprobe slamr
+OR
+# modprobe slusb  
+
+ The slmodem packages way contain a scripts/ folder , with scripts for
+ automating driver loading and port creation upon bootup. For some Systems, 
+ it has proven beneficial to cause a pause after driver loading by inserts
+ 	sleep 1 (or maybe 2 or 3 if necessary)
+ before the line:
+ 	echo -n "Starting SmartLink Modem driver for: $SLMODEMD_DEVICE"
+ Without the pause, the driver diagnositics may not complete 
+ before the following step is attempted, with a resultant failure.
+ 
+ Call back support is implemented in slmodem-2.9.10 and slmodem-2.9.9b
+See  http://linmodems.technion.ac.il/archive-fifth/msg00219.html
+   
+END 
+cat<<END>>$RECORD
+
+ The Modem/DriverCompiling.txt  is a MUST READ,
+ if you are not experienced in configuring kernel-source/
+ or get "unresolved symbols" upon driver insertion.
+
+  Most recent WinModem fixes are in:  http://linmodems.technion.ac.il/FAQ.html
+  
+(4) For guidance on automation see  http://linmodems.technion.ac.il/archive-fourth/msg03734.html
+and the scripts in the slmodem-2.9.n/scripts folder/
+
+END
+
+if [ "$DISTR" = "debian" ] && ! [ "$BEST"  =  "" ] ; then
+    echo " For Debian users, the kernel-headers-$SYS.deb can be used instead of kernel-source/" >> $RECORD
+    echo >>  $RECORD
+fi
+if [ "$BN" = "scanModem" ] ; then
+  if ! [ "`pwd`" = "/" ] ; then
+    FILES=`ls Modem`
+    cat<<END
+    
+   A subfolder Modem/  has been written,  containing these files with more detailed Information: 
+ ------------------------------------------------------------------------------------------
+ `echo $FILES`  
+-------------------------------------------------------------------------------------------
+       Please read 1stRead.txt first for Guidance.  
+END
+  fi
+
+  if test -z $FAST ; then
+    rm $TMPM $TMPM.* &> /dev/null
+  fi
+else
+  echo  -------------- ending SCANMODEM section ---------------- >>$RECORD
+fi
+echo
+
+

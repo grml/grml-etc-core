@@ -1,0 +1,37 @@
+#!/bin/sh
+# Filename:      XF86AudioMute
+# Purpose:       mute and restore audio settings
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Sun May 14 15:03:53 CEST 2006 [mika]
+################################################################################
+
+. /etc/grml/lsb-functions
+
+UNMUT="Sound unmuted"
+MUT="Sound muted"
+
+if [ -f ~/.aumixtmp ] ; then
+  amixer set PCM unmute &>/dev/null ; RC=$?
+  if [ -n "$DISPLAY" ] ; then
+    einfo "$UNMUT" ; eend $?
+      echo "$UNMUT" | \
+      osd_cat --delay=2 -c orange -A center -p middle -f "-misc-fixed-medium-r-normal-*-*-150-*-*-c-*-iso8859-15"
+  else
+    einfo "$UNMUT" ; eend $RC
+  fi
+  rm -f ~/.aumixtmp
+else
+  touch ~/.aumixtmp
+  amixer set PCM mute &>/dev/null ; RC=$?
+  if [ -n "$DISPLAY" ] ; then
+    einfo "$MUT" ; eend $RC
+      echo "$MUT" | \
+      osd_cat --delay=2 -c orange -A center -p middle -f "-misc-fixed-medium-r-normal-*-*-150-*-*-c-*-iso8859-15"
+  else
+    einfo "$MUT" ; eend $RC
+  fi
+fi
+
+## END OF FILE #################################################################

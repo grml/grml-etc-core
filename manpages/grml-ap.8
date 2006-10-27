@@ -1,0 +1,57 @@
+.TH grml-ap 8
+.SH "NAME"
+grml-ap \- set up your box as access point
+.SH SYNOPSIS
+.B grml-ap
+.RI " start|stop|restart|info "
+.SH DESCRIPTION
+This manual page documents briefly the
+.B grml-ap
+command.
+.SH NOTES
+grml-ap uses the capabilities of your WLAN cards driver. Therefore
+you need a card including drivers providing access point features.
+atheros-based cards using the madwifi[-ng] drivers are known to work
+very well.
+.SH CONFIGURATION
+Configure setup via configuration file /etc/grml/routersetup.
+The variable AP_ESSID sets the essid of the accesspoint, if it is unset the essid grml-ap will be used by default.
+The variable AP_ENC toggles the use of encryption; set it off (that is the default) if you do not want to use encryption at all or if you want to enable encryption set the encryption key via the AP_ENC variable.
+
+.SH USAGE
+
+On the server side (where running grml-ap):
+
+  ,----
+  | # grml-ap start
+  | # cat /etc/network/interfaces
+  | iface ap inet static
+  |   address 192.168.10.1
+  |   netmask 255.255.255.0
+  |   network 192.168.10.0
+  |   broadcast 192.168.10.255
+  | # ifup ath0=ap
+  | # grml-router start
+  `----
+
+On the client side (assuming eth0 is your WLAN device):
+
+  ,----
+  | # cat /etc/network/interfaces
+  | iface ap inet static
+  |   address 192.168.10.2
+  |   netmask 255.255.255.0
+  |   network 192.168.10.0
+  |   broadcast 192.168.10.255
+  |   gateway 192.168.10.1
+  | # ifup eth0=ap
+  `----
+  
+.SH SEE ALSO
+.BR grml-bridge (8),
+.BR grml-router (8).
+.SH AUTHOR
+grml-ap was written by Ulrich Dangel <schula@grml.org> and Michael Prokop <mika@grml.org>.
+.PP
+This manual page was written by Michael Prokop
+<mika@grml.org> for the Debian project (but may be used by others).

@@ -1,0 +1,27 @@
+#!/bin/sh
+# Filename:      XF86AudioRaiseVolume
+# Purpose:       raise audio volume
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Die Aug 01 01:18:11 CEST 2006 [mika]
+################################################################################
+
+. /etc/grml/lsb-functions
+
+aumix -v +5 ; RC=$?
+
+if ! [ "$RC" = 0 ] ; then
+   eend "Error running 'aumix -v +5'" ; eend 1
+fi
+
+VOLUME=$(aumix -q | awk -F, '/vol/ {print $2}')
+
+if [ -n "$DISPLAY" ] ; then
+  einfo "Raised audio volume to${VOLUME}" ; eend $?
+  osd_cat -b percentage -P $VOLUME -d 2 -c orange -A center -p middle
+else
+  einfo "Raised audio volume to${VOLUME}" ; eend $RC
+fi
+
+## END OF FILE #################################################################

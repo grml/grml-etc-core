@@ -1,0 +1,6 @@
+bin
+etc/grml
+etc/postfix
+usr/bin
+usr/sbin
+sbin

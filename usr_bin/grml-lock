@@ -1,0 +1,97 @@
+#!/bin/zsh
+# Filename:      grml-lock
+# Purpose:       lock console
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Sam Mai 27 15:12:24 CEST 2006 [mika]
+################################################################################
+
+PN=$0
+
+if [ -r /etc/grml_version ] ; then
+else
+  dialog --stdout --title "$PN" --msgbox "Warning: this system does not look like a grml-system
+it might not work as intended." 7 70
+fi
+
+welcome_screen() {
+dialog --stdout --title "$PN" --msgbox "Welcome to $PN!
+
+This script will lock virtual consoles when running
+on console or lock X server when running X.
+
+Notice that you can not lock a GNU screen-session
+via this script, use the lockscreen command
+instead (default is pressing ctrl-a x inside
+GNU screen)!
+
+Report bugs, send wishes and feedback to the grml team:
+http://www.grml.org/ - contact (at) grml.org
+" 16 65
+}
+
+lockcons()
+{
+  vlock -a
+}
+
+lockx()
+{
+  xlock
+}
+
+askxlock()
+{
+  dialog --stdout --title "$PN" --yesno "Now lock X?" 0 0
+  retval=$?
+  case $retval in
+    0) 
+       lockx
+       ;;
+  esac
+}
+
+askvlock()
+{
+  dialog --stdout --title "$PN" --yesno "Now lock consoles?" 0 0
+  retval=$?
+  case $retval in
+    0)
+       lockcons
+       ;;
+  esac
+}
+
+askpwd()
+{
+dialog --stdout --title "$PN" --yesno "Set password for user $USER?" 0 0
+retval=$?
+case $retval in
+  0) 
+     while [ -z "$PASSWD" ] ; do
+       PASSWD=$(dialog --stdout --title "$PN" --passwordbox "Set password (hidden typing):" 0 0)
+       if [ -n "$PASSWD" ] ; then
+         echo "$USER:$PASSWD" | sudo chpasswd
+       else
+         dialog --stdout --title "$PN" --msgbox "Error while setting password. Empty passwords are not accepted." 6 65
+       fi
+     done
+     ;;
+  *)
+#     asklock
+     ;;
+esac
+}
+
+if [[ $(tty) == /dev/tty* ]] ; then
+  welcome_screen
+  askpwd
+  askvlock
+elif [ -n "$DISPLAY" ] ; then
+  welcome_screen
+  askpwd
+  askxlock
+fi
+
+## END OF FILE #################################################################

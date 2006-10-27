@@ -1,0 +1,70 @@
+#!/bin/zsh
+# Filename:      fex
+# Purpose:       extract archives via smart frontend
+# Authors:       grml-team (grml.org), (c) Matthias Kopfermann, (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Sam Mai 27 15:12:16 CEST 2006 [mika]
+################################################################################
+
+autoload -U colors && colors
+emulate zsh
+
+ file=$1
+ qprompt="
+        $fg_bold[red]Really decompress $fg_bold[magenta]${file}$fg[default]? Press y or Y for YES
+        or any other key for NO $fg[default]
+"
+
+ nothing_to_do="
+        $fg_bold[green]Okay, I will not uncompress the file $fg_bold[magenta]${file}$fg[default]$fg[default] as requested.
+"
+
+decision="read -q '?$qprompt'"
+(( ${+PAGER} )) || local PAGER=less
+
+ if [ -f $file ]
+ then
+         case $file in
+         (*.tar.bz2) 
+                tar -tvjf $file \
+                       | \
+                     $PAGER && eval $decision && tar -xvjf $file \
+                      || print $nothing_to_do ;;
+         (*.tar.gz)
+                tar -tvzf $file  | $PAGER && eval $decision \
+                && tar -xvzf $file \
+                || print $nothing_to_do ;;
+         (*.bz2)
+                bzip2 -tv $file  | $PAGER && eval $decision \
+                && bzip2 -vd $file || print $nothing_to_do ;;
+         (*.gz)
+                gzip -tv  $file | $PAGER && eval $decision \
+                && gzip -d $file || print $nothing_to_do ;;
+         (*.tar)
+                tar -tvf $file | $PAGER && eval $decision \
+                && tar xvf $file || print $nothing_to_do ;;
+         (*.tgz)
+                tar -tvzf $file | $PAGER&& eval $decision \
+                && tar xzvf $file || print $nothing_to_do ;;
+         (*.zip)
+                unzip -tv $file | $PAGER&& eval $decision \
+                && unzip $file || print $nothing_to_do ;;
+         (*.Z)
+                uncompress -tv $file | $PAGER && eval $decision \
+                && uncompress -v $file || print $nothing_to_do ;;
+         (*.rar)
+                unrar t $file | $PAGER && eval $decision \
+                && unrar x $file || print $nothing_to_do ;; 
+         (*.lzo)
+                lzop -t $file | $PAGER && eval $decision \
+                && lzop -x $file || print $nothing_to_do ;;
+         (*)
+                echo 'Error. Not the expected arguments!'
+                echo "Usage: $0 file" ; exit 1 ;;
+         esac
+ else
+         echo "'$file' is not a valid file"
+ fi
+
+## END OF FILE #################################################################

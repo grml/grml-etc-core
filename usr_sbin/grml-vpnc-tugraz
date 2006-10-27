@@ -1,0 +1,118 @@
+#!/bin/sh
+# Filename:      grml-vpnc-tugraz
+# Purpose:       connect via vpnc in VC-Graz/TU Graz (www.vc-graz.ac.at / www.tugraz.at)
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Tue Mar 28 10:02:46 CEST 2006 [mika]
+################################################################################
+
+# Documentation:
+# http://www.zid.tugraz.at/ki/netz/extern/vpn/
+
+LANG=C
+LC_ALL=C
+
+if [ "$UID" != 0 ];  then
+  sudo $0
+  exit
+fi
+
+function typeofservice() {
+NETWORK=$(dialog --stdout --clear --title "foobar" --menu \
+"This script is a submenu of grml-network to set up an internet connection
+
+Notice if you want to connect to WLAN at TU Graz:
+Make sure you have a connection to the access point and an ip-address.
+Run 'iwconfig \$DEVICE essid tug ; dhclient \$DEVICE'." 0 0 0 \
+"WLAN"   "Connect via WLAN to TU Graz network" \
+"VCGraz" "Connect to VC-Graz (not yet tested - use grml-pptp-vcgraz!)" \
+"External" "External connection (not yet tested!)" \
+"Exit"   "Exit this program")
+
+retval=$?
+
+case $retval in
+  0)
+        if [ $NETWORK == WLAN ]; then
+         GATEWAY=129.27.200.1
+         # GATEWAY=172.27.12.2
+         ACCOUNT='Account information - your TUGOnline username'
+        fi
+
+        if [ $NETWORK == VCGraz ]; then
+         GATEWAY=10.0.0.1
+         ACCOUNT='Account information - your account number'
+        fi
+
+        if [ $NETWORK == External ]; then
+         GATEWAY=129.27.200.1
+         ACCOUNT='Account information - account number'
+        fi
+        ;;
+  1)
+        echo "Cancel pressed." ; exit
+        ;;
+  255)
+        echo "ESC pressed." ; exit
+        ;;
+esac
+}
+
+runit(){
+echo "# vpnc at $NETWORK" > /etc/vpnc/vpnctugraz.conf
+echo "
+Debug 0
+IKE DH Group dh2
+Perfect Forward Secrecy dh2
+IPSec gateway $GATEWAY
+IPSec ID default
+IPSec secret default
+Xauth username $ACCOUNTNAME
+Xauth password $PASSWORD
+
+" >> /etc/vpnc/vpnctugraz.conf
+
+echo -e "#!/bin/sh\nLANG=C\n" > /etc/init.d/vpnctug
+cat >> /etc/init.d/vpnctug << "EOF"
+case "$1" in
+  start)
+    echo "Starting vpnc"
+#    route del default
+#    vpnc /etc/vpnc/vpnctugraz.conf
+    vpnc-connect /etc/vpnc/vpnctugraz.conf
+#    route add default dev tun0
+    ;;
+
+  stop)
+    echo "Stopping vpnc"
+    /usr/sbin/vpnc-disconnect
+    killall -HUP vpnc
+    ;;
+
+  *)
+    echo "Usage: /etc/init.d/vpnctug {start|stop}" >&2
+    ;;
+
+esac
+
+exit 0
+EOF
+
+chmod 600 /etc/vpnc/vpnctugraz.conf
+chmod +x /etc/init.d/vpnctug
+/etc/init.d/vpnctug start
+}
+
+typeofservice
+if [ -z "$ACCOUNTNAME" ] || [ -z "$PASSWORD" ] ; then
+  ACCOUNTNAME=$(dialog --stdout --title "vpnc in $NETWORK" --inputbox "${ACCOUNT}:" 0 0) || exit 0
+  PASSWORD=$(dialog --stdout --title "vpnc in $NETWORK" --passwordbox "Account password (hidden typing)" 0 40) || exit 0
+  [ -z "$ACCOUNTNAME" ] && exit 1
+  [ -z "$PASSWORD" ] && exit 1
+  runit
+else
+  runit
+fi
+
+## END OF FILE #################################################################

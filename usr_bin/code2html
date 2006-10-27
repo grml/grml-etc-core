@@ -1,0 +1,27 @@
+#!/usr/bin/perl -p
+#
+# code2html - convert code to html for posting to slashdot
+#
+# tchrist@perl.com
+# Sunday, December 19th, 1999
+
+BEGIN { print "<TT>\n" }        # and the spirit of awk...
+
+# first kill all the tabs
+1 while s{ \t + }
+         { " " x (length($&)*8 - length($`)%8) }ex;
+
+# then the four standard naughty bits
+s/&/&amp;/g;        # must remember to do this one first!
+s/</&lt;/g;         # this is the most important one
+s/>/&gt;/g;         # don't close too early
+s/"/&quot;/g;       # only in embedded tags, i guess
+
+# make lines break where they should
+s/^\s*$/<P>/ || s/$/<BR>/;
+
+# make sure spaces aren't squishticated so we
+# can do indentation and properly align comments
+s/  /&nbsp; /g;
+
+END { print "</TT>\n" }         # ...shall be with us always

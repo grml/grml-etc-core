@@ -1,0 +1,56 @@
+#!/bin/sh
+# Filename:      getsf
+# Purpose:       download project from sourceforge.net
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Fre Sep 29 13:56:15 CEST 2006 [mika]
+################################################################################
+
+if ! type wget 1>&/dev/null 2>&1 ; then
+   echo "Binary wget not available. Exiting." 1>&2
+   exit 1
+fi
+
+if [ -z "$1" ] ; then
+   echo "$0 - download project from sourceforge.net" 1>&2
+   echo 1>&2
+   echo "Usage: $0 <projectname-version.archive>" 1>&2
+
+   echo 1>&2 "
+Usage examples:
+
+  $0 htop-0.6.3.tar.gz
+  $0 http://prdownloads.sourceforge.net/htop/htop-0.6.3.tar.gz
+  MIRROR=puzzle $0 http://prdownloads.sourceforge.net/htop/htop-0.6.3.tar.gz
+
+Available mirrors:
+
+  superb-east (US), jaist (JP), ovh (FR), optusnet (AU), kent (UK), mesh (DE),
+  superb-west (US), easynews (US), surfnet (NL), ufpr (BR), heanet (IE),
+  nchc (TW), umn (US), belnet (BE), puzzle (CH), switch (CH)
+
+Send bug reports to Michael Prokop <mika@grml.org>"
+   exit 1
+fi
+
+[ -n "$MIRROR" ] || MIRROR=mesh # set default mirror if not already set
+
+case "$PROG" in
+  *http://*)
+      PROG=${PROG##*/}
+      BASENAME=${PROG%%-*}
+      BASENAME=${BASENAME%%_*}
+      BASENAME=$(echo $BASENAME| tr 'A-Z' 'a-z')
+      wget http://$MIRROR.dl.sourceforge.net/sourceforge/$BASENAME/$PROG
+      ;;
+  *)
+      PROG="$1"
+      BASENAME=${PROG%%-*}
+      BASENAME=${BASENAME%%_*}
+      BASENAME=$(echo $BASENAME| tr 'A-Z' 'a-z')
+      wget http://$MIRROR.dl.sourceforge.net/sourceforge/$BASENAME/$PROG
+      ;;
+esac
+
+## END OF FILE #################################################################

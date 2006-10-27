@@ -1,0 +1,131 @@
+#!/bin/sh
+# Filename:      mkdosswapfile
+# Purpose:       create GRML swapfile on an existing DOS partition
+# Authors:       (c) Klaus Knopper Mar 2001, (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Mit Okt 04 11:52:06 CEST 2006 [mika]
+################################################################################
+
+PATH="/bin:/sbin:/usr/bin:/usr/sbin"
+export PATH
+
+# XDIALOG_HIGH_DIALOG_COMPAT=1
+# export XDIALOG_HIGH_DIALOG_COMPAT
+
+[ "`id -u`" != "0" ] && exec sudo "$0" "$@"
+
+#TMP="/tmp/mkdosswapfile.tmp$$"
+TMP=$(mktemp)
+
+bailout(){
+  rm -f "$TMP"
+  exit 0
+}
+
+DIALOG="dialog"
+# [ -n "$DISPLAY" ] && [ -x /usr/bin/Xdialog ] && DIALOG="Xdialog"
+
+trap bailout 1 2 3 15
+
+# LANGUAGE etc.
+[ -r /etc/default/locale ] && . /etc/default/locale
+
+DOSPARTITIONS=""
+
+# Find all DOS partitions
+if [ -f /proc/partitions ]
+then
+partitions=""
+for p in $(awk 'BEGIN{old="__start"}{if($0==old){exit}else{old=$0;if($4&&$4!="name"){print $4}}}' /proc/partitions); do
+case $p in
+ hd?|sd?) partitions="$partitions /dev/$p"; ;;
+ *) ;;
+esac
+done
+if [ -n "$partitions" ]
+then
+foundp="$(LANG=C LC_ALL=C fdisk -l $partitions 2>/dev/null)"
+for p in `echo "$foundp" | awk '/^\/dev\//{if(/FAT/){print $1}}'`
+do
+d="/mnt/${p##*/}"
+if mount -o ro -t vfat $p $d 2>/dev/null; then
+[ ! -f $d/grml.swp ] && DOSPARTITIONS="$DOSPARTITIONS $p"
+umount $d
+fi
+done
+fi
+fi
+
+if [ -n "$DOSPARTITIONS" ]; then
+echo -n "c"
+for p in $DOSPARTITIONS; do
+# Language-dependent Messages
+case "$LANGUAGE" in
+de|at|ch)
+MESSAGE1="Möchten Sie eine SWAP-Datei 'grml.swp' für GRML auf Ihrer bestehenden DOS-Partition $p anlegen? Eine solche SWAP-Datei ermöglicht es Ihnen, trotz geringem Hauptspeicher Programmpakete wie KDE zu benutzen. Sie können diese Datei nach Beendigung Ihrer GRML-Session gefahrlos wieder löschen."
+MESSAGE2="Bitte geben Sie an, wieviel MB Sie als SWAP verwenden wollen. Empfohlen: 60 - 128. Frei: "
+MESSAGE3="Erzeuge swapfile 'grml.swp' auf $p..."
+ERROR1="Leider ist nicht genug Platz auf dieser Partition ($p), es sollten mindestens 60 MB frei sein."
+SUCCESS="Das Einrichten des Swapfiles 'grml.swp' auf $p war erfolgreich."
+;;
+es)
+MESSAGE1="¿Quiere crear un fichero de memoria virtual (swap) 'grml.swp' en su partición DOS existente $p? Un fichero swap le permite utilizar grandes aplicaciones como KDE incluso si su ordenador tiene poca memoria. Puede borrar tranquilamente el fichero swap una vez haya finalizado su sesión con GRML."
+MESSAGE2="Por favor, especifique la cantidad de espacio en disco que quiere utilizar como SWAP. Recomendado: 60 - 128. Libre: "
+MESSAGE3="Creando archivo de memoria virtual 'grml.swp' en $p..."
+ERROR1="Lo siento, no hay suficiente espacio libre en $p. Son necesarios al menos 60 MB."
+SUCCESS="Archivo swap 'grml.swp' en $p creado satisfactoriamente."
+;;
+*)
+MESSAGE1="Do you want to create a swapfile 'grml.swp' on your existing DOS partition $p? A swapfile allows you to use huge application packages like KDE even if your computer is low on memory. You can safely delete the swapfile after finishing your GRML session."
+MESSAGE2="Please specify the amount of diskspace that you want to use as SWAP. Recommended: 60 - 128. Free: "
+MESSAGE3="Creating swapfile 'grml.swp' on $p..."
+ERROR1="Sorry, not enough free space on $p. At least 60 MB required."
+SUCCESS="Swapfile 'grml.swp' on $p successfully created."
+;;
+esac
+
+d="/mnt/${p##*/}"
+f="$d/grml.swp"
+if mount -o umask=000,rw -t vfat $p $d; then
+if $DIALOG --yesno "$MESSAGE1" 11 62; then
+AVAIL=$(df -m $d | awk '/^\/dev\//{print $4}')
+if [ "$AVAIL" -lt 60 ]; then
+$DIALOG --msgbox "$ERROR1" 10 45
+umount $d
+else
+rm -f "$TMP"
+$DIALOG --inputbox "$MESSAGE2 $AVAIL" 8 62 "60" 2>"$TMP" || { umount "$d" ; bailout; }
+IN="`cat $TMP`" 
+[ "$IN" -ge 60 -a "$IN" -le "$AVAIL" ] 2>/dev/null || IN="60"
+echo "$MESSAGE3"
+dd if=/dev/zero of="$f" bs=1000k count="$IN" && \
+mkswap -v1 "$f" && swapon -v "$f" 2>/dev/null && \
+echo "$f swap swap defaults 0 0" >>/etc/fstab
+[ "$?" = "0" ] && { sleep 2 ; $DIALOG --msgbox "$SUCCESS" 10 45; } || umount "$d" 2>/dev/null
+mount -o remount,ro $d
+fi
+else
+umount "$d"
+fi
+fi
+done
+else
+case "$LANGUAGE" in
+de|at|ch)
+ERROR2="Leider sind auf Ihrem System keine geeigneten DOS-Partitionen zum Einrichten eines Swapfile vorhanden."
+;;
+es)
+ERROR2="Lo siento, no se han encontrado particiones disponibles de tipo DOS para el fichero swap de memoria virtual."
+;;
+*)
+ERROR2="Sorry, no DOS partitions available for swapfile."
+;;
+esac
+
+$DIALOG --msgbox "$ERROR2" 10 45
+fi
+
+bailout
+
+## END OF FILE #################################################################

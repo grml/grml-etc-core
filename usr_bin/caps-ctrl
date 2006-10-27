@@ -1,0 +1,39 @@
+#!/bin/sh
+# Filename:      caps-ctrl
+# Purpose:       switch setting of caps-control key (switch between ctrl + shift)
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Sun Jan 15 22:45:27 CET 2006 [mika]
+################################################################################
+
+if [ -z "$DISPLAY" ] ; then
+ if [ "$UID" != 0 ] ; then
+   echo "Sorry, you need root permissions for running $0 on console
+using loadkeys. Run this program with root permissions. Exiting."
+   exit -1
+ fi
+ dumpkeys | grep -q '^keycode  58 = Caps_Lock' && \
+ ( echo "Caps lock mapped to shift-function. Switching caps lock key to control key."
+   echo $'keycode 58 = Control Control Control Control Control Control Control Control  Control  Control  Control  Control  Control  Control  Control\nkeycode 29 = Caps_Lock Caps_Lock Caps_Lock Caps_Lock Caps_Lock Caps_Lock Caps_Lock' | loadkeys
+ ) ||
+ ( echo "Caps lock mapped to control-function. Switching caps lock key to shift key."
+   echo $'keycode 58 = Caps_Lock Caps_Lock Caps_Lock Caps_Lock Caps_Lock Caps_Lock Caps_Lock Caps_Lock  Caps_Lock  Caps_Lock  Caps_Lock  Caps_Lock  Caps_Lock  Caps_Lock  Caps_Lock\nkeycode 29 = Control Control Control Control Control Control Control ' | loadkeys
+ )
+else
+ xmodmap -pm | grep -q 'control.*Caps_Lock' && \
+ ( echo "Caps lock mapped to control-function. Switching caps lock key to shift key."
+   xmodmap -e "add lock = Caps_Lock"
+   echo "clear Lock
+         keycode 66 = Shift_Lock
+         add Lock = Shift_Lock" | xmodmap -
+   echo "Problems? Try to run 'setxkbmap -option caps:shift' manually."
+ ) ||
+ ( echo "Caps lock mapped to shift-function. Switching caps lock key to control key"
+   xmodmap -e "keycode 66 = Caps_Lock"
+   xmodmap -e "remove lock = Caps_Lock" -e "add control = Caps_Lock"
+   echo "Problems? Try to run 'setxkbmap -option ctrl:nocaps' manually."
+ )
+fi
+
+## END OF FILE #################################################################

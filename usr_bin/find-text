@@ -1,0 +1,86 @@
+#!/usr/bin/perl -s
+# Written By Shamir Biton , 27/08/2001
+# This script can search for text pattern in text file only
+
+use Cwd; 						# to use internal perl libreary
+sub ScanDirectory
+{	
+	my ($workdir) = shift;
+	my ($startdir) = &cwd; 				# $startdir will get the current directory value
+	
+	# This part of code take the list of names from $workdir and place it in @names array
+	
+	chdir($workdir) or die "Unable to enter dir $workdir:$!\n";
+	opendir(DIR,".") or die "Unable to open dir $workdir:$!\n";
+	my @names = readdir(DIR) or die "Unable to read dir $workdir:$!\n";
+	closedir(DIR);
+	
+	#
+	foreach my $name (@names)
+	{
+		next if ($name eq ".");
+		next if ($name eq "..");
+		next if ($name eq "lost+found");
+		
+		if (-d $name) 
+		{
+			&ScanDirectory($name);
+			next;
+		}
+		
+		if (-T $name)				      # only if it is text file
+		{
+                        # print ("Checking $name..\n");
+			$NofTimes = 0;
+			open(FILENAME,$name);
+			
+				while(<FILENAME>)
+				{
+				
+					if (/$wordTOfind/i)             # key word to search
+					{
+					$NofTimes +=1;
+					}	
+				}
+				
+				close(FILENAME);
+				if ($NofTimes > 0) 
+				{
+					print ("Found in $workdir/$name [$NofTimes Times]\n");
+				}	
+			
+		}	
+	}
+	
+	chdir($startdir) or die "Unable to change dir $startdir:$!\n";
+}
+
+my ($defaultdir) = &cwd;
+printf("Enter root path: [$defaultdir] ");
+$userdir = <STDIN>;
+chomp $userdir;
+
+if (! $userdir eq "")
+{
+	while (! -d $userdir) 
+	{
+		printf("Wrong Directory name, Please Enter Valid path name:");
+		$userdir = <STDIN>;
+		chomp $userdir;
+	}			
+}
+printf("Enter Text To seach: ");
+$wordTOfind = <STDIN>;
+chomp $wordTOfind;
+
+if ($userdir eq "") 
+	{
+		&ScanDirectory(".")
+	}
+else
+	{
+        print $userdir	;
+	&ScanDirectory($userdir);
+			
+	}
+

@@ -1,0 +1,20 @@
+#!/bin/sh
+# Filename:      xsay
+# Purpose:       output X clipboard text via flite
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Fre Jul 14 01:29:42 CEST 2006 [mika]
+################################################################################
+
+if [ -x /usr/bin/wmiipsel ] ; then
+  flite -o play -t "$(wmiipsel)"
+else
+  if [ -x /usr/bin/wmiiplumb ] ; then
+    flite -o play -t "$(wmiiplumb)"
+  else
+    flite -o play -t "$(wmiplumb)"
+  fi
+fi
+
+## END OF FILE #################################################################

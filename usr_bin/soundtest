@@ -1,0 +1,33 @@
+#!/bin/sh
+# Filename:      soundtest
+# Purpose:       test sound on your grml system
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Sun Jan 15 22:46:13 CET 2006 [mika]
+################################################################################
+
+PN=`basename "$0"`
+[ -z "$PLAYER" ] && PLAYER="ogg123"
+if [ -z "$1" ] ; then
+  FILE="/usr/share/grml/effect.ogg"
+else
+  FILE="$*"
+fi
+
+echo "$PN - trying to play $FILE with $PLAYER
+
+You do not hear anything? Make sure volume is not turned off.
+Adjust mixer settings via aumix or alsamixer.
+
+Tip: $PN supports some options.
+Just provide the files you want to play as arguments,
+adjust player which should be used for playing the files
+via environment variable PLAYER. Usage example:
+
+  PLAYER=mp3blaster $PN /usr/share/grml/effect.ogg /another/file/to/play.mp3
+"
+
+$PLAYER $FILE && echo "It looks like sound works for you. :-)" || echo "problems with sound? :-("
+
+## END OF FILE #################################################################

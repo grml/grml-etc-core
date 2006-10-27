@@ -1,0 +1,37 @@
+#!/bin/zsh
+# Filename:      grml-info
+# Purpose:       start browser with documentation for grml
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Fre Jul 07 22:42:18 CEST 2006 [mika]
+################################################################################
+
+local PAGE='/usr/share/doc/grml-docs/startpage.html'
+
+# do we have X?
+if ! [ -n "$DISPLAY" ]; then
+ # is it grml-small?
+ if grep -q small /etc/grml_version ; then
+    links $PAGE
+ else
+  # do we have a real console?
+  if [[ $(tty) == /dev/tty* ]] ; then
+    # do we have framebuffer support?
+    if [ -c /dev/fb0 ] ; then
+      links2 -driver fb $PAGE
+    else
+      # no, we don't have framebuffer
+      w3m $PAGE
+    fi
+  # no, probably we are running inside GNU screen
+  else
+    w3m $PAGE
+  fi
+ fi
+# oh, we have X!
+else
+  dillo $PAGE
+fi
+
+## END OF FILE #################################################################

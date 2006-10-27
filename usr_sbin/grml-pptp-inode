@@ -1,0 +1,117 @@
+#!/bin/sh
+# Filename:      grml-pptp-inode
+# Purpose:       connect via pptp to inode (www.inode.at)
+# Authors:       grml-team (grml.org), (c) Andreas Gredler <jimmy@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Fre Aug 11 11:41:22 CEST 2006 [mika]
+################################################################################
+
+################################################################################
+# Notes:
+# This script is based on 'knoppix-pptp' (version 0.3.1)
+# by Wolfgang Scheicher.
+################################################################################
+
+LANG=C
+
+if [ "$UID" != 0 ]; then
+#  sudo $0
+#  exit
+echo foo
+fi
+
+if [ -z "$FORCE_OLD" ] ; then
+  dialog --title "Inode XDSL Graz" --msgbox "Please notice that grml-pptp-inode is considered as deprecated. We recommend to use PPPOE for Inode XDSL.
+
+So please configure your system running pppoeconf
+
+If you really want to use the old grml-pptp-inode script execute
+
+  FORCE_OLD=1 grml-pptp-inode
+" 0 0
+else
+
+runit(){
+echo "name ${VPNUSERNAME}" > /etc/ppp/peers/inode
+cat >> /etc/ppp/peers/inode << "EOF"
+remotename XDSL
+defaultroute
+noipdefault
+noauth
+noproxyarp
+persist
+logfile /var/log/pptp.log
+
+EOF
+
+echo "${VPNUSERNAME} XDSL ${VPNPASSWORD} *" >> /etc/ppp/pap-secrets
+chmod 0600 /etc/ppp/pap-secrets
+
+echo -e "#!/bin/sh\nLANG=C\nVPNSERVER=\"${VPNSERVER}\"\n" > /etc/init.d/pptp
+
+cat >> /etc/init.d/pptp << "EOF"
+
+GATEWAY=`ifconfig | awk -v RS="" '/addr:172./{print substr($7,6,11)1}'`
+PPTP="/usr/sbin/pptp $VPNSERVER call inode"
+
+case "$1" in
+  start)
+      echo "Starting up XDSL: pptp"
+      /sbin/route del default &>/dev/null
+      /sbin/route add -host $VPNSERVER gw $GATEWAY &>/dev/null
+      start-stop-daemon --start --exec $PPTP
+    ;;
+  stop)
+      echo "Shutting down XDSL: pptp"
+      killall pppd &>/dev/null
+      if [ $? == 0 ]; then
+        /sbin/route del -host $VPNSERVER gw $GATEWAY &>/dev/null
+        /sbin/route add default gw $GATEWAY &>/dev/null
+        echo "."
+      fi
+    ;;
+  reconnect)
+    echo -n "Reconnecting XDSL: pptd"
+    start-stop-daemon --start --exec $PPTP
+    echo "."
+    ;;
+  *)
+      echo "Usage: /etc/init.d/pptp {start|stop|reconnect}"
+      exit 1
+    ;;
+esac
+
+exit 0
+EOF
+
+chmod +x /etc/init.d/pptp
+touch /var/log/pptp.log
+/etc/init.d/pptp start
+dialog --title "PPTP Log" --no-cancel --tailbox /var/log/pptp.log 0 0
+}
+
+[ -n "${VPNSERVER}"   ] || VPNSERVER="10.0.0.138"
+[ -n "${VPNUSERNAME}" ] || VPNUSERNAME=$(cat /etc/ppp/pap-secrets | grep XDSL | cut -d " " -f1)
+[ -n "${VPNPASSWORD}" ] || VPNPASSWORD=$(cat /etc/ppp/pap-secrets | grep XDSL | cut -d " " -f3)
+
+if [ -z "$VPNUSERNAME" ] || [ -z "$VPNPASSWORD" ] ; then
+  COMMAND1=$(dialog --stdout --title "Inode XDSL Graz" --inputbox \
+  "Account name(e.g. xdsl.<id>@home):" 0 0) || exit 0
+  COMMAND2=$(dialog --stdout --title "Inode XDSL Graz" --passwordbox "Account password (hidden typing)" 0 40) || exit 0
+
+  VPNUSERNAME=${COMMAND1%/*}
+  VPNPASSWORD=${COMMAND2#*/}
+  [ ! -z "$VPNUSERNAME" ] || exit 1
+  [ ! -z "$VPNPASSWORD" ] || exit 1
+  runit
+else
+  dialog --title "Inode XDSL Graz" --msgbox "Found already configured
+  account.\nIf the settings are wrong, delete the entries in
+  /etc/ppp/pap-secrets" 10 45
+  runit
+fi
+
+fi # $FORCE_OLD
+
+## END OF FILE #################################################################

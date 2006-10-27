@@ -1,0 +1,235 @@
+.\" Filename:      grml-scripts.1
+.\" Purpose:       man page for grml-scripts
+.\" Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+.\" Bug-Reports:   see http://grml.org/bugs/
+.\" License:       This file is licensed under the GPL v2.
+.\" Latest change: Die Sep 26 12:37:06 CEST 2006 [mika]
+.\"###############################################################################
+
+.\"###############################################################
+.TH grml\-scripts 1 "grml-scripts"
+.SH "NAME"
+grml\-scripts \- script collection for the grml distribution
+.\"#######################################################
+.SH "USER SCRIPTS"
+
+.SS align
+find out a platform's endianness, alignment rules, and type
+sizes. Moderately useful for porting stuff.
+.SS attach-screen
+attach to a running screen-session
+.SS bincompare.pl
+binary file similarity checking (using entropy)
+.SS caps-ctrl
+Switch keyboard settings of key known as "Caps-Lock" between
+using Caps-Lock either as control- or shift-key. Notice:
+running caps-ctrl on console requires root-permissions,
+running it in X window system works as normal user.
+.SS cicqhist
+create a human-readable version of centericq history
+.SS code2color
+convert a source code to syntax highlighted HTML
+.SS code2html
+convert code to html
+.SS cpu-screen
+output current / available cpu frequence (useful for integration into GNU screen)
+.SS cpufreq-detect.sh
+detect cpu type and set $MODULE to appropriate kernel module for cpufrequency scaling
+.SS dir2html
+create HTML-listing for a directory
+.SS exifinfo
+print EXIF information of an image file
+.SS fex
+extract archives via smart frontend
+.SS find-hidden-word-text
+find hidden text in MS Word documents
+.SS find-text
+search for text pattern in text file only
+.SS findwaste
+find good directories for archiving based on the average age
+of files (access time) in the directory and the directory size
+.SS firevim
+open a file from firefox with vim
+.SS get_tw_cli
+get 3ware RAID controller command line interface tool (tw_cli)
+.SS grepc
+grep for pattern and cut it
+.SS grml-bind
+make a readonly-file writeable (not necessary when using
+unionfs)
+.SS grml-config-user
+Configuration interface for user tasks on the grml system.
+.SS grml-hwinfo
+collect hardware information and write it to info.tar.bz2
+.SS grml-info
+start browser with documentation for grml
+.SS grml-init
+fix tty permissions and run screen and zsh (notice: not required for
+interactive usage but only for startup of grml system)
+.SS grml-lock
+lock virtual consoles
+.SS grml-mutt
+configuration script for mailclient mutt
+.SS grml-muttng
+configuration script for mailclient mutt-ng
+.SS grml-resolution
+change X resolution via a simple menu frontend
+.SS grml-screen
+start screen session and fix console permissions
+.SS grml-lang
+switch keyboard layout
+.SS grml-slrn
+configuration script for newsreader slrn
+.SS grml-start
+start browser with information page on grml
+.SS hgrep.sh
+highlight grep output
+.SS iimage
+create statical webgallery
+.SS ip-screen
+print ip address of configured network interfaces to stdout.
+.SS irclog2html-2.1.pl
+create html output of irc log files
+.SS lesspipe.sh
+wrapper for less
+.SS logview
+Log viewer program. Pass it parameters of the logs to view, or it will automatically view some.
+.SS mailhops
+shows the route of an Internet mail message
+.SS make_chroot_jail
+create chroot environment for a user
+.SS myip
+return IP address of running system on stdout (requires network access)
+.SS osd_server.py
+Listen for incoming messages on a specific port and print
+them via osd_cat.
+.SS runit
+prompt for command via Xdialog and execute it afterwards
+.SS say
+wrapper for festival to use the text to speech system
+.SS search
+perl script by Jeffrey Friedl - a combo of find and grep
+.SS sepdate.pl sepdate.rb sepdate.sh
+"endless september"
+.SS soundtest
+Test sound on your grml system via playing a ogg-file.
+Provide the files you want to play as arguments,
+adjust player which should be used for playing the files
+via environment variable PLAYER. Calling the script without
+any arguments will play the default file via ogg123.
+.SS sysdump
+dump /sys to a textformat
+.SS tinyp2p.py
+a functional peer-to-peer file sharing application, written in
+fifteen lines of code, in the Python programming language
+.SS twebgal
+create a tiny webgallery using CSS-features
+.SS unbleach.pl
+replace all the unsighted unprintable characters
+bleached out of your source, useful for really
+dirty perl programs
+.SS urlgrep.awk
+print http|ftp|rstp|mms:// text entries in text.
+.SS usbtree
+Reads /proc/bus/usb/devices and selectively lists and/or interprets it.
+.SS wwwis
+read in an HTML file and insert 'HEIGHT=### WIDTH=###' directives into the inlined images used in the file
+.SS XF86AudioLowerVolume
+Lower audio volume.
+.SS XF86AudioMute
+Mute and - if run again - restore audio settings.
+.SS XF86AudioRaiseVolume
+Raise audio volume.
+.SS xsay
+output X clipboard text via flite (soundsystem)
+.SS zsh-login
+Start zsh using login-option through exec.
+
+.SH "ADMIN SCRIPTS"
+
+.SS blacklist
+Blacklist module via module-init-tools (/etc/modprobe.d/grml).
+.SS bt-audio
+Connect audio bluetooth device (e.g. bluetooth headset) to local system.
+.SS bt-hid
+Connect human input device via bluetooth to local system.
+.SS dpkg_not_running
+Check whether Debian's package management (dpkg) is running.
+Returns 0 if it is not running and 1 if it is already running.
+.SS dpkg-rebuild
+rebuild your Debian dpkg/apt status file if it got
+corrupted by a system crash.
+.SS grml-config
+Central configuration interface to configure the grml system.
+.SS grml-config-root
+Configuration interface for admin tasks on the grml system.
+.SS grml-hostname
+Simple frontend to set hostname.
+.SS grml-nessus
+Prepare nessus for use on grml system.
+.SS grml-network
+Main interface to configure network setup / cards.
+Synopsis: 'grml-network'. Set environment variable NOCHECK
+to skip network status check. Run 'grml-network check' to
+execute network status check and exit immediately afterwards.
+.SS grml-postfix
+Configuration script to set up postfix on grml system for
+use with TLS.
+.SS grml-pptp-inode
+Connect via PPTP at ISP Inode.
+.SS grml-pptp-vcgraz
+Connect via PPTP in Virtual Campus Graz.
+.SS grml-pptp-xdsl-students
+Connect via PPTP at ISP Inode (XDSL@students).
+.SS grml-tpm
+Set up a system for use with TPM technology.
+.SS grml-vpnc-tugraz
+Connect to TU Graz network via vpnc.
+.SS grml-pptp-vcgraz
+Connect via PPTP in Virtual Campus Graz.
+.SS grml-pptp-xdsl-students
+Connect via PPTP at ISP Inode (XDSL@students).
+.SS grml-vpnc-tugraz
+Connect to TU Graz network via vpnc.
+.SS mkdosswapfile
+Create GRML swapfile on an existing DOS partition.
+.SS modemlink
+Start device drivers and set /dev/modem link in GRML.
+.SS ndiswrapper.sh
+NdisWrapper configuration script.
+.SS netcardconfig
+A very light-weight text-based network configuration tool.
+.SS noeject
+Wrapper script to avoid ejecting and prompting for CD removal when
+rebooting/halting system. Use it via 'noeject <cmd>', e.g. 'noeject reboot'
+to reboot system without ejecting CD and without prompting.
+.SS noprompt
+Wrapper script to avoid prompting for CD removal when rebooting/halting
+system. Use it via 'noprompt <cmd>', e.g. 'noprompt reboot' to reboot system
+without prompting.
+.SS pong
+Ping a class-C subnet in parallel without using a broadcast
+address. Useful for seeing which IPs are in use.
+.SS prepare_ramdisk.sh
+Set up a ramdisk.
+.SS prepare_tmpfs.sh
+Set up a tmpfs.
+.SS PrintAnalyzer
+Generate some stats from cups page_log file.
+.SS service
+Wrapper script for /etc/init.d/-scripts. Use it e.g. via 'service postfix start'.
+.SS suspenduser.sh
+Suspend a user account for the indefinite future.
+.SS unblacklist
+Remove blacklisted module from /etc/modprobe.d/grml.
+
+.SH "BUGS"
+Probably. Please report any bugs you find and report
+feedback and suggestions to the grml-team.
+See http://grml.org/bugs/ for further information.
+Thank you!
+
+.SH "COPYRIGHT"
+Copyright \(co 2004-2006 by the grml-team.
+.\"###### END OF FILE ##########################################################
+.\" vim:tw=60

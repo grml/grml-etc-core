@@ -1,0 +1,28 @@
+.TH getsf 1
+.SH "NAME"
+getsf \- download project from sourceforge.net
+.SH SYNOPSIS
+.B getsf <projectame-version.archive>
+.SH DESCRIPTION
+This manual page documents briefly the
+.B getsf
+command.
+.SH OPTIONS
+The first option is taken as the project's name which is downloaded via wget.
+You can specify the mirror which should be used via environment variable MIRROR.
+The default mirror is mesh (DE/germany).
+.SH USAGE EXAMPLES
+.TP
+.B getsf htop-0.6.3.tar.gz
+Download htop version 0.6.3 from default mirror (mesh).
+.TP
+.B getsf http://prdownloads.sourceforge.net/htop/htop-0.6.3.tar.gz
+Download htop version 0.6.3 from default mirror (mesh).
+.TP
+.B MIRROR=puzzle getsf http://prdownloads.sourceforge.net/htop/htop-0.6.3.tar.gz
+Download htop version 0.6.3 from mirror puzzle.
+.SH AUTHOR
+getsf was written by Michael Prokop <mika@grml.org>.
+.PP
+This manual page was written by Michael Prokop
+<mika@grml.org> for the Debian project (but may be used by others).

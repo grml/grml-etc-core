@@ -1,0 +1,47 @@
+#!/usr/bin/perl -w
+# Filename:      grepc
+# Purpose:       grep for pattern and cut it
+# Authors:       Olaf Klischat <klischat@cs.tu-berlin.de>
+# Bug-Reports:   see http://grml.org/bugs/
+# Latest change: Fre Jän 07 10:41:17 CET 2005 [mika]
+################################################################################
+
+################################################################################
+# Usage-Examples taken from:
+# http://groups.google.de/groups?selm=87acw742ea.fsf%40swangoose.isst.fhg.de
+
+# get ipaddress of interface ppp0:
+# $ ifconfig ppp0 | grepc 'inet addr:(.*?)\s'
+
+# list all debian packages which have dependency on a given package
+# $ apt-cache showpkg perl-tk | grepc '(.*?),perl-tk'
+
+# list all files which have been changed in comparison to the
+# cvs repository:
+# $ cvs diff 2>/dev/null | grepc '^RCS file: (.*?),v$'
+
+# get environment variable of a specific process:
+# $ grepc 'PATH=(.*?)\0' </proc/<pid>/environ
+
+# list destination ports of iptables lol:
+# $ </var/log/messages grepc 'DPT=(.*?) '
+
+# get debian packages on host1, download them on host2:
+# host1:$ apt-get install --yes --force-yes --print-uris gnome >uris.txt
+# host2:$ <uris.txt grepc "^'(.*?)'" | xargs -l ncftpget
+
+# list all directories containing apache-java source:
+# $ find . -path '*org/apache/*.java' | grepc '^(.*?)/org/apache' | sort | uniq
+################################################################################
+
+my $re = shift or die "usage: grepc <perl regexp containing a capture buffer>\n";
+
+$re = eval { qr/$re/ } or die "invalid regexp: $@";
+
+while (<>) {
+    if (/$re/) {
+        print "$1\n";
+    }
+}
+
+## END OF FILE #################################################################

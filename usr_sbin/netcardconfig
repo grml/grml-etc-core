@@ -1,0 +1,754 @@
+#!/bin/bash
+# Filename:      grml-network
+# Purpose:       configuration script for network
+# Authors:       Klaus Knopper 2002, Niall Walsh + Stefan Lippers-Hollmann 2005, Michael Prokop <mika@grml.org>, Marcel Wichern <marcel@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Mit Okt 04 11:52:26 CEST 2006 [mika]
+################################################################################
+# Changes have been merged from Kanotix's netcardconfig taken from
+# http://kanotix.com/files/debian/pool/main/n/netcardconfig-kanotix/
+################################################################################
+
+PATH="/bin:/sbin:/usr/bin:/usr/sbin"
+export PATH
+
+# get root
+if [ $UID != 0 ]; then
+ echo Error: become root before starting $0 >&2
+ exit 100
+fi
+
+TMP=$(mktemp)
+WPATMP=$(mktemp)
+
+bailout() {
+  rm -f "$TMP"
+  rm -f "$WPATMP"
+  exit $1
+}
+
+# This function produces the IWOURLINE for interfaces
+writeiwline() {
+  IWOURLINE=""
+  if [ -n "$NWID" ]; then
+    IWOURLINE="$IWOURLINE wireless-nwid $NWID\n"
+  fi
+
+  if [ -n "$MODE" ]; then
+    IWOURLINE="$IWOURLINE wireless-mode $MODE\n"
+  fi
+
+  if [ -n "$CHANNEL" ]; then
+    IWOURLINE="$IWOURLINE wireless-channel $CHANNEL\n"
+  fi
+
+  if [ -n "$FREQ" ]; then
+    IWOURLINE="$IWOURLINE wireless-freq $FREQ\n"
+  fi
+
+  if [ -n "$KEY" ]; then
+    if [ "$PUBKEY" -eq 1 ]; then
+      # Store the key in interfaces in wireless-key
+      IWOURLINE="$IWOURLINE wireless-key $KEY\n"
+    else
+      # Store the key in /etc/network/wep.$DV which is root readable only
+      # Use pre-up in interfaces to read and set it
+      echo "$KEY" > /etc/network/wep.$DV && chmod 600 /etc/network/wep.$DV && IWOURLINE="$IWOURLINE pre-up KEY=\$(cat /etc/network/wep.$DV) && iwconfig $DV key \$KEY\n"
+    fi
+  fi
+
+  [ -d /sys/module/rt2??0/ ] && IWPREUPLINE="$IWPREUPLINE pre-up /sbin/ifconfig $DV up\n"
+
+  if [ -n "$IWCONFIG" ]; then
+    IWPREUPLINE="$IWPREUPLINE iwconfig $IWCONFIG\n"
+  fi
+
+  if [ -n "$IWSPY" ]; then
+    IWPREUPLINE="$IWPREUPLINE iwspy $IWSPY\n"
+  fi
+
+  if [ -n "$IWPRIV" ]; then
+    IWPREUPLINE="$IWPREUPLINE iwpriv $IWPRIV\n"
+  fi
+
+  # execute ESSID last, but make sure that it is written as first option
+  if [ -n "$ESSID" ]; then
+    IWOURLINE="$IWOURLINE wireless-essid $ESSID\n"
+  fi
+
+  if [ $WPAON -gt 0 ]; then
+    # Using wpa requires a wpa_supplicant entry
+    IWPREUPLINE="${IWPREUPLINE}pre-up wpa_supplicant -D$WPA_DEV -i$WLDEVICE -c/etc/wpa_supplicant.conf -B\n"
+    touch /etc/wpa_supplicant.conf
+    awk '/^network={/{if(found){found=0}else{found=1;hold=$0}}/ssid={/{if(/ssid='"$ESSID"'/){found=1}else{found=0;print hold}}{if(!found){print}}' /etc/wpa_supplicant.conf >> "$TMP"
+    wpa_passphrase "$ESSID" "$WPASECRET" 2>/dev/null >> "$TMP"
+    mv -f /etc/wpa_supplicant.conf /etc/wpa_supplicant.conf.$(date +%Y%m%d_%H%M)
+    if ! grep -q "For more information take a look at" /etc/wpa_supplicant.conf ; then
+      cat >$WPATMP <<EOF
+# /etc/wpa_supplicant.conf
+# For more information take a look at /usr/share/doc/wpasupplicant/
+#
+# Other WPA options:
+#  scan_ssid [0]|1
+#  bssid 00:11:22:33:44:55
+#  priority [0]|Integer
+#  proto [WPA RSN] WPA|RSN
+#  key_mgmt [WPA-PSK WPA-EAP]|NONE|WPA-PSK|WPA-EAP|IEEE8021X
+#  pairwise [CCMP TKIP]|CCMP|TKIP|NONE
+#  group [CCMP TKIP WEP105 WEP40]|CCMP|TKIP|WEP105|WEP40
+#  eapol_flags [3]|1|2
+
+EOF
+    fi
+    [ -n "$APSCAN" ] && echo "$APSCAN" >> "$WPATMP"
+    cat "$WPATMP" "$TMP" > /etc/wpa_supplicant.conf
+    rm -f $WPATMP 2>/dev/null
+    IWDOWNLINE="${IWDOWNLINE}down killall wpa_supplicant\n"
+  fi
+
+  IWOURLINE="$IWOURLINE $IWPREUPLINE $IWDOWNLINE"
+  #echo "DEBUG: for interfaces $IWOURLINE"
+}
+
+device2props() {
+  PARTCOUNT=0
+  isauto=0
+  isfirewire=0
+  iswireless=0
+  driver=""
+  mac=""
+  for PART in $DEVICE; do
+    if [ $PARTCOUNT -eq 0 ]; then
+      DEVICENAME=$PART
+    else
+      echo $PART | grep -q A::1 && isauto=1
+      echo $PART | grep -q F::1 && isfirewire=1
+      echo $PART | grep -q W::1 && iswireless=1
+      [ -z "$driver" ] && driver=$(echo $PART|awk 'BEGIN {FS="::"} /^D:/{print $2}')
+      [ -z "$mac" ] && mac=$(echo $PART|awk 'BEGIN {FS="::"} /^M:/{print $2}')
+    fi
+    ((PARTCOUNT++))
+  done
+}
+
+props2string() {
+  MY_DEVICE_NAME=""
+  [ $isfirewire -gt 0 ] && MY_DEVICE_NAME="$NET_DEVICE_NAME_FW"
+  [ -z "$MY_DEVICE_NAME" -a $iswireless -gt 0 ] && MY_DEVICE_NAME="$NET_DEVICE_NAME_W"
+  [ -z "$MY_DEVICE_NAME" ] && MY_DEVICE_NAME="$NET_DEVICE_NAME"
+  MY_DEVICE_NAME="$DEVICENAME $MY_DEVICE_NAME $mac $driver"
+  [ $isauto -gt 0 ] && MY_DEVICE_NAME="$MY_DEVICE_NAME $NET_DEVICE_NAME_AUTO"
+  MY_DEVICE_NAME=$(echo $MY_DEVICE_NAME | sed 's/\ /__/g')
+}
+
+addauto() {
+  if ! egrep -e "^auto[  ]+.*$DV" /etc/network/interfaces >/dev/null; then
+    awk '{if(/^auto/){if(done==0){print $0 " '"$DV"'";done=1}else{print}}else{print}}END{if(done==0){print "auto '$DV'"}}' "/etc/network/interfaces" > "$TMP"
+    cat "$TMP" > /etc/network/interfaces
+  fi
+}
+
+remauto(){
+  if egrep -e "^auto[  ]+.*$DV" /etc/network/interfaces >/dev/null; then
+    perl -pi -e 's/^(auto.*)'$DV'(.*)$/$1$2/;' /etc/network/interfaces
+  fi
+}
+
+configiface() {
+  [ ! -r /etc/network/interfaces ] && touch /etc/network/interfaces
+  DEVICE=${NETDEVICES[$DV]}
+  device2props
+  DV=$DEVICENAME
+  # wireless config
+  WLDEVICE="$(LANG=C LC_MESSAGEWS=C iwconfig $DV 2>/dev/null | awk '/802\.11|READY|ESSID/{print $1}')"
+  WLDEVICECOUNT="$(LANG=C LC_MESSAGEWS=C iwconfig $DV 2>/dev/null | wc -l)"
+  if [ $iswireless -gt 0 ] && $DIALOG --yesno "$MESSAGE13" 8 45; then
+    ESSID=""
+    NWID=""
+    MODE=""
+    CHANNEL=""
+    FREQ=""
+    SENS=""
+    RATE=""
+    KEY=""
+    RTS=""
+    FRAG=""
+    IWCONFIG=""
+    IWSPY=""
+    IWPRIV=""
+
+    if [ -f /etc/network/interfaces ]; then
+      awk '/iface/{if(/'"$DV"'/){found=1}else{found=0}}
+        /essid/{if(found){for(i=NF;i>=2;i--)essid=$i "~" essid}}
+        /nwid/{if(found){nwid=$NF}}
+        /mode/{if(found){mode=$NF}}
+        /channel/{if(found){channel=$NF}}
+        /freq/{if(found){freq=$NF}}
+        /sens/{if(found){sens=$NF}}
+        /rate/{if(found){rate=$NF}}
+        /rts/{if(found){rts=$NF}}
+        /frag/{if(found){frag=$NF}}
+        /iwconfig/{if(!/KEY/){if(found){iwconfig=$NF}}}
+        /iwspy/{if(found){iwspy=$NF}}
+        /iwpriv/{if(found){iwpriv=$NF}}
+        /wireless[-_]key/{if(found){gsub(/^\W*wireless[-_]key\W*/,"");key=$0}}
+        END{
+          if (!(length(essid))){essid="~~~"}
+          if (!(length(nwid))){nwid="~~~"}
+          if (!(length(mode))){mode="~~~"}
+          if (!(length(channel))){channel="~~~"}
+          if (!(length(freq))){freq="~~~"}
+          if (!(length(sens))){sens="~~~"}
+          if (!(length(rate))){rate="~~~"}
+          if (!(length(rts))){rts="~~~"}
+          if (!(length(frag))){frag="~~~"}
+          if (!(length(iwconfig))){iwconfig="~~~"}
+          if (!(length(iwspy))){iwspy="~~~"}
+          if (!(length(iwpriv))){iwpriv="~~~"}
+          if (!(length(key))){key="~~~"}
+          print essid" "nwid" "mode" "channel" "freq" "sens" "rate" "rts" "frag" "iwconfig" "iwspy" "iwpriv" "key
+        }' /etc/network/interfaces >"$TMP"
+
+      read ESSID NWID MODE CHANNEL FREQ SENS RATE RTS FRAG IWCONFIG IWSPY IWPRIV KEY<"$TMP"
+
+      if [ "$ESSID" = "~~~" ]; then  ESSID=""; fi
+      if [ "$NWID" = "~~~" ]; then  NWID=""; fi
+      if [ "$MODE" = "~~~" ]; then  MODE=""; fi
+      if [ "$CHANNEL" = "~~~" ]; then  CHANNEL=""; fi
+      if [ "$FREQ" = "~~~" ]; then  FREQ=""; fi
+      if [ "$SENS" = "~~~" ]; then  SENS=""; fi
+      if [ "$RATE" = "~~~" ]; then  RATE=""; fi
+      if [ "$RTS" = "~~~" ]; then  RTS=""; fi
+      if [ "$FRAG" = "~~~" ]; then  FRAG=""; fi
+      if [ "$IWCONFIG" = "~~~" ]; then IWCONFIG=""; fi
+      if [ "$IWSPY" = "~~~" ]; then  IWSPY=""; fi
+      if [ "$IWPRIV" = "~~~" ]; then  IWPRIV=""; fi
+      if [ "$KEY" = "~~~" ]; then  KEY=""; fi
+
+      ESSID=$(echo $ESSID | tr "~" " " | sed 's/ *$//')
+
+      if [ -z "$KEY" ]; then
+        KEY=$(cat /etc/network/wep.$DV 2>/dev/null)
+
+        if [ -z "$KEY" ]; then
+          PUBKEY=0
+        else
+          PUBKEY=-1
+        fi
+      else
+        PUBKEY=1
+      fi
+
+      #echo "DEBUG:E:$ESSID N:$NWID M:$MODE C:$CHANNEL F:$FREQ S:$SENS R:$RATE K:$KEY R:$RTS F:$FRAG I:$IWCONFIG I:$IWSPY I:$IWPRIV"
+      rm -f "$TMP"
+    fi
+
+    $DIALOG --inputbox "$MESSAGEW4 $DEVICENAME $MESSAGEW5" 15 50 "$ESSID" 2>"$TMP" || bailout 1
+    read ESSID <"$TMP" ; rm -f "$TMP"
+    [ -z "$ESSID" ] && ESSID="any"
+
+    $DIALOG --inputbox "$MESSAGEW6 $DEVICENAME $MESSAGEW7" 15 50 "$NWID" 2>"$TMP" || bailout 1
+    read NWID <"$TMP" ; rm -f "$TMP"
+
+    $DIALOG --inputbox "$MESSAGEW8 $DEVICENAME $MESSAGEW9" 15 50 "$MODE" 2>"$TMP" || bailout 1
+    read MODE <"$TMP" ; rm -f "$TMP"
+    [ -z "$MODE" ] && MODE="Managed"
+
+    $DIALOG --inputbox "$MESSAGEW10 $DEVICENAME $MESSAGEW11" 15 50 "$CHANNEL" 2>"$TMP" || bailout 1
+    read CHANNEL <"$TMP" ; rm -f "$TMP"
+
+    if [ -z "$CHANNEL" ]; then
+      $DIALOG --inputbox "$MESSAGEW12 $DEVICENAME $MESSAGEW13" 15 50 "$FREQ" 2>"$TMP" || bailout 1
+      read FREQ <"$TMP" ; rm -f "$TMP"
+    fi
+
+    WPAON=0
+    IWDRIVER=$driver
+
+    case $IWDRIVER in
+      ath_pci)
+        WPA_DEV="madwifi"
+        ;;
+      ipw2200|ipw2100)
+        WPA_DEV="wext"
+        ;;
+      hostap)
+        WPA_DEV="hostap"
+        ;;
+    esac
+
+    if [ -z "$WPA_DEV" ]; then
+      if [ -d /proc/net/ndiswrapper/$DV ]; then
+        WPA_DEV=ndiswrapper
+      elif [ -d /proc/net/hostap/$DV ]; then
+        WPA_DEV=hostap
+      elif [ $WLDEVICECOUNT -eq 1 ]; then
+        if [ -e /proc/driver/atmel ]; then
+          WPA_DEV=atmel
+        fi
+      fi
+    fi
+
+    WPAON=-1
+
+    if [ -n "$WPA_DEV" ]; then
+      if $DIALOG --yesno "$MESSAGEW22" 15 50; then
+        # Other wpa options
+        # scan_ssid [0]|1
+        # bssid 00:11:22:33:44:55
+        # priority [0]|Integer
+        # proto [WPA RSN] WPA|RSN
+        # key_mgmt [WPA-PSK WPA-EAP]|NONE|WPA-PSK|WPA-EAP|IEEE8021X
+        # pairwise [CCMP TKIP]|CCMP|TKIP|NONE
+        # group [CCMP TKIP WEP105 WEP40]|CCMP|TKIP|WEP105|WEP40
+        # eapol_flags [3]|1|2
+
+      if ! $DIALOG --yesno "Is SSID broadcast enabled?" 15 50; then
+        APSCAN="ap_scan=2"
+      fi
+        WPAON=1
+        KEY=""
+        WPASECRET=$(awk	'/network/{if(found){found=0}else{found=1}}/ssid/{if(/ssid="'"$ESSID"'"/){found=1}else{found=0}}/#scan_ssid=1/#psk=/{if(found){gsub(/^\W*#psk="/,"");gsub(/"\W*$/,"");print}}' /etc/wpa_supplicant.conf)
+
+        $DIALOG --inputbox "$MESSAGEW23 $ESSID" 15 50 "$WPASECRET" 2>"$TMP" || bailout 1
+        WPASECRET=$(sed -e 's/\\/\\/g' "$TMP") && rm -r "$TMP"
+
+        case $WPA_DEV in
+          hostap)
+            MODE="Managed"
+            ;;
+        esac
+      else
+        WPASECRET=""
+      fi
+    else
+      WPASECRET=""
+    fi
+
+    # No need for a wep key if we are using wpa
+    if [ ! $WPAON -eq 1 ]; then
+      $DIALOG --inputbox "$MESSAGEW14 $DEVICENAME $MESSAGEW15" 15 50 "$KEY" 2>"$TMP" || bailout 1
+      read KEY <"$TMP" ; rm -f "$TMP"
+
+      if [ -n "$KEY" -a "$PUBKEY" -eq 0 ]; then
+        if ! $DIALOG --yesno "$MESSAGEW25 $DEVICENAME $MESSAGEW26" 15 50; then
+          PUBKEY=1
+        fi
+      fi
+    fi
+
+    $DIALOG --inputbox "$MESSAGEW16 $DEVICENAME $MESSAGEW17" 15 50 "$IWCONFIG" 2>"$TMP" || bailout 1
+    read IWCONFIG <"$TMP" ; rm -f "$TMP"
+
+    $DIALOG --inputbox "$MESSAGEW18 $DEVICENAME $MESSAGEW19" 15 50 "$IWSPY" 2>"$TMP" || bailout 1
+    read IWSPY <"$TMP" ; rm -f "$TMP"
+
+    $DIALOG --inputbox "$MESSAGEW20 $DEVICENAME $MESSAGEW21" 15 50 "$IWPRIV" 2>"$TMP" || bailout 1
+    read IWPRIV <"$TMP" ; rm -f "$TMP"
+
+    writeiwline
+  fi
+
+  if $DIALOG --yesno "$MESSAGE2" 8 45; then
+    if [ -w /etc/network/interfaces ]; then
+      rm -f "$TMP"
+      awk '/iface/{if(/'"$DV"'/){found=1}else{found=0}}
+        /^\W$/{if(blank==0){lastblank=1}else{lastblank=0}{blank=1}}
+        /\w/{blank=0;lastblank=0}
+        {if(!(found+lastblank)){print}}
+        END{print "iface '"$DV"' inet dhcp"}' \
+        /etc/network/interfaces >"$TMP"
+      echo -e "$IWOURLINE" >> $TMP
+      #echo -e "\n\n" >> $TMP
+      cat "$TMP" >/etc/network/interfaces
+      rm -f "$TMP"
+      # Add an "auto" entry
+      #addauto
+    fi
+  else
+    if [ -f /etc/network/interfaces ]; then
+      awk '/iface/{if(/'"$DV"'/){found=1}else{found=0}}
+        /address/{if(found){address=$NF}}
+        /netmask/{if(found){netmask=$NF}}
+        /broadcast/{if(found){broadcast=$NF}}
+        /gateway/{if(found){gateway=$NF}}
+        END{print address" "netmask" "broadcast" "gateway}' /etc/network/interfaces >"$TMP"
+      read IP NM BC DG <"$TMP"
+      rm -f "$TMP"
+    fi
+
+    $DIALOG --inputbox "$MESSAGE6 $DV" 10 45 "${IP:-192.168.0.1}" 2>"$TMP" || bailout 1
+    read IP <"$TMP" ; rm -f "$TMP"
+
+    $DIALOG --inputbox "$MESSAGE7 $DV" 10 45 "${NM:-255.255.255.0}" 2>"$TMP" || bailout 1
+    read NM <"$TMP" ; rm -f "$TMP"
+
+    $DIALOG --inputbox "$MESSAGE8 $DV" 10 45 "${BC:-${IP%.*}.255}" 2>"$TMP" || bailout 1
+    read BC <"$TMP" ; rm -f "$TMP"
+
+    $DIALOG --inputbox "$MESSAGE9" 10 45 "${DG:-${IP%.*}.254}" 2>"$TMP"
+    read DG <"$TMP" ; rm -f "$TMP"
+
+    if [ -f "/etc/resolv.conf" ]; then
+      NS="$(awk '/^nameserver/{printf "%s ",$2}' /etc/resolv.conf)"
+    fi
+
+    $DIALOG --inputbox "$MESSAGE10" 10 45 "${NS:-${IP%.*}.254}" 2>"$TMP"
+    read NS <"$TMP" ; rm -f "$TMP"
+
+    if [ -w /etc/network/interfaces ]; then
+      awk '/iface/{if(/'"$DV"'/){found=1}else{found=0}}
+        {if(!found){print}}
+        END{print "\niface '"$DV"' inet static\n\taddress '"$IP"'\n\tnetmask '"$NM"'\n\tnetwork '"${IP%.*}.0"'";if("'"$BC"'"!=""){print "\tbroadcast '"$BC"'"};if("'"$DG"'"!=""){print "\tgateway '"$DG"'"};if("'"$IWOURLINE"'"!=""){print "'"$IWOURLINE"'"};print "\n"}' \
+        /etc/network/interfaces >"$TMP"
+
+      cat "$TMP" >/etc/network/interfaces
+      rm -f "$TMP"
+
+      # Add an "auto" entry
+      #addauto
+    fi
+
+    if [ -n "$NS" ]; then
+      more=""
+
+      for i in $NS; do
+        if [ -z "$more" ]; then
+          more=yes
+          echo "$MESSAGE11 $i"
+          echo "nameserver $i" >/etc/resolv.conf
+        else
+          echo "$MESSAGE12 $i"
+          echo "nameserver $i" >>/etc/resolv.conf
+        fi
+      done
+    fi
+  fi
+  echo "Done."
+}
+
+DIALOG="dialog"
+# export XDIALOG_HIGH_DIALOG_COMPAT=1
+# [ -n "$DISPLAY" ] && [ -x /usr/bin/Xdialog ] && DIALOG="Xdialog"
+
+# LANGUAGE etc.
+[ -r /etc/default/locale ] && . /etc/default/locale
+
+# Default all strings to English
+NET_DEVICE_NAME="Network_device"
+NET_DEVICE_NAME_W="Wireless_device"
+NET_DEVICE_NAME_FW="Firewire_device"
+NET_DEVICE_NAME_AUTO="Auto"
+MESSAGE0="No supported network cards found."
+MESSAGE1="Please select network device"
+MESSAGE2="Use DHCP broadcast?"
+MESSAGE3="Sending DHCP broadcast from device"
+MESSAGE4="Failed."
+MESSAGE5="Hit return to exit."
+MESSAGE6="Please enter IP Address for "
+MESSAGE7="Please enter Network Mask for "
+MESSAGE8="Please enter Broadcast Address for "
+MESSAGE9="Please enter Default Gateway"
+MESSAGE10="Please enter Nameserver(s)"
+MESSAGE11="Setting Nameserver in /etc/resolv.conf to"
+MESSAGE12="Adding Nameserver to /etc/resolv.conf:"
+MESSAGE13="Setup wireless options?"
+MESSAGE14="Failed to bring up the interface, would you like to reconfigure it?"
+MESSAGE15="Interface enabled, do you want it auto enabled at boot?"
+MESSAGEW0="No wireless network card found."
+MESSAGEW1="Configuration of wireless parameters for"
+MESSAGEW3="Please configure IP parameters of the interface first"
+MESSAGEW4="Enter the ESSID for"
+MESSAGEW5="\n\n\n(empty for 'any', not recommended !)\n"
+MESSAGEW6="Enter the NWID (cell identifier)\nfor"
+MESSAGEW7=", if needed\n\n\n"
+MESSAGEW8="Enter the mode for"
+MESSAGEW9="\n\n(Managed(=default), Ad-Hoc, Master,\nRepeater, Secondary, auto)\n"
+MESSAGEW10="Enter channel number for"
+MESSAGEW11="\n\n(0 bis 16, empty for auto or if you want to\n enter the frequency next)\n"
+MESSAGEW12="Enter the frequency for"
+MESSAGEW13="\n\n(e.g 2.412G, empty for auto)"
+MESSAGEW14="Enter the encryption key\nfor"
+MESSAGEW15="\n\n(empty for cleartext, not recommended !!)"
+MESSAGEW16="Enter additional parameters for\n'iwconfig"
+MESSAGEW17="' if needed, e.g.\n\n\nsens -80  rts 512  frag 512  rate 5.5M"
+MESSAGEW18="Enter additional parameters for\n'iwspy"
+MESSAGEW19="' if needed\n\n\n"
+MESSAGEW20="Enter additional parameters for\n'iwpriv"
+MESSAGEW21="' if needed\n\n\n"
+MESSAGEW22="Enable WPA support?"
+MESSAGEW23="Enter the WPA passphrase (passphrase must be 8..63 characters) for"
+MESSAGEW25="Would you like to store your wep key in it's own private file ("
+MESSAGEW26=")?   If you say no, your wep key will be stored in /etc/network/interfaces and will be readable by any account on your system.  You may want to 'chmod 600 /etc/network/interfaces' if you answer no to this question"
+MESSAGEW27="Is SSID broadcast enabled?"
+
+case "$LANGUAGE" in
+  de|at|ch)
+    NET_DEVICE_NAME="Netzwerkkarte"
+    MESSAGE0="Keine unterstützten Netzwerkkarte(n) gefunden."
+    MESSAGE1="Bitte Netzwerkkarte auswählen"
+    MESSAGE2="DHCP Broadcast zur Konfiguration benutzen? (Nein=manuell)"
+    MESSAGE3="Sende DHCP Broadcast von Netzwerkkarte"
+    MESSAGE4="Fehlgeschlagen."
+    MESSAGE5="Eingabetaste zum Beenden."
+    MESSAGE6="Bitte geben Sie die IP-Adresse ein für "
+    MESSAGE7="Bitte geben Sie die Netzwerk-Maske ein für "
+    MESSAGE8="Bitte geben Sie die Broadcast-Adresse ein für "
+    MESSAGE9="Bitte geben Sie das Default-Gateway ein"
+    MESSAGE10="Bitte geben Sie den/die Nameserver ein"
+    MESSAGE11="Setze Nameserver in /etc/resolv.conf auf "
+    MESSAGE12="Füge Nameserver in /etc/resolv.conf hinzu:"
+    MESSAGE13="WLAN-Einstellungen konfigurieren?"
+    MESSAGE14="Fehler beim Aktivieren des Interface, wollen Sie es neu konfigurieren?"
+    MESSAGE15="Interface aktiviert, beim Systemstart automatisch aktivieren?"
+    MESSAGEW0="Keine Wireless-Netzwerkkarte gefunden."
+    MESSAGEW1="Konfiguration der Wireless-Parameter von"
+    MESSAGEW2="Bitte Wireless-Netzwerkkarte auswählen"
+    MESSAGEW3="Bitte konfigurieren Sie vorher die IP-Parameter der Karte !"
+    MESSAGEW4="Geben Sie die ESSID für"
+    MESSAGEW5="ein\n\n\n(leer für 'any', nicht zu empfehlen !!)\n"
+    MESSAGEW6="Geben Sie ggf. die NWID (Cell Identifier)\nfür"
+    MESSAGEW7="ein, falls es eine gibt\n\n\n"
+    MESSAGEW8="Geben Sie den Modus für"
+    MESSAGEW9="ein\n\n(Managed(=default), Ad-Hoc, Master,\nRepeater, Secondary, auto)\n"
+    MESSAGEW10="Geben Sie den Kanal für"
+    MESSAGEW11="ein\n\n(0 bis 16, leer für auto oder Frequenz-\neingabe im nächsten Fenster)\n"
+    MESSAGEW12="Geben Sie die Frequenz für"
+    MESSAGEW13="ein\n\n(z.B. 2.412G, leer für auto)"
+    MESSAGEW14="Geben Sie den Verschlüsselungs-Key\nfür"
+    MESSAGEW15="ein\n\n(leer für Klartext, nicht zu empfehlen !!)"
+    MESSAGEW16="Geben Sie ggf. zusätzliche Parameter für\n'iwconfig"
+    MESSAGEW17="' ein, z.B.\n\n\nsens -80  rts 512  frag 512  rate 5.5M"
+    MESSAGEW18="Geben Sie ggf. zusätzliche Parameter für\n'iwspy"
+    MESSAGEW19="' ein\n\n\n"
+    MESSAGEW20="Geben Sie ggf. zusätzliche Parameter für\n'iwpriv"
+    MESSAGEW21="' ein\n\n\n"
+    MESSAGEW22="WPA-Unterstützung aktivieren?"
+    MESSAGEW23="WPA-Passwort eingeben für"
+    MESSAGEW25="WEP-Schlüssel in privater Datei abspeichern ("
+    MESSAGEW26="? Wenn Sie hier Nein sagen, wird der WEP-Schlüssel in /etc/network/interfaces abgespeichert und kann von allen Accounts auf dem System gelesen werden. Wenn Sie mit Nein antworten, sollten Sie vielleicht 'chmod 600 /etc/network/interfaces' ausführen."
+    MESSAGEW27="Ist SSID Broadcast aktiviert?"
+    ;;
+  es)
+    NET_DEVICE_NAME="Dispositivo_de_la_red"
+    MESSAGE0="Se han encontrado tarjetas de red no soportadas."
+    MESSAGE1="Por favor, seleccione el dispositivo fisico  de red"
+    MESSAGE2="¿Utilizar broadcast DHCP?"
+    MESSAGE3="Enviando broadcast DHCP desde el dispositivo"
+    MESSAGE4="Fallado."
+    MESSAGE5="Pulse enter para salir."
+    MESSAGE6="Por favor, inserte la dirección IP para "
+    MESSAGE7="Por favor, inserte la máscara de red para "
+    MESSAGE8="Por favor, inserte la dirección de Broadcast para "
+    MESSAGE9="Por favor, inserte la puerta de enlace por defecto"
+    MESSAGE10="Por favor, inserte los servidores DNS"
+    MESSAGE11="Poniendo los servidores de nombres de /etc/resolv.conf a "
+    MESSAGE12="Adicionando servidor DNS a /etc/resolv.conf:"
+    MESSAGEW0="No se ha encontrado una tarjeta inalámbrica."
+    MESSAGEW1="Configuración de los parámetros inalámbricos para"
+    MESSAGEW2="Por favor, seleccione un dispositivo de red inalámbrico"
+    MESSAGEW3="Por favor, configure primero los parámetros de la IP para la interfaz"
+    MESSAGEW4="Teclee el ESSID para"
+    MESSAGEW5="\n\n\n(vacío para 'cualquiera', ¡no recomendado!)\n"
+    MESSAGEW6="Teclee el NWID (identificador de celda)\npara"
+    MESSAGEW7=", si es necesario\n\n\n"
+    MESSAGEW8="Teclee el modo para"
+    MESSAGEW9="\n\n(Managed(=por_defecto), Ad-Hoc, Master,\nRepeater, Secondary, auto)\n"
+    MESSAGEW10="Teclee el número del canal para"
+    MESSAGEW11="\n\n(0 bis 16, vacío para auto o si lo prefiere\n teclee la frecuencia seguidamente)\n"
+    MESSAGEW12="Teclee la frecuencia para"
+    MESSAGEW13="\n\n(ej. 2.412G, vacío para auto)"
+    MESSAGEW14="Teclee la clave de encriptación\npara"
+    MESSAGEW15="\n\n(vacío para texto plano, ¡¡no recomendado!!)"
+    MESSAGEW16="Teclee los parámetros adicionales para\n'iwconfig"
+    MESSAGEW17="' Si es necesario, ej.\n\n\nsens -80  rts 512  frag 512  rate 5.5M"
+    MESSAGEW18="Teclee los parámetros adicionales para\n'iwspy"
+    MESSAGEW19="' si es necesario\n\n\n"
+    MESSAGEW20="Teclee los parámetros adicionales para\n'iwpriv"
+    MESSAGEW21="' si es necesario\n\n\n"
+    ;;
+  it)
+    NET_DEVICE_NAME="Periferica_di_rete"
+    NET_DEVICE_NAME_W="Periferica_Wireless"
+    NET_DEVICE_NAME_FW="Periferica_Firewire"
+    NET_DEVICE_NAME_AUTO="Automatico"
+    MESSAGE0="Non ho trovato schede di rete supportate."
+    MESSAGE1="Per favore seleziona la periferica di rete"
+    MESSAGE2="Devo utilizzare il broadcast DHCP?"
+    MESSAGE3="Sto inviando il broadcast DHCP dalla periferica"
+    MESSAGE4="Fallito."
+    MESSAGE5="Premi invio per uscire."
+    MESSAGE6="Inserisci l'indirizzo IP per "
+    MESSAGE7="Inserisci la maschera di rete per "
+    MESSAGE8="Inserisci l'indirizzo di broadcast per "
+    MESSAGE9="Inserisci il Gateway di default"
+    MESSAGE10="Inserisci i Nameserver"
+    MESSAGE11="Sto settando i Nameserver in /etc/resolv.conf a"
+    MESSAGE12="Aggiungo i Nameserver in /etc/resolv.conf:"
+    MESSAGE13="Configuro le opzioni del wireless?"
+    MESSAGE14="Non riesco ad attivare l'interfaccia, vuoi riconfigurarla?"
+    MESSAGE15="Interfaccia attiva, vuoi abilitarla automaticamente all'avvio?"
+    MESSAGEW0="Nessuna scheda di rete wireless trovata."
+    MESSAGEW1="Configurazione dei parametri wireless per"
+    MESSAGEW3="Configura i parametri IP dell'interfaccia per prima cosa!"
+    MESSAGEW4="Inserisci l'ESSID per"
+    MESSAGEW5="\n\n\n(vuoto per 'tutti', non raccomandato!)\n"
+    MESSAGEW6="Inserisci il NWID (cell identifier)\nper"
+    MESSAGEW7=", se necessario\n\n\n"
+    MESSAGEW8="Inserisci la modalità per"
+    MESSAGEW9="\n\n(Managed(=default), Ad-Hoc, Master,\nRepeater, Secondary, auto)\n"
+    MESSAGEW10="Inserisci il numero di canale per"
+    MESSAGEW11="\n\n(da 0 a 16, vuoto per automatico o se vuoi\n inserire la frequnza dopo)\n"
+    MESSAGEW12="Inserisci la frequenza per"
+    MESSAGEW13="\n\n(es. 2.412G, vuoto per automatico)"
+    MESSAGEW14="Inserisci la chiave crittografica\nper"
+    MESSAGEW15="\n\n(vuoto per trasmissione in chiaro, non raccomandato!)"
+    MESSAGEW16="Inserisci i parametri aggiuntivi per\n'iwconfig"
+    MESSAGEW17="' se necessario, es.\n\n\nsens -80  rts 512  frag 512  rate 5.5M"
+    MESSAGEW18="Inserisci parametri aggiuntivi per\n'iwspy"
+    MESSAGEW19="' se necessario\n\n\n"
+    MESSAGEW20="Inserisci parametri aggiuntivi per\n'iwpriv"
+    MESSAGEW21="' se necessario\n\n\n"
+    MESSAGEW22="Abilito il supporto WPA?"
+    MESSAGEW23="Inserisci la Passphrase di WPA\nper"
+    MESSAGEW25="Vuoi memorizzare la tua chiave WEP nel suo file riservato ("
+    MESSAGEW26=")?   Se dici no, la tua chiave WEP sarà memorizzata nel file /etc/network/interfaces e sarà leggibile da tutti gli account del tuo sistema. Dovresti fare 'chmod 600 /etc/network/interfaces' se rispondi no a questa domanda"
+    MESSAGEW27="Is SSID broadcast enabled?"
+    ;;
+fr)
+    NET_DEVICE_NAME="Carte_réseau"
+    MESSAGE0="Aucune carte réseau supportée trouvée."
+    MESSAGE1="Sélectionnez la carte réseau, svp"
+    MESSAGE2="Voulez-vous utiliser DHCP?"
+    MESSAGE3="Envoi de broadcast DHCP par la carte"
+    MESSAGE4="Echec."
+    MESSAGE5="Appuyez sur Entrée pour quitter."
+    MESSAGE6="Entrez une adresse IP pour "
+    MESSAGE7="Entrez le Masque de Sous-réseau pour "
+    MESSAGE8="Entrez l'adresse Broadcast pour "
+    MESSAGE9="Entrez l'IP de la Passerelle par Défaut"
+    MESSAGE10="Entrez Les DNS de votre FAI"
+    MESSAGE11="Réglage des DNS dans /etc/resolv.conf"
+    MESSAGE12="Ajoût des DNS dans /etc/resolv.conf:"
+    MESSAGEW0="Aucune carte Wifi trouvée."
+    MESSAGEW1="Configuration des paramètres de réseau sans fil pour "
+    MESSAGEW3="SVP, Commencez par configurer les paramètres d'IP de l'interface!"
+    MESSAGEW4="Entrez l'ESSID pour"
+    MESSAGEW5="\n\n\n(ne rien mettre pour 'peu importe' n'est pas recommandé !)\n"
+    MESSAGEW6="Entrez le NWID (cell identifier)\npour"
+    MESSAGEW7=", si nécessaire\n\n\n"
+    MESSAGEW8="Entrez le mode pour "
+    MESSAGEW9="\n\n(Managed(=default), Ad-Hoc, Master,\nRepeater, Secondary, auto)\n"
+    MESSAGEW10="Entrez numéro de canal pour"
+    MESSAGEW11="\n\n(0 à 16, vide pour auto ou si vous voulez\n entrer la fréquence ensuite)\n"
+    MESSAGEW12="Entrez la fréquence pour"
+    MESSAGEW13="\n\n(ex: 2.412G, vide pour auto)"
+    MESSAGEW14="Entrez la clé de cryptage\npour"
+    MESSAGEW15="\n\n(vide pour texte en clair, non recommandé !!)"
+    MESSAGEW16="Entrez des paramètres additionnels pour\n'iwconfig"
+    MESSAGEW17="' si nécessaire, comme \n\n\nsens -80  rts 512  frag 512  rate 5.5M"
+    MESSAGEW18="Entrer des paramètres additionnels pour\n'iwspy"
+    MESSAGEW19="' si nécessaire\n\n\n"
+    MESSAGEW20="Entrer des paramètres additionnels pour\n'iwpriv"
+    MESSAGEW21="' si nécessaire\n\n\n"
+    MESSAGEW22="Activer la protection WPA?"
+    MESSAGEW23="Entrez le mot-de-passe WPA pour"
+    MESSAGEW25="Clé WEP sauvée dans un fichier privé ("
+    MESSAGEW26="? Si vous répondez non ici, la clé WEP sera stockée dans /etc/network/interfaces et pourra être accessible à tous les utilisateurs de la machine. Peut-être serait-il alors judicieux de fixer ainsi les droits de 'interfaces': 'chmod 600 /etc/network/interfaces'"
+    MESSAGEW27="Is SSID broadcast enabled?"
+    ;;
+esac
+
+NETDEVICESCOUNT=0
+LAN=$(tail -n +3 /proc/net/dev|awk -F: '{print $1}'|sed "s/\s*//"|grep -v -e ^lo -e ^vmnet|sort)
+[ -n "$WLAN" ] || WLAN=$(tail -n +3 /proc/net/wireless 2>/dev/null|awk -F: '{print $1}'|sort)
+unset LAN_DEVICES WLAN_DEVICES FIREWIRE_DEVICES NETDEVICES
+while read dev mac; do
+#echo "Making NETDEVICES $NETDEVICESCOUNT $dev"
+  iswlan=$(echo $dev $WLAN|tr ' ' '\n'|sort|uniq -d)
+  isauto="0"
+  grep auto /etc/network/interfaces | grep -q $dev && isauto="1"
+  driver=$(ethtool -i $dev 2>/dev/null|awk '/^driver:/{print $2}')
+  if [ "$driver" ]; then
+    if [ "$iswlan" ]; then
+      NETDEVICES[$NETDEVICESCOUNT]="$dev A::$isauto M::$mac D::$driver W::1 F::0"
+    else
+      NETDEVICES[$NETDEVICESCOUNT]="$dev A::$isauto M::$mac D::$driver W::0 F::0"
+    fi
+  else
+    if [ "$iswlan" ]; then
+      NETDEVICES[$NETDEVICESCOUNT]="$dev A::$isauto M::$mac W::1 F::0"
+    else
+      NETDEVICES[$NETDEVICESCOUNT]="$dev A::$isauto M::$mac W::0 F::0"
+    fi
+  fi
+#echo "Made to ${NETDEVICES[$NETDEVICESCOUNT]}"
+  ((NETDEVICESCOUNT++))
+done < <(ifconfig -a|grep Ethernet|grep -v ^vmnet|awk '! /^\s/{print $1" "$5}')
+for dev in $LAN; do
+  if [ "$(ethtool -i $dev 2>/dev/null|awk '/^bus-info:/{print $2}')" == "ieee1394" ]; then
+    isauto="0"
+    grep auto /etc/network/interfaces | grep -q $dev && isauto="1"
+    NETDEVICES[$NETDEVICESCOUNT]="$dev A::$isauto D::$(ethtool -i $dev 2>/dev/null|awk '/^driver:/{print $2}') W::0 F::1"
+    ((NETDEVICESCOUNT++))
+  fi
+done
+
+#NETDEVICES="$(cat /proc/net/dev | awk -F: '/eth.:|lan.:|tr.:|wlan.:|ath.:|ra.:/{print $1}')"
+
+if [ -z "$NETDEVICES" ]; then
+  $DIALOG --msgbox "$MESSAGE0" 15 45
+  bailout
+fi
+
+count="$NETDEVICESCOUNT"
+
+if [ "$count" -gt 1 ]; then
+  DEVICELIST=""
+  mycount=0
+  while [ $mycount -lt $count ]; do
+    DEVICE=${NETDEVICES[$mycount]}
+#echo "$mycount is $DEVICE"
+    device2props
+#echo "name: $DEVICENAME auto: $isauto fw: $isfirewire mac: $mac driver: $driver"
+    props2string
+    DEVICELIST="$DEVICELIST $mycount $MY_DEVICE_NAME"
+    ((mycount++))
+  done
+fi
+
+# To translate
+EXITKEY="E"
+EXITMENU="$EXITKEY Exit"
+
+# main program loop until they bailout
+while (true); do
+  # first get the device
+  if [ "$count" -gt 1 ]; then
+    rm -f "$TMP"
+    $DIALOG --menu "$MESSAGE1" 18 60 12 $DEVICELIST $EXITMENU 2>"$TMP" || bailout
+    read DV <"$TMP" ; rm -f "$TMP"
+    [ "$DV" = "$EXITKEY" ] && bailout
+  else
+    # Only one device
+    DV=0
+    # they have asked to stop configuring the interface so exit
+    [ -z "$IFACEDONE" ] || bailout
+  fi
+  # device config loop
+  IFACEDONE=""
+  while [ -n "$DV" -a -z "$IFACEDONE" ]; do
+    configiface
+    ifdown $DV
+    sleep 3
+    if ! ifup $DV; then
+      $DIALOG --yesno "$MESSAGE14" 15 50 || IFACEDONE="DONE"
+    else
+      $DIALOG --yesno "$MESSAGE15" 15 50 && addauto || remauto
+      IFACEDONE="DONE"
+    fi
+  done
+done
+
+## END OF FILE #################################################################

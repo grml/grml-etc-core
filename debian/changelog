@@ -1,0 +1,1936 @@
+grml-scripts (0.8-25) unstable; urgency=low
+
+  * Added new hostnames to random-hostname, thanks Filippo Cattaneo.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 13 Oct 2006 12:08:43 +0200
+
+grml-scripts (0.8-24) unstable; urgency=low
+
+  * Add grml-iptstate (wrapper around iptstate).
+
+ -- Michael Prokop <mika@grml.org>  Thu, 12 Oct 2006 17:28:01 +0200
+
+grml-scripts (0.8-23) unstable; urgency=low
+
+  * net-functions: fix getLanDriver (we have to s/ath/wifi/)
+  * routersetup: support $AP_DEVICE and $ATH_MODE
+  * grml-ap: some fixes, improvements,...
+
+ -- Michael Prokop <mika@grml.org>  Thu, 12 Oct 2006 11:28:29 +0200
+
+grml-scripts (0.8-22) unstable; urgency=low
+
+  * Applied patch by Moritz 'moemoe' Augsburger, thanks!
+    - net-functions: improve + extend functions
+    - grml-bridge: extended => some new features
+    - grml-ap: added support for hostap, generic mode,...
+
+ -- Michael Prokop <mika@grml.org>  Wed, 11 Oct 2006 23:04:19 +0200
+
+grml-scripts (0.8-21) unstable; urgency=low
+
+  * Added grml-bridge and grml-ap.
+  * Update grml-router (some small improvements).
+
+ -- Michael Prokop <mika@grml.org>  Sun,  8 Oct 2006 00:18:45 +0200
+
+grml-scripts (0.8-20) unstable; urgency=low
+
+  * Added grml-router (set up your box as NAT-router).
+
+ -- Michael Prokop <mika@grml.org>  Sat,  7 Oct 2006 14:09:07 +0200
+
+grml-scripts (0.8-19) unstable; urgency=low
+
+  * grml-setlang: do not set $COUNTRY, causes problems with mtools
+    (and therefore syslinux as well). Also do not set $CHARSET, should
+    not be necessary as well.
+  * modemlink, mkdosswapfile, netcardconfig and grml-network:
+    source /etc/default/locale instead of /etc/sysconfig/*
+
+ -- Michael Prokop <mika@grml.org>  Wed,  4 Oct 2006 10:22:24 +0200
+
+grml-scripts (0.8-18) unstable; urgency=low
+
+  * grml-hostname: info message for 'New hostname' proposal,
+    adjust message if $GRML2HD is set.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 30 Sep 2006 12:36:28 +0200
+
+grml-scripts (0.8-17) unstable; urgency=low
+
+  * random-hostname: added some more hostnames - thanks, Ronny!
+  * debian/control: it's "make life easier", thanks Mark!
+
+ -- Michael Prokop <mika@grml.org>  Sat, 30 Sep 2006 11:46:10 +0200
+
+grml-scripts (0.8-16) unstable; urgency=low
+
+  * Added script getsf (download project from sourceforge.net).
+  * Bumbed Standard-Version to 3.7.2. Some more cosmetic stuff
+    to make lintian a little bit happier.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 29 Sep 2006 13:32:36 +0200
+
+grml-scripts (0.8-15) unstable; urgency=low
+
+  * Add script random-hostname (print random hostname to stdout).
+  * Adjust grml-hostname to support use of random-hostname. Adjust
+    ipv6 line in /etc/hosts as well.
+  * Added manpages for grml-setlang and grml-setkeyboard.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 26 Sep 2006 11:18:59 +0200
+
+grml-scripts (0.8-14) unstable; urgency=low
+
+  * grml-setlang: support all languages defined in
+    /etc/grml/language-functions. Don't set $LC_ALL by default anymore.
+    Support non-interactive use via 'grml-setlang <language>'.
+  * Added grml-autoconfig >= 0.5-10 to Suggests.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 23 Sep 2006 13:17:43 +0200
+
+grml-scripts (0.8-13) unstable; urgency=low
+
+  * grml-muttng: use set header_cache="~/.muttng/cache" instead of
+    ~/.mutt/headers and create directory ~/.muttng if it's not yet present.
+    Thanks for reporting, moemoe!
+
+ -- Michael Prokop <mika@grml.org>  Thu, 21 Sep 2006 20:00:28 +0200
+
+grml-scripts (0.8-12) unstable; urgency=low
+
+  * Remove create_mnt_labels as it has been deprecated by new
+    udev and rebuildfstab solution.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 18 Sep 2006 19:07:56 +0200
+
+grml-scripts (0.8-11) unstable; urgency=low
+
+  * Another fix in debian/preinst, thanks for mabu for reporting.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 18 Sep 2006 13:37:27 +0200
+
+grml-scripts (0.8-10) unstable; urgency=low
+
+  * Ship /etc/grml/script-functions.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 18 Sep 2006 00:51:54 +0200
+
+grml-scripts (0.8-9) unstable; urgency=low
+
+  * Rename debian/postinst into debian/preinst, hopefully this fixes a problem
+    when running a Debian upgrade where maintainer scripts need [ef]grep.
+    Thanks for noticing, Kevin Krammer!
+
+ -- Michael Prokop <mika@grml.org>  Sun, 17 Sep 2006 17:33:39 +0200
+
+grml-scripts (0.8-8) unstable; urgency=low
+
+  * Added gtf (Generate mode timings using the GTF Timing Standard).
+  * Remove empty README-Debian.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 15 Sep 2006 16:04:10 +0200
+
+grml-scripts (0.8-7) unstable; urgency=low
+
+  * Remove /bin/[ef]grep, we don't need it any more as /bin/sh
+    isn't /bin/zsh on grml.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 14 Sep 2006 00:04:34 +0200
+
+grml-scripts (0.8-6) unstable; urgency=low
+
+  * Remove dpkg-divert of /bin/[ef]grep.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 13 Sep 2006 23:47:44 +0200
+
+grml-scripts (0.8-5) unstable; urgency=low
+
+  * grml-nessus: update handling of /var/lib/nessus/nessus-services
+
+ -- Michael Prokop <mika@grml.org>  Mon, 11 Sep 2006 17:31:42 +0200
+
+grml-scripts (0.8-4) unstable; urgency=low
+
+  * Updated manpage reread_partition_table.8.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  7 Sep 2006 11:42:36 +0200
+
+grml-scripts (0.8-3) unstable; urgency=low
+
+  * Added reread_partition_table (re-read partition table on
+    Linux).
+
+ -- Michael Prokop <mika@grml.org>  Tue,  5 Sep 2006 23:37:44 +0200
+
+grml-scripts (0.8-2) unstable; urgency=low
+
+  * Added create_mnt_labels (create directories for filesystems
+    with a label).
+
+ -- Michael Prokop <mika@grml.org>  Sun,  3 Sep 2006 19:21:16 +0200
+
+grml-scripts (0.8-1) unstable; urgency=low
+
+  * Bumb version, grml 0.8 is coming...
+
+ -- Michael Prokop <mika@grml.org>  Fri, 11 Aug 2006 11:44:45 +0200
+
+grml-scripts (0.7-53) unstable; urgency=low
+
+  * grml-pptp-inode: recommend usage of pppoeconf.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 11 Aug 2006 11:42:12 +0200
+
+grml-scripts (0.7-52) unstable; urgency=low
+
+  * bt-hid: start dbus and /etc/init.d/bluetooth (thanks for
+    testing, Spida).
+
+ -- Michael Prokop <mika@grml.org>  Thu, 10 Aug 2006 00:19:24 +0200
+
+grml-scripts (0.7-51) unstable; urgency=low
+
+  * myip: use /bin/zsh as interpreter to make lintian happy. 
+
+ -- Michael Prokop <mika@grml.org>  Mon,  7 Aug 2006 23:39:54 +0200
+
+grml-scripts (0.7-50) unstable; urgency=low
+
+  * Removed deprecated ath-switcher script (madwifi-ng is the default
+    now).
+
+ -- Michael Prokop <mika@grml.org>  Mon,  7 Aug 2006 23:36:20 +0200
+
+grml-scripts (0.7-49) unstable; urgency=low
+
+  * bt-audio: Send dbus-output to /dev/null. Warn that dbus won't be
+    stopped with 'bt-audio stop' (preventing other subsystems to
+    fail then).
+
+ -- Michael Prokop <mika@grml.org>  Sun,  6 Aug 2006 20:30:52 +0200
+
+grml-scripts (0.7-48) unstable; urgency=low
+
+  * bt-audio: dbus needs to be running, handling passphrase
+    stuff via new infrastructure of bluez-utils. 
+
+ -- Michael Prokop <mika@grml.org>  Sun,  6 Aug 2006 18:35:50 +0200
+
+grml-scripts (0.7-47) unstable; urgency=low
+
+  * grml-setlang/grml-setkeyboard: mention [us] in en-selection.
+
+ -- Michael Prokop <mika@grml.org>  Sat,  5 Aug 2006 11:40:31 +0200
+
+grml-scripts (0.7-46) unstable; urgency=low
+
+  * grml-hostname: adjust myhostname in /etc/postfix/main.cf as well.
+    (Thanks for hint, Nico!)
+  * blacklist: warn if module does not exist (thanks for hint, Nico).
+
+ -- Michael Prokop <mika@grml.org>  Fri,  4 Aug 2006 11:32:27 +0200
+
+grml-scripts (0.7-45) unstable; urgency=low
+
+  * XF86AudioRaiseVolume, XF86AudioLowerVolume: use percentage bar
+    instead of simple text. Thanks, schula!
+
+ -- Michael Prokop <mika@grml.org>  Tue,  1 Aug 2006 01:19:35 +0200
+
+grml-scripts (0.7-44) unstable; urgency=low
+
+  * grml-setkeyboard: oh, it's $LANGUAGE instead of $KEYBOARD
+    of course, as we source /etc/grml/language-functions.
+    Read in /etc/sysconfig/keyboard instead of bootoption lang.
+  * grml-setlang: read in /etc/environment and /etc/default/locale
+    instead of bootoption lang.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 27 Jul 2006 18:49:45 +0200
+
+grml-scripts (0.7-43) unstable; urgency=low
+
+  * grml-tpm: exit script if running trousers daemon fails.
+  * grml-nessus: use lsb-functions, make sure directory
+    /var/lib/nessus/nessus-services exists.
+  * grml-config-root: add grml-setlang and grml-setkeyboard to menu.
+  * grml-setkeyboard: added info text for grml-lang.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 26 Jul 2006 02:23:13 +0200
+
+grml-scripts (0.7-42) unstable; urgency=low
+
+  * Update myip: added 'ztcp -c $REPLY' (thanks, formorer).
+
+ -- Michael Prokop <mika@grml.org>  Tue, 25 Jul 2006 21:33:30 +0200
+
+grml-scripts (0.7-41) unstable; urgency=low
+
+  * Updated manpage of grml-setlang (mention /etc/default/locale).
+  * Added script 'myip' (return IP address of running system on stdout)
+    by formorer, thanks!
+
+ -- Michael Prokop <mika@grml.org>  Mon, 24 Jul 2006 21:34:49 +0200
+
+grml-scripts (0.7-40) unstable; urgency=low
+
+  * Added symlinks for manpages of grml-setlang/grml-setkeyboard.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 24 Jul 2006 21:24:56 +0200
+
+grml-scripts (0.7-39) unstable; urgency=low
+
+  * grml-setlang/grml-setkeyboard: updated corresponding to
+    new file /etc/grml/language-functions and don't use
+    /etc/environment anymore but /etc/default/locale (zsh
+    will source /etc/environment as well to be backwards
+    compatible).
+
+ -- Michael Prokop <mika@grml.org>  Wed, 19 Jul 2006 21:16:03 +0200
+
+grml-scripts (0.7-38) unstable; urgency=low
+
+  * x-say: hmpf, wmiplumb has been renamed into wmiipsel in wmii[-3].
+    Adjusted in script x-say therefore.
+  * make_chroot_jail: update to latest upstream version which
+    incorporates suggest fix for /dev/-permissions.
+  * Added grml-setlang and grml-setkeyboard (need heavy testing
+    before going public).
+  * grml-policy-rc.d got its own manpage with much more details.
+  * Moved grml-policy-rc.d to its own package.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 14 Jul 2006 01:29:51 +0200
+
+grml-scripts (0.7-37) unstable; urgency=low
+
+  * Check for existence of /dev/fb0 in grml-info.
+  * Added osd_server.py.
+  * Added grml-policy-rc.d.
+
+ -- Michael Prokop <mika@grml.org>  Fri,  7 Jul 2006 22:42:48 +0200
+
+grml-scripts (0.7-36) unstable; urgency=low
+
+  * Rename dpkg_running into dpkg_not_running as it is more logical.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 28 Jun 2006 20:24:31 +0200
+
+grml-scripts (0.7-35) unstable; urgency=low
+
+  * Added dpkg_running: check whether Debian's package management
+    (dpkg) is running (return 0 if it is running; return 1 if it is
+    not running).
+
+ -- Michael Prokop <mika@grml.org>  Wed, 28 Jun 2006 18:15:56 +0200
+
+grml-scripts (0.7-34) unstable; urgency=low
+
+  * netcardconfig: adjusted tail commands to avoid the warning:
+    'Warning: "+number" syntax is deprecated, please use "-n +number'
+
+ -- Michael Prokop <mika@grml.org>  Sun,  4 Jun 2006 17:25:59 +0200
+
+grml-scripts (0.7-33) unstable; urgency=low
+
+  * Update iimage to latest revision, thanks for hint - Sven Guckes!
+
+ -- Michael Prokop <mika@grml.org>  Sun, 28 May 2006 14:24:16 +0200
+
+grml-scripts (0.7-32) unstable; urgency=low
+
+  * Mention zsh-help in zsh-login.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 28 May 2006 14:20:13 +0200
+
+grml-scripts (0.7-31) unstable; urgency=low
+
+  * grml-network: support more than one default route when checking
+    network status. Thanks for reporting and bugfix, Kai Wilke!
+
+ -- Michael Prokop <mika@grml.org>  Sat, 27 May 2006 23:02:15 +0200
+
+grml-scripts (0.7-30) unstable; urgency=low
+
+  * Again use /bin/zsh as shebang line for zsh scripts.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 27 May 2006 14:45:49 +0200
+
+grml-scripts (0.7-29) unstable; urgency=low
+
+  * Updated grml-tpm: added support for "real TPM hardware".
+    Tested with IBM ThinkPad T60's TPM 1.2 chip and tpm_tis
+    of 2.6.17-rc5 including special patch (thanks to
+    Kylene Jo Hall).
+
+ -- Michael Prokop <mika@grml.org>  Fri, 26 May 2006 00:46:48 +0200
+
+grml-scripts (0.7-28) unstable; urgency=low
+
+  * Improved error handling in grml-hostname.
+  * Some small adjustments in ath-switcher.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 14 May 2006 15:28:38 +0200
+
+grml-scripts (0.7-27) unstable; urgency=low
+
+  * Updated XF86Audio*-scripts: improved status information.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 14 May 2006 15:03:09 +0200
+
+grml-scripts (0.7-26) unstable; urgency=low
+
+  * Updated XF86AudioMute: use amixer instead of aumix, check
+    for running X instead of set $DISPLAY, use osd_cat for
+    on-screen-display.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 14 May 2006 02:58:18 +0200
+
+grml-scripts (0.7-25) unstable; urgency=low
+
+  * Don't use gawk but just 'awk' in grml-pptp-inode.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 12 May 2006 18:09:07 +0200
+
+grml-scripts (0.7-24) unstable; urgency=low
+
+  * Added dialog to depends, thanks for notice - Martin Buchleitner!
+
+ -- Michael Prokop <mika@grml.org>  Wed, 10 May 2006 19:30:42 +0200
+
+grml-scripts (0.7-23) unstable; urgency=low
+
+  * Added grml-tpm: set up a system for use with TPM technology
+
+ -- Michael Prokop <mika@grml.org>  Sun,  7 May 2006 17:06:14 +0200
+
+grml-scripts (0.7-22) unstable; urgency=low
+
+  * Added grml-resolution: change X resolution via a simple menu
+    frontend; script based on work by Florian Keller, thanks!
+
+ -- Michael Prokop <mika@grml.org>  Thu,  4 May 2006 23:13:49 +0200
+
+grml-scripts (0.7-21) unstable; urgency=low
+
+  * grml-hostname: adjust hostname in /etc/hosts as well. Thanks
+    for report, Thomas Ulz!
+
+ -- Michael Prokop <mika@grml.org>  Tue,  2 May 2006 20:49:04 +0200
+
+grml-scripts (0.7-20) unstable; urgency=low
+
+  * grml-hostname: write hostname also to /etc/hostname.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 30 Apr 2006 18:17:46 +0200
+
+grml-scripts (0.7-19) unstable; urgency=low
+
+  * Added grml-hostname to set hostname.
+  * Rewrote grml-postfix: run 'dpkg-reconfigure postfix' instead
+    of the own, old shellscript stuff..
+
+ -- Michael Prokop <mika@grml.org>  Thu, 27 Apr 2006 18:22:58 +0200
+
+grml-scripts (0.7-18) unstable; urgency=low
+
+  * Mention unblacklist in manpage.
+  * Exit if no parameters given to [un]blacklist.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 22 Apr 2006 13:18:51 +0200
+
+grml-scripts (0.7-17) unstable; urgency=low
+
+  * Don't run Xdialog in modemlink, grml-network, netcardconfig,
+    ndiswrapper.sh and mkdosswapfile.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 21 Apr 2006 22:24:16 +0200
+
+grml-scripts (0.7-16) unstable; urgency=low
+
+  * bt-audio: add support for setting PIN via $PIN=...
+
+ -- Michael Prokop <mika@grml.org>  Fri, 21 Apr 2006 22:01:13 +0200
+
+grml-scripts (0.7-15) unstable; urgency=low
+
+  * prepare_ramdisk.sh + prepare_tmpfs.sh: use zsh instead of
+    /bin/sh; setopt nonomatch
+
+ -- Michael Prokop <mika@grml.org>  Fri, 21 Apr 2006 11:13:06 +0200
+
+grml-scripts (0.7-14) unstable; urgency=low
+
+  * grml-lang: use us-latin1 instead of us-intl.iso15 for us.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 21 Apr 2006 02:02:57 +0200
+
+grml-scripts (0.7-13) unstable; urgency=low
+
+  * netcardconfig: send error messages to /dev/null when
+    checking for $WLAN via /proc/net/wireless
+
+ -- Michael Prokop <mika@grml.org>  Thu, 20 Apr 2006 23:05:36 +0200
+
+grml-scripts (0.7-12) unstable; urgency=low
+
+  * grml-network: don't run network status check if nmap
+    isn't present.
+  * grml-pptp-vcgraz: provide more useful error message if
+    network isn't 10.x.x.x.
+  * Updated make_chroot_jail.sh to latest upstream version.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 20 Apr 2006 22:58:09 +0200
+
+grml-scripts (0.7-11) unstable; urgency=low
+
+  * Reworked grml-network: merged network-setup into it.
+  * Removed deprecated network-setup.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 20 Apr 2006 22:15:00 +0200
+
+grml-scripts (0.7-10) unstable; urgency=low
+
+  * Added blacklist / unblacklist.
+  * Removed wlardconfig.
+  * Updated network-setup.
+  * Use Xdialog in netcardconfig so it can be used via network-setup
+    as well.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 20 Apr 2006 18:34:27 +0200
+
+grml-scripts (0.7-9) unstable; urgency=low
+
+  * netcardconfig: don't use Xdialog even though $DISPLAY is set
+
+ -- Michael Prokop <mika@grml.org>  Thu, 20 Apr 2006 15:56:44 +0200
+
+grml-scripts (0.7-8) unstable; urgency=low
+
+  * cpufreq-detect.sh: use p4-clockmod for 'Intel(R) Celeron(R)
+    M processor'.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 18 Apr 2006 19:10:00 +0200
+
+grml-scripts (0.7-7) unstable; urgency=low
+
+  * netcardconfig: merged with latest Kanotix version.
+    Now /etc/network/interfaces is used for wpa-supplicant
+    as suggested by Debian upstream. Some further improvements
+    in WPA and wireless handling.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 18 Apr 2006 18:17:47 +0200
+
+grml-scripts (0.7-6) unstable; urgency=low
+
+  * grml-lang: rename 'en' to 'us' as this is much more consistent.
+    Improved error message output.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 15 Apr 2006 11:26:03 +0200
+
+grml-scripts (0.7-5) unstable; urgency=low
+
+  * grml-lang: fixed the 'line 62: return: can only `return from a
+    function or sourced script' problem.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 15 Apr 2006 10:41:05 +0200
+
+grml-scripts (0.7-4) unstable; urgency=low
+
+  * Updated lesspipe.sh to new upstream version 1.53.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 11 Apr 2006 15:20:01 +0200
+
+grml-scripts (0.7-3) unstable; urgency=low
+
+  * ath-switcher: Fixed installation command for madwifi-ng-modules.
+    Updated $LAST_LOAD_OF_ATH_LINE as suggested by Spida. Thanks!
+  * Added symlink for ath-switcher manpage.
+
+ -- Michael Prokop <mika@grml.org>  Fri,  7 Apr 2006 18:36:52 +0200
+
+grml-scripts (0.7-2) unstable; urgency=low
+
+  * Bash does not like "local" inside functions, fixed in bt-hid.
+  * ath-switcher: don't execute anything if no Atheros chip is
+    present.
+
+ -- Michael Prokop <mika@grml.org>  Fri,  7 Apr 2006 13:16:51 +0200
+
+grml-scripts (0.7-1) unstable; urgency=low
+
+  * New grml version.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  6 Apr 2006 16:19:53 +0200
+
+grml-scripts (0.6-31) unstable; urgency=low
+
+  * Added ath-switcher.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  6 Apr 2006 14:04:05 +0200
+
+grml-scripts (0.6-30) unstable; urgency=low
+
+  * Fixed nroff problem in manpage (thanks for reporting, Jimmy).
+  * Improved documentation of noeject/noprompt in manpage.
+
+ -- Michael Prokop <mika@grml.org>  Wed,  5 Apr 2006 00:10:49 +0200
+
+grml-scripts (0.6-29) unstable; urgency=low
+
+  * And one more typo fix in manpage (thanks again, Peter Czyz).
+
+ -- Michael Prokop <mika@grml.org>  Mon,  3 Apr 2006 18:25:54 +0200
+
+grml-scripts (0.6-28) unstable; urgency=low
+
+  * Fixed another typo in manpage (thanks again, Peter Czyz).
+
+ -- Michael Prokop <mika@grml.org>  Mon,  3 Apr 2006 18:13:41 +0200
+
+grml-scripts (0.6-27) unstable; urgency=low
+
+  * Fixed typo in manpage (thanks, Peter Czyz).
+
+ -- Michael Prokop <mika@grml.org>  Mon,  3 Apr 2006 18:04:00 +0200
+
+grml-scripts (0.6-26) unstable; urgency=low
+
+  * Applied patch by Gebi to improve programs and Makefile in
+    compile/ - thanks!
+
+ -- Michael Prokop <mika@grml.org>  Fri, 31 Mar 2006 22:36:51 +0200
+
+grml-scripts (0.6-25) unstable; urgency=low
+
+  * Adjusted NO_IFACE_MSG_LEN in ip-screen for new "not available"
+    message.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 30 Mar 2006 23:09:37 +0200
+
+grml-scripts (0.6-24) unstable; urgency=low
+
+  * Reduced "not available" messages in cpu-screen and ip-screen.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 28 Mar 2006 11:01:46 +0200
+
+grml-scripts (0.6-23) unstable; urgency=low
+
+  * We don't have to modify the route in grml-vpnc-tugraz anymore.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 28 Mar 2006 10:02:50 +0200
+
+grml-scripts (0.6-22) unstable; urgency=low
+
+  * netcardconfig: Check whether $NETDEVICES is already set, otherwise
+    search for network devices. This allows us to use netcardconfig
+    through 'NETDEVICES=foobar netcardconfig' on systems with
+    persistent NIC interface names (not using the default NIC names).
+
+ -- Michael Prokop <mika@grml.org>  Sun, 26 Mar 2006 23:56:40 +0200
+
+grml-scripts (0.6-21) unstable; urgency=low
+
+  * We don't need any output to stdout in cpufreq-detect.sh.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 24 Mar 2006 23:35:59 +0100
+
+grml-scripts (0.6-20) unstable; urgency=low
+
+  * Added cpufreq-detect.sh for the new config_cpu() in
+    grml-autoconfig.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 24 Mar 2006 11:19:51 +0100
+
+grml-scripts (0.6-19) unstable; urgency=low
+
+  * Added support for /etc/release_info to zsh-login. Sound
+    output if any of the accessibility related bootoptions
+    found.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 23 Mar 2006 12:06:57 +0100
+
+grml-scripts (0.6-18) unstable; urgency=low
+
+  * dpkg-divert sucks. Thanks to Michael Sucha for hint that
+    egrep/fgrep was missing since last update. Fixed that.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 19 Mar 2006 01:11:43 +0100
+
+grml-scripts (0.6-17) unstable; urgency=low
+
+  * Updated clean target in debian/rules.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 17 Mar 2006 20:25:01 +0100
+
+grml-scripts (0.6-16) unstable; urgency=low
+
+  * Updated grml-vpnc-tugraz (use vpnc-connect now).
+
+ -- Michael Prokop <mika@grml.org>  Thu, 16 Mar 2006 16:43:49 +0100
+
+grml-scripts (0.6-15) unstable; urgency=low
+
+  * Updated make_chroot_jail to latest upstream version, fixes
+    the login-problem.
+
+ -- Michael Prokop <mika@grml.org>  Wed,  1 Mar 2006 23:04:31 +0100
+
+grml-scripts (0.6-14) unstable; urgency=low
+
+  * Upps, forgot to mention in the previous changelog entry that
+    grml-setlang has been renamed to grml-lang because the LC/LANG
+    stuff does not work as intented (therefor we don't have to
+    start another zsh instance via grml-lang alias in /etc/zsh/zshrc).
+  * Adjusted Build-Depends, it's dietlibc-dev and not dietlibc of
+    course (thanks, gebi).
+
+ -- Michael Prokop <mika@grml.org>  Sat, 25 Feb 2006 18:04:33 +0100
+
+grml-scripts (0.6-13) unstable; urgency=low
+
+  * Updated grml-pptp-vcgraz: write initscript /etc/init.d/pptp-vcgraz
+    instead of /etc/init.d/pptp, provide usage-information, status-
+    option and slightly improved file handling.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 25 Feb 2006 00:06:47 +0100
+
+grml-scripts (0.6-12) unstable; urgency=low
+
+  * Updated grml-lock. Improved security via not using tmpfile.
+  * Updated grml-slrn. Make dialog boxes larger...
+
+ -- Michael Prokop <mika@grml.org>  Thu, 23 Feb 2006 15:36:35 +0100
+
+grml-scripts (0.6-11) unstable; urgency=low
+
+  * Updated grml-vpnc-tugraz. The gateway will change from 172.27.12.2
+    to 129.27.200.1 within the next days.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 22 Feb 2006 13:15:21 +0100
+
+grml-scripts (0.6-10) unstable; urgency=low
+
+  * Updated grml-vpnc-tugraz. Added usage information.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 21 Feb 2006 20:30:34 +0100
+
+grml-scripts (0.6-9) unstable; urgency=low
+
+  * Small fix in grml-nessus.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 19 Feb 2006 21:53:03 +0100
+
+grml-scripts (0.6-8) unstable; urgency=low
+
+  * Updated grml-nessus. Fixes parsing problem and adds use of
+    nessus-mkcert.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 18 Feb 2006 22:25:51 +0100
+
+grml-scripts (0.6-7) unstable; urgency=low
+
+  * Updated bt-audio, fixed some small issues - improved error
+    handling.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 18 Feb 2006 18:59:01 +0100
+
+grml-scripts (0.6-6) unstable; urgency=low
+
+  * Oh, forgot to add cpu-screen. ;-) Adjusted format of output
+    of cpu-screen as well.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 12 Feb 2006 00:29:19 +0100
+
+grml-scripts (0.6-5) unstable; urgency=low
+
+  * Implemented cpu-screen in C now. Renamed cpu-screen
+    to cpu-screen.sh.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 11 Feb 2006 23:15:43 +0100
+
+grml-scripts (0.6-4) unstable; urgency=low
+
+  * Compile ip-screen with diet.
+  * Added dietgcc and gcc to build-depends.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 11 Feb 2006 00:55:32 +0100
+
+grml-scripts (0.6-3) unstable; urgency=low
+
+  * Added get_tw_cli.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  9 Feb 2006 12:22:04 +0100
+
+grml-scripts (0.6-2) unstable; urgency=low
+
+  * Fixed typo (it's hcid and not hicd) in bt-hid.
+  * Added check for root permissions to bt-hid.
+  * First version of bt-audio.
+  * Adjusted make_chroot_jail in manpage (removed the .sh).
+
+ -- Michael Prokop <mika@grml.org>  Wed,  1 Feb 2006 20:08:41 +0100
+
+grml-scripts (0.6-1) unstable; urgency=low
+
+  * The 'get your winterschlapfn' release.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 21 Jan 2006 14:03:44 +0100
+
+grml-scripts (0.5-36) unstable; urgency=low
+
+  * Applied patch for netcardconfig, contributed by
+    Wolfgang Karall (thanks a lot!):
+    - reread passphrase correctly if reconfiguring
+    - handle backslashes in passphrase correctly
+    - kill wpa_supplicant on ifdown
+
+ -- Michael Prokop <mika@grml.org>  Fri, 20 Jan 2006 10:25:10 +0100
+
+grml-scripts (0.5-35) unstable; urgency=low
+
+  * Fixed some more $VARIABLES handling in several scripts.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 15 Jan 2006 22:50:39 +0100
+
+grml-scripts (0.5-34) unstable; urgency=low
+
+  * Updated grml-pptp-inode (thanks, gebi!).
+
+ -- Michael Prokop <mika@grml.org>  Sun, 15 Jan 2006 18:37:36 +0100
+
+grml-scripts (0.5-33) unstable; urgency=low
+
+  * Let's quote the $VARIABLES in some grml-* scripts.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 15 Jan 2006 16:31:36 +0100
+
+grml-scripts (0.5-32) unstable; urgency=low
+
+  * Fixed problem with $USERNAME in suspenduser_gui.sh.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 12 Jan 2006 22:17:44 +0100
+
+grml-scripts (0.5-31) unstable; urgency=low
+
+  * Slightly improved error handling of bt-hid.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 12 Jan 2006 09:55:51 +0100
+
+grml-scripts (0.5-30) unstable; urgency=low
+
+  * Made grml-screen dash-compatible.
+
+ -- Michael Prokop <mika@grml.org>  Sun,  8 Jan 2006 15:30:12 +0100
+
+grml-scripts (0.5-29) unstable; urgency=low
+
+  * Updated make_chroot_jail once more (thanks, Wolfgang Fuschlberger!).
+
+ -- Michael Prokop <mika@grml.org>  Sat,  7 Jan 2006 17:21:22 +0100
+
+grml-scripts (0.5-28) unstable; urgency=low
+
+  * Fixed prepare_ramdisk.sh:
+    - Removed size-option of prepare_ramdisk.sh as it causes problems.
+    - Adjusted info text as well (it's not a tmpfs but a ramdisk).
+    - Hmpf. Only losetup of loop-aes-utils knows about the '-a' option.
+      Removed 'losetup -d ...' code therefor in the meanwhile.
+
+ -- Michael Prokop <mika@grml.org>  Fri,  6 Jan 2006 17:31:29 +0100
+
+grml-scripts (0.5-27) unstable; urgency=low
+
+  * Added prepare_ramdisk.sh and prepare_tmpfs.sh.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  5 Jan 2006 13:34:37 +0100
+
+grml-scripts (0.5-26) unstable; urgency=low
+
+  * Updated make_chroot_jail to latest upstream version (thanks
+    for information, Wolfgang Fuschlberger!).
+
+ -- Michael Prokop <mika@grml.org>  Wed,  4 Jan 2006 19:19:03 +0100
+
+grml-scripts (0.5-25) unstable; urgency=low
+
+  * Updated grml-info script for usage on grml-small.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 22 Dec 2005 01:46:37 +0100
+
+grml-scripts (0.5-24) unstable; urgency=low
+
+  * Adjusted xsay for use with wmiiplumb.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 21 Dec 2005 20:39:11 +0100
+
+grml-scripts (0.5-23) unstable; urgency=low
+
+  * Mention grml-tips in welcome info in zsh-login.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 20 Dec 2005 17:24:06 +0100
+
+grml-scripts (0.5-22) unstable; urgency=low
+
+  * Integrate grml-vpnc-tugraz in grml-network.
+  * Added grml-terminalserver to grml-config-root.
+  * Removed network-setup (duplicate entry for grml-network)
+    in grml-config-root.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 20 Dec 2005 12:44:06 +0100
+
+grml-scripts (0.5-21) unstable; urgency=low
+
+  * Updated bt-hid: warn if running hidd was successfull but
+    no connection could be established.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 18 Dec 2005 20:32:48 +0100
+
+grml-scripts (0.5-20) unstable; urgency=low
+
+  * WTF is LC_MESSAGEWS in netcardconfig?
+    It should be LC_MESSAGES of course. Fixed that.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 18 Dec 2005 12:33:33 +0100
+
+grml-scripts (0.5-19) unstable; urgency=low
+
+  * Adjusted dialog window size in grml-postfix.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 16 Dec 2005 00:09:30 +0100
+
+grml-scripts (0.5-18) unstable; urgency=low
+
+  * Do not overwrite wpa-config file in netcardconfig (thx4hint, mabu!).
+
+ -- Michael Prokop <mika@grml.org>  Thu,  8 Dec 2005 17:05:28 +0100
+
+grml-scripts (0.5-17) unstable; urgency=low
+
+  * bt-hid: start hcid instead of bluez-utils. Added status cmdline
+    option.
+
+ -- Michael Prokop <mika@grml.org>  Mon,  5 Dec 2005 15:59:43 +0100
+
+grml-scripts (0.5-16) unstable; urgency=low
+
+  * Start bluez-utils through bt-hid.
+  * Split of grml-config: grml-config as main interface calling
+    grml-config-user and grml-config-root.
+
+ -- Michael Prokop <mika@grml.org>  Mon,  5 Dec 2005 11:14:55 +0100
+
+grml-scripts (0.5-15) unstable; urgency=low
+
+  * Added script bt-hid (connect human input device via bluetooth
+    to local system).
+
+ -- Michael Prokop <mika@grml.org>  Sun,  4 Dec 2005 23:50:04 +0100
+
+grml-scripts (0.5-14) unstable; urgency=low
+
+  * Improved code layout of grml-network, added program name to
+    title dialog interface.
+
+ -- Michael Prokop <mika@grml.org>  Sun,  4 Dec 2005 01:09:31 +0100
+
+grml-scripts (0.5-13) unstable; urgency=low
+
+  * Added grml-config (central config interface) [thx, Nico!].
+  * Added suspenduser_gui.sh (dialog interface for
+    suspenduser.sh) [thx, Nico!].
+
+ -- Michael Prokop <mika@grml.org>  Sat,  3 Dec 2005 23:02:52 +0100
+
+grml-scripts (0.5-12) unstable; urgency=low
+
+  * Fixed small parsing bug and improved infotext in script soundtest.
+
+ -- Michael Prokop <mika@grml.org>  Sat,  3 Dec 2005 16:12:37 +0100
+
+grml-scripts (0.5-11) unstable; urgency=low
+
+  * Oh, let's move python and ruby from depends to suggests. :)
+
+ -- Michael Prokop <mika@grml.org>  Thu,  1 Dec 2005 15:21:40 +0100
+
+grml-scripts (0.5-10) unstable; urgency=low
+
+  * Remove grml-network from Suggests as the package does not exist.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  1 Dec 2005 15:11:28 +0100
+
+grml-scripts (0.5-9) unstable; urgency=low
+
+  * Big update of debian/control so grml-scripts works "smoother"
+    on plain debian and grml-small.
+  * Updated script attach-screen [check for grml's screenrc and
+    use it if present. Don't run keychain if it's not preset].
+  * Updated grml-pptp-*-scripts [removed the zsh-specific stuff].
+  * Mention XF86*-scripts in manpage grml-scripts.
+  * Adjusted path for zsh in grml-info - now we lintian-clean again.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  1 Dec 2005 14:43:35 +0100
+
+grml-scripts (0.5-8) unstable; urgency=low
+
+  * Dropped support of $BROWSER in grml-info, it might break
+    X-startup via ~/.xinitrc which runs grml-info.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  1 Dec 2005 00:22:56 +0100
+
+grml-scripts (0.5-7) unstable; urgency=low
+
+  * Compile ip-screen with '-O2'.
+  * Updated script grml-info [use links on plain console,
+    w3m with no set $DISPLAY and dillo when $DISPLAY is set].
+
+ -- Michael Prokop <mika@grml.org>  Wed, 30 Nov 2005 20:45:50 +0100
+
+grml-scripts (0.5-6) unstable; urgency=low
+
+  * Added ip-screen for integration in GNU screen (thx, gebi!).
+
+ -- Michael Prokop <mika@grml.org>  Wed, 30 Nov 2005 00:10:51 +0100
+
+grml-scripts (0.5-5) unstable; urgency=low
+
+  * Added scripts for handling audio volume:
+    - XF86AudioLowerVolume
+    - XF86AudioMute
+    - XF86AudioRaiseVolume
+
+ -- Michael Prokop <mika@grml.org>  Sat, 12 Nov 2005 16:17:31 +0100
+
+grml-scripts (0.5-4) unstable; urgency=low
+
+  * Added script noprompt.
+  * Added script zsh-login.
+  * Updated manpage.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 10 Nov 2005 23:19:36 +0100
+
+grml-scripts (0.5-3) unstable; urgency=low
+
+  * Updated caps-ctrl - included patch by wuehlmaus which improves
+    compatibility on plain console. Thanks, wuehlmaus!
+
+ -- Michael Prokop <mika@grml.org>  Thu, 10 Nov 2005 22:57:01 +0100
+
+grml-scripts (0.5-2) unstable; urgency=low
+
+  * Added wm-ng, a wrapper script for fluxbox with some additional features.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  3 Nov 2005 15:33:20 +0100
+
+grml-scripts (0.5-1) unstable; urgency=low
+
+  * The grml 0.5 release - bump version therefore.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 23 Oct 2005 19:21:50 +0200
+
+grml-scripts (0.4-37) unstable; urgency=low
+
+  * Removed forgotten manpages of removed binaries.
+  * Added grml-saveconfig to suggests.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 23 Oct 2005 01:16:26 +0200
+
+grml-scripts (0.4-36) unstable; urgency=low
+
+  * Moved save-config, restore-config and mkpersistenthome
+    to package grml-saveconfig.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 23 Oct 2005 00:51:35 +0200
+
+grml-scripts (0.4-35) unstable; urgency=low
+
+  * Update of grml-pptp-xdsl-students (thanks, hecka!).
+
+ -- Michael Prokop <mika@grml.org>  Sat, 22 Oct 2005 09:49:37 +0200
+
+grml-scripts (0.4-34) unstable; urgency=low
+
+  * Redirect mke2fs output to /dev/null in mkpersistenthome.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 18 Oct 2005 23:59:49 +0200
+
+grml-scripts (0.4-33) unstable; urgency=low
+
+  * Removed unused variables in restore-config.
+  * Improved handling of $GRML_VERSION in save-config.
+  * Updated mkpersistenthome.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 18 Oct 2005 15:54:46 +0200
+
+grml-scripts (0.4-32) unstable; urgency=low
+
+  * Updated help information of save-config and restore-config.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 17 Oct 2005 14:52:16 +0200
+
+grml-scripts (0.4-31) unstable; urgency=low
+
+  * Finished main work on restore-config.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 15 Oct 2005 23:22:20 +0200
+
+grml-scripts (0.4-30) unstable; urgency=low
+
+  * Added save-config and restore-config.
+    Knoppix based script saveconfig was dropped.
+    Notice: restore-config is still under development.
+  * Updated vmware-detect (use 'int main' to supress gcc warning).
+  * Added script findchanged.
+  * Added script grepedit -> http://bigasterisk.com/grepedit
+
+ -- Michael Prokop <mika@grml.org>  Thu, 13 Oct 2005 10:32:15 +0200
+
+grml-scripts (0.4-29) unstable; urgency=low
+
+  * Update of grml-network and netcardconfig by Marcel (thanks!).
+
+ -- Michael Prokop <mika@grml.org>  Wed, 12 Oct 2005 22:12:18 +0200
+
+grml-scripts (0.4-28) unstable; urgency=low
+
+  * New upstream release of make_chroot_jail and moved it from
+    /usr/bin/ to /usr/sbin/.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 27 Sep 2005 18:08:51 +0200
+
+grml-scripts (0.4-27) unstable; urgency=low
+
+  * Use 'set generate_message_id 0' in grml-slrn.
+  * Applied patch to grml-setlang by Tobias for supporting
+    'ch' in grml-lang (thanks!). Adjusted message for not-
+    supported languages.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 24 Sep 2005 23:12:56 +0200
+
+grml-scripts (0.4-26) unstable; urgency=low
+
+  * Use dh_link instead of manual symlink farm.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 24 Sep 2005 21:25:17 +0200
+
+grml-scripts (0.4-25) unstable; urgency=low
+
+  * Added logview by Joey Hess.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 16 Sep 2005 18:19:39 +0200
+
+grml-scripts (0.4-24) unstable; urgency=low
+
+  * Script soundtest should be located in /usr/bin/ of course and
+    not in /bin, upps.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  1 Sep 2005 12:22:16 +0200
+
+grml-scripts (0.4-23) unstable; urgency=low
+
+  * Added script soundtest for testing sound on grml-system.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  1 Sep 2005 12:02:10 +0200
+
+grml-scripts (0.4-22) unstable; urgency=low
+
+  * Added fgrep and egrep with fix for zsh (diverts original fgrep and
+    egrep).
+
+ -- Michael Prokop <mika@grml.org>  Thu, 18 Aug 2005 11:53:22 +0200
+
+grml-scripts (0.4-21) unstable; urgency=low
+
+  * Switched backed to browser w3m instead of links.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 14 Aug 2005 14:30:16 +0200
+
+grml-scripts (0.4-20) unstable; urgency=low
+
+  * Added urlgrep.awk (thanks to marcel!).
+
+ -- Michael Prokop <mika@grml.org>  Tue,  9 Aug 2005 16:05:51 +0200
+
+grml-scripts (0.4-19) unstable; urgency=low
+
+  * The 'we are lintian-clean'-release:
+    - debian/control: 'any' architecture but not 'all' (vmware probably
+      will not work on anything else than x86)
+    - modified /bin/zsh to /usr/bin/zsh for zsh-scripts
+    - added dash as dependency, removed bash (as it's an essential-package)
+  * Added symlinks for executables without own manpage pointing to 'man
+    grml-scripts'.
+  * Added script noeject. Use it via 'noeject <cmd>' (where <cmd>
+    is either reboot or halt) to avoid ejecting of CD-ROM and
+    prompting for it.
+
+ -- Michael Prokop <mika@grml.org>  Mon,  8 Aug 2005 21:20:05 +0200
+
+grml-scripts (0.4-18) unstable; urgency=low
+
+  * Removed acpi-screen as yacpi >= 1.3 supports it via 'yacpi -t'.
+
+ -- Michael Prokop <mika@grml.org>  Sun,  7 Aug 2005 21:51:21 +0200
+
+grml-scripts (0.4-17) unstable; urgency=low
+
+  * Added script service (wrapper script for /etc/init.d/-scripts,
+    use it e.g. via 'service postfix start').
+
+ -- Michael Prokop <mika@grml.org>  Sun,  7 Aug 2005 12:18:37 +0200
+
+grml-scripts (0.4-16) unstable; urgency=low
+
+  * Removed grml-hwinfo and sysdump, they got their own package
+    namend grml-hwinfo.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 28 Jul 2005 09:22:58 +0200
+
+grml-scripts (0.4-15) unstable; urgency=low
+
+  * Updated grml-start and grml-info: let's use links2 for
+    console instead of w3m (which again doesn't display images on
+    fb...).
+
+ -- Michael Prokop <mika@grml.org>  Tue, 26 Jul 2005 10:49:43 +0200
+
+grml-scripts (0.4-14) unstable; urgency=low
+
+  * New upstream release up lesspipe.sh (version 1.52).
+
+ -- Michael Prokop <mika@grml.org>  Wed, 20 Jul 2005 00:06:33 +0200
+
+grml-scripts (0.4-13) unstable; urgency=low
+
+  * Added apt-check-sigs (taken from http://people.debian.org/~ajt/apt-check-sigs).
+
+ -- Michael Prokop <mika@grml.org>  Fri,  1 Jul 2005 02:11:06 +0200
+
+grml-scripts (0.4-12) unstable; urgency=low
+
+  * Restore 'export' - it's important for GNU screen. grml.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 25 Jun 2005 12:13:49 +0200
+
+grml-scripts (0.4-11) unstable; urgency=low
+
+  * Removed 'export' of $USER in grml-init.
+  * Updated grml-screen (change dir to $HOME).
+  * Updated grml-init-screen (fixed 'export' and cd to $HOME).
+
+ -- Michael Prokop <mika@grml.org>  Sat, 25 Jun 2005 00:59:36 +0200
+
+grml-scripts (0.4-10) unstable; urgency=low
+
+  * Added scanmodem (taken from
+    http://linmodems.technion.ac.il/packages/scanModem.gz), conflicts with
+    old package scanmodem.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 11 Jun 2005 16:40:40 +0200
+
+grml-scripts (0.4-9) unstable; urgency=low
+
+  * Removed dependency ruby, added to suggests.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 10 Jun 2005 10:15:28 +0200
+
+grml-scripts (0.4-8) unstable; urgency=low
+
+  * Removed dependency grml-x, added to suggests.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 10 Jun 2005 09:44:08 +0200
+
+grml-scripts (0.4-7) unstable; urgency=low
+
+  * Fixed grml-screen for use with dash.
+
+ -- Michael Prokop <mika@grml.org>  Sun,  5 Jun 2005 23:15:09 +0200
+
+grml-scripts (0.4-6) unstable; urgency=low
+
+  * Updated manpage grml-scripts (fixed #16).
+  * Don't run nroff but ship manpages as they are.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 29 May 2005 11:21:43 +0200
+
+grml-scripts (0.4-5) unstable; urgency=low
+
+  * Removed grml-x, provide grml-x in it's own package!
+    Notice: grml-scripts depends on grml-x just too make sure
+    everyone installs grml-x. This will be changed in a few
+    days/weeks/...
+  * Removed mkxconf [we don't need it any more...].
+  * Updated grml-hwinfo [use hwinfo log=... instead of 1>...].
+
+ -- Michael Prokop <mika@grml.org>  Mon, 23 May 2005 23:41:06 +0200
+
+grml-scripts (0.4-4) unstable; urgency=low
+
+  * Added dpkg-rebuild (see
+    http://www.cs.duke.edu/~reynolds/projects/dpkg-rebuild).
+  * Added pong (see
+    http://www.cs.duke.edu/~reynolds/projects/pong.c).
+  * Added align (see
+    http://www.cs.duke.edu/~reynolds/projects/align.c).
+
+ -- Michael Prokop <mika@grml.org>  Sun, 22 May 2005 12:51:23 +0200
+
+grml-scripts (0.4-3) unstable; urgency=low
+
+  * Added dialog to dependencies.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 12 May 2005 19:55:43 +0200
+
+grml-scripts (0.4-2) unstable; urgency=low
+
+  * Removed some dependencies.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 12 May 2005 19:39:56 +0200
+
+grml-scripts (0.4-1) unstable; urgency=low
+
+  * Let's release it!
+
+ -- Michael Prokop <mika@grml.org>  Mon,  9 May 2005 13:45:59 +0200
+
+grml-scripts (0.3-44) unstable; urgency=low
+
+  * Updated saveconfig.
+  * Updated iimage to latest release.
+
+ -- Michael Prokop <mika@grml.org>  Sun,  8 May 2005 23:12:50 +0200
+
+grml-scripts (0.3-43) unstable; urgency=low
+
+  * Updated grml-pptp-xdsl-students [thanks, hecka!].
+  * Updated grml-vpnc-tugraz.
+
+ -- Michael Prokop <mika@grml.org>  Sun,  8 May 2005 20:25:47 +0200
+
+grml-scripts (0.3-42) unstable; urgency=low
+
+  * Updated grml-init-screen. 
+
+ -- Michael Prokop <mika@grml.org>  Sun,  8 May 2005 16:00:28 +0200
+
+grml-scripts (0.3-41) unstable; urgency=low
+
+  * Updated grml-hwinfo (some more error-handling, echo message
+    when running not as user root).
+  * Updated grml-nessus (we don't need the copying of files anymore
+    due to unionfs-support).
+  * Updated grml-pptp-xdsl-students (replaced example 'grml.g' with
+    'grml' because of new accounting system).
+
+ -- Michael Prokop <mika@grml.org>  Sun,  8 May 2005 12:06:36 +0200
+
+grml-scripts (0.3-40) unstable; urgency=low
+
+  * Removed .old-files (backup stuff).
+  * Updated grml-x (changed order of resolutions).
+  * Updated grml-postfix (removed postfix-tls hint, removed sudo).
+
+ -- Michael Prokop <mika@grml.org>  Sat,  7 May 2005 21:40:25 +0200
+
+grml-scripts (0.3-39) unstable; urgency=low
+
+  * Updated grml-lock (added support for locking X).
+
+ -- Michael Prokop <mika@grml.org>  Fri,  6 May 2005 12:41:23 +0200
+
+grml-scripts (0.3-38) unstable; urgency=low
+
+  * Added firevim (open file from firefox with vim).
+
+ -- Michael Prokop <mika@grml.org>  Tue,  3 May 2005 17:05:42 +0200
+
+grml-scripts (0.3-37) unstable; urgency=low
+
+  * Updated manpages for grml-scripts and grml-x.
+  * Added grml-init-screen (required for /etc/inittab).
+  * Added 'exec ...' to grml-screen, grml-init, grml-init-screen,
+    grml-start.
+  * Updated grml-network (DISPLAY='', added grml-vpnc-tugraz).
+
+ -- Michael Prokop <mika@grml.org>  Sun,  1 May 2005 21:26:09 +0200
+
+grml-scripts (0.3-36) unstable; urgency=low
+
+  * Updated grml-muttng (applied
+    <URL:http://user.cs.tu-berlin.de/~pdmef/mutt-ng/update-config.pl>).
+
+ -- Michael Prokop <mika@grml.org>  Fri, 29 Apr 2005 20:04:47 +0200
+
+grml-scripts (0.3-35) unstable; urgency=low
+
+  * Updated grml-vpnc-tugraz (tested at TUGraz).
+  * Updated grml-network (improved exit-handling).
+
+ -- Michael Prokop <mika@grml.org>  Wed, 27 Apr 2005 13:50:11 +0200
+
+grml-scripts (0.3-34) unstable; urgency=low
+
+  * Added exifinfo script
+    (<URL:http://www.shelldorado.com/scripts/cmds/exifinfo>).
+  * Added sysdump script
+    (<URL:http://club.black.co.at/david/hwdb/Sysfs/sysdump>).
+  * Updated grml-hwinfo (the "let's collect hwinfo"-release).
+  * Updated grml-scripts manpage.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 25 Apr 2005 23:33:56 +0200
+
+grml-scripts (0.3-33) unstable; urgency=low
+
+  * Updated grml-vpnc-tugraz (provide config file as parameter to vpnc).
+  * Added twebgal script (create tiny webgallery using CSS-features)
+    [thanks, Worf!].
+
+ -- Michael Prokop <mika@grml.org>  Mon, 25 Apr 2005 00:39:14 +0200
+
+grml-scripts (0.3-32) unstable; urgency=low
+
+  * Added grml-vpnc-tugraz (not yet tested!).
+
+ -- Michael Prokop <mika@grml.org>  Mon, 25 Apr 2005 00:11:56 +0200
+
+grml-scripts (0.3-31) unstable; urgency=low
+
+  * Updated lesspipe.sh and code2color to latest upstream
+    version (1.50).
+  * Added script usbtree.
+  * Updated grml-x (change fbdev to vesa in help-text,
+    fixed vt-switching-problem).
+
+ -- Michael Prokop <mika@grml.org>  Fri, 22 Apr 2005 00:52:08 +0200
+
+grml-scripts (0.3-30) unstable; urgency=low
+
+  * Fixed grml-x (use hsyncval instead of hsyncvalue, *d'oh*).
+
+ -- Michael Prokop <mika@grml.org>  Thu, 21 Apr 2005 16:02:37 +0200
+
+grml-scripts (0.3-29) unstable; urgency=low
+
+  * Fixed xsay (missing quotes).
+
+ -- Michael Prokop <mika@grml.org>  Thu, 21 Apr 2005 12:29:53 +0200
+
+grml-scripts (0.3-28) unstable; urgency=low
+
+  * Added script xsay.
+  * Added (updated) netcardconfig and wlcardconfig
+    and their frontend grml-network (which also supports the
+    grml-pptp*-scripts) [thanks, Marcel Wichern!].
+
+ -- Michael Prokop <mika@grml.org>  Wed, 20 Apr 2005 22:31:55 +0200
+
+grml-scripts (0.3-27) unstable; urgency=low
+
+  * Updated cpu-screen (improved output).
+  * Updated grml-x (just some typos in output).
+
+ -- Michael Prokop <mika@grml.org>  Wed, 20 Apr 2005 00:06:49 +0200
+
+grml-scripts (0.3-26) unstable; urgency=low
+
+  * Updated grml-x (fix -hsync/-vsync options).
+
+ -- Michael Prokop <mika@grml.org>  Tue, 19 Apr 2005 15:35:47 +0200
+
+grml-scripts (0.3-25) unstable; urgency=low
+
+  * Updated grml-x (set XkbRules xorg and XkbVariant nodeadkeys for xorg,
+    reset_color for xfree86-common).
+
+ -- Michael Prokop <mika@grml.org>  Tue, 19 Apr 2005 11:47:27 +0200
+
+grml-scripts (0.3-24) unstable; urgency=low
+
+  * Updated grml-x (removed debug-info, removed invalid font-entries,
+    if detected resolution is 1024x768-only, then provide manual
+    settings) and manpage of grml-x.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 18 Apr 2005 15:18:54 +0200
+
+grml-scripts (0.3-23) unstable; urgency=low
+
+  * Added nostart-option to manpage of grml-x.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 17 Apr 2005 20:13:11 +0200
+
+grml-scripts (0.3-22) unstable; urgency=low
+
+  * Added '-nostart'-option to grml-x.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 16 Apr 2005 13:56:44 +0200
+
+grml-scripts (0.3-21) unstable; urgency=low
+
+  * Fixed display-option of grml-x.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 15 Apr 2005 17:55:43 +0200
+
+grml-scripts (0.3-20) unstable; urgency=low
+
+  * Added '-help'-option to grml-x.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 12 Apr 2005 20:42:02 +0200
+
+grml-scripts (0.3-19) unstable; urgency=low
+
+  * Updated grml-x (let's try to provide /dev/input/mice in any case).
+
+ -- Michael Prokop <mika@grml.org>  Sun, 10 Apr 2005 12:37:48 +0200
+
+grml-scripts (0.3-18) unstable; urgency=low
+
+  * Updated grml-x (let's activate the force-option when detecting
+    manual options) and manpage for grml-x.
+  * Removed grml-x2 (hey, grml-x works and grml-x2 just breaks
+    things ;-)).
+
+ -- Michael Prokop <mika@grml.org>  Fri,  8 Apr 2005 15:22:00 +0200
+
+grml-scripts (0.3-17) unstable; urgency=low
+
+  * Now really added grml-x-manpage. 8-)
+
+ -- Michael Prokop <mika@grml.org>  Mon,  4 Apr 2005 14:10:27 +0200
+
+grml-scripts (0.3-16) unstable; urgency=low
+
+  * Fixed grml-x.
+
+ -- Michael Prokop <mika@grml.org>  Mon,  4 Apr 2005 09:09:34 +0200
+
+grml-scripts (0.3-15) unstable; urgency=low
+
+  * Updated grml-x for another devel-release.
+  * Added manpage for grml-x.
+
+ -- Michael Prokop <mika@grml.org>  Sun,  3 Apr 2005 23:28:37 +0200
+
+grml-scripts (0.3-14) unstable; urgency=low
+
+  * Big update of grml-x but still under development.
+  * Updated grml-hwinfo (not yet finished!).
+
+ -- Michael Prokop <mika@grml.org>  Sat,  2 Apr 2005 13:20:58 +0200
+
+grml-scripts (0.3-13) unstable; urgency=low
+
+  * Fixed grml-x.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 26 Mar 2005 12:02:01 +0100
+
+grml-scripts (0.3-12) unstable; urgency=low
+
+  * Updated grml-x (several improvements and fixes).
+
+ -- Michael Prokop <mika@grml.org>  Fri, 25 Mar 2005 20:51:07 +0100
+
+grml-scripts (0.3-11) unstable; urgency=low
+
+  * Updated grml-x (fixed HSYNC/VSYNC, prepare for usage with xorg).
+
+ -- Michael Prokop <mika@grml.org>  Thu, 24 Mar 2005 09:52:50 +0100
+
+grml-scripts (0.3-10) unstable; urgency=low
+
+  * Fixed grml-network [wrong entry in interfaces when chosing dhcp, thx
+    riesebie!].
+
+ -- Michael Prokop <mika@grml.org>  Tue, 22 Mar 2005 14:13:33 +0100
+
+grml-scripts (0.3-9) unstable; urgency=low
+
+  * The "another devel-ISO"-release.
+  * grml-x3 seems to work for "first public tests" - ergo:
+    - removed grml-x2
+    - renamed grml-x to grml-x2
+    - renamed grml-x3 to grml-x
+    -> Want to start X? Use grml-x.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 20 Mar 2005 22:39:40 +0100
+
+grml-scripts (0.3-8) unstable; urgency=low
+
+  * Updated grml-x3.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 20 Mar 2005 19:15:54 +0100
+
+grml-scripts (0.3-7) unstable; urgency=low
+
+  * Added grml-x3 (still under development).
+
+ -- Michael Prokop <mika@grml.org>  Sat, 19 Mar 2005 18:45:05 +0100
+
+grml-scripts (0.3-6) unstable; urgency=low
+
+  * Changed Architecture to all in debian/rules.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 19 Mar 2005 17:30:34 +0100
+
+grml-scripts (0.3-5) unstable; urgency=low
+
+  * Improved grml-network (use 'ifconfig -a' to detect not yet
+    configured devices).
+
+ -- Michael Prokop <mika@grml.org>  Sun, 13 Mar 2005 00:33:01 +0100
+
+grml-scripts (0.3-4) unstable; urgency=low
+
+  * Added vmware-detect.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 12 Mar 2005 15:03:21 +0100
+
+grml-scripts (0.3-3) unstable; urgency=low
+
+  * Fixed fex ('unzip -v' did not uncompress files).
+
+ -- Michael Prokop <mika@grml.org>  Fri, 11 Mar 2005 22:12:12 +0100
+
+grml-scripts (0.3-2) unstable; urgency=low
+
+  * Improved info-screen inside grml-lock.
+  * Added grml-network (added ipcalc to Suggests).
+  * Updated cpu-screen.
+  * Extended debian/control description.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 11 Mar 2005 01:51:34 +0100
+
+grml-scripts (0.3-1) unstable; urgency=low
+
+  * The "hustenstopper" release - let's go public!
+  * Ok, rename grml-pptp-xdsl to grml-pptp-xdsl-students (because
+    the script only works for XDSL@students) [thanks, hecka!].
+
+ -- Michael Prokop <mika@grml.org>  Thu,  3 Mar 2005 23:09:56 +0100
+
+grml-scripts (0.2-25) unstable; urgency=low
+
+  * Added grml-lock (lock console).
+  * Updated fex.
+  * Removed grml-encrypt (I don't want the devel-release in release 0.3).
+  * Renamed grml-pptp* scripts, we now have:
+      - grml-pptp-inode
+      - grml-pptp-vcgraz
+      - grml-pptp-xdsl
+
+ -- Michael Prokop <mika@grml.org>  Wed,  2 Mar 2005 15:49:08 +0100
+
+grml-scripts (0.2-24) unstable; urgency=low
+
+  * Added tpp-devel (current svn-snapshot from tpp).
+
+ -- Michael Prokop <mika@grml.org>  Wed,  2 Mar 2005 12:45:26 +0100
+
+grml-scripts (0.2-23) unstable; urgency=low
+
+  * Added grml-pptp-xdsl-students (thanks, hecka!).
+  * Updated grml-muttng (improve config).
+
+ -- Michael Prokop <mika@grml.org>  Tue,  1 Mar 2005 00:26:21 +0100
+
+grml-scripts (0.2-22) unstable; urgency=low
+
+  * Updated cpu-screen [switch display of $CUR / $MHZ ].
+  * Updated mkxconf ('getBootParam xmodule').
+
+ -- Michael Prokop <mika@grml.org>  Mon, 28 Feb 2005 15:24:11 +0100
+
+grml-scripts (0.2-21) unstable; urgency=low
+
+  * Updated grml-info (don't use $BROWSER but hardcoded values).
+  * Updated grml-mutt (ask for account details as in grml-muttng).
+
+ -- Michael Prokop <mika@grml.org>  Mon, 28 Feb 2005 15:13:37 +0100
+
+grml-scripts (0.2-20) unstable; urgency=low
+
+  * Added grml-muttng.
+  * Added fex.
+  * Updated grml-mutt ('color attachment black white').
+
+ -- Michael Prokop <mika@grml.org>  Sun, 27 Feb 2005 14:54:54 +0100
+
+grml-scripts (0.2-19) unstable; urgency=low
+
+  * Added unbleach.pl.
+  * Updated mkxconf (use of 'hwinfo --gfxcard').
+
+ -- Michael Prokop <mika@grml.org>  Sat, 26 Feb 2005 23:34:24 +0100
+
+grml-scripts (0.2-18) unstable; urgency=low
+
+  * Added hgrep.sh.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 21 Feb 2005 23:19:40 +0100
+
+grml-scripts (0.2-17) unstable; urgency=low
+
+  * Updated grml-x2.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 11 Feb 2005 19:31:22 +0100
+
+grml-scripts (0.2-16) unstable; urgency=low
+
+  * Updated mkxconf (let's set 1600x1200 as maximum)
+  * Updated grml-x and grml-x2.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 11 Feb 2005 14:28:38 +0100
+
+grml-scripts (0.2-15) unstable; urgency=low
+
+  * Updated cpu-screen (read /sys/...).
+
+ -- Michael Prokop <mika@grml.org>  Fri, 11 Feb 2005 13:30:26 +0100
+
+grml-scripts (0.2-14) unstable; urgency=low
+
+  * Another grml-bind update [by gebi].
+  * Updated cpu-screen (read /sys/...).
+
+ -- Michael Prokop <mika@grml.org>  Thu, 10 Feb 2005 09:31:13 +0100
+
+grml-scripts (0.2-13) unstable; urgency=low
+
+  * Fixed grml-bind for use with new sh-lib ('die' instead of 'warn').
+
+ -- Michael Prokop <mika@grml.org>  Thu, 10 Feb 2005 04:12:28 +0100
+
+grml-scripts (0.2-12) unstable; urgency=low
+
+  * Updated mkxconf ('head -1' for jimmy's box).
+
+ -- Michael Prokop <mika@grml.org>  Thu, 10 Feb 2005 00:29:40 +0100
+
+grml-scripts (0.2-11) unstable; urgency=low
+
+  * Added suspenduser.sh to sbin/.
+  * Updated grml-bind and man page of grml-bind.
+
+ -- Michael Prokop <mika@grml.org>  Tue,  8 Feb 2005 16:47:25 +0100
+
+grml-scripts (0.2-10) unstable; urgency=low
+
+  * Updated grml-x2 (echo warning if running from inside screen)
+
+ -- Michael Prokop <mika@grml.org>  Thu,  3 Feb 2005 20:46:27 +0100
+
+grml-scripts (0.2-9) unstable; urgency=low
+
+  * Fixed grml-x2.
+  * Fixed cpu-screen.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  3 Feb 2005 18:42:17 +0100
+
+grml-scripts (0.2-8) unstable; urgency=low
+
+  * Added grml-x2 (using new xconfiguration tool mkxconf).
+
+ -- Michael Prokop <mika@grml.org>  Wed,  2 Feb 2005 22:37:51 +0100
+
+grml-scripts (0.2-7) unstable; urgency=low
+
+  * acpi-screen should go to bin of course. (grml)
+  * updated acpi-screen code.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 30 Jan 2005 23:23:48 +0100
+
+grml-scripts (0.2-6) unstable; urgency=low
+
+  * Added acpi-screen (thanks to Nico Golde for coding!)
+    [notice: broken devel version]
+  * Added cpu-screen.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 30 Jan 2005 18:46:23 +0100
+
+grml-scripts (0.2-5) unstable; urgency=low
+
+  * Added mkxconf to sbin/. (devel-release!)
+  * Added grml-encrypt to bin/. (devel-release!)
+  * Added grml-init to bin/.
+  * Updated 'say' (provide usage information).
+  * Removed chown...$TTY-stuff in grml-mutt and grml-slrn
+    cause it's handled via grml-init from now on.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 30 Jan 2005 14:39:08 +0100
+
+grml-scripts (0.2-4) unstable; urgency=low
+
+  * Updated 'say' (use flite instead of festival by default).
+
+ -- Michael Prokop <mika@grml.org>  Fri, 28 Jan 2005 22:56:42 +0100
+
+grml-scripts (0.2-3) unstable; urgency=low
+
+  * Added PrintAnalyzer (generate some stats from cups page_log file)
+    to sbin/.
+  * Added tinyp2p.py to bin/.
+  * Added grml-pptp-xdsl to bin/.
+  * Moved grml-postfix, grml-pptp* from bin/ to sbin/.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 27 Jan 2005 10:46:10 +0100
+
+grml-scripts (0.2-2) unstable; urgency=low
+
+  * Fixed tty-settings for console on grml system in grml-mutt and
+    grml-slrn.
+
+ -- Michael Prokop <mika@grml.org>  Sun,  9 Jan 2005 23:01:58 +0100
+
+grml-scripts (0.2-1) unstable; urgency=low
+
+  * grml 0.2 release.
+  * Fixed spelling error in grml-nessus.
+  * Added additional information to english version of saveconfig
+    output.
+
+ -- Michael Prokop <mika@grml.org>  Sun,  9 Jan 2005 22:11:41 +0100
+
+grml-scripts (0.1-19) unstable; urgency=low
+
+  * Added mkpersistenthome to bin/.
+  * French translation in saveconfig by Alexander Prokop.
+
+ -- Michael Prokop <mika@grml.org>  Sun,  9 Jan 2005 16:28:34 +0100
+
+grml-scripts (0.1-18) unstable; urgency=low
+
+  * Updated manual page grml-scripts.
+
+ -- Michael Prokop <mika@grml.org>  Sun,  9 Jan 2005 14:49:25 +0100
+
+grml-scripts (0.1-17) unstable; urgency=low
+
+  * Added grepc to bin/.
+  * Added runit to bin/.
+  * Updated /etc/postfix/Makefile.
+  * Updated grml-nessus.
+
+ -- Michael Prokop <mika@grml.org>  Fri,  7 Jan 2005 10:46:30 +0100
+
+grml-scripts (0.1-16) unstable; urgency=low
+
+  * Added irclog2html-2.1.pl ->
+    http://perkypants.org/projects/irclog2html/
+    to bin/.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  6 Jan 2005 22:22:27 +0100
+
+grml-scripts (0.1-15) unstable; urgency=low
+
+  * Fixed color-setup-bug in grml-mutt and grml-slrn.
+  * Added grml-nessus to sbin/.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  6 Jan 2005 16:05:02 +0100
+
+grml-scripts (0.1-14) unstable; urgency=low
+
+  * Added ndiswrapper.sh to sbin/.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  6 Jan 2005 11:17:02 +0100
+
+grml-scripts (0.1-13) unstable; urgency=low
+
+  * Added modemlink to sbin/.
+  * Added network-setup to sbin/.
+  * Added mkdosswapfile to sbin/.
+
+ -- Michael Prokop <mika@grml.org>  Sun,  2 Jan 2005 12:40:30 +0100
+
+grml-scripts (0.1-12) unstable; urgency=low
+
+  * Moved netcardconfig from bin/ to sbin/.
+  * Added wlcardconfig to sbin/.
+  * Removed script helpztags (due to fallback to older vim-version
+    which brings helpztags out of box).
+  * Adjusted shebang-line in script 'say'.
+
+ -- Michael Prokop <mika@grml.org>  Sat,  1 Jan 2005 15:45:57 +0100
+
+grml-scripts (0.1-11) unstable; urgency=low
+
+  * Added script 'search' by Jeffrey Friedl (it performs recursive
+    searches for strings, is fast and has many options).
+  * Added script 'find-text' (taken from Whoppix's find-sploits.pl).
+  * Added script 'findwaste' by David Coppit:
+    http://www.coppit.org/code/findwaste
+
+ -- Michael Prokop <mika@grml.org>  Sat,  1 Jan 2005 15:04:08 +0100
+
+grml-scripts (0.1-10) unstable; urgency=low
+
+  * Added script 'helpztags' (generate tags for Vim helpfiles).
+
+ -- Michael Prokop <mika@grml.org>  Thu, 30 Dec 2004 00:34:16 +0100
+
+grml-scripts (0.1-9) unstable; urgency=low
+
+  * Hidden typing of password in grml-postfix.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 29 Dec 2004 23:02:00 +0100
+
+grml-scripts (0.1-8) unstable; urgency=low
+
+  * Added script 'say' (output via festival).
+
+ -- Michael Prokop <mika@grml.org>  Thu, 23 Dec 2004 11:49:52 +0100
+
+grml-scripts (0.1-7) unstable; urgency=low
+
+  * Removed grml-pine (pine sucks).
+
+ -- Michael Prokop <mika@grml.org>  Tue, 21 Dec 2004 20:22:46 +0100
+
+grml-scripts (0.1-6) unstable; urgency=low
+
+  * Updated wwwis from upstream.
+  * Cosmetic changes in grml-postfix.
+  * Improved grml-slrn and grml-mutt (--radiolist).
+
+ -- Michael Prokop <mika@grml.org>  Sat, 18 Dec 2004 00:10:34 +0100
+
+grml-scripts (0.1-5) unstable; urgency=low
+
+  * Updated iimage from upstream. 
+
+ -- Michael Prokop <mika@grml.org>  Thu, 16 Dec 2004 00:28:54 +0100
+
+grml-scripts (0.1-4) unstable; urgency=low
+
+  * Added grml-mutt, grml-slrn, grml-postfix and grml-pptp-inode.
+  * Removed Makefile and improved debian/rules.
+
+ -- Michael Prokop <mika@grml.org>  Sat,  4 Dec 2004 17:08:18 +0100
+
+grml-scripts (0.1-3) unstable; urgency=low
+
+  * Improved grml-x: now it takes additional arguments, for example:
+      grml-x wmi -- :9
+    to start wmi on tty9.
+  * Added dir2html.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 16 Nov 2004 13:09:07 +0100
+
+grml-scripts (0.1-2) unstable; urgency=low
+
+  * Added find-hidden-word-text and dir2html.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 31 Oct 2004 11:55:27 +0100
+
+grml-scripts (0.1-1) unstable; urgency=low
+
+  * Added netcardconfig.
+  * Renamed make_chroot_jail.sh to make_chroot_jail
+
+ -- Michael Prokop <mika@grml.org>  Thu, 28 Oct 2004 22:24:08 +0200
+
+grml-scripts (0.1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 17 Sep 2004 20:28:21 +0200
+

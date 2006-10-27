@@ -1,0 +1,28 @@
+#!/bin/sh
+# Filename:      postinst
+# Purpose:       postinst script for package grml-scripts
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Mon Sep 18 16:12:57 CEST 2006 [mika]
+################################################################################
+
+set -e
+
+case "$1" in
+   configure)
+
+     [ -f /bin/egrep.dpkg-bak ] && mv /bin/egrep.dpkg-bak /bin/egrep
+     [ -f /bin/egrep.old      ] && rm /bin/egrep.old
+     [ -f /bin/fgrep.dpkg-bak ] && mv /bin/fgrep.dpkg-bak /bin/fgrep
+     [ -f /bin/fgrep.old      ] && rm /bin/fgrep.old
+
+     ;;
+
+   *)
+     exit 0
+esac
+
+exit 0
+
+## END OF FILE #################################################################

@@ -1,0 +1,24 @@
+Source: grml-scripts
+Section: utils
+Priority: optional
+Maintainer: Michael Prokop <mika@grml.org>
+Build-Depends: debhelper (>= 4.0.0), dietlibc-dev
+Standards-Version: 3.7.2
+
+Package: grml-scripts
+Architecture: any
+Depends: dialog, perl, zsh, dash, w3m | links | links2, screen, console-tools | xbase-clients
+Suggests: ruby, python, grml-x, ipcalc, hwinfo, antiword, grml-etc, grml-rebuildfstab, grml-scanpartitions, grml-files, grml-hwinfo, grml-saveconfig, pptp-linux, flite, wmii, mutt | mutt-ng, slrn, grml-docs, grml-autoconfig (>= 0.5-10)
+Conflicts: scanmodem, grml-etc-core (<< 0.1-6)
+Description: some small scripts which should make life easier
+ Some scripts which should make life easier. For example:
+ code2color, grml-mutt, grml-muttng, grml-slrn,
+ iimage, lesspipe.sh make_chroot_jail.sh, sepdate.pl,
+ sepdate.rb, sepdate.sh*, wwwis.
+ .
+ Notice: not all the packages which are required in all the scripts
+ are in the "Depends:" line. If you want to get a full featured
+ grml-scripts-package install the packages from the 'Suggests' line
+ too or just use the grml(-large)-system.
+ .
+ For more details take a look at the manpage grml-scripts.

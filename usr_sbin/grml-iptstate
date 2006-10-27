@@ -1,0 +1,27 @@
+#!/bin/sh
+# Filename:      grml-iptstate
+# Purpose:       wrapper around iptstate (top-like display of IP Tables state table entries)
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Don Okt 12 17:20:59 CEST 2006 [mika]
+################################################################################
+
+. /etc/grml/script-functions
+check4progs iptstate || exit 1
+
+if grep -q ip_conntrack /proc/modules ; then
+   iptstate
+else
+   echo "Module ip_conntrack is not present. Can not start iptstate therefore."
+   echo -n "Do you want to load it and invoke iptstate afterwards? [YES|no] "
+   read a
+   if [ "$a" = YES -o "$a" = yes -o "$a" = '' -o "$a" = y -o "$a" = Y ] ; then
+      modprobe ip_conntrack && exec iptstate
+   else
+      echo "Aborting as requested."
+      exit 1
+   fi
+fi
+
+## END OF FILE #################################################################

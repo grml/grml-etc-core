@@ -1,0 +1,21 @@
+#!/bin/dash
+# Filename:      grml-init-screen
+# Purpose:       fix tty permissions and run screen and zsh afterwards
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Sam Jun 25 12:11:22 CEST 2005 [mika]
+################################################################################
+
+# export variable USER for use withing GNU screen:
+  export USER=`id -un`
+
+# fix rungetty:
+  TTY=`tty`
+  sudo chown $USER.$USER $TTY
+
+# now start screen:
+  cd $HOME
+  /usr/bin/screen -c /etc/grml/screenrc ; exec /bin/zsh
+
+## END OF FILE #################################################################

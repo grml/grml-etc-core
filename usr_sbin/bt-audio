@@ -1,0 +1,190 @@
+#!/bin/sh
+# Filename:      bt-audio
+# Purpose:       connect bluetooth audio device (e.g. headset) to local system
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Son Aug 06 20:30:34 CEST 2006 [mika]
+################################################################################
+
+. /etc/grml/lsb-functions
+
+if [ $UID != 0 ] ; then
+   eerror "Need root privileges. Please run $0 as user root." ; eend 1
+   exit 1
+fi
+
+HCID_CONF='/etc/bluetooth/bt_headset.conf'
+[ -n "$PIN" ] || PIN='0000'
+
+case "$1" in
+  start)
+   einfo "Starting bluetooth support."
+    eindent
+
+    if ! [ -r $HCID_CONF ] ; then
+      ewarn "$HCID_CONF does not exist. Setting it up."
+      cat > $HCID_CONF <<EOF
+# Bluetooth headset configuration file created by bt-audio.
+
+# HCId options
+options {
+	# Automatically initialize new devices
+	autoinit yes;
+
+	# Security Manager mode
+	#   none - Security manager disabled
+	#   auto - Use local PIN for incoming connections
+	#   user - Always ask user for a PIN
+	#
+	security auto;
+
+	# Pairing mode
+	#   none  - Pairing disabled
+	#   multi - Allow pairing with already paired devices
+	#   once  - Pair once and deny successive attempts
+	pairing multi;
+
+	# Default PIN code for incoming connections
+	passkey "0000";
+}
+
+# Default settings for HCI devices
+device {
+	# Local device name
+	#   %d - device id
+	#   %h - host name
+	name "%h-%d";
+
+	# Local device class
+	class 0x3e0100;
+
+	# Default packet type
+	#pkt_type DH1,DM1,HV1;
+
+	# Inquiry and Page scan
+	iscan enable; pscan enable;
+
+	# Default link mode
+	#   none   - no specific policy
+	#   accept - always accept incoming connections
+	#   master - become master on incoming connections,
+	#            deny role switch on outgoing connections
+	lm accept;
+
+	# Default link policy
+	#   none    - no specific policy
+	#   rswitch - allow role switch
+	#   hold    - allow hold mode
+	#   sniff   - allow sniff mode
+	#   park    - allow park mode
+	lp rswitch,hold,sniff,park;
+}
+EOF
+    fi
+
+    if pgrep dbus-daemon 1>/dev/null; then
+      einfo "dbus already running." ; eend 0
+    else
+      einfo "Starting dbus."
+      /etc/init.d/dbus start 1>/dev/null ; eend $?
+    fi
+
+    if pgrep hcid 1>/dev/null; then
+      einfo "hicd already running." ; eend 0
+    else
+      einfo "Starting hcid."
+       HCIINFO=$(mktemp)
+       if /usr/sbin/hcid -f $HCID_CONF 1>$HCIINFO 2>&1 ; then
+         rm -f $HCIINFO
+         eend 0
+       else
+         eerror "hcid could not be started: `cat $HCIINFO`. Exiting."
+         rm -f $HCIINFO
+         eend 1
+         exit 1
+       fi
+    fi
+
+    einfo "Loading bluetooth modules:"
+    for module in bluetooth ohci1394 hci_usb snd-bt-sco ; do
+      eindent
+      einfo "$module" ; modprobe $module ; eend $?
+      eoutdent
+    done
+
+    einfo "Scanning for bluetooth audio device. Press the 'connect' button on the device!"
+    einfo "Scanning might take a while. Searching..."
+    SUCCESS=$(mktemp)
+    ERROR=$(mktemp)
+
+    if hcitool scan 1>${SUCCESS} 2>${ERROR} ; then
+     if ! grep -q ':' $SUCCESS ; then
+        eerror "Could not find any devices. Exiting." ; eend 1
+        exit 1
+     else
+     ID=$(grep '[[:alnum:]][[:alnum:]]:' $SUCCESS | awk '{print $1}')
+      if [ -n "$ID" ] ; then
+       einfo "Success: connected device ${ID}." ; eend 0
+       logger -t "bluez-connect" "connected human input device ${ID}"
+       btsco -v $ID 1>/dev/null &
+       # hcitool cc $ID
+      else
+       ewarn "Warning: searching for device succeded but no connection could be established."
+      fi
+     fi
+    else
+      eerror "Error: `cat $ERROR`" ; eend 1
+    fi
+
+    rm -f $SUCCESS $ERROR
+    ;;
+  stop)
+    einfo "Stopping hcid."
+    killall hcid ; eend $? # workaround because start-stop-daemon does not work :-/
+    ewarn "Will not stop dbus as it might be used by other services." ; eend 0
+    einfo "Disconnecting all human input devices."
+    logger -t "bluez-connect" "disconnected all human input devices"
+    hidd --killall ; eend $?
+    ;;
+  restart|force-reload)
+    $0 stop
+    sleep 1
+    $0 start
+    ;;
+  test)
+    if [ -r /usr/share/centericq/sms.wav ] ; then
+      einfo "Trying to play /usr/share/centericq/sms.wav on headset:"
+      echo -n "   "
+      aplay -B 1000000 -D plughw:Headset  /usr/share/centericq/sms.wav 1>/dev/null ; eend $?
+    else
+      eerror "/usr/share/centericq/sms.wav does not exist. Can not test sound." ; eend 1
+    fi
+    ;;
+  status)
+    einfo "$0 - checking status:"
+    eindent
+    if pgrep hcid 1>/dev/null ; then
+      einfo "hcid running." ; eend 0
+      if [ -d /proc/asound/Headset ] ; then
+        einfo "cat /proc/asound/Headset/*/info:"
+        cat /proc/asound/Headset/*/info ; eend $?
+      else
+        eerror "Directory /proc/asound/Headset does not exist." ; eend 1
+      fi
+    else
+      eerror "hcid not running." ; eend 1
+    fi
+    eoutdent
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|status|restart|force-reload|test}"
+    exit 1
+    ;;
+esac
+
+eoutdent
+
+exit 0
+
+## END OF FILE #################################################################

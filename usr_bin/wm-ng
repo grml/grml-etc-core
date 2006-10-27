@@ -1,0 +1,18 @@
+#!/bin/sh
+# Filename:      wm-ng
+# Purpose:       a wrapper script to call fluxbox with some additional features activated
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Thu Nov 03 15:32:49 CET 2005 [mika]
+################################################################################
+
+/usr/bin/gkrellm   &   # -w
+
+(sleep 2; idesk &) &
+
+/usr/bin/fluxbox
+
+exit $?
+
+## END OF FILE #################################################################

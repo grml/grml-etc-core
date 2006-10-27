@@ -1,0 +1,67 @@
+#!/bin/sh
+# Filename:      grml-hostname
+# Purpose:       simple frontend to set hostname
+# Authors:       (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Sam Sep 30 12:36:24 CEST 2006 [mika]
+################################################################################
+
+if [ $UID != 0 ] ; then
+   echo Error: become root before starting $0 >& 2
+   exit 100
+fi
+
+PN='grml-hostname'
+TMP=$(mktemp)
+OLDHOSTNAME="$(hostname)"
+
+if [ -x /usr/bin/random-hostname ] ; then
+   HOSTNAME="$(/usr/bin/random-hostname)"
+else
+   HOSTNAME="$(hostname)"
+fi
+
+bailout() {
+  rm -f $TMP
+  exit 1
+}
+trap bailout 1 2 3 15
+
+# running inside grml2hd? Don't warn because of hostname + X
+[ -n "$GRML2HD" ] || MSG='\n\nNotice: setting a different hostname while running X is *not* recommend!'
+
+HOSTNAME="$(dialog --stdout --title "${PN}" --extra-button --extra-label "Propose hostname" \
+--inputbox "Set hostname (/etc/hostname, /etc/hosts and /etc/postfix/main.cf will be adjusted)\
+\n\nTip: press 'Propose hostname' for another proposal${MSG}" 14 70 $HOSTNAME)"
+retval=$?
+
+case $retval in
+  0)
+     if hostname "$HOSTNAME" 1>/dev/null 2>${TMP} ; then
+       echo "$HOSTNAME" > /etc/hostname
+       sed -i "s/^127.0.0.1[ \t]*$OLDHOSTNAME[ \t]*localhost/127.0.0.1       $HOSTNAME localhost/" /etc/hosts
+       sed -i "s/^::1[ \t]*ip6-localhost ip6-loopback[ \t]*$OLDHOSTNAME/::1     ip6-localhost ip6-loopback $HOSTNAME/" /etc/hosts
+       POSTFIX=''
+       if [ -r /etc/postfix/main.cf ] ; then
+         sed -i "s/^myhostname = .*/myhostname = $HOSTNAME/" /etc/postfix/main.cf && POSTFIX='
+Configuration of myhostname in /etc/postfix/main.cf has been adjusted as well. Do not forget to restart postfix if necessary.'
+       fi
+       dialog --stdout --title "${PN}" --msgbox "Setting hostname to $HOSTNAME was successful.$POSTFIX" 0 0
+     else
+       dialog --stdout --title "${PN}" --msgbox "Error when setting hostname to $HOSTNAME: `cat $TMP`" 0 0
+     fi
+     ;;
+  1)
+     echo "Cancel pressed."
+     ;;
+  3)
+     $0 ;;
+  255)
+     echo "ESC pressed."
+     ;;
+esac
+
+rm -f $TMP 2>/dev/null
+
+## END OF FILE #################################################################

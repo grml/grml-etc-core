@@ -1,0 +1,179 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# GNU copyright 1997 to 1999 by Joey Hess.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+configure-stamp:
+	dh_testdir
+	# Add here commands to configure the package.
+
+	touch configure-stamp
+
+
+build: build-stamp
+
+build-stamp: configure-stamp
+	dh_testdir
+	cd $(CURDIR)/compile/ && make
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+
+	# Add here commands to clean up after the build process.
+	rm -rf $(CURDIR)/debian/grml-scripts/
+	cd compile ; make clean
+
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	# Add here commands to install the package into debian/grml-scripts.
+	cp usr_bin/*         debian/grml-scripts/usr/bin/
+	cp usr_sbin/*        debian/grml-scripts/usr/sbin/
+	cp makefile.postfix  debian/grml-scripts/etc/postfix/Makefile
+	install -m 755 compile/align                  debian/grml-scripts/usr/bin/align
+	install -m 755 compile/cpu-screen             debian/grml-scripts/usr/bin/cpu-screen
+	install -m 755 compile/ip-screen              debian/grml-scripts/usr/bin/ip-screen
+	install -m 755 compile/gtf                    debian/grml-scripts/usr/bin/gtf
+	install -m 755 compile/pong                   debian/grml-scripts/usr/sbin/pong
+	install -m 755 compile/vmware-detect          debian/grml-scripts/usr/bin/vmware-detect
+	install -m 755 compile/dpkg_not_running       debian/grml-scripts/usr/sbin/dpkg_not_running
+	install -m 755 compile/reread_partition_table debian/grml-scripts/usr/sbin/reread_partition_table
+	install -m 644 script-functions               debian/grml-scripts/etc/grml/script-functions
+	install -m 644 net-functions                  debian/grml-scripts/etc/grml/net-functions
+	install -m 644 routersetup                    debian/grml-scripts/etc/grml/routersetup
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs
+	dh_installman manpages/grml-scripts.1 manpages/grml-bind.8 manpages/reread_partition_table.8 manpages/gtf.1 manpages/random-hostname.1 \
+	manpages/grml-setkeyboard.8 manpages/grml-setlang.8 manpages/getsf.1 manpages/grml-router.8 manpages/grml-ap.8 manpages/grml-bridge.8 \
+	manpages/grml-iptstate.8
+#	cp --no-dereference man/*.1.gz debian/grml-scripts/usr/share/man/man1/
+	dh_link /usr/sbin/blacklist /usr/sbin/unblacklist
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/align.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/apt-check-sigs.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/attach-screen.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/bincompare.pl.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/blacklist.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/bt-hid.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/bt-audio.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/caps-ctrl.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/cicqhist.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/code2color.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/code2html.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/cpu-screen.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/cpu-screen.sh.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/cpufreq-detect.sh.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/dir2html.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/dpkg_not_running.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/dpkg-rebuild.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/exifinfo.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/fex.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/findchanged.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/find-hidden-word-text.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/find-text.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/findwaste.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/firevim.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/get_tw_cli.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grepc.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grepedit.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-bind.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-config.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-config-root.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-config-user.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-hostname.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-info.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-init.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-init-screen.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-lock.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-mutt.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-muttng.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-nessus.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-network.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-postfix.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-pptp-inode.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-pptp-vcgraz.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-pptp-xdsl-students.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-screen.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-lang.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-resolution.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-slrn.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-start.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-tpm.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-vpnc-tugraz.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/hgrep.sh.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/iimage.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/ip-screen.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/irclog2html-2.1.pl.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/lesspipe.sh.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/logview.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/mailhops.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/make_chroot_jail.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/mkdosswapfile.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/modemlink.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/myip.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/ndiswrapper.sh.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/netcardconfig.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/noeject.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/noprompt.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/osd_server.py.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/pong.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/prepare_ramdisk.sh.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/prepare_tmpfs.sh.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/PrintAnalyzer.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/runit.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/say.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/scanmodem.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/search.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/sepdate.pl.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/sepdate.rb.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/sepdate.sh.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/service.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/soundtest.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/suspenduser.sh.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/suspenduser_gui.sh.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/tinyp2p.py.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/twebgal.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/unblacklist.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/unbleach.pl.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/urlgrep.awk.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/usbtree.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/vmware-detect.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/wm-ng.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/wwwis.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/xsay.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/XF86AudioLowerVolume.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/XF86AudioMute.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/XF86AudioRaiseVolume.1.gz
+	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/zsh-login.1.gz
+	dh_strip
+	dh_compress
+	mkdir -p $(CURDIR)/debian/grml-scripts/usr/share/lintian/overrides/
+	cp -av debian/overrides $(CURDIR)/debian/grml-scripts/usr/share/lintian/overrides/grml-scripts
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

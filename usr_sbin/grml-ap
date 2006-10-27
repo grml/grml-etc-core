@@ -1,0 +1,215 @@
+#!/bin/sh
+# Filename:      grml-ap
+# Purpose:       set up access point on your box
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Mit Okt 11 23:00:43 CEST 2006 [moemoe]
+################################################################################
+
+# exit on any error
+set -e
+
+CONFIG_FILE=/etc/grml/routersetup
+. /etc/grml/lsb-functions
+. /etc/grml/net-functions
+. /etc/grml/script-functions
+
+check4root
+
+if ! [ -r "$CONFIG_FILE" ] ; then
+        eerror "$CONFIG_FILE could not be read."
+        exit 1
+fi
+
+. "$CONFIG_FILE"
+
+[ -n "$AP_ESSID" ] || AP_ESSID=grml-ap
+[ -n "$AP_ENC" ]   || AP_ENC=off
+
+info_message() {
+        DEV="$1"
+        echo $1 | grep -q wlan && DEV=$(echo $1 | sed 's/wlan/wifi/')
+        einfo "Finished setting up access point. Make sure your device $DEV is configured:"
+        einfo "For example put the following into /etc/network/interfaces and run \"ifup $DEV=ap\""
+        echo "
+iface ap inet static
+      address 192.168.10.1
+      netmask 255.255.255.0
+      network 192.168.10.0
+      broadcast 192.168.10.255
+"
+        einfo "On the client side put the following into /etc/network/interfaces and run \"ifup \$DEV=ap\""
+        echo "
+iface ap inet static
+      address 192.168.10.2
+      netmask 255.255.255.0
+      network 192.168.10.0
+      broadcast 192.168.10.255
+      gateway 192.168.10.1
+      wireless_essid $AP_ESSID
+"
+}
+
+set_ath_mode() {
+        eindent
+          einfo "Setting $1 to mode $2"
+          iwpriv $1 mode $2 ; eend $?
+        eoutdent
+}
+
+setupWifiDevice() {
+        DEV=$1
+        einfo "Setting wireless modes on $DEV"
+        
+          eindent
+          einfo "Setting sid to: $AP_ESSID"
+          iwconfig $DEV essid $AP_ESSID ; eend $?
+
+          [ "$AP_ENC" = off ] && ENC_INFO='off' || ENC_INFO='******'
+          einfo "Settinc encrypton to: $ENC_INFO "
+          iwconfig $DEV enc $AP_ENC ; eend $?
+
+          einfo "Setting device up"
+          ifconfig $DEV up ; eend $?
+
+        eoutdent
+}
+
+setup_atheros() {
+        einfo "Atheros setup: creating new WLAN AP device"
+
+        # ugly but don't know of another workaround
+        if iwconfig 2>/dev/null | grep -A1 ath0 | grep -q 'Access Point: Not-Associated' ; then
+          einfo "Destroying old ath device"
+          wlanconfig ath0 destroy ; eend $?
+        fi
+
+        device=$(wlanconfig ath create wlandev $1 wlanmode ap)
+        eend $?
+        
+        setupWifiDevice $device
+        [ -n "$ATH_MODE" ] && set_ath_mode "$device" "$ATH_MODE"
+
+        info_message $device
+        exit 0
+}
+
+setup_hostap() {
+        einfo "Hostap setup: creating new WLAN AP device"
+        eindent
+
+          # einfo "Changing mode of $1 to AP"
+          # ifconfig $1 down ; eend $?
+  
+          # dunno if the card is pci or pcmcia, just try to unload and
+          # load both versions,
+          [ -n $(lsmod | grep ^orinoco_pci) ] && HAPT="pci"
+          [ -n $(lsmod | grep ^orinoco_cs) ]  && HAPT="cs"
+          [ -n $(lsmod | grep ^orinoco_plx) ] && HAPT="plx"
+
+          einfo "Unloading old modules"
+          modprobe -r orinoco orinoco_$HAPT
+          eend $?
+
+          einfo "Loading new modules"
+          modprobe hostap_$HAPT
+          eend $? && setupWifiDevice $1
+
+        eoutdent
+
+        info_message $1
+        exit 0
+}
+
+setup_iwconfig() {
+        einfo "Trying to set $1 into mode master"
+        ifconfig $1 down
+        iwconfig $1 mode master
+        eend $? && setupWifiDevice $1
+        exit 0
+}
+
+setup_generic() {
+        einfo "Generic setup (no hostap / atheros capable device found): creating new WLAN AP device"
+        echo "TODO! iwconfig $1 mode Ad-Hoc"
+        exit 0
+}
+
+detect_wl_cards() {
+        # If you want to extend this with a specific funtion for a
+        # special driver, please have a look at /etc/grml/net-functions
+        for i in $AP_DEVICE $(getWlanDevices) ; do
+                DRIVER=$(getLanDriver $i)
+                case $DRIVER in
+                  ath_pci)
+                       echo $i | grep -q ath && i=$(echo $i | sed 's/ath/wifi/')
+                       setup_atheros $i
+                       ;;
+                  orinoco|hostap)
+                       setup_hostap $i
+                       ;;
+                  ipw2100|prism54)
+                       setup_iwconfig $i
+                       ;;
+                  *)
+                       setup_generic $i
+                       ;;
+                esac
+        done
+}
+
+stop_devices() {
+  einfo "Searching for WLAN device with ESSID $AP_ESSID"
+  DEVICE=$(iwconfig 2>/dev/null| grep "ESSID:\"$AP_ESSID\"" | awk '{print $1}')
+  eindent
+  if [ -n "$DEVICE" ] ; then
+     for i in $DEVICE ; do
+       einfo "Found device $i" ; eend 0
+     done
+  else
+     eerror "No device(s) with ESSID $AP_ESSID found"
+     exit 1
+  fi
+  case $DEVICE in
+      ath*)
+        einfo "Shutting down $DEVICE"
+        ifdown $DEVICE
+        wlanconfig $DEVICE destroy ; eend $?
+        exit 0
+        ;;
+      *)
+        for i in $DEVICE ; do
+          einfo "Shutting down $i"
+          ifdown $i ; eend $?
+        done
+        exit 0
+        ;;
+  esac
+  eoutdent
+}
+
+case "$1" in
+    start)
+       detect_wl_cards
+       ;;
+    stop)
+       einfo "Trying to stop all present grml-ap setups"
+       stop_devices
+       ;;
+    restart)
+       $0 stop
+       sleep 1:
+       $0 start
+       ;;
+    *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+eerror "Your wlan card is not supported at the moment. Sorry" ; eend 1
+exit 1
+
+## END OF FILE #################################################################
+# vim: ft=sh expandtab ai
