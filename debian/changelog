@@ -2,7 +2,10 @@ grml-scripts (0.8-26) unstable; urgency=low
 
   * Split out network related scripts into package grml-network,
     depend on it therefore.
+  * Added script fma (fast manual access, thanks for the idea -
+    wuehlmaus!)
   * Another cleanup of debian/rules.
+  * Updated debian/overrides.
   * Added XS-X-Vcs-Hg: header to debian/control, see
     http://www.bononia.it/~zack/blog/posts/xs-x-vcs-XXX.html
 

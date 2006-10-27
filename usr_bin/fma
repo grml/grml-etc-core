@@ -1,0 +1,55 @@
+#!/bin/zsh
+# Filename:      fma
+# Purpose:       "fast manual access"
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Sam Okt 28 00:32:10 CEST 2006 [mika]
+################################################################################
+
+. /etc/grml/lsb-functions
+. /etc/grml/script-functions
+
+check4progs man lzop vim || exit 1
+
+MANDIR=$HOME/man
+
+if ! [ -d "$MANDIR" ] ; then
+   einfo "Creating $MANDIR."
+   mkdir $MANDIR ; eend $?
+fi
+
+case $1 in
+  [0-9])
+    SECTION="${1}"
+    SECTIONFILE=".${1}"
+    MANPAGE="$2"
+    ;;
+  *)
+    SECTION=''
+    MANPAGE="$1"
+    ;;
+esac
+
+if [ -z "$MANPAGE" ] ; then
+   eerror "Usage: $0 [section] manpage" ; eend 1
+   exit 1
+fi
+
+if ! [ -f "${MANDIR}/${MANPAGE}${SECTIONFILE}.txt.lzo" ] ; then
+   einfo "Writing manpage to ${MANDIR}/${MANPAGE}${SECTIONFILE}.txt"
+   if man $SECTION $MANPAGE 1>/dev/null ; then
+      man $SECTION $MANPAGE > ${MANDIR}/${MANPAGE}${SECTIONFILE}.txt ; eend $?
+      einfo "Compressing manpage with lzop"
+      lzop -o ${MANDIR}/${MANPAGE}${SECTIONFILE}.txt.lzo ${MANDIR}/${MANPAGE}${SECTIONFILE}.txt ; eend $?
+   else
+      exit 1
+      eend 1
+   fi
+fi
+
+vim -c 'set ft=man' =( lzop -cd $MANDIR/${MANPAGE}${SECTIONFILE}.txt.lzo)
+
+einfo "Thanks for flying $0." ; eend 0
+
+## END OF FILE #################################################################
