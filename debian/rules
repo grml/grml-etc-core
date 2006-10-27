@@ -6,16 +6,9 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-configure-stamp:
-	dh_testdir
-	# Add here commands to configure the package.
-
-	touch configure-stamp
-
-
 build: build-stamp
 
-build-stamp: configure-stamp
+build-stamp:
 	dh_testdir
 	cd $(CURDIR)/compile/ && make
 	touch build-stamp
@@ -23,7 +16,7 @@ build-stamp: configure-stamp
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp configure-stamp
+	rm -f build-stamp
 
 	# Add here commands to clean up after the build process.
 	rm -rf $(CURDIR)/debian/grml-scripts/
@@ -50,8 +43,6 @@ install: build
 	install -m 755 compile/dpkg_not_running       debian/grml-scripts/usr/sbin/dpkg_not_running
 	install -m 755 compile/reread_partition_table debian/grml-scripts/usr/sbin/reread_partition_table
 	install -m 644 script-functions               debian/grml-scripts/etc/grml/script-functions
-	install -m 644 net-functions                  debian/grml-scripts/etc/grml/net-functions
-	install -m 644 routersetup                    debian/grml-scripts/etc/grml/routersetup
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -64,8 +55,7 @@ binary-arch: build install
 	dh_installchangelogs
 	dh_installdocs
 	dh_installman manpages/grml-scripts.1 manpages/grml-bind.8 manpages/reread_partition_table.8 manpages/gtf.1 manpages/random-hostname.1 \
-	manpages/grml-setkeyboard.8 manpages/grml-setlang.8 manpages/getsf.1 manpages/grml-router.8 manpages/grml-ap.8 manpages/grml-bridge.8 \
-	manpages/grml-iptstate.8
+	manpages/grml-setkeyboard.8 manpages/grml-setlang.8 manpages/getsf.1 manpages/grml-iptstate.8
 #	cp --no-dereference man/*.1.gz debian/grml-scripts/usr/share/man/man1/
 	dh_link /usr/sbin/blacklist /usr/sbin/unblacklist
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/align.1.gz
@@ -107,18 +97,13 @@ binary-arch: build install
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-mutt.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-muttng.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-nessus.1.gz
-	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-network.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-postfix.1.gz
-	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-pptp-inode.1.gz
-	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-pptp-vcgraz.1.gz
-	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-pptp-xdsl-students.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-screen.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-lang.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-resolution.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-slrn.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-start.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-tpm.1.gz
-	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-vpnc-tugraz.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/hgrep.sh.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/iimage.1.gz
 	dh_link /usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/ip-screen.1.gz

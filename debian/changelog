@@ -1,3 +1,13 @@
+grml-scripts (0.8-26) unstable; urgency=low
+
+  * Split out network related scripts into package grml-network,
+    depend on it therefore.
+  * Another cleanup of debian/rules.
+  * Added XS-X-Vcs-Hg: header to debian/control, see
+    http://www.bononia.it/~zack/blog/posts/xs-x-vcs-XXX.html
+
+ -- Michael Prokop <mika@grml.org>  Sat, 28 Oct 2006 00:23:41 +0200
+
 grml-scripts (0.8-25) unstable; urgency=low
 
   * Added new hostnames to random-hostname, thanks Filippo Cattaneo.
