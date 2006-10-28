@@ -1,3 +1,10 @@
+grml-scripts (0.8-27) unstable; urgency=low
+
+  * fma: don't use $0 inside usage-function but hardcode program
+    name instead.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 28 Oct 2006 13:20:50 +0200
+
 grml-scripts (0.8-26) unstable; urgency=low
 
   * Split out network related scripts into package grml-network,
