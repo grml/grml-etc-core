@@ -693,6 +693,7 @@
 
 # get x-lite voip software
   getxlite() {
+    setopt local_options
     setopt errreturn
     [ -d ~/tmp ] || mkdir ~/tmp
     cd ~/tmp
@@ -709,6 +710,7 @@
 
 # get skype
   getskype() {
+    setopt local_options
     setopt errreturn
     echo "Downloading debian package of skype."
     echo "Notice: If you want to use a more recent skype version run 'getskypebeta'."
@@ -718,6 +720,7 @@
 
 # get beta-version of skype
   getskypebeta() {
+    setopt local_options
     setopt errreturn
     echo "Downloading debian package of skype (beta version)."
     wget http://www.skype.com/go/getskype-linux-beta-deb
@@ -726,6 +729,7 @@
 
 # get gzimo (voicp software)
   getgizmo() {
+    setopt local_options
     setopt errreturn
     echo "gconf2-common and libgconf2-4 have to be available. Installing therefor."
     $SUDO apt-get update
@@ -736,6 +740,7 @@
 
 # get AIR - Automated Image and Restore
   getair() {
+    setopt local_options
     setopt errreturn
     [ -w . ] || { echo 'Error: you do not have write permissions in this directory. Exiting.' ; return 1 }
     local VER='1.2.8'
