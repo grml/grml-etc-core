@@ -39,6 +39,10 @@
     return 1
   }
 
+  isgrmlsmall() {
+    [[ ${${${(f)"$(</etc/grml_version)"}%% *}##*-} == 'small' ]] && return 0 ; return 1
+  }
+
 # check for user, if not running as root set $SUDO to sudo
  (( EUID != 0 )) && SUDO='sudo' || SUDO=''
 
@@ -54,8 +58,7 @@
 # }}}
 
 # {{{ set some variables
-  export EDITOR=${EDITOR:-vim}
-#  export SHELL=${SHELL:-/bin/zsh}
+  isgrmlsmall && export EDITOR=${EDITOR:-vi} || export EDITOR=${EDITOR:-vim}
   export MAIL=${MAIL:-/var/mail/$USER}
   [[ -f ~/.terminfo/m/mostlike ]] && MYLESS='LESS=C TERMINFO=~/.terminfo TERM=mostlike less' || MYLESS='less'
   [[ -x /usr/bin/dircolors ]] && eval `dircolors -b`
