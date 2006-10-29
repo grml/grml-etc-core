@@ -1,7 +1,10 @@
 grml-etc-core (0.1-29) unstable; urgency=low
 
-  * /etc/zsh/zshrc: added isgrmlsmall() and set $EDITOR
-    according to grml flavour, thanks - Frank Terbeck!
+  * /etc/zsh/zshrc:
+    - added isgrmlsmall() and set $EDITOR according to grml flavour,
+      thanks - Frank Terbeck!
+    - deactivate smiley on right side of prompt by default, uncomment
+      the line if you want to use it
   * /etc/skel/.zshrc: add http://zshwiki.org/home/examples/zleiab
     but do not activate it by default
   * /etc/skel/.hgrc: adjust username for "generic user"

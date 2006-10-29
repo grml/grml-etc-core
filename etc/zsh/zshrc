@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mit Okt 25 23:44:27 CEST 2006 [mika]
+# Latest change: Son Okt 29 17:49:13 CET 2006 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -39,9 +39,13 @@
     return 1
   }
 
-  isgrmlsmall() {
+  if isgrml ; then
+    isgrmlsmall() {
     [[ ${${${(f)"$(</etc/grml_version)"}%% *}##*-} == 'small' ]] && return 0 ; return 1
   }
+  else
+    isgrmlsmall() { return 1 ; }
+  fi
 
 # check for user, if not running as root set $SUDO to sudo
  (( EUID != 0 )) && SUDO='sudo' || SUDO=''
@@ -292,9 +296,11 @@ fi
   # run 'NOPRECMD=1 zsh' to disable the precmd + preexec commands
   is4 && ! [[ -n "$NOPRECMD" ]] && precmd () {
       if [ -n "$BATTERY" ] ; then
-        RPROMPT="%(?..:()% ${PERCENT}${SCREENTITLE}"
+        # RPROMPT="%(?..:()% ${PERCENT}${SCREENTITLE}"
+        RPROMPT="${PERCENT}${SCREENTITLE}"
       else
-        RPROMPT="%(?..:()% ${SCREENTITLE}"
+        # RPROMPT="%(?..:()% ${SCREENTITLE}"
+        RPROMPT="${SCREENTITLE}"
       fi
       # adjust title of xterm
       # see http://www.faqs.org/docs/Linux-mini/Xterm-Title.html
