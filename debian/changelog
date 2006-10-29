@@ -2,6 +2,9 @@ grml-etc-core (0.1-29) unstable; urgency=low
 
   * /etc/zsh/zshrc: added isgrmlsmall() and set $EDITOR
     according to grml flavour, thanks - Frank Terbeck!
+  * /etc/skel/.zshrc: add http://zshwiki.org/home/examples/zleiab
+    but do not activate it by default
+  * /etc/skel/.hgrc: adjust username for "generic user"
 
  -- Michael Prokop <mika@grml.org>  Sat, 28 Oct 2006 16:21:34 +0200
 

@@ -10,7 +10,7 @@
 # for more details about possibilities for configuration of mercurial.
 
 [ui]
-username = Michael Prokop <mika@grml.org>
+username = grml User <repos@grml.org.invalid>
 # debug = true
 # verbose = true
 # merge = hgmergevim
