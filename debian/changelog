@@ -2,6 +2,8 @@ grml-scripts (0.8-27) unstable; urgency=low
 
   * fma: don't use $0 inside usage-function but hardcode program
     name instead.
+  * Remove /etc/grml/script-functions and ship it via package
+    grml-etc-core. Depend on package grml-etc-core therefore.
 
  -- Michael Prokop <mika@grml.org>  Sat, 28 Oct 2006 13:20:50 +0200
 

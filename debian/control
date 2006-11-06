@@ -8,9 +8,9 @@ XS-X-Vcs-Hg: http://hg.grml.org/grml-scripts
 
 Package: grml-scripts
 Architecture: any
-Depends: dialog, perl, zsh, dash, w3m | links | links2, screen, console-tools | xbase-clients, grml-network
+Depends: dialog, perl, zsh, dash, w3m | links | links2, screen, console-tools | xbase-clients, grml-network, grml-etc-core
 Suggests: ruby, python, grml-x, ipcalc, hwinfo, antiword, grml-etc, grml-rebuildfstab, grml-scanpartitions, grml-files, grml-hwinfo, grml-saveconfig, pptp-linux, flite, wmii, mutt | mutt-ng, slrn, grml-docs, grml-autoconfig (>= 0.5-10), lzop
-Conflicts: scanmodem, grml-etc-core (<< 0.1-6)
+Conflicts: scanmodem, grml-etc-core (<< 0.1-30)
 Description: some small scripts which should make life easier
  Some scripts which should make life easier. For example:
  code2color, grml-mutt, grml-muttng, grml-slrn,
