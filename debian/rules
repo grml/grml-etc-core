@@ -42,7 +42,6 @@ install: build
 	install -m 755 compile/vmware-detect          debian/grml-scripts/usr/bin/vmware-detect
 	install -m 755 compile/dpkg_not_running       debian/grml-scripts/usr/sbin/dpkg_not_running
 	install -m 755 compile/reread_partition_table debian/grml-scripts/usr/sbin/reread_partition_table
-	install -m 644 script-functions               debian/grml-scripts/etc/grml/script-functions
 
 # Build architecture-independent files here.
 binary-indep: build install
