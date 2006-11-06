@@ -1,3 +1,11 @@
+grml-etc-core (0.1-30) unstable; urgency=low
+
+  * Ship /etc/grml/script-functions with this package so other packages
+    like grml-debootstrap don't have to depend on package grml-scripts.
+  * Bumb Standard Version to 3.7.2 (no further changes).
+
+ -- Michael Prokop <mika@grml.org>  Mon,  6 Nov 2006 22:32:19 +0100
+
 grml-etc-core (0.1-29) unstable; urgency=low
 
   * /etc/zsh/zshrc:
