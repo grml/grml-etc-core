@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Okt 26 00:50:18 CEST 2006 [mika]
+# Latest change: Son Nov 12 11:30:30 CET 2006 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -62,24 +62,111 @@
 # These do not have to be at the beginning of the command line.
 # Avoid typing cd ../../ for going two dirs down and so on
 # Usage, e.g.: "$ cd ...' or just '$ ...' with 'setopt auto_cd'
-  alias -g '...'='../..'
-  alias -g '....'='../../..'
-# Usage is "$ somecommand C (this pipes it into 'wc -l'):
-  alias -g BG='& exit'
-  alias -g C='|wc -l'
-  alias -g G='|grep'
-  alias -g H='|head'
-  alias -g Hl=' --help |& less -r'
-  alias -g K='|keep'
-  alias -g L='|less'
-  alias -g LL='|& less -r'
-  alias -g M='|most'
-  alias -g N='&>/dev/null'
-  alias -g R='| tr A-z N-za-m'
-  alias -g SL='| sort | less'
-  alias -g S='| sort'
-  alias -g T='|tail'
-  alias -g V='| vim -'
+# Notice: deactivated by 061112 by default, use another approach - see 'power completion'
+#  alias -g '...'='../..'
+#  alias -g '....'='../../..'
+#  alias -g BG='& exit'
+#  alias -g C='|wc -l'
+#  alias -g G='|grep'
+#  alias -g H='|head'
+#  alias -g Hl=' --help |& less -r'
+#  alias -g K='|keep'
+#  alias -g L='|less'
+#  alias -g LL='|& less -r'
+#  alias -g M='|most'
+#  alias -g N='&>/dev/null'
+#  alias -g R='| tr A-z N-za-m'
+#  alias -g SL='| sort | less'
+#  alias -g S='| sort'
+#  alias -g T='|tail'
+#  alias -g V='| vim -'
+
+# power completion, see http://zshwiki.org/home/examples/zleiab
+# less risky than the global aliases but powerful as well
+# just type the abbreviation key and afterwards ',.' to expand it
+  declare -A abk
+  setopt extendedglob
+  setopt interactivecomments
+  abk=(
+   # key  # value
+   'C'    '| wc -l'
+   '...' '../..'
+   '....' '../../..'
+   'BG' '& exit'
+   'C' '|wc -l'
+   'G' '|& grep --color=auto'
+   'H' '|head'
+   'Hl' ' --help |& less -r'
+   'L' '|less'
+   'LL' '|& less -r'
+   'M' '|most'
+   'N' '&>/dev/null'
+   'R' '| tr A-z N-za-m'
+   'SL' '| sort | less'
+   'S' '| sort -u'
+   'T' '|tail'
+   'V' '|& vim -'
+   'hide' "echo -en '\033]50;nil2\007'"
+   'tiny' 'echo -en "\033]50;-misc-fixed-medium-r-normal-*-*-80-*-*-c-*-iso8859-15\007"'
+   'small' 'echo -en "\033]50;6x10\007"'
+   'medium' 'echo -en "\033]50;-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso8859-15\007"'
+   'default' 'echo -e "\033]50;-misc-fixed-medium-r-normal-*-*-140-*-*-c-*-iso8859-15\007"'
+   'large' 'echo -en "\033]50;-misc-fixed-medium-r-normal-*-*-150-*-*-c-*-iso8859-15\007"'
+   'huge' 'echo -en "\033]50;-misc-fixed-medium-r-normal-*-*-210-*-*-c-*-iso8859-15\007"'
+   'smartfont' 'echo -en "\033]50;-artwiz-smoothansi-*-*-*-*-*-*-*-*-*-*-*-*\007"'
+   'semifont' 'echo -en "\033]50;-misc-fixed-medium-r-semicondensed-*-*-120-*-*-*-*-iso8859-15\007"'
+   'da' 'du -sch'
+   'j' 'jobs -l'
+   'u' 'translate -i'
+   'co' "./configure && make && sudo make install"
+   'CH' "./configure --help"
+   'conkeror' 'firefox -chrome chrome://conkeror/content'
+   'dir' 'ls -lSrah'
+   'lad' $'ls -d .*(/)\n# only show dot-directories'
+   'lsa' $'ls -a .*(.)\n# only show dot-files'
+   'lss' $'ls -l *(s,S,t)\n# only files with setgid/setuid/sticky flag'
+   'lsl' $'ls -l *(@[1,10])\n# only symlinks'
+   'lsx' $'ls -l *(*[1,10])\n# only executables'
+   'lsw' $'ls -ld *(R,W,X.^ND/)\n# world-{readable,writable,executable} files'
+   'lsbig' $'ls -flh *(.OL[1,10])\n# display the biggest files'
+   'lsd' $'ls -d *(/)\n# only show directories'
+   'lse' $'ls -d *(/^F)\n# only show empty directories'
+   'lsnew' $'ls -rl *(D.om[1,10])\n# display the newest files'
+   'lsold' $'ls -rtlh *(D.om[-11,-1])\n # display the oldest files'
+   'lssmall' $'ls -Srl *(.oL[1,10])\n# display the smallest files'
+   'rw-' 'chmod 600'
+   '600' 'chmod u+rw-x,g-rwx,o-rwx'
+   'rwx' 'chmod u+rwx'
+   '700' 'chmod u+rwx,g-rwx,o-rwx'
+   'r--' 'chmod u+r-wx,g-rwx,o-rwx'
+   '644' $'chmod u+rw-x,g+r-wx,o+r-wx\n # 4=r,2=w,1=x'
+   '755' 'chmod u+rwx,g+r-w+x,o+r-w+x'
+   'md' 'mkdir -p '
+   'cmplayer' 'mplayer -vo -fs -zoom fbdev'
+   'fbmplayer' 'mplayer -vo -fs -zoom fbdev'
+   'fblinks' 'links2 -driver fb'
+   'insecssh' 'ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
+   'fori' 'for i ({..}) { }'
+   'cx'	'chmod +x'
+   'e'	'print -l'
+   'se' 'setopt interactivecomments'
+   'va' 'valac --vapidir=../vapi/ --pkg=gtk+-2.0 gtktest.vala'
+   'fb2' '=mplayer -vo fbdev -fs -zoom 1>/dev/null -xy 2'
+   'fb3' '=mplayer -vo fbdev -fs  -zoom 1>/dev/null -xy 3'
+   'ci' 'centericq'
+   'D'	'export DISPLAY=:0.0'
+   'mp' 'mplayer -vo xv -fs -zoom'
+  )
+  globalias () {
+        local MATCH
+        matched_chars='[.-|_a-zA-Z0-9]#'
+        LBUFFER=${LBUFFER%%(#m)[.-|_a-zA-Z0-9]#}
+        LBUFFER+=${abk[$MATCH]:-$MATCH}
+  }
+  zle -N globalias
+  bindkey ",." globalias
+#  bindkey "^]" globalias
+  bindkey '^k' up-line-or-search  
 # }}}
 
 ## another approach for global aliases: cloning vim's abbreviation feature {{{
@@ -836,6 +923,9 @@
     indent -npro -kr -i8 -ts8 -sob -l80 -ss -ncs $*
   }
 
+# highlight important stuff in diff output, usage example: hg diff | hidiff
+  [ -x =histring ] && \
+  alias hidiff="histring -fE '^Comparing files .*|^diff .*' | histring -c yellow -fE '^\-.*' | histring -c green -fE '^\+.*'"
 
 # rename pictures based on information found in exif headers
   exirename() {
