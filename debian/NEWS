@@ -1,0 +1,17 @@
+grml-etc-core (0.1-31) unstable; urgency=low
+
+  * Please notice, that the behaviour of global aliases in /etc/skel/.zshrc
+    has been changed. Now global aliases won't be expanded automatically
+    anymore. You can still use them (and even some more now as well),
+    just type the abbreviation/global alias and expand it via pressing
+    the key sequence ',.'. Usage example:
+
+    % ls G<press-',.'-here>
+
+    expands to:
+
+    % ls |& grep --color=auto
+
+    Thanks for the contribution, Matthias Kopfermann!
+
+ -- Michael Prokop <mika@grml.org>  Sun, 12 Nov 2006 12:27:02 +0100

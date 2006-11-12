@@ -3,6 +3,7 @@ grml-etc-core (0.1-31) unstable; urgency=low
   * /etc/skel/.zshrc:
     - added alias hidiff (highlight important stuff in diff
       output), active if histring is available
+    - added some isgrmlsmall checks, thanks Frank Terbeck!
     - added power completion, thanks wuehlmaus!
       See http://zshwiki.org/home/examples/zleiab for details.
       Notice: this deactivates the global aliases by default now,
