@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Nov 12 11:30:30 CET 2006 [mika]
+# Latest change: Son Nov 12 12:23:38 CET 2006 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -18,6 +18,10 @@
 # completion system {{{
 # just make sure it is loaded in this file too
   type compinit &>/dev/null || { autoload -U compinit && compinit }
+# }}}
+
+# make sure isgrmlsmall is defined {{{
+  type isgrmlsmall &>/dev/null || function isgrmlsmall () { return 1 }
 # }}}
 
 ## variables {{{
@@ -79,7 +83,7 @@
 #  alias -g SL='| sort | less'
 #  alias -g S='| sort'
 #  alias -g T='|tail'
-#  alias -g V='| vim -'
+#  isgrmlsmall || alias -g V='| vim -'
 
 # power completion, see http://zshwiki.org/home/examples/zleiab
 # less risky than the global aliases but powerful as well
@@ -105,7 +109,6 @@
    'SL' '| sort | less'
    'S' '| sort -u'
    'T' '|tail'
-   'V' '|& vim -'
    'hide' "echo -en '\033]50;nil2\007'"
    'tiny' 'echo -en "\033]50;-misc-fixed-medium-r-normal-*-*-80-*-*-c-*-iso8859-15\007"'
    'small' 'echo -en "\033]50;6x10\007"'
@@ -157,6 +160,7 @@
    'D'	'export DISPLAY=:0.0'
    'mp' 'mplayer -vo xv -fs -zoom'
   )
+  isgrmlsmall || abk+=( 'V' '|& vim -')
   globalias () {
         local MATCH
         matched_chars='[.-|_a-zA-Z0-9]#'
@@ -165,43 +169,6 @@
   }
   zle -N globalias
   bindkey ",." globalias
-# }}}
-
-## another approach for global aliases: cloning vim's abbreviation feature {{{
-# http://zshwiki.org/home/examples/zleiab
-# typeset -A abbreviations
-# abbreviations=(
-#   "Im"    "| more"
-#   "Ia"    "| awk"
-#   "Ig"    "| grep"
-#   "Ieg"   "| egrep"
-#   "Iag"   "| agrep"
-#   "Igr"   "| groff -s -p -t -e -Tlatin1 -mandoc"
-#   "Ip"    "| $PAGER"
-#   "Ih"    "| head"
-#   "Ik"    "| keep"
-#   "It"    "| tail"
-#   "Is"    "| sort"
-#   "Iv"    "| ${VISUAL:-${EDITOR}}"
-#   "Iw"    "| wc"
-#   "Ix"    "| xargs"
-# )
-# 
-# magic-abbrev-expand() {
-#     local MATCH
-#     LBUFFER=${LBUFFER%%(#m)[_a-zA-Z0-9]#}
-#     LBUFFER+=${abbreviations[$MATCH]:-$MATCH}
-#     zle self-insert
-# }
-# 
-# no-magic-abbrev-expand() {
-#   LBUFFER+=' '
-# }
-# 
-# zle -N magic-abbrev-expand
-# zle -N no-magic-abbrev-expand
-# bindkey " " magic-abbrev-expand
-# bindkey "^x " no-magic-abbrev-expand
 # }}}
 
 ## aliases {{{
@@ -314,7 +281,7 @@
   sig()     { agrep -d '^-- $' "$*" ~/.Signature }
   swiki()   { ${=BROWSER} http://de.wikipedia.org/wiki/Spezial:Search/${(C)1} }
   udiff()   { diff -urd $* | egrep -v "^Only in |^Binary files " }
-  viless()  { vim --cmd 'let no_plugin_maps = 1' -c "so \$VIMRUNTIME/macros/less.vim" "${@:--}" }
+  isgrmlsmall || viless()  { vim --cmd 'let no_plugin_maps = 1' -c "so \$VIMRUNTIME/macros/less.vim" "${@:--}" }
   wikide () { ${=BROWSER} http://de.wikipedia.org/wiki/"${(C)*}" }
   wikien()  { ${=BROWSER} http://en.wikipedia.org/wiki/"$*" }
   wodeb ()  { ${=BROWSER} "http://packages.debian.org/cgi-bin/search_contents.pl?word=$1&version=${2:-unstable}" }
@@ -514,8 +481,8 @@
 #  getstrings () { perl -ne 'while ( m/"(.*?)"/gc ) { print $1, "\n"; }' $*}
 #  getanchors () { perl -ne 'while ( m/«([^«»\n]+)»/gc ) { print $1, "\n"; }' $* }
 #  showINC ()    { perl -e 'for (@INC) { printf "%d %s\n", $i++, $_ }' }
-#  vimpm ()      { vim `perldoc -l $1 | sed -e 's/pod$/pm/'` }
-#  vimhelp ()    { vim -c "help $1" -c on -c "au! VimEnter *" }
+#  isgrmlsmall || vimpm ()      { vim `perldoc -l $1 | sed -e 's/pod$/pm/'` }
+#  isgrmlsmall || vimhelp ()    { vim -c "help $1" -c on -c "au! VimEnter *" }
 
 # plap foo -- list all occurrences of program in the current PATH
   plap() {
@@ -552,7 +519,7 @@
   cl() { cd $1 && ls -a }
 
 # Use vim to convert plaintext to HTML
-  2html() { vim -u NONE -n -c ':syntax on' -c ':so $VIMRUNTIME/syntax/2html.vim' -c ':wqa' $1 > /dev/null 2> /dev/null }
+  isgrmlsmall || 2html() { vim -u NONE -n -c ':syntax on' -c ':so $VIMRUNTIME/syntax/2html.vim' -c ':wqa' $1 > /dev/null 2> /dev/null }
 
 # Usage: simple-extract <file>
 # Description: extracts archived files (maybe)
@@ -650,7 +617,7 @@
 # Use 'view' to read manpages, if u want colors, regex - search, ...
 # like vi(m).
 # It's shameless stolen from <http://www.vim.org/tips/tip.php?tip_id=167>
-  vman() { man $* | col -b | view -c 'set ft=man nomod nolist' - }
+  isgrmlsmall || vman() { man $* | col -b | view -c 'set ft=man nomod nolist' - }
 
 # search for various types or README file in dir and display them in $PAGER
 # function readme() { $PAGER -- (#ia3)readme* }
