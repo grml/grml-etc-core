@@ -165,8 +165,6 @@
   }
   zle -N globalias
   bindkey ",." globalias
-#  bindkey "^]" globalias
-  bindkey '^k' up-line-or-search  
 # }}}
 
 ## another approach for global aliases: cloning vim's abbreviation feature {{{
