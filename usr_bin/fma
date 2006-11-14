@@ -4,8 +4,10 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Okt 28 13:20:46 CEST 2006 [mika]
+# Latest change: Son Nov 12 12:03:13 CET 2006 [mika]
 ################################################################################
+
+# Idea for this script and basic functionally by Matthias Kopfermann <maddi@grml.org>.
 
 . /etc/grml/lsb-functions
 . /etc/grml/script-functions
@@ -62,6 +64,6 @@ fi
 
 vim -c 'set ft=man' =( lzop -cd $MANDIR/${MANPAGE}${SECTIONFILE}.txt.lzo)
 
-einfo "Thanks for flying fma." ; eend 0
+einfo "Thanks for flying fma using vim and lzop." ; eend 0
 
 ## END OF FILE #################################################################

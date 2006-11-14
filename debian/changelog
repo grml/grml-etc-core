@@ -1,3 +1,9 @@
+grml-scripts (0.8-28) unstable; urgency=low
+
+  * fma: added hint to lzop and updated header information
+
+ -- Michael Prokop <mika@grml.org>  Sun, 12 Nov 2006 12:03:20 +0100
+
 grml-scripts (0.8-27) unstable; urgency=low
 
   * fma: don't use $0 inside usage-function but hardcode program
