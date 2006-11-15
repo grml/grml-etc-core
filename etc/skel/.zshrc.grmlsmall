@@ -1,0 +1,26 @@
+# Filename:      .zshrc.grmlsmall
+# Purpose:       remove items from grml's zsh configuration that
+#                depend on software that is not in grmlsmall.
+# Authors:       Frank Terbeck <ft@bewatermyfriend.de>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Mit Nov 15 21:31:18 CET 2006 [ft]
+################################################################################
+
+# vim is not in grmlsmall
+  [[ $EDITOR == vim ]] && EDITOR='vi'
+  unset abk[V]
+  unalias    'V'      &> /dev/null
+  unfunction vman     &> /dev/null
+  unfunction vimpm    &> /dev/null
+  unfunction vimhelp  &> /dev/null
+  unfunction viless   &> /dev/null
+  unfunction 2html    &> /dev/null
+
+# manpages are not in grmlsmall
+  unfunction manzsh   &> /dev/null
+  unalias    man2     &> /dev/null
+  unalias    man      &> /dev/null
+  unfunction man2     &> /dev/null
+
+## END OF FILE #################################################################

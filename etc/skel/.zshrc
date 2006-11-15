@@ -26,6 +26,9 @@
 
 ## variables {{{
 
+# do you want grmlsmall-specific adjustments?
+  GRMLSMALL_SPECIFIC=1
+
 # set terminal property (used e.g. by msgid-chooser)
   export COLORTERM="yes"
 
@@ -83,7 +86,7 @@
 #  alias -g SL='| sort | less'
 #  alias -g S='| sort'
 #  alias -g T='|tail'
-#  isgrmlsmall || alias -g V='| vim -'
+#  alias -g V='| vim -'
 
 # power completion, see http://zshwiki.org/home/examples/zleiab
 # less risky than the global aliases but powerful as well
@@ -109,6 +112,7 @@
    'SL' '| sort | less'
    'S' '| sort -u'
    'T' '|tail'
+   'V' '|& vim -'
    'hide' "echo -en '\033]50;nil2\007'"
    'tiny' 'echo -en "\033]50;-misc-fixed-medium-r-normal-*-*-80-*-*-c-*-iso8859-15\007"'
    'small' 'echo -en "\033]50;6x10\007"'
@@ -160,7 +164,6 @@
    'D'	'export DISPLAY=:0.0'
    'mp' 'mplayer -vo xv -fs -zoom'
   )
-  isgrmlsmall || abk+=( 'V' '|& vim -')
   globalias () {
         local MATCH
         matched_chars='[.-|_a-zA-Z0-9]#'
@@ -281,7 +284,7 @@
   sig()     { agrep -d '^-- $' "$*" ~/.Signature }
   swiki()   { ${=BROWSER} http://de.wikipedia.org/wiki/Spezial:Search/${(C)1} }
   udiff()   { diff -urd $* | egrep -v "^Only in |^Binary files " }
-  isgrmlsmall || viless()  { vim --cmd 'let no_plugin_maps = 1' -c "so \$VIMRUNTIME/macros/less.vim" "${@:--}" }
+  viless()  { vim --cmd 'let no_plugin_maps = 1' -c "so \$VIMRUNTIME/macros/less.vim" "${@:--}" }
   wikide () { ${=BROWSER} http://de.wikipedia.org/wiki/"${(C)*}" }
   wikien()  { ${=BROWSER} http://en.wikipedia.org/wiki/"$*" }
   wodeb ()  { ${=BROWSER} "http://packages.debian.org/cgi-bin/search_contents.pl?word=$1&version=${2:-unstable}" }
@@ -481,8 +484,8 @@
 #  getstrings () { perl -ne 'while ( m/"(.*?)"/gc ) { print $1, "\n"; }' $*}
 #  getanchors () { perl -ne 'while ( m/«([^«»\n]+)»/gc ) { print $1, "\n"; }' $* }
 #  showINC ()    { perl -e 'for (@INC) { printf "%d %s\n", $i++, $_ }' }
-#  isgrmlsmall || vimpm ()      { vim `perldoc -l $1 | sed -e 's/pod$/pm/'` }
-#  isgrmlsmall || vimhelp ()    { vim -c "help $1" -c on -c "au! VimEnter *" }
+#  vimpm ()      { vim `perldoc -l $1 | sed -e 's/pod$/pm/'` }
+#  vimhelp ()    { vim -c "help $1" -c on -c "au! VimEnter *" }
 
 # plap foo -- list all occurrences of program in the current PATH
   plap() {
@@ -519,7 +522,7 @@
   cl() { cd $1 && ls -a }
 
 # Use vim to convert plaintext to HTML
-  isgrmlsmall || 2html() { vim -u NONE -n -c ':syntax on' -c ':so $VIMRUNTIME/syntax/2html.vim' -c ':wqa' $1 > /dev/null 2> /dev/null }
+  2html() { vim -u NONE -n -c ':syntax on' -c ':so $VIMRUNTIME/syntax/2html.vim' -c ':wqa' $1 > /dev/null 2> /dev/null }
 
 # Usage: simple-extract <file>
 # Description: extracts archived files (maybe)
@@ -617,7 +620,7 @@
 # Use 'view' to read manpages, if u want colors, regex - search, ...
 # like vi(m).
 # It's shameless stolen from <http://www.vim.org/tips/tip.php?tip_id=167>
-  isgrmlsmall || vman() { man $* | col -b | view -c 'set ft=man nomod nolist' - }
+  vman() { man $* | col -b | view -c 'set ft=man nomod nolist' - }
 
 # search for various types or README file in dir and display them in $PAGER
 # function readme() { $PAGER -- (#ia3)readme* }
@@ -1021,7 +1024,18 @@
 # print $'\e[?96;0;64c'
 # }}}
 
-# finally source a local zshrc {{{
+# finally source a local zshrc and grmlsmall-specific configuration {{{
+
+# The following file is used to remove zsh-config-items that do not work
+# in grml-small by default.
+# If you do not want these adjustments (for whatever reason),
+# there are three ways to accomplish that:
+#  a) at the beginning of this file (variables section), set
+#     $GRMLSMALL_SPECIFIC to 0 or comment out the variable definition.
+#  b) remove/rename .zshrc.grmlsmall
+#  c) comment out the following line
+  (( GRMLSMALL_SPECIFIC > 0 )) && isgrmlsmall && source ~/.zshrc.grmlsmall
+
 # this allows us to stay in sync with /etc/skel/.zshrc
 # through 'ln -s /etc/skel/.zshrc ~/.zshrc' and put own
 # modifications in ~/.zshrc.local

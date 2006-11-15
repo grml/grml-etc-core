@@ -44,7 +44,7 @@
     [[ ${${${(f)"$(</etc/grml_version)"}%% *}##*-} == 'small' ]] && return 0 ; return 1
   }
   else
-    isgrmlsmall() { return 1 ; }
+    isgrmlsmall() { return 1 }
   fi
 
 # check for user, if not running as root set $SUDO to sudo
@@ -62,7 +62,7 @@
 # }}}
 
 # {{{ set some variables
-  isgrmlsmall && export EDITOR=${EDITOR:-vi} || export EDITOR=${EDITOR:-vim}
+  export EDITOR=${EDITOR:-vim}
   export MAIL=${MAIL:-/var/mail/$USER}
   [[ -f ~/.terminfo/m/mostlike ]] && MYLESS='LESS=C TERMINFO=~/.terminfo TERM=mostlike less' || MYLESS='less'
   [[ -x /usr/bin/dircolors ]] && eval `dircolors -b`
@@ -700,8 +700,8 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   setenv()  { typeset -x "${1}${1:+=}${(@)argv[2,$#]}" }  # csh compatibility
   freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
   manzsh()  {  /usr/bin/man zshall |  vim -c "se ft=man| se hlsearch" +/"$1" - ; }
+#  manzsh()  { /usr/bin/man zshall |  most +/"$1" ; }
 #  manzsh()  { man zshall | $MYLESS -p $1 ; }
-#  manzsh() {  /usr/bin/man zshall |  most +/"$1" ; }
 
 # use "dchange <package-name>" to view Debian's changelog of the package:
   dchange() {

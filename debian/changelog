@@ -1,3 +1,10 @@
+grml-etc-core (0.1-32) unstable; urgency=low
+
+  * zsh-setup: applied patch from Frank Terbeck for improved
+    grml-small support via /etc/skel/.zshrc.grmlsmall, thanks!
+
+ -- Michael Prokop <mika@grml.org>  Wed, 15 Nov 2006 21:28:44 +0100
+
 grml-etc-core (0.1-31) unstable; urgency=low
 
   * /etc/skel/.zshrc:
