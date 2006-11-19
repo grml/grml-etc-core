@@ -3,7 +3,7 @@
 " Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 " Bug-Reports:   see http://grml.org/bugs/
 " License:       This file is licensed under the GPL v2.
-" Latest change: Son Mai 28 01:26:49 CEST 2006 [mika]
+" Latest change: Son Nov 19 15:26:34 CET 2006 [mika]
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " All system-wide defaults are set in $VIMRUNTIME/debian.vim (usually just
@@ -20,7 +20,10 @@
 runtime! debian.vim
 
 " Uncomment the next line to make Vim more Vi-compatible
-" NOTE: debian.vim sets 'nocompatible'.  Setting 'compatible' changes numerous
+" NOTE: debian.vim sets 'nocompatible', but only if debian.vim is available,
+" so let's make sure we run in nocompatible mode:
+set nocompatible
+" Setting 'compatible' changes numerous
 " options, so any other options should be set AFTER setting 'compatible'.
 "set compatible
 

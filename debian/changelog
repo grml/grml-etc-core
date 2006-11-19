@@ -5,6 +5,9 @@ grml-etc-core (0.1-33) unstable; urgency=low
   * Small fix in debian/preinst to prevent overwriting from original
     files when diverting several times (again: please report any
     problems you notice).
+  * /etc/vim/vimrc: 'set nocompatible' even though it's set via
+    debian.vim, just to make sure we have nocompatible also on
+    older vim versions.
 
  -- Michael Prokop <mika@grml.org>  Sun, 19 Nov 2006 14:45:25 +0100
 
