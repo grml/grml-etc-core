@@ -1,3 +1,10 @@
+grml-etc-core (0.1-34) grml-testing; urgency=low
+
+  * Build package for new repository layout using 'grml-testing'
+    as "Distribution".
+
+ -- Michael Prokop <mika@grml.org>  Sun, 19 Nov 2006 16:24:50 +0100
+
 grml-etc-core (0.1-33) unstable; urgency=low
 
   * /etc/zsh/zshrc: improve error handling; do *not* export $FPATH
