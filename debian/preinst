@@ -18,7 +18,7 @@ divert_conffile() {
        cp -f "$CONFFILE" "$CONFFILE".original
     else
        [ -e "$CONFFILE" ] && cp -f "$CONFFILE" "$CONFFILE".grml-etc-core
-       [ -e "$CONFFILE" ] && cp -f "$CONFFILE" "$CONFFILE".original
+#       [ -e "$CONFFILE" ] && cp -f "$CONFFILE" "$CONFFILE".original
     fi
 }
 
