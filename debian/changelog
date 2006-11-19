@@ -1,7 +1,10 @@
 grml-etc-core (0.1-33) unstable; urgency=low
 
   * /etc/zsh/zshrc: improve error handling; do *not* export $FPATH
-    to avoid problems with different zsh versions.
+    to avoid problems with different zsh versions. 
+  * Small fix in debian/preinst to prevent overwriting from original
+    files when diverting several times (again: please report any
+    problems you notice).
 
  -- Michael Prokop <mika@grml.org>  Sun, 19 Nov 2006 14:45:25 +0100
 
