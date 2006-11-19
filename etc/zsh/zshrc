@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Okt 29 17:49:13 CET 2006 [mika]
+# Latest change: Son Nov 19 14:45:18 CET 2006 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -14,7 +14,7 @@
 
 # {{{ check for version/system
 # check for versions (compatibility reasons)
-  if autoload is-at-least && is-at-least ; then
+  if autoload is-at-least && is-at-least 2>/dev/null ; then
      is4() { is-at-least 4 }
      is42() { is-at-least 4.2 }
   else
@@ -71,7 +71,7 @@
 #  cdpath=(.. ~)
 
 # Support our own site-functions
-  [ -d /etc/zsh/site-functions ] && export FPATH=/etc/zsh/site-functions:$FPATH
+  [ -d /etc/zsh/site-functions ] && FPATH=/etc/zsh/site-functions:$FPATH
 
 # automatically remove duplicates from these arrays
   typeset -U path cdpath fpath manpath
@@ -130,8 +130,9 @@ fi
 
   # we don't want to quote/espace URLs on our own...
   # avoid 'url-quote-magic: function definition file not found' on some older boxes
-  if [ -f "/usr/share/zsh/$ZSH_VERSION/functions/Zle/url-quote-magic" ] ; then
-     autoload -U url-quote-magic && zle -N self-insert url-quote-magic
+  if [ -f "/usr/share/zsh/$ZSH_VERSION/functions/Zle/url-quote-magic" ] && \
+     autoload -U url-quote-magic && url-quote-magic 2>/dev/null && zle -N self-insert url-quote-magic ; then
+     zle -N self-insert url-quote-magic
   else
      print 'Notice: no url-quote-magic available :('
   fi
@@ -140,7 +141,7 @@ fi
   autoload run-help # use via 'esc-h'
 
 # completion system
-  is42 && if autoload -U compinit && [ -f "/usr/share/zsh/$ZSH_VERSION/functions/Completion/compinit" ] ; then
+  if autoload -U compinit && [ -f "/usr/share/zsh/$ZSH_VERSION/functions/Completion/compinit" ] && compinit 2>/dev/null ; then
     compinit
    else
      print 'Notice: no compinit available :('
@@ -286,10 +287,10 @@ fi
 # }}}
 
 # {{{ set prompt
-  if [ -f "/usr/share/zsh/$ZSH_VERSION/functions/Prompts/promptinit" ] ; then
-     autoload promptinit && promptinit # people should be able to use their favourite prompt
+  if [ -f "/usr/share/zsh/$ZSH_VERSION/functions/Prompts/promptinit" ] && autoload promptinit && promptinit 2>/dev/null ; then
+     promptinit # people should be able to use their favourite prompt
   else
-     print 'Notice: no prompiinit available :('
+     print 'Notice: no promptinit available :('
   fi
   # precmd() => a function which is executed just before each prompt
   # precmd () { setopt promptsubst; [[ -o interactive ]] && jobs -l;
@@ -339,7 +340,7 @@ fi
   }
 
 # set colors
-  if autoload colors && colors ; then
+  if autoload colors && colors 2>/dev/null ; then
      BLUE="%{${fg[blue]}%}"
      RED="%{${fg_bold[red]}%}"
      GREEN="%{${fg[green]}%}"

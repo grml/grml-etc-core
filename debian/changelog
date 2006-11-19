@@ -1,3 +1,10 @@
+grml-etc-core (0.1-33) unstable; urgency=low
+
+  * /etc/zsh/zshrc: improve error handling; do *not* export $FPATH
+    to avoid problems with different zsh versions.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 19 Nov 2006 14:45:25 +0100
+
 grml-etc-core (0.1-32) unstable; urgency=low
 
   * zsh-setup: applied patch from Frank Terbeck for improved
