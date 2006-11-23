@@ -1,3 +1,10 @@
+grml-etc-core (0.1-35) unstable; urgency=low
+
+  * Adjust /etc/apt/sources.list.grml for new repositories (thanks
+    for the great work, formorer!), not yet activated by default.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 23 Nov 2006 22:47:04 +0100
+
 grml-etc-core (0.1-34) grml-testing; urgency=low
 
   * Build package for new repository layout using 'grml-testing'
