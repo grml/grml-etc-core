@@ -1,3 +1,19 @@
+grml-etc-core (0.1-36) unstable; urgency=low
+
+  * /etc/skel/.zshrc:
+    + alias hbp='hg-buildpackage'
+    + renamed tla related aliases:
+        ldiff   => tdi
+        mirror  => tmi
+        commit  => tco
+        merge   => tme
+    + fix function lcheck
+  * /etc/zsh/zshrc:
+    + grml-rebuildfstab: use -config option of new rebuildfstab
+    + alias acp='apt-cache policy'
+
+ -- Michael Prokop <mika@grml.org>  Fri, 24 Nov 2006 23:09:12 +0100
+
 grml-etc-core (0.1-35) unstable; urgency=low
 
   * Adjust /etc/apt/sources.list.grml for new repositories (thanks

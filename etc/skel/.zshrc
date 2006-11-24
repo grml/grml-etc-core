@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Nov 12 12:23:38 CET 2006 [mika]
+# Latest change: Fre Nov 24 23:08:52 CET 2006 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -33,7 +33,7 @@
   export COLORTERM="yes"
 
 # set default browser
-  if [ -z $BROWSER ] ; then
+  if [ -z "$BROWSER" ] ; then
      if [ -n "$DISPLAY" ] ; then
         [ -x =firefox ] && export BROWSER=firefox
      else
@@ -154,14 +154,14 @@
    'fblinks' 'links2 -driver fb'
    'insecssh' 'ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
    'fori' 'for i ({..}) { }'
-   'cx'	'chmod +x'
-   'e'	'print -l'
+   'cx' 'chmod +x'
+   'e'  'print -l'
    'se' 'setopt interactivecomments'
    'va' 'valac --vapidir=../vapi/ --pkg=gtk+-2.0 gtktest.vala'
    'fb2' '=mplayer -vo fbdev -fs -zoom 1>/dev/null -xy 2'
    'fb3' '=mplayer -vo fbdev -fs  -zoom 1>/dev/null -xy 3'
    'ci' 'centericq'
-   'D'	'export DISPLAY=:0.0'
+   'D'  'export DISPLAY=:0.0'
    'mp' 'mplayer -vo xv -fs -zoom'
   )
   globalias () {
@@ -204,11 +204,13 @@
   alias conkeror='firefox -chrome chrome://conkeror/content'
 
 # arch/tla stuff
-  alias ldiff='tla what-changed --diffs | less'
-  alias tbp='tla-buildpackage'
-  alias mirror='tla archive-mirror'
-  alias commit='tla commit'
-  alias merge='tla star-merge'
+  if type -p tla >/dev/null 2>&1 ; then
+     alias tdi='tla what-changed --diffs | less'
+     alias tbp='tla-buildpackage'
+     alias tmi='tla archive-mirror'
+     alias tco='tla commit'
+     alias tme='tla star-merge'
+  fi
 
 # listing stuff
   alias dir="ls -lSrah"
@@ -426,8 +428,14 @@
    echo /proc/*/cwd(:h:t:s/self//) # Analog zu >ps ax | awk '{print $1}'<"
   }
 
+# find out which libs define a symbol
+# usage example: 'lcheck strcpy'
   lcheck() {
-   nm -go /usr/lib/lib*.a 2>/dev/null | grep ":[[:xdigit:]]\{8\} . .*$1"":[[:xdigit:]]\{8\} . .*$1"
+     if [ -n "$1" ] ; then
+        nm -go /usr/lib/lib*.a 2>/dev/null | grep ":[[:xdigit:]]\{8\} . .*$1"
+      else
+        echo "Usage: lcheck <function>" >&2
+     fi
   }
 
 # clean up directory
@@ -819,7 +827,7 @@
     $SUDO dpkg -i skype-beta*.deb && echo "skype installed."
   }
 
-# get gzimo (voicp software)
+# get gzimo (VoIP software)
   getgizmo() {
     setopt local_options
     setopt errreturn
@@ -921,63 +929,66 @@
       for i in `hg status -marn "$@"` ; diff -ubwd <(hg cat "$i") "$i"
     }
 
-  # diffstat for specific version of mercurial
+  # build debian package
+    alias hbp='hg-buildpackage'
+
+  # diffstat for specific version of a mercurial repository
   #   hgstat      => display diffstat between last revision and tip
   #   hgstat 1234 => display diffstat between revision 1234 and tip
     hgstat() {
       [ -n "$1" ] && hg diff -r $1 -r tip | diffstat || hg export tip | diffstat
     }
 
-  # get current mercurial tip via hg itself and install it in $HOME
-  gethgclone() {
-    setopt local_options
-    setopt errreturn
-    if [ -f mercurial-tree/.hg ] ; then
-      cd mercurial-tree
-      echo "Running hg pull for retreiving latest version..."
-      hg pull
-      echo "Finished update. Building mercurial"
-      make local
-      echo "Setting \$PATH to $PWD:\$PATH..."
-      export PATH="$PWD:$PATH"
-    else
-      echo "Downloading mercurial via hg"
-      hg clone http://selenic.com/repo/hg mercurial-tree
-      cd mercurial-tree
+  # get current mercurial tip via hg itself
+    gethgclone() {
+      setopt local_options
+      setopt errreturn
+      if [ -f mercurial-tree/.hg ] ; then
+        cd mercurial-tree
+        echo "Running hg pull for retreiving latest version..."
+        hg pull
+        echo "Finished update. Building mercurial"
+        make local
+        echo "Setting \$PATH to $PWD:\$PATH..."
+        export PATH="$PWD:$PATH"
+      else
+        echo "Downloading mercurial via hg"
+        hg clone http://selenic.com/repo/hg mercurial-tree
+        cd mercurial-tree
+        echo "Building mercurial"
+        make local
+        echo "Setting \$PATH to $PWD:\$PATH..."
+        export PATH="$PWD:$PATH"
+        echo "make sure you set it permanent via ~/.zshrc if you plan to use it permanently."
+        # echo "Setting \$PYTHONPATH to PYTHONPATH=\${HOME}/lib/python,"
+        # export PYTHONPATH=${HOME}/lib/python
+      fi
+    }
+  
+  fi # end of check whether we have the 'hg'-executable
+
+  # get current mercurial snapshot
+    gethgsnap() {
+      setopt local_options
+      setopt errreturn
+      if [ -f mercurial-snapshot.tar.gz ] ; then
+         echo "mercurial-snapshot.tar.gz exists already, skipping download."
+      else
+        echo "Downloading mercurial snapshot"
+        wget http://www.selenic.com/mercurial/mercurial-snapshot.tar.gz
+      fi
+      echo "Unpacking mercurial-snapshot.tar.gz"
+      tar zxf mercurial-snapshot.tar.gz
+      cd mercurial-snapshot/
+      echo "Installing required build-dependencies"
+      $SUDO apt-get update
+      $SUDO apt-get install python2.4-dev
       echo "Building mercurial"
       make local
       echo "Setting \$PATH to $PWD:\$PATH..."
       export PATH="$PWD:$PATH"
       echo "make sure you set it permanent via ~/.zshrc if you plan to use it permanently."
-      # echo "Setting \$PYTHONPATH to PYTHONPATH=\${HOME}/lib/python,"
-      # export PYTHONPATH=${HOME}/lib/python
-    fi
-  }
-
-  fi # end of check whether we have the 'hg'-executable
-
-  # get and install current mercurial snapshot in $HOME
-  gethgsnap() {
-    setopt local_options
-    setopt errreturn
-    if [ -f mercurial-snapshot.tar.gz ] ; then
-       echo "mercurial-snapshot.tar.gz exists already, skipping download."
-    else
-      echo "Downloading mercurial snapshot"
-      wget http://www.selenic.com/mercurial/mercurial-snapshot.tar.gz
-    fi
-    echo "Unpacking mercurial-snapshot.tar.gz"
-    tar zxf mercurial-snapshot.tar.gz
-    cd mercurial-snapshot/
-    echo "Installing required build-dependencies"
-    $SUDO apt-get update
-    $SUDO apt-get install python2.4-dev
-    echo "Building mercurial"
-    make local
-    echo "Setting \$PATH to $PWD:\$PATH..."
-    export PATH="$PWD:$PATH"
-    echo "make sure you set it permanent via ~/.zshrc if you plan to use it permanently."
-  }
+    }
 # }}}
 
 # some useful commands often hard to remember - let's grep for them {{{

@@ -446,9 +446,13 @@ zsh-help - hints for use of zsh on grml
 
 Main configuration of zsh happens in /etc/zsh/zshrc (global)
 and /etc/skel/.zshrc which is copied to \$HOME/.zshrc once.
-The files are part of the package grml-etc, if you want to
+The files are part of the package grml-etc-core, if you want to
 use them on a non-grml-system just get the tar.gz from
-http://grml.org/repos/
+http://grml.org/repos/ or get the files from the mercurial
+repository:
+
+  http://hg.grml.org/grml-etc-core/raw-file/tip/etc/skel/.zshrc
+  http://hg.grml.org/grml-etc-core/raw-file/tip/etc/zsh/zshrc
 
 If you want to stay in sync with zsh configuration of grml
 run 'ln -sf /etc/skel/.zshrc \$HOME/.zshrc' and configure
@@ -487,14 +491,15 @@ Enjoy your grml system with the zsh!$reset_color"
 
 # debian stuff
   if [ -r /etc/debian_version ] ; then
-    alias acs="apt-cache search"
-    alias acsh="apt-cache show"
+    alias acs='apt-cache search'
+    alias acsh='apt-cache show'
+    alias acp='apt-cache policy'
     alias adg="$SUDO apt-get dist-upgrade"
     alias agi="$SUDO apt-get install"
     alias ag="$SUDO apt-get upgrade"
     alias au="$SUDO apt-get update"
-    alias dbp="dpkg-buildpackage"
-    alias ge="grep-excuses"
+    alias dbp='dpkg-buildpackage'
+    alias ge='grep-excuses'
 
     isgrmlcd && alias su="sudo su"          # change to user root
     alias tlog="tail -f /var/log/syslog"    # take a look at the syslog
@@ -666,8 +671,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   alias grml-version='cat /etc/grml_version'
 
   if [ -x /usr/sbin/rebuildfstab ] ; then
-     local fstabuser=$(getent passwd 1000 | cut -d: -f1)
-     alias grml-rebuildfstab="rebuildfstab -v -r -u $fstabuser -g $fstabuser"
+     alias grml-rebuildfstab='rebuildfstab -v -r -config'
   fi
 }
 # }}}
