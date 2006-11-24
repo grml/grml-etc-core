@@ -238,7 +238,6 @@
 
 # console stuff
   alias cmplayer='mplayer -vo fbdev'
-#  alias fbmplayer='mplayer -vo fbdev'
   alias fbmplayer='mplayer -vo fbdev -fs -zoom'
   alias fblinks='links2 -driver fb'
 
@@ -267,7 +266,7 @@
   cvsr()    { rcs2log $* | $PAGER }
   cvss()    { cvs status -v $* }
   debbug()  { ${=BROWSER} "http://bugs.debian.org/$*" }
-  debbugm() { bts show --mbox $1 } # provide bugnummer as $1
+  debbugm() { bts show --mbox $1 } # provide bugnummer as "$1"
   disassemble(){ gcc -pipe -S -o - -O -g $* | as -aldh -o /dev/null }
   dmoz()    { ${=BROWSER} http://search.dmoz.org/cgi-bin/search\?search=${1// /_} }
   dwicti()  { ${=BROWSER} http://de.wiktionary.org/wiki/${(C)1// /_} }
@@ -298,31 +297,12 @@
   _doc() { _files -W /usr/share/doc -/ }
   compdef _doc doc
 
-# debian upgrade
-  upgrade () {
-    if [ -z $1 ] ; then
-        $SUDO apt-get update
-        $SUDO apt-get -u upgrade
-    else
-        ssh $1 $SUDO apt-get update
-        # ask before the upgrade
-        local dummy
-        ssh $1 $SUDO apt-get --no-act upgrade
-        echo -n "Process the upgrade ?"
-        read -q dummy
-        if [[ $dummy == "y" ]] ; then
-            ssh $1 $SUDO apt-get -u upgrade --yes
-        fi
-    fi
-  }
-
 # make screenshot of current desktop (use 'import' from ImageMagic)
   sshot() {
         [[ ! -d ~/shots  ]] && mkdir ~/shots
         #cd ~/shots ; sleep 5 ; import -window root -depth 8 -quality 80 `date "+%Y-%m-%d--%H:%M:%S"`.png
         cd ~/shots ; sleep 5; import -window root shot_`date --iso-8601=m`.jpg
   }
-
 
 # list images only
   limg() {
@@ -334,7 +314,6 @@
       ls "$@" "$images[@]"
     fi
   }
-
 
 # create pdf file from source code
   makereadable() {
@@ -351,6 +330,7 @@
     pcre_compile $1 && \
     pcre_match $2 && echo "regex matches" || echo "regex does not match"
   }
+
 # list files which have been modified within the last x days
   new() { print -l *(m-$1) }
 
@@ -595,6 +575,7 @@
         fi
   }
 
+# follow symlinks
   folsym() {
     if [[ -e $1 || -h $1 ]]; then
         file=$1
@@ -674,7 +655,7 @@
         done
   }
 
-# $ show_print `cat /etc/passwd`
+# % slow_print `cat /etc/passwd`
   slow_print() {
         for argument in "${@}"
         do
@@ -687,6 +668,7 @@
         print ""
   }
 
+# display system state
   status() {
         print ""
         print "Date..: "$(date "+%Y-%m-%d %H:%M:%S")""
@@ -698,6 +680,7 @@
         print ""
   }
 
+# Rip an audio CD
   audiorip() {
         mkdir -p ~/ripps
         cd ~/ripps
@@ -715,6 +698,7 @@
         fi
   }
 
+# and burn it
   audioburn() {
         cd ~/ripps
         cdrdao write --device $DEVICE --driver generic-mmc audiocd.toc
@@ -730,6 +714,7 @@
         fi
   }
 
+# Make an audio CD from all mp3 files
   mkaudiocd() {
         cd ~/ripps
         for i in *.[Mm][Pp]3; do mv "$i" `echo $i | tr '[A-Z]' '[a-z]'`; done
@@ -739,6 +724,7 @@
         for i in *.wav; do sox $i.wav -r 44100 $i.wav resample; done
   }
 
+# Create an ISO image. You are prompted for volume name, filename and directory
   mkiso() {
         echo " * Volume name "
         read volume
@@ -749,7 +735,7 @@
         mkisofs -o ~/$iso -A $volume -allow-multidot -J -R -iso-level 3 -V $volume -R $files
   }
 
-# generate thumbnails ;)
+# simple thumbnails generator
   genthumbs () {
     rm -rf thumb-* index.html
     echo "

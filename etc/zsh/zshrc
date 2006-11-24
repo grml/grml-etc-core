@@ -176,7 +176,7 @@ fi
   zle -N edit-command-line && \
   bindkey '\ee' edit-command-line
 
-## menu selection: pick item but stay in the menu (press esc-return)
+# menu selection: pick item but stay in the menu (press esc-return)
   is4 && bindkey -M menuselect '\e^M' accept-and-menu-complete
 
 # press "ctrl-e d" to insert the actual date in the form yyyy-mm-dd
@@ -501,6 +501,24 @@ Enjoy your grml system with the zsh!$reset_color"
     alias dbp='dpkg-buildpackage'
     alias ge='grep-excuses'
 
+    # debian upgrade
+    upgrade () {
+      if [ -z "$1" ] ; then
+          $SUDO apt-get update
+          $SUDO apt-get -u upgrade
+      else
+          ssh $1 $SUDO apt-get update
+          # ask before the upgrade
+          local dummy
+          ssh $1 $SUDO apt-get --no-act upgrade
+          echo -n 'Process the upgrade?'
+          read -q dummy
+          if [[ $dummy == "y" ]] ; then
+              ssh $1 $SUDO apt-get -u upgrade --yes
+          fi
+      fi
+    }
+
     isgrmlcd && alias su="sudo su"          # change to user root
     alias tlog="tail -f /var/log/syslog"    # take a look at the syslog
     alias zshskel="source /etc/skel/.zshrc" # source skeleton zshrc
@@ -521,7 +539,7 @@ Please use the wodim binary instead' ; return 1"
 # {{{ Use hard limits, except for a smaller stack and no core dumps
   unlimit
   limit stack 8192
-  limit core 0      # important for a live-cd-system
+  isgrmlcd && limit core 0 # important for a live-cd-system
   limit -s
 # }}}
 
@@ -750,11 +768,11 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 
 # use it e.g. via 'Restart apache2'
  if [ -d /etc/init.d ] ; then
-  for i in Start Restart Stop Reload ; do
+  for i in Start Restart Stop Force-Reload Reload ; do
     eval "$i() { $SUDO /etc/init.d/\$1 ${i:l} \$2 ; }"
   done
 # now the completion for this:
-  compctl -g "$(echo /etc/init.d/*(:t))" Start Restart Stop Reload
+  compctl -g "$(echo /etc/init.d/*(:t))" Start Restart Stop Force-Reload Reload
  fi
 # }}}
 
