@@ -1,12 +1,14 @@
 grml-etc-core (0.1-37) unstable; urgency=low
 
-  The 'a zsh workshop improves code quality' release. :)
+  The 'preparation to a zsh workshop improves code quality' release. :)
 
   * /etc/zsh/zshrc:
     - run "limit core 0" only in live-cd mode
     - support Force-Reload for /etc/init.d/*-action as well
     - move upgrade-function from /etc/skel/.zshrc to this file
   * /etc/skel/.zshrc: some cosmetic cleanups
+  * grml-zsh-refcard has been updated (big thanks to Frank
+    Terbeck again!) (Closes: issue9)
 
  -- Michael Prokop <mika@grml.org>  Sat, 25 Nov 2006 00:06:16 +0100
 
