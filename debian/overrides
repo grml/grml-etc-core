@@ -22,6 +22,7 @@ grml-scripts: shell-script-fails-syntax-check ./usr/bin/grml-lock
 grml-scripts: shell-script-fails-syntax-check ./usr/sbin/grml-nessus
 grml-scripts: shell-script-fails-syntax-check ./usr/sbin/grml-tpm
 grml-scripts: shell-script-fails-syntax-check ./usr/bin/caps-ctrl
+grml-scripts: shell-script-fails-syntax-check ./usr/sbin/grml-swapon
 grml-scripts: statically-linked-binary ./usr/bin/cpu-screen
 grml-scripts: statically-linked-binary ./usr/bin/ip-screen
 grml-scripts: statically-linked-binary ./usr/sbin/reread_partition_table
