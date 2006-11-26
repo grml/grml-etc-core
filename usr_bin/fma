@@ -55,7 +55,7 @@ if ! [ -f "${MANDIR}/${MANPAGE}${SECTIONFILE}.txt.lzo" ] ; then
    if man $SECTION $MANPAGE 1>/dev/null ; then
       man $SECTION $MANPAGE > ${MANDIR}/${MANPAGE}${SECTIONFILE}.txt ; eend $?
       einfo "Compressing manpage with lzop"
-      lzop -o ${MANDIR}/${MANPAGE}${SECTIONFILE}.txt.lzo ${MANDIR}/${MANPAGE}${SECTIONFILE}.txt ; eend $?
+      lzop -U ${MANDIR}/${MANPAGE}${SECTIONFILE}.txt.lzo ${MANDIR}/${MANPAGE}${SECTIONFILE}.txt ; eend $?
    else
       exit 1
       eend 1

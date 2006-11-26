@@ -1,3 +1,10 @@
+grml-scripts (0.8-31) unstable; urgency=low
+
+  * fma: use '-U' option for lzop as suggested by wuehlmaus in
+    http://bts.grml.org/grml/issue19
+
+ -- Michael Prokop <mika@grml.org>  Sun, 26 Nov 2006 17:20:53 +0100
+
 grml-scripts (0.8-30) unstable; urgency=low
 
   * Update script fex, thanks - wuehlmaus! (Closes: issue18)
