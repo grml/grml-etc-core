@@ -1,0 +1,73 @@
+#!/bin/zsh
+# Filename:      grml-swapon
+# Purpose:       activate swap partitions with taking care of suspend signatures
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Son Nov 26 18:04:13 CET 2006 [mika]
+################################################################################
+
+set -e # exit on any error
+
+. /etc/grml/script-functions
+. /etc/grml/lsb-functions
+. /etc/grml/autoconfig.functions
+
+check4root || exit 1
+check4progs dd blkid swapon || exit 2
+
+checkbootparam "anyswap" && export ANYSWAP='yes' || export ANYSWAP=""
+
+case $1 in
+   --force)
+     ANYSWAP='yes'
+     ;;
+   -h*|--h*)
+     ewarn 'grml-swapon: activate swap partitions defined in /etc/fstab'
+     eindent
+       ewarn 'Usage: grml-swapon [--help|-h] [--force]'
+       ewarn 'Tip: execute grml-rebuildfstab for rebuilding /etc/fstab'
+     eoutdent
+     eend 1
+     ;;
+esac
+
+einfo "Searching for swap partition(s) as requested."
+eindent
+
+[ -n "$ANYSWAP" ] && einfo "Option --force set, forcing usage of swap partitions."
+
+while read p m f relax; do
+  case "$p" in *fd0*|*proc*|*sys*|*\#*) continue;; esac
+  partoptions="users,exec"
+  fnew=""
+  case "$f" in swap)
+     case "$(dd if=$p bs=1 count=6 skip=4086 2>/dev/null)" in
+             S1SUSP|S2SUSP|pmdisk|[zZ]*)
+                if [ -n "$ANYSWAP" ] ; then
+                  einfo "Using swap partition ${WHITE}${p}${NORMAL} [bootoption anyswap found]."
+                  swapon $p 2>>$DEBUG ; eend $?
+                else
+                  ewarn "Suspend signature on ${WHITE}${p}${NORMAL} found, not using as swap. Force usage via option: --force"
+                fi
+               ;;
+             *)
+                if [[ "$p" == LABEL* ]] ; then
+                   p=$(blkid -t $p | awk -F: '{print $1}')
+                fi
+                if grep -q $p /proc/swaps ; then
+                   ewarn "Not using swap partition ${WHITE}${p}${NORMAL} as it is already in use." ; eend 0
+                else
+                   einfo "Using swap partition ${WHITE}${p}${NORMAL}."
+                   swapon $p 2>>$DEBUG ; eend $?
+                fi
+               ;;
+     esac
+   continue
+   ;;
+  esac
+ done <<EOT
+$(cat /etc/fstab)
+EOT
+
+eoutdent

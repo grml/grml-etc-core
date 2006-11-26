@@ -1,3 +1,9 @@
+grml-scripts (0.8-32) unstable; urgency=low
+
+  * Add script grml-swapon for activating swap partitions.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 26 Nov 2006 18:13:34 +0100
+
 grml-scripts (0.8-31) unstable; urgency=low
 
   * fma: use '-U' option for lzop as suggested by wuehlmaus in
