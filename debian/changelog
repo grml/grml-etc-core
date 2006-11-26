@@ -1,3 +1,9 @@
+grml-etc-core (0.2.1) unstable; urgency=low
+
+  * New version number for new release.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 26 Nov 2006 19:15:39 +0100
+
 grml-etc-core (0.1-38) unstable; urgency=low
 
   * /etc/zsh/zlogout: execute 'clear', thanks for suggestion
