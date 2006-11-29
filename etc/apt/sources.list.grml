@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Nov 23 22:44:51 CET 2006 [mika]
+# Latest change: Mit Nov 29 23:24:27 CET 2006 [mika]
 ################################################################################
 # Notice: because of ressource limits some lines might have been commented
 #         out on the grml live CD system. Just uncomment lines containing
@@ -20,15 +20,16 @@
 #      http://www.backports.org/
 ##############################################################################
 
-# main grml repository:
-  deb     http://grml.org/repos/ ./
-  deb-src http://grml.org/repos/ ./
-
-# new grml repositories:
-#  deb     http://deb.grml.org/ grml main
-#  deb-src http://deb.grml.org/ grml main
+# stable grml repository:
+  deb     http://deb.grml.org/ grml-stable  main
+  deb-src http://deb.grml.org/ grml-stable  main
+# testing/developer grml repository:
 #  deb     http://deb.grml.org/ grml-testing main
 #  deb-src http://deb.grml.org/ grml-testing main
+
+# old (fallback) grml repository:
+#  deb     http://grml.org/repos/ ./
+#  deb-src http://grml.org/repos/ ./
 
 # Unstable:
 # TU Graz mirror

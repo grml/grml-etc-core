@@ -1,3 +1,10 @@
+grml-etc-core (0.2.2) unstable; urgency=low
+
+  * Use new grml-repository by default now (thanks for the great
+    work, formorer!).
+
+ -- Michael Prokop <mika@grml.org>  Wed, 29 Nov 2006 23:25:08 +0100
+
 grml-etc-core (0.2.1) unstable; urgency=low
 
   * New version number for new release.
