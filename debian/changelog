@@ -1,14 +1,20 @@
 grml-etc-core (0.2.2) unstable; urgency=low
 
+  Another "Frank 'ft' Terbeck is my zsh hero" release.
+
   * Use new grml-repository by default now (thanks for the great
     work, formorer!).
   * /etc/zsh/zshrc:
     - move power completion / abbreviation expansion from /etc/skel/.zshrc to
       main zsh config file so we can use it as root as well (thanks for hint,
       wuehlmaus)
+    - move function H-Glob to this file as well and make it available
+      as help-zshglob as well, thanks for the translation to english - ft!
     - support setting of RPROMPT via $DONTSETRPROMPT (thanks ft!)
     - allow setting NOPRECMD=1 without starting new zsh (thanks, ft!)
-  * /etc/skel/.zshrc: rework function dirspace() [support $1]
+  * /etc/skel/.zshrc:
+    - rework function dirspace() [support $1]
+    - replace all '1>/dev/null 2>&1' with '&>/dev/null'
 
  -- Michael Prokop <mika@grml.org>  Wed, 29 Nov 2006 23:25:08 +0100
 

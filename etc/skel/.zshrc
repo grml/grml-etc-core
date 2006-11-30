@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Nov 30 16:15:10 CET 2006 [mika]
+# Latest change: Don Nov 30 17:03:28 CET 2006 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -120,7 +120,7 @@
   alias conkeror='firefox -chrome chrome://conkeror/content'
 
 # arch/tla stuff
-  if type -p tla >/dev/null 2>&1 ; then
+  if type -p tla &>/dev/null ; then
      alias tdi='tla what-changed --diffs | less'
      alias tbp='tla-buildpackage'
      alias tmi='tla archive-mirror'
@@ -206,7 +206,7 @@
   wikien()  { ${=BROWSER} http://en.wikipedia.org/wiki/"$*" }
   wodeb ()  { ${=BROWSER} "http://packages.debian.org/cgi-bin/search_contents.pl?word=$1&version=${2:-unstable}" }
 
-  which google >/dev/null 2>&1 && gex () { google "\"[ $1]\" $*" } # exact search at google
+  which google &>/dev/null && gex () { google "\"[ $1]\" $*" } # exact search at google
 
 # Function Usage: doc packagename
   doc() { cd /usr/share/doc/$1 && ls }
@@ -283,45 +283,6 @@
       return 1
     fi
     cd ~$dir
-  }
-
-# provide useful information on globbing
-  H-Glob() {
-  echo -e "
-      /      directories
-      .      plain files
-      @      symbolic links
-      =      sockets
-      p      named pipes (FIFOs)
-      *      executable plain files (0100)
-      %      device files (character or block special)
-      %b     block special files
-      %c     character special files
-      r      owner-readable files (0400)
-      w      owner-writable files (0200)
-      x      owner-executable files (0100)
-      A      group-readable files (0040)
-      I      group-writable files (0020)
-      E      group-executable files (0010)
-      R      world-readable files (0004)
-      W      world-writable files (0002)
-      X      world-executable files (0001)
-      s      setuid files (04000)
-      S      setgid files (02000)
-      t      files with the sticky bit (01000)
-   print *(m-1)          # Dateien, die vor bis zu einem Tag modifiziert wurden.
-   print *(a1)           # Dateien, auf die vor einem Tag zugegriffen wurde.
-   print *(@)            # Nur Links
-   print *(Lk+50)        # Dateien die ueber 50 Kilobytes grosz sind
-   print *(Lk-50)        # Dateien die kleiner als 50 Kilobytes sind
-   print **/*.c          # Alle *.c - Dateien unterhalb von \$PWD
-   print **/*.c~file.c   # Alle *.c - Dateien, aber nicht 'file.c'
-   print (foo|bar).*     # Alle Dateien mit 'foo' und / oder 'bar' am Anfang
-   print *~*.*           # Nur Dateien ohne '.' in Namen
-   chmod 644 *(.^x)      # make all non-executable files publically readable
-   print -l *(.c|.h)     # Nur Dateien mit dem Suffix '.c' und / oder '.h'
-   print **/*(g:users:)  # Alle Dateien/Verzeichnisse der Gruppe >users<
-   echo /proc/*/cwd(:h:t:s/self//) # Analog zu >ps ax | awk '{print $1}'<"
   }
 
 # find out which libs define a symbol
@@ -426,7 +387,7 @@
   cl() { cd $1 && ls -a }
 
 # Use vim to convert plaintext to HTML
-  2html() { vim -u NONE -n -c ':syntax on' -c ':so $VIMRUNTIME/syntax/2html.vim' -c ':wqa' $1 > /dev/null 2> /dev/null }
+  2html() { vim -u NONE -n -c ':syntax on' -c ':so $VIMRUNTIME/syntax/2html.vim' -c ':wqa' $1 &>/dev/null }
 
 # Usage: simple-extract <file>
 # Description: extracts archived files (maybe)
@@ -837,7 +798,7 @@
 # }}}
 
 # mercurial related stuff {{{
-  if type -p hg >/dev/null 2>&1 ; then
+  if type -p hg &>/dev/null ; then
   # gnu like diff for mercurial
   # http://www.selenic.com/mercurial/wiki/index.cgi/TipsAndTricks
     hgdi() {
@@ -879,7 +840,7 @@
         # export PYTHONPATH=${HOME}/lib/python
       fi
     }
-  
+
   fi # end of check whether we have the 'hg'-executable
 
   # get current mercurial snapshot
