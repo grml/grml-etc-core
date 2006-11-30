@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Nov 19 14:45:18 CET 2006 [mika]
+# Latest change: Don Nov 30 16:15:06 CET 2006 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -103,7 +103,7 @@
 fi
 
 ## keybindings (run 'bindkeys' for details, more details via man zshzle)
-# use emacs style per default
+# use emacs style per default:
   bindkey -e
 # use vi style:
 # bindkey -v
@@ -122,6 +122,96 @@ fi
 #fi
 
 #  bindkey '\eq' push-line-or-edit
+# }}}
+
+# power completion - abbreviation expansion {{{
+# power completion / abbreviation expansion / buffer expansion
+# see http://zshwiki.org/home/examples/zleiab for details
+# less risky than the global aliases but powerful as well
+# just type the abbreviation key and afterwards ',.' to expand it
+  declare -A abk
+  setopt extendedglob
+  setopt interactivecomments
+  abk=(
+   # key  # value
+   'C'    '| wc -l'
+   '...' '../..'
+   '....' '../../..'
+   'BG' '& exit'
+   'C' '|wc -l'
+   'G' '|& grep --color=auto'
+   'H' '|head'
+   'Hl' ' --help |& less -r'
+   'L' '|less'
+   'LL' '|& less -r'
+   'M' '|most'
+   'N' '&>/dev/null'
+   'R' '| tr A-z N-za-m'
+   'SL' '| sort | less'
+   'S' '| sort -u'
+   'T' '|tail'
+   'V' '|& vim -'
+   'hide' "echo -en '\033]50;nil2\007'"
+   'tiny' 'echo -en "\033]50;-misc-fixed-medium-r-normal-*-*-80-*-*-c-*-iso8859-15\007"'
+   'small' 'echo -en "\033]50;6x10\007"'
+   'medium' 'echo -en "\033]50;-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso8859-15\007"'
+   'default' 'echo -e "\033]50;-misc-fixed-medium-r-normal-*-*-140-*-*-c-*-iso8859-15\007"'
+   'large' 'echo -en "\033]50;-misc-fixed-medium-r-normal-*-*-150-*-*-c-*-iso8859-15\007"'
+   'huge' 'echo -en "\033]50;-misc-fixed-medium-r-normal-*-*-210-*-*-c-*-iso8859-15\007"'
+   'smartfont' 'echo -en "\033]50;-artwiz-smoothansi-*-*-*-*-*-*-*-*-*-*-*-*\007"'
+   'semifont' 'echo -en "\033]50;-misc-fixed-medium-r-semicondensed-*-*-120-*-*-*-*-iso8859-15\007"'
+   'da' 'du -sch'
+   'j' 'jobs -l'
+   'u' 'translate -i'
+   'co' "./configure && make && sudo make install"
+   'CH' "./configure --help"
+   'conkeror' 'firefox -chrome chrome://conkeror/content'
+   'dir' 'ls -lSrah'
+   'lad' $'ls -d .*(/)\n# only show dot-directories'
+   'lsa' $'ls -a .*(.)\n# only show dot-files'
+   'lss' $'ls -l *(s,S,t)\n# only files with setgid/setuid/sticky flag'
+   'lsl' $'ls -l *(@[1,10])\n# only symlinks'
+   'lsx' $'ls -l *(*[1,10])\n# only executables'
+   'lsw' $'ls -ld *(R,W,X.^ND/)\n# world-{readable,writable,executable} files'
+   'lsbig' $'ls -flh *(.OL[1,10])\n# display the biggest files'
+   'lsd' $'ls -d *(/)\n# only show directories'
+   'lse' $'ls -d *(/^F)\n# only show empty directories'
+   'lsnew' $'ls -rl *(D.om[1,10])\n# display the newest files'
+   'lsold' $'ls -rtlh *(D.om[-11,-1])\n # display the oldest files'
+   'lssmall' $'ls -Srl *(.oL[1,10])\n# display the smallest files'
+   'rw-' 'chmod 600'
+   '600' 'chmod u+rw-x,g-rwx,o-rwx'
+   'rwx' 'chmod u+rwx'
+   '700' 'chmod u+rwx,g-rwx,o-rwx'
+   'r--' 'chmod u+r-wx,g-rwx,o-rwx'
+   '644' $'chmod u+rw-x,g+r-wx,o+r-wx\n # 4=r,2=w,1=x'
+   '755' 'chmod u+rwx,g+r-w+x,o+r-w+x'
+   'md' 'mkdir -p '
+   'cmplayer' 'mplayer -vo -fs -zoom fbdev'
+   'fbmplayer' 'mplayer -vo -fs -zoom fbdev'
+   'fblinks' 'links2 -driver fb'
+   'insecssh' 'ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
+   'fori' 'for i ({..}) { }'
+   'cx' 'chmod +x'
+   'e'  'print -l'
+   'se' 'setopt interactivecomments'
+   'va' 'valac --vapidir=../vapi/ --pkg=gtk+-2.0 gtktest.vala'
+   'fb2' '=mplayer -vo fbdev -fs -zoom 1>/dev/null -xy 2'
+   'fb3' '=mplayer -vo fbdev -fs  -zoom 1>/dev/null -xy 3'
+   'ci' 'centericq'
+   'D'  'export DISPLAY=:0.0'
+   'mp' 'mplayer -vo xv -fs -zoom'
+  )
+
+  globalias () {
+        local MATCH
+        matched_chars='[.-|_a-zA-Z0-9]#'
+        LBUFFER=${LBUFFER%%(#m)[.-|_a-zA-Z0-9]#}
+        LBUFFER+=${abk[$MATCH]:-$MATCH}
+  }
+
+  zle -N globalias
+  bindkey ",." globalias
 # }}}
 
 # {{{ autoloading
@@ -148,21 +238,20 @@ fi
      function zstyle { }
      function compdef { }
   fi
+
   is4 && autoload -U zed                  # use ZLE editor to edit a file or function
 
-  is4 && \
-  for mod in complist deltochar mathfunc ; do
-    zmodload -i zsh/${mod}
-  done
+  is4 && for mod in complist deltochar mathfunc ; do
+             zmodload -i zsh/${mod}
+         done
+
 # autoload zsh modules when they are referenced
-  is4 && \
-  for opt mod in a  stat    \
-                 a  zpty    \
-                 a  zprof   \
-                 ap mapfile ; do
-    zmodload -${opt} zsh/${mod} ${mod}
-  done
-  unset opt mod
+  is4 && for opt mod in a  stat    \
+                        a  zpty    \
+                        a  zprof   \
+                        ap mapfile ; do
+             zmodload -${opt} zsh/${mod} ${mod}
+         done ; unset opt mod
 
   is4 && autoload -U insert-files && \
   zle -N insert-files && \
@@ -264,7 +353,7 @@ fi
     zle backward-kill-word
   }
   zle -N slash-backward-kill-word
-  bindkey 'v' slash-backward-kill-word # press esc-v to delete a word until its last '/' (not the same as ctrl-w!)
+  bindkey '\ev' slash-backward-kill-word # press esc-v to delete a word until its last '/' (not the same as ctrl-w!)
 # }}}
 
 # {{{ history
@@ -292,16 +381,23 @@ fi
   else
      print 'Notice: no promptinit available :('
   fi
-  # precmd() => a function which is executed just before each prompt
+
+# precmd() => a function which is executed just before each prompt
+# use 'NOPRECMD=1' to disable the precmd + preexec commands
+
   # precmd () { setopt promptsubst; [[ -o interactive ]] && jobs -l;
-  # run 'NOPRECMD=1 zsh' to disable the precmd + preexec commands
+
   is4 && ! [[ -n "$NOPRECMD" ]] && precmd () {
-      if [ -n "$BATTERY" ] ; then
-        # RPROMPT="%(?..:()% ${PERCENT}${SCREENTITLE}"
-        RPROMPT="${PERCENT}${SCREENTITLE}"
-      else
-        # RPROMPT="%(?..:()% ${SCREENTITLE}"
-        RPROMPT="${SCREENTITLE}"
+      (( NOPRECMD > 0 )) && return 0
+      # just use DONTSETRPROMPT=1 to be able to overwrite RPROMPT
+      if [[ -z ${DONTSETRPROMPT} ]] ; then
+        if [ -n "$BATTERY" ] ; then
+          # RPROMPT="%(?..:()% ${PERCENT}${SCREENTITLE}"
+          RPROMPT="${PERCENT}${SCREENTITLE}"
+        else
+          # RPROMPT="%(?..:()% ${SCREENTITLE}"
+          RPROMPT="${SCREENTITLE}"
+        fi
       fi
       # adjust title of xterm
       # see http://www.faqs.org/docs/Linux-mini/Xterm-Title.html
@@ -311,18 +407,20 @@ fi
       esac
   }
 
-  # chpwd () => a function which is executed whenever the directory is changed
+# chpwd () => a function which is executed whenever the directory is changed
 
-  # preexec() => a function running before every command
+# preexec() => a function running before every command
   is4 && ! [[ -n "$NOPRECMD" ]] && preexec () {
-  # set screen window title if running in a screen
-  # get the name of the program currently running and hostname of local machine
+      (( NOPRECMD > 0 )) && return 0
+  # set hostname if not running on host with name 'grml'
       local HOSTNAME=$(hostname)
       if [[ "$HOSTNAME" != grml ]] ; then
          NAME="@$HOSTNAME"
       fi
+  # get the name of the program currently running and hostname of local machine
+  # set screen window title if running in a screen
       if [[ "$TERM" == screen* ]]; then
-#          local CMD=${1[(wr)^(*=*|sudo|ssh|-*)]}       # dont't use hostname
+          # local CMD=${1[(wr)^(*=*|sudo|ssh|-*)]}       # dont't use hostname
           local CMD="${1[(wr)^(*=*|sudo|ssh|-*)]}$NAME" # use hostname
           echo -ne "\ek$CMD\e\\"
       fi
@@ -361,12 +459,12 @@ fi
   PS3='?# '         # selection prompt used within a select loop.
   PS4='+%N:%i:%_> ' # the execution trace prompt (setopt xtrace). default: '+%N:%i>'
 
-# set variable debian_chroot if running in a chroot with /etc/debian_chroot
+  # set variable debian_chroot if running in a chroot with /etc/debian_chroot
   if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
   fi
 
-# don't use colors on dumb terminals (like emacs):
+  # don't use colors on dumb terminals (like emacs):
   if [[ "$TERM" == dumb ]] ; then
     PROMPT="${EXITCODE}${debian_chroot:+($debian_chroot)}%n@%m %40<...<%B%~%b%<< %# "
   else
@@ -384,7 +482,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
     fi
   fi
 
-# if we are inside a grml-chroot set a specific prompt theme
+  # if we are inside a grml-chroot set a specific prompt theme
   if [ -n "$GRML_CHROOT" ] ; then
      PROMPT="%{$fg[red]%}(CHROOT) %{$fg_bold[red]%}%n%{$fg_no_bold[white]%}@%m %40<...<%B%~%b%<< %\# "
   fi
@@ -776,8 +874,9 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
  fi
 # }}}
 
-# make sure our environment is clean regarding colors
+# {{{ make sure our environment is clean regarding colors
   for color in BLUE RED GREEN CYAN WHITE ; unset $color
+# }}}
 
 # source another config file if present {{{
   if [ -r /etc/zsh/zshrc.local ]; then
