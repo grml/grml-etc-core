@@ -1,3 +1,10 @@
+grml-etc-core (0.2.4) unstable; urgency=low
+
+  * /etc/zsh/zshrc: add alias 'any' for grepping through process
+    list, thanks for the basic idea - Karl Voit!
+
+ -- Michael Prokop <mika@grml.org>  Sat,  2 Dec 2006 11:51:06 +0100
+
 grml-etc-core (0.2.3) unstable; urgency=low
 
   * Let's ship /etc/apt/preferences.grml as reference file.
