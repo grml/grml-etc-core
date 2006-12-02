@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Dez 02 18:40:18 CET 2006 [mika]
+# Latest change: Son Dez 03 00:24:00 CET 2006 [mika]
 ################################################################################
 
 # Idea for this script and basic functionally by Matthias Kopfermann <maddi@grml.org>.
@@ -39,10 +39,12 @@ case $1 in
     SECTION="${1}"
     SECTIONFILE=".${1}"
     MANPAGE="$2"
+    SEARCH="$3"
     ;;
   *)
     SECTION=''
     MANPAGE="$1"
+    SEARCH="$2"
     ;;
 esac
 
