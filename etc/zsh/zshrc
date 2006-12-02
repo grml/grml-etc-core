@@ -833,9 +833,15 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 # shell functions {{{
   setenv()  { typeset -x "${1}${1:+=}${(@)argv[2,$#]}" }  # csh compatibility
   freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
-  manzsh()  {  /usr/bin/man zshall |  vim -c "se ft=man| se hlsearch" +/"$1" - ; }
-#  manzsh()  { /usr/bin/man zshall |  most +/"$1" ; }
-#  manzsh()  { man zshall | $MYLESS -p $1 ; }
+
+  # fast manual access
+  if type -p qma &>/dev/null ; then
+     manzsh()  { qma zshall "$1" }
+  else
+     manzsh()  { /usr/bin/man zshall |  vim -c "se ft=man| se hlsearch" +/"$1" - ; }
+     # manzsh()  { /usr/bin/man zshall |  most +/"$1" ; }
+     # manzsh()  { man zshall | $MYLESS -p $1 ; }
+  fi
 
 # use "dchange <package-name>" to view Debian's changelog of the package:
   dchange() {
@@ -927,7 +933,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   }
   alias help-zshglob=H-Glob
 
-  type -p fma &>/dev/null && alias ?='fma zshall'
+  type -p qma &>/dev/null && alias ?='qma zshall'
 
   # grep for running process, like: 'any vim'
   any() {

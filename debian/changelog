@@ -1,3 +1,11 @@
+grml-etc-core (0.2.7) unstable; urgency=low
+
+  * /etc/zsh/zshrc: fma has been renamed into qma, adjust references
+    therefore and use qma for manzsh too. (This fixes part 2/2 of
+    issue19)
+
+ -- Michael Prokop <mika@grml.org>  Sat,  2 Dec 2006 18:49:05 +0100
+
 grml-etc-core (0.2.6) unstable; urgency=low
 
   * /etc/zsh/zshrc: update URL for grml repository in zsh-help.
