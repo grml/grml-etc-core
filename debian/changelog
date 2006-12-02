@@ -1,3 +1,13 @@
+grml-etc-core (0.2.5) unstable; urgency=low
+
+  * /etc/zsh/zshrc:
+    - our new default umask is now 002.
+    - function isutfenv to check whether we are running inside
+      an utf environment
+    - add option utf8 to alias truec according to result of isutfenv
+
+ -- Michael Prokop <mika@grml.org>  Sat,  2 Dec 2006 16:08:37 +0100
+
 grml-etc-core (0.2.4) unstable; urgency=low
 
   * /etc/zsh/zshrc: add alias 'any' for grepping through process

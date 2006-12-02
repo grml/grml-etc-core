@@ -47,6 +47,14 @@
     isgrmlsmall() { return 1 }
   fi
 
+  # are we running within an utf environment?
+  isutfenv() {
+    case "$LANG $CHARSET $LANGUAGE" in
+      *utf*) return 0 ;;
+      *)     return 1 ;;
+    esac
+  }
+
 # check for user, if not running as root set $SUDO to sudo
  (( EUID != 0 )) && SUDO='sudo' || SUDO=''
 
@@ -306,7 +314,8 @@ fi
 # }}}
 
 # {{{ set some important options
-  umask 022
+  # umask 022
+  umask 002
 
 # history:
   setopt append_history       # append history list to the history file (important for multiple parallel zsh sessions!)
@@ -535,7 +544,11 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
 
 # truecrypt; use e.g. via 'truec /dev/ice' /mnt/ice' or 'truec -i'
   if [ -x /usr/sbin/truecrypt ] ; then
-     alias truec='truecrypt --mount-options "rw,sync,dirsync,users,uid=1000,gid=users,umask=077" '
+     if isutfenv ; then
+        alias truec='truecrypt --mount-options "rw,sync,dirsync,users,uid=1000,gid=users,umask=077,utf8" '
+     else
+        alias truec='truecrypt --mount-options "rw,sync,dirsync,users,uid=1000,gid=users,umask=077" '
+     fi
   fi
 
   zsh-help(){print "$bg[white]$fg[black]
@@ -830,10 +843,10 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
        most /usr/share/doc/${1}/changelog.Debian.gz
     else
        if [ -r /usr/share/doc/${1}/changelog.gz ] ; then
-	  most /usr/share/doc/${1}/changelog.gz
+          most /usr/share/doc/${1}/changelog.gz
        else
-	  echo "No changelog for package $1 found, sorry."
-	  return 1
+          echo "No changelog for package $1 found, sorry."
+          return 1
        fi
     fi
   }
