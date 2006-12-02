@@ -1,3 +1,10 @@
+grml-etc-core (0.2.8) unstable; urgency=low
+
+  * /etc/zsh/zshrc: drop completion for lintian and linda as
+    zsh ships that already.
+
+ -- Michael Prokop <mika@grml.org>  Sat,  2 Dec 2006 22:43:38 +0100
+
 grml-etc-core (0.2.7) unstable; urgency=low
 
   * /etc/zsh/zshrc: fma has been renamed into qma, adjust references

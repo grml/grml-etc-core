@@ -680,8 +680,6 @@ grmlcomp() {
   zstyle ':completion:*:history-words'   menu yes                            # activate menu
   zstyle ':completion:*:history-words'   remove-all-dups yes                 # ignore duplicate entries
   zstyle ':completion:*:history-words'   stop yes                            #
-  zstyle ':completion:*:*:linda:*'       file-patterns '*.deb'               # complete debian packages for command 'linda'
-  zstyle ':completion:*:*:lintian:*'     file-patterns '*.deb'               # complete debian packages for command 'lintian'
   zstyle ':completion:*'                 matcher-list 'm:{a-z}={A-Z}'        # match uppercase from lowercase
   zstyle ':completion:*:matches'         group 'yes'                         # separate matches into groups
   zstyle ':completion:*'                 group-name ''
