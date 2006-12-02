@@ -559,7 +559,7 @@ Main configuration of zsh happens in /etc/zsh/zshrc (global)
 and /etc/skel/.zshrc which is copied to \$HOME/.zshrc once.
 The files are part of the package grml-etc-core, if you want to
 use them on a non-grml-system just get the tar.gz from
-http://grml.org/repos/ or get the files from the mercurial
+http://deb.grml.org/ or get the files from the mercurial
 repository:
 
   http://hg.grml.org/grml-etc-core/raw-file/tip/etc/skel/.zshrc

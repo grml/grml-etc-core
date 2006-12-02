@@ -1,3 +1,10 @@
+grml-etc-core (0.2.6) unstable; urgency=low
+
+  * /etc/zsh/zshrc: update URL for grml repository in zsh-help.
+    (Closes: issue36)
+
+ -- Michael Prokop <mika@grml.org>  Sat,  2 Dec 2006 18:24:07 +0100
+
 grml-etc-core (0.2.5) unstable; urgency=low
 
   * /etc/zsh/zshrc:
