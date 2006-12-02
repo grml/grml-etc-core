@@ -1,3 +1,10 @@
+grml-scripts (0.9.2) unstable; urgency=low
+
+  * fma has been renamed into qma. Supports "directly jump to
+    keyword" now. (Closes: issue19)
+
+ -- Michael Prokop <mika@grml.org>  Sat,  2 Dec 2006 18:46:31 +0100
+
 grml-scripts (0.9.1) unstable; urgency=low
 
   * New version number for new release.

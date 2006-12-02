@@ -1,18 +1,18 @@
 .TH FMA 1
 .SH NAME
-fma \- fast manual access
+qma \- quick manual access
 .SH SYNOPSIS
-.B fma
-.RI [ section ] " manualpage"
+.B qma
+.RI "[ section ] manualpage [ keyword ]"
 .SH DESCRIPTION
 This manual page documents briefly the
-.B fma
+.B qma
 command.
 .PP
-\fBfma\fP is a script which allows fast and efficient access to manual pages
+\fBqma\fP is a script which allows quick and efficient access to manual pages
 through using compression via lzop and display of vim.
 
-fma generates manpages via running 'man <requested_manpage>' and storing
+qma generates manpages via running 'man <requested_manpage>' and storing
 the result in a file with the extension txt in directory $HOME/man. Then
 lzop is executed for the file and the output is written to a file with the
 additional extension lzo. Afterwards the editor vim is executed with
@@ -21,9 +21,13 @@ filetype set to man and using on-the-fly decompressing using lzop again.
 So far you did not win any time of course. But if you want to display the
 same manpage again the processed manpage already exists in $HOME/man and
 can be displayed immediately. If you want to experience the difference
-just run 'fma zshall' two times and compare it with 'man zshall' too.
+just run 'qma zshall' two times and compare it with 'man zshall' too.
+
+If you want to jump to a special keyword inside the manpage use it as
+last option of the qma commandline. Searching for the keyword is done
+case insensitive inside vim.
 .SH OPTIONS
-fma supports the following options:
+qma supports the following options:
 .TP
 .B \-h, \-\-help
 Show summary of options.
@@ -36,16 +40,19 @@ If the environment variable MANDIR is set the specified directory is taken
 for output files instead of the default directory $HOME/man.
 .SH USAGE EXAMPLE
 .TP
-.B % fma zshall
+.B % qma zshall
 Display manpage zshall (man zshall).
 .TP
-.B % fma 1 read
+.B % qma 1 read
 Display manpage read of section 1 (man 1 read).
 .TP
-.B % fma 2 read
+.B % qma 2 read
 Display manpage read of section 2 (man 2 read).
+.TP
+.B % qma grml overview
+Display manpage grml and jump to keyword "overview".
 .SH AUTHOR
-fma was written by Michael Prokop <mika@grml.org> based on an idea of
+qma was written by Michael Prokop <mika@grml.org> based on an idea of
 Matthias Kopfermann <matthi@grml.org>.
 .PP
 This manual page was written by Michael Prokop <mika@grml.org>

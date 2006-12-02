@@ -1,10 +1,10 @@
 #!/bin/zsh
-# Filename:      fma
-# Purpose:       "fast manual access"
+# Filename:      qma
+# Purpose:       "quick manual access"
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Nov 12 12:03:13 CET 2006 [mika]
+# Latest change: Sam Dez 02 18:40:18 CET 2006 [mika]
 ################################################################################
 
 # Idea for this script and basic functionally by Matthias Kopfermann <maddi@grml.org>.
@@ -23,7 +23,7 @@ if ! [ -d "$MANDIR" ] ; then
 fi
 
 usage() {
-   eerror "Usage: fma [section] manpage" ; eend 1
+   eerror "Usage: qma [section] manpage" ; eend 1
    exit 1
 }
 
@@ -32,7 +32,7 @@ case $1 in
     usage
     ;;
   -v*|--v*)
-    einfo "fma - version $VERSION" ; eend 0
+    einfo "qma - version $VERSION" ; eend 0
     exit 0
     ;;
   [0-9])
@@ -62,8 +62,12 @@ if ! [ -f "${MANDIR}/${MANPAGE}${SECTIONFILE}.txt.lzo" ] ; then
    fi
 fi
 
-vim -c 'set ft=man' =( lzop -cd $MANDIR/${MANPAGE}${SECTIONFILE}.txt.lzo)
+if [ -n "$SEARCH" ] ; then
+  vim -c "set ft=man | set hlsearch | set ignorecase" +/"$SEARCH" =( lzop -cd $MANDIR/${MANPAGE}${SECTIONFILE}.txt.lzo)
+else
+  vim -c 'set ft=man' =( lzop -cd $MANDIR/${MANPAGE}${SECTIONFILE}.txt.lzo)
+fi
 
-einfo "Thanks for flying fma using vim and lzop." ; eend 0
+einfo "Thanks for flying qma using vim and lzop." ; eend 0
 
 ## END OF FILE #################################################################
