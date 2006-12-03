@@ -396,8 +396,8 @@ fi
 
   # precmd () { setopt promptsubst; [[ -o interactive ]] && jobs -l;
 
-  is4 && ! [[ -n "$NOPRECMD" ]] && precmd () {
-      (( NOPRECMD > 0 )) && return 0
+  is4 && [[ -z $NOPRECMD ]] && precmd () {
+      [[ -n $NOPRECMD ]] && return 0
       # just use DONTSETRPROMPT=1 to be able to overwrite RPROMPT
       if [[ -z ${DONTSETRPROMPT} ]] ; then
         if [ -n "$BATTERY" ] ; then
@@ -419,8 +419,8 @@ fi
 # chpwd () => a function which is executed whenever the directory is changed
 
 # preexec() => a function running before every command
-  is4 && ! [[ -n "$NOPRECMD" ]] && preexec () {
-      (( NOPRECMD > 0 )) && return 0
+  is4 && [[ -z $NOPRECMD ]] && preexec () {
+      [[ -n $NOPRECMD ]] && return 0
   # set hostname if not running on host with name 'grml'
       local HOSTNAME=$(hostname)
       if [[ "$HOSTNAME" != grml ]] ; then

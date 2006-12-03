@@ -1,3 +1,9 @@
+grml-etc-core (0.2.9) unstable; urgency=low
+
+  * /etc/zsh/zshrc: update NOPRECMD handling
+
+ -- Michael Prokop <mika@grml.org>  Sun,  3 Dec 2006 11:47:22 +0100
+
 grml-etc-core (0.2.8) unstable; urgency=low
 
   * /etc/zsh/zshrc: drop completion for lintian and linda as
