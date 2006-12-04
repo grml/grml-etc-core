@@ -1,22 +1,20 @@
 #!/bin/zsh
 # Filename:      qma
 # Purpose:       "quick manual access"
-# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>, Matthias Kopfermann <maddi@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Dez 03 00:24:00 CET 2006 [mika]
+# Latest change: Mon Dez 04 22:54:47 CET 2006 [maddi]
 ################################################################################
-
-# Idea for this script and basic functionally by Matthias Kopfermann <maddi@grml.org>.
 
 . /etc/grml/lsb-functions
 . /etc/grml/script-functions
 
 check4progs man lzop vim || exit 1
 
-MANDIR=${MANDIR:-$HOME/man}
 VERSION='0.1'
 
+MANDIR=${MANDIR:-$HOME/man}
 if ! [ -d "$MANDIR" ] ; then
    einfo "Creating $MANDIR."
    mkdir $MANDIR ; eend $?
@@ -48,26 +46,59 @@ case $1 in
     ;;
 esac
 
+
 if [ -z "$MANPAGE" ] ; then
    usage
 fi
 
-if ! [ -f "${MANDIR}/${MANPAGE}${SECTIONFILE}.txt.lzo" ] ; then
-   einfo "Writing manpage to ${MANDIR}/${MANPAGE}${SECTIONFILE}.txt"
+QUICKMAN="${MANDIR}/${MANPAGE}${SECTIONFILE}.txt.lzo"
+
+if ! [ -f "$QUICKMAN" ] ; then
+   einfo "Writing manpage to $QUICKMAN"
    if man $SECTION $MANPAGE 1>/dev/null ; then
-      man $SECTION $MANPAGE > ${MANDIR}/${MANPAGE}${SECTIONFILE}.txt ; eend $?
+      man $SECTION $MANPAGE | lzop -U >$QUICKMAN ; eend $?
       einfo "Compressing manpage with lzop"
-      lzop -U ${MANDIR}/${MANPAGE}${SECTIONFILE}.txt.lzo ${MANDIR}/${MANPAGE}${SECTIONFILE}.txt ; eend $?
+      eend $?
    else
       exit 1
       eend 1
    fi
 fi
 
+vimconfig='
+ 	 set filetype=man
+	 "set hlsearch can be annoying so use <C-L> to dehighlight"
+	 nn <silent> <C-L> :nohlsearch<cr>|redraw "shut up hlsearch when it confuses more than it helps and"
+	 nn q :qa!<cr> "q should really end our document-reading like less does"
+	 nn Q :q!<cr> "different than q in that it quits only the current window when multiple windows "
+	 nn <F10> :qa!<cr> "honor midnight-commander addicts :) "
+	 nn a ]I "use one wonderful vim feature to show all matches of the word in the document in ex-mode"
+	 nn A [I "the other way round"
+	 nn b <C-b>
+	 nn <backspace> <C-f>
+	 "nn f <C-f>
+	 nn p }zz
+	 nn j <C-E> "scroll the page down one line"
+	 nn k <C-Y> "scroll the page up one line"
+	 nn -n <ESC> :set invnumber<cr>  "the expectation of getting the next search via 'n' can not be ignored"
+	 nn h :set invhlsearch<cr>
+	 nn i :set invignorecase<cr> "Make toggling case-sensitive accessable via the letter i"
+	 nn -i :set invignorecase<cr> "Make toggling case-sensitive accessable via the less convention via -i"
+	 nn <space> <C-f>
+	 nn <backspace> <C-b>
+	 nn <enter> gg
+	 nn S :split<cr>
+	 nn V :vsplit<cr>
+	set filetype=man
+	set ignorecase
+     	set nomodifiable "Really not modify a document here"
+	set readonly
+'
+
 if [ -n "$SEARCH" ] ; then
-  vim -c "set ft=man | set hlsearch | set ignorecase" +/"$SEARCH" =( lzop -cd $MANDIR/${MANPAGE}${SECTIONFILE}.txt.lzo)
+  vim -S  =( echo $vimconfig  ) +/"$SEARCH" =( lzop -cd ${QUICKMAN} )
 else
-  vim -c 'set ft=man' =( lzop -cd $MANDIR/${MANPAGE}${SECTIONFILE}.txt.lzo)
+  vim -S =( echo $vimconfig  ) =( lzop -cd $QUICKMAN )
 fi
 
 einfo "Thanks for flying qma using vim and lzop." ; eend 0

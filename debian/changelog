@@ -1,3 +1,9 @@
+grml-scripts (0.9.5) unstable; urgency=low
+
+  * qma: use vim in less-like mode, thanks - wuehlmaus!
+
+ -- Michael Prokop <mika@grml.org>  Mon,  4 Dec 2006 22:56:50 +0100
+
 grml-scripts (0.9.4) unstable; urgency=low
 
   * qma: fix missing $SEARCH (thanks for noticing, wuehlmaus).
