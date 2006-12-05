@@ -27,17 +27,22 @@ case "$1" in
         # move files from package grml-etc to grml-etc-core, make sure
         # we don't lose any files...
         for file in /etc/zsh/zlogin /etc/zsh/zprofile /etc/zsh/zshenv /etc/zsh/zshrc \
-                    /etc/zsh/zlogout /etc/skel/.zshrc /etc/vim/vimrc; do
+                    /etc/zsh/zlogout /etc/vim/vimrc; do
                divert_conffile $file && \
                [ -f "$file" ] && rm $file && \
                dpkg-divert --quiet --add --rename --package grml-etc-core --divert "$file".original $file  && \
-               [ -f "$file".dpkg-bak ] && mv -f "$file".dpkg-bak "$file"
+               [ -f "$file".dpkg-bak ]      && mv -f "$file".dpkg-bak "$file"
                [ -f "$file".grml-etc-core ] && mv -f "$file".grml-etc-core "$file"
 
                # trying to overwrite `/etc/skel/.zshrc', which is also in package zsh
                # [ -f /etc/skel/.zshrc ] && \
                # dpkg-divert --quiet --add --rename --package grml-etc-core --divert /etc/skel/.zshrc.original /etc/skel/.zshrc
         done
+
+	if dpkg-divert --list grml-etc-core 2>/dev/null | grep -q /etc/skel/.zshrc.original ; then
+	   mv -f /etc/skel/.zshrc.original /etc/skel/.zshrc.original.old && \
+	   dpkg-divert --remove --rename --package grml-etc-core /etc/skel/.zshrc
+	fi
 
      ;;
    *)
