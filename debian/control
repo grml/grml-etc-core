@@ -8,7 +8,7 @@ Standards-Version: 3.7.2
 Package: grml-etc-core
 Architecture: all
 Conflicts: grml-etc (<< 0.8-11), grml-autoconfig (<< 0.5-7), grml-scripts (<< 0.8-27)
-Depends: vim | nvi, zsh
+Depends: editor | vim | nvi, zsh
 Description: core ecetera files for the grml system
  This package includes some /etc files for the
  grml system. Whereas the main grml-etc package is

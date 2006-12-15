@@ -1,3 +1,10 @@
+grml-etc-core (0.2.11) unstable; urgency=low
+
+  * Do not depend on vim or nvi only but allow use of virtual package
+    editor also. Thanks, Markus Wigge <mwigge@marcant.net>!
+
+ -- Michael Prokop <mika@grml.org>  Fri, 15 Dec 2006 01:02:09 +0100
+
 grml-etc-core (0.2.10) unstable; urgency=low
 
   * Remove /etc/skel/.zshrc from dpkg-diversion.
