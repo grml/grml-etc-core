@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>, Matthias Kopfermann <maddi@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mon Dez 04 22:54:47 CET 2006 [maddi]
+# Latest change: Sam Dez 16 17:24:05 CET 2006 [maddi]
 ################################################################################
 
 . /etc/grml/lsb-functions
@@ -66,33 +66,47 @@ if ! [ -f "$QUICKMAN" ] ; then
 fi
 
 vimconfig='
- 	 set filetype=man
-	 "set hlsearch can be annoying so use <C-L> to dehighlight"
-	 nn <silent> <C-L> :nohlsearch<cr>|redraw "shut up hlsearch when it confuses more than it helps and"
-	 nn q :qa!<cr> "q should really end our document-reading like less does"
-	 nn Q :q!<cr> "different than q in that it quits only the current window when multiple windows "
-	 nn <F10> :qa!<cr> "honor midnight-commander addicts :) "
-	 nn a ]I "use one wonderful vim feature to show all matches of the word in the document in ex-mode"
-	 nn A [I "the other way round"
-	 nn b <C-b>
-	 nn <backspace> <C-f>
-	 "nn f <C-f>
-	 nn p }zz
-	 nn j <C-E> "scroll the page down one line"
-	 nn k <C-Y> "scroll the page up one line"
-	 nn -n <ESC> :set invnumber<cr>  "the expectation of getting the next search via 'n' can not be ignored"
-	 nn h :set invhlsearch<cr>
-	 nn i :set invignorecase<cr> "Make toggling case-sensitive accessable via the letter i"
-	 nn -i :set invignorecase<cr> "Make toggling case-sensitive accessable via the less convention via -i"
-	 nn <space> <C-f>
-	 nn <backspace> <C-b>
-	 nn <enter> gg
-	 nn S :split<cr>
-	 nn V :vsplit<cr>
-	set filetype=man
-	set ignorecase
-     	set nomodifiable "Really not modify a document here"
-	set readonly
+         set filetype=man
+         "set hlsearch can be annoying so use <C-L> to dehighlight"
+        "shut up hlsearch when it confuses more than it helps and"
+         nn <silent> <C-L> :nohlsearch<cr>|redraw
+        "q should really end our document-reading like less does"
+         nn q :qa!<cr>
+        "different than q in that it quits only the current window when multiple windows "
+         nn Q :q!<cr>
+        "honor midnight-commander addicts :) "
+         nn <F10> :qa!<cr>
+        "use one wonderful vim feature to show all matches of the word in the document in ex-mode"
+         nn a ]I
+        "the other way round"
+         nn A [I
+         nn b <C-b>
+         nn <backspace> <C-f>
+         "nn f <C-f>
+         nn p }zz
+        "scroll the page down one line"
+         nn j <C-E>
+        "scroll the page up one line"
+         nn k <C-Y>
+        "the expectation of getting the next search via 'n' can not be ignored"
+         nn -n <ESC> :set invnumber<cr>
+         nn h :set invhlsearch<cr>
+        "Make toggling case-sensitive accessable via the letter i"
+         nn i :set invignorecase<cr>
+        "Make toggling case-sensitive accessable via the less convention via -i"
+         nn -i :set invignorecase<cr>
+         nn <space> <C-f>
+         nn <backspace> <C-b>
+         nn <enter> gg
+         nn S :split<cr>
+         nn V :vsplit<cr>
+        set filetype=man
+        set ignorecase
+        "Really not modify a document here"
+        set nomodifiable
+        set readonly
+        "We have a more modern approach to searching in vim!"
+        set incsearch
 '
 
 if [ -n "$SEARCH" ] ; then
