@@ -372,6 +372,16 @@ fi
   isgrmlcd && SAVEHIST=1000 || SAVEHIST=10000 # useful for setopt append_history
 # }}}
 
+# dirstack handling {{{
+  DIRSTACKSIZE=20
+  if [[ -f ~/.zdirs ]] && [[ ${#dirstack[*]} -eq 0 ]]; then
+     dirstack=( ${(uf)"$(< ~/.zdirs)"} )
+     # "cd -" won't work after login by just setting $OLDPWD, so
+     cd $dirstack[0] && cd $OLDPWD
+  fi
+  chpwd() { dirs -pl >! ~/.zdirs }
+# }}}
+
 # {{{ display battery status on right side of prompt via running 'BATTERY=1 zsh'
   if [ -n "$BATTERY" ] ; then
      if [ -x =acpi ] ; then
