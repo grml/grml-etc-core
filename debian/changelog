@@ -1,3 +1,12 @@
+grml-scripts (0.9.8) unstable; urgency=low
+
+  * grml-setlang: use utf8 as default. Get iso stuff via $LANG-iso,
+    utf8 via $LANG or $LANG-utf8. Add grml-autoconfig (>= 0.6.9)
+    to Suggests as grml-setlang requires current language functions.
+  * Add S-X-Vcs-Hg entry to debian/control.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 16 Dec 2006 18:21:58 +0100
+
 grml-scripts (0.9.7) unstable; urgency=low
 
   * qma: update vim config [thanks, wuehlmaus]
