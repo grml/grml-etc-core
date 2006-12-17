@@ -1,3 +1,10 @@
+grml-etc-core (0.2.13) unstable; urgency=low
+
+  * /etc/zsh/zshrc + /etc/skel/.zshrc: make sure 'dirs' is not
+    an alias or function
+
+ -- Michael Prokop <mika@grml.org>  Sun, 17 Dec 2006 13:52:22 +0100
+
 grml-etc-core (0.2.12) unstable; urgency=low
 
   * /etc/zsh/zshrc: add support for global dirstack handling

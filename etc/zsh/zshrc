@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Nov 30 16:15:06 CET 2006 [mika]
+# Latest change: Son Dez 17 13:52:04 CET 2006 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -239,8 +239,8 @@ fi
   autoload run-help # use via 'esc-h'
 
 # completion system
-  if autoload -U compinit && [ -f "/usr/share/zsh/$ZSH_VERSION/functions/Completion/compinit" ] && compinit 2>/dev/null ; then
-    compinit
+  if autoload -U compinit && compinit 2>/dev/null ; then
+     compinit 2>/dev/null || print 'Notice: no compinit available :('
    else
      print 'Notice: no compinit available :('
      function zstyle { }
@@ -250,7 +250,7 @@ fi
   is4 && autoload -U zed                  # use ZLE editor to edit a file or function
 
   is4 && for mod in complist deltochar mathfunc ; do
-             zmodload -i zsh/${mod}
+             zmodload -i zsh/${mod} 2>/dev/null || print "Notice: no ${mod} available :("
          done
 
 # autoload zsh modules when they are referenced
@@ -379,7 +379,11 @@ fi
      # "cd -" won't work after login by just setting $OLDPWD, so
      cd $dirstack[0] && cd $OLDPWD
   fi
-  chpwd() { dirs -pl >! ~/.zdirs }
+  # notice: we have to make sure 'dirs' is not a function/alias, otherwise
+  # zsh might hang of course
+  chpwd() {
+    alias dirs &>/dev/null || functions dirs &>/dev/null || dirs -pl >! ~/.zdirs
+  }
 # }}}
 
 # {{{ display battery status on right side of prompt via running 'BATTERY=1 zsh'

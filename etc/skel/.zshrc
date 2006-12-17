@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Nov 30 17:03:28 CET 2006 [mika]
+# Latest change: Son Dez 17 13:51:23 CET 2006 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -265,7 +265,7 @@
 # jump between directories
 # Copyright 2005 Nikolai Weibull <nikolai@bitwi.se>
 # notice: option AUTO_PUSHD has to be set
-  d(){
+  alias d &>/dev/null || functions d &>/dev/null || d(){
     emulate -L zsh
     autoload -U colors
     local color=$fg_bold[blue]
