@@ -1,3 +1,10 @@
+grml-etc-core (0.2.14) unstable; urgency=low
+
+  * Use builtin for chpwd's dirs command instead of the alias
+    and function workaround, thanks - schula!
+
+ -- Michael Prokop <mika@grml.org>  Sun, 17 Dec 2006 14:55:05 +0100
+
 grml-etc-core (0.2.13) unstable; urgency=low
 
   * /etc/zsh/zshrc + /etc/skel/.zshrc: make sure 'dirs' is not

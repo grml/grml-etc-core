@@ -379,10 +379,8 @@ fi
      # "cd -" won't work after login by just setting $OLDPWD, so
      cd $dirstack[0] && cd $OLDPWD
   fi
-  # notice: we have to make sure 'dirs' is not a function/alias, otherwise
-  # zsh might hang of course
   chpwd() {
-    alias dirs &>/dev/null || functions dirs &>/dev/null || dirs -pl >! ~/.zdirs
+    builtin dirs -pl >! ~/.zdirs
   }
 # }}}
 
