@@ -4,7 +4,7 @@
 # Authors:       (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Sep 30 12:36:24 CEST 2006 [mika]
+# Latest change: Son Dez 17 16:23:34 CET 2006 [mika]
 ################################################################################
 
 if [ $UID != 0 ] ; then
@@ -38,19 +38,15 @@ retval=$?
 
 case $retval in
   0)
-     if hostname "$HOSTNAME" 1>/dev/null 2>${TMP} ; then
-       echo "$HOSTNAME" > /etc/hostname
-       sed -i "s/^127.0.0.1[ \t]*$OLDHOSTNAME[ \t]*localhost/127.0.0.1       $HOSTNAME localhost/" /etc/hosts
-       sed -i "s/^::1[ \t]*ip6-localhost ip6-loopback[ \t]*$OLDHOSTNAME/::1     ip6-localhost ip6-loopback $HOSTNAME/" /etc/hosts
-       POSTFIX=''
-       if [ -r /etc/postfix/main.cf ] ; then
-         sed -i "s/^myhostname = .*/myhostname = $HOSTNAME/" /etc/postfix/main.cf && POSTFIX='
+     echo "$HOSTNAME" > /etc/hostname
+     sed -i "s/^127.0.0.1[ \t]*$OLDHOSTNAME[ \t]*localhost/127.0.0.1       $HOSTNAME localhost/" /etc/hosts
+     sed -i "s/^::1[ \t]*ip6-localhost ip6-loopback[ \t]*$OLDHOSTNAME/::1     ip6-localhost ip6-loopback $HOSTNAME/" /etc/hosts
+     POSTFIX=''
+     if [ -r /etc/postfix/main.cf ] ; then
+       sed -i "s/^myhostname = .*/myhostname = $HOSTNAME/" /etc/postfix/main.cf && POSTFIX='
 Configuration of myhostname in /etc/postfix/main.cf has been adjusted as well. Do not forget to restart postfix if necessary.'
-       fi
-       dialog --stdout --title "${PN}" --msgbox "Setting hostname to $HOSTNAME was successful.$POSTFIX" 0 0
-     else
-       dialog --stdout --title "${PN}" --msgbox "Error when setting hostname to $HOSTNAME: `cat $TMP`" 0 0
      fi
+     dialog --stdout --title "${PN}" --msgbox "Setting hostname to $HOSTNAME was successful.$POSTFIX" 0 0
      ;;
   1)
      echo "Cancel pressed."
