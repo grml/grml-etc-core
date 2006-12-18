@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sun Jan 15 22:46:00 CET 2006 [mika]
+# Latest change: Mon Dez 18 00:31:53 CET 2006 [mika]
 ################################################################################
 
 PATH=${PATH:-'/bin/:/sbin/:/usr/local/bin:/usr/bin:/usr/sbin'}
@@ -111,9 +111,9 @@ cat > $SLRNRC << EOF
 
   set spoiler_display_mode 1
 
-  set charset isolatin
   set use_mime 1
-  set mime_charset "iso-8859-15"
+%  set charset isolatin
+%  set mime_charset "iso-8859-15"
 
   set sorting_method 5
   set check_new_groups 1         % let slrn check for new newsgroups

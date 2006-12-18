@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Mai 28 14:20:08 CEST 2006 [mika]
+# Latest change: Mon Dez 18 01:34:26 CET 2006 [mika]
 ################################################################################
 
 [ -r /etc/grml_version ] && GRMLVERSION=$(cat /etc/grml_version) || GRMLVERSION='(no version information available)'
@@ -30,6 +30,11 @@ if [ -x /usr/bin/flite ] ; then
  case "$CMDLINE" in
    *swspeak*|*blind*|*brltty*|*speakup*) flite -o play -t "Finished booting" ;;
  esac
+fi
+
+# activate unicode console if running within utf8 environment
+if [ -r /etc/default/locale ] ; then
+   grep -q "LANG=.*UTF" /etc/default/locale && unicode_start
 fi
 
 exec /bin/zsh -l

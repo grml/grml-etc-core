@@ -1,3 +1,12 @@
+grml-scripts (0.9.10) unstable; urgency=low
+
+  * grml-slrn: do not activate 'set charset isolatin' and
+    'set mime_charset "iso-8859-15"' by default so slrn works in
+    UTF-8 mode as well.
+  * zsh-login: run unicode_start if running inside utf environment
+
+ -- Michael Prokop <mika@grml.org>  Mon, 18 Dec 2006 00:31:57 +0100
+
 grml-scripts (0.9.9) unstable; urgency=low
 
   * grml-hostname: do not execute 'hostname $NEWHOSTNAME', the
