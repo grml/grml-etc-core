@@ -44,7 +44,7 @@ int reread_partition_table(char *dev)
   }
 }
 
-void main(int argc, char** argv)
+int main(int argc, char** argv)
 {
   if (getuid() != 0){
     printf("Error: reread_partition_table requires root permissions\n");
@@ -63,6 +63,7 @@ void main(int argc, char** argv)
     }
     reread_partition_table(argv[1]);
   }
+  return EXIT_SUCCESS;
 }
 
 /* END OF FILE ****************************************************************/
