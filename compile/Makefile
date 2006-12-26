@@ -25,14 +25,18 @@ cpu-screen: cpu-screen.c
 pong: pong.c
 
 vmware-detect: vmware-detect.c
+	diet $(CC) $(CFLAGS) -o $@ $^
+	strip --strip-all $@
 
 dpkg_not_running: dpkg_not_running.c
+	diet $(CC) $(CFLAGS) -o $@ $^
+	strip --strip-all $@
 
 align: align.c
-	$(CC) -Wall -o align align.c
 
 reread_partition_table: reread_partition_table.c
-	diet $(CC) -s -Os -o reread_partition_table reread_partition_table.c
+	diet $(CC) $(CFLAGS) -o $@ $^
+	strip --strip-all $@
 
 gtf: gtf.c
 	$(CC) gtf.c -lm -Wall -o gtf
