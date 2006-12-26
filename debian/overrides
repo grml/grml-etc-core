@@ -26,3 +26,5 @@ grml-scripts: shell-script-fails-syntax-check ./usr/sbin/grml-swapon
 grml-scripts: statically-linked-binary ./usr/bin/cpu-screen
 grml-scripts: statically-linked-binary ./usr/bin/ip-screen
 grml-scripts: statically-linked-binary ./usr/sbin/reread_partition_table
+grml-scripts: statically-linked-binary ./usr/bin/vmware-detect
+grml-scripts: statically-linked-binary ./usr/sbin/dpkg_not_running
