@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Dez 17 13:52:04 CET 2006 [mika]
+# Latest change: Fre Jän 05 00:00:23 CET 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -554,6 +554,9 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
 
   alias swspeak="setopt singlelinezle ; unsetopt prompt_cr ; export PS1='%m%# ' ; speechd-up" # set up software synth.
 
+  # I like clean prompt, so provide simple way to get that
+  alias 0 &>/dev/null || functions 0 &>/dev/null || alias 0='return 0'
+
 # truecrypt; use e.g. via 'truec /dev/ice' /mnt/ice' or 'truec -i'
   if [ -x /usr/sbin/truecrypt ] ; then
      if isutfenv ; then
@@ -657,6 +660,25 @@ Please use the wodim binary instead' ; return 1"
      fi
   fi
 
+# I hate lacking backward compability, so provide an alternative therefore
+  if ! [ -x /usr/sbin/apache2-ssl-certificate ] ; then
+   function apache2-ssl-certificate(){
+
+     print 'Debian does not ship apache2-ssl-certificate anymore (see #398520). :('
+     print 'You might want to take a look at Debian the package ssl-cert as well.'
+     print 'To generate a certificate for use with apache2 follow the instructions:'
+
+     echo '
+
+export RANDFILE=/dev/random
+mkdir /etc/apache2/ssl/
+openssl req $@ -new -x509 -days 365 -nodes -out /etc/apache2/ssl/apache.pem -keyout /etc/apache2/ssl/apache.pem
+chmod 600 /etc/apache2/ssl/apache.pem
+
+Run "grml-tips ssl-certificate" if you need further instructions.
+'
+   }
+  fi
 # }}}
 
 # {{{ Use hard limits, except for a smaller stack and no core dumps
@@ -756,22 +778,54 @@ grmlcomp() {
 # bindkey "^M" my_accept
 
 # command for process lists, the local web server details and host completion
-  hosts=(`hostname` grml.org)
-  zstyle '*' hosts $hosts
   zstyle ':completion:*:urls' local 'www' '/var/www/' 'public_html'
 
 # caching
   [ -d $ZSHDIR/cache ] && zstyle ':completion:*' use-cache yes && \
                           zstyle ':completion::complete:*' cache-path $ZSHDIR/cache/
 
-# use ~/.ssh/known_hosts for completion [does not work with hashing of new ssh versions anymore]
-  if [ -f "$HOME/.ssh/known_hosts" ] ; then
-    hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*})
-    zstyle ':completion:*:hosts' hosts $hosts
+# host completion
+  if is42 ; then
+    [ -r ~/.ssh/known_hosts ] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
+    [ -r /etc/hosts ] && : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(</etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}} || _etc_hosts=()
+  else
+    _ssh_hosts=()
+    _etc_hosts=()
   fi
+  hosts=(
+      `hostname`
+      "$_ssh_hosts[@]"
+      "$_etc_hosts[@]"
+      grml.org
+      localhost
+  )
+  zstyle ':completion:*:hosts' hosts $hosts
+#  zstyle '*' hosts $hosts
+
+# specify your logins:
+# my_accounts=(
+#  {grml,grml1}@foo.invalid
+#  grml-devel@bar.invalid
+# )
+# other_accounts=(
+#  {fred,root}@foo.invalid
+#  vera@bar.invalid
+# )
+# zstyle ':completion:*:my-accounts' users-hosts $my_accounts
+# zstyle ':completion:*:other-accounts' users-hosts $other_accounts
+
+# specify specific port/service settings:
+#  telnet_users_hosts_ports=(
+#    user1@host1:
+#    user2@host2:
+#    @mail-server:{smtp,pop3}
+#    @news-server:nntp
+#    @proxy-server:8000
+#  )
+# zstyle ':completion:*:*:telnet:*' users-hosts-ports $telnet_users_hosts_ports
 
 # use generic completion system for programs not yet defined:
-  compdef _gnu_generic tail head feh cp mv gpg df stow uname ipacsum fetchipac
+  compdef _gnu_generic tail head feh cp mv df stow uname ipacsum fetchipac
 
 # see upgrade function in this file
   compdef _hosts upgrade
@@ -843,6 +897,18 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 # shell functions {{{
   setenv()  { typeset -x "${1}${1:+=}${(@)argv[2,$#]}" }  # csh compatibility
   freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
+  reload () {
+   if [[ "$#*" -eq 0 ]]; then
+      [ -r ~/.zshrc ] && . ~/.zshrc
+   else
+      local fn
+      for fn in "$@"; do
+          unfunction $fn
+          autoload -U $fn
+      done
+   fi
+  }
+  compdef _functions reload freload
 
   # fast manual access
   if type -p qma &>/dev/null ; then
@@ -888,10 +954,10 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   compdef _aliases edalias
 
 # edit function via zle:
-  edfun() {
+  edfunc() {
     [ -z "$1" ] && { echo "Usage: edfun <function_to_edit>" ; return 1 } || zed -f "$1" ;
   }
-  compdef _functions edfun
+  compdef _functions edfunc
 
 # use it e.g. via 'Restart apache2'
  if [ -d /etc/init.d ] ; then
@@ -955,10 +1021,26 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
      local LENGTH=$(expr length $STRING)
      local FIRSCHAR=$(echo $(expr substr $STRING 1 1))
      local REST=$(echo $(expr substr $STRING 2 $LENGTH))
-     ps xauwww| grep [$FIRSCHAR]$REST
+     ps xauwww| grep "[$FIRSCHAR]$REST"
   fi
   }
 
+  # Switching shell safely and efficiently? http://www.zsh.org/mla/workers/2001/msg02410.html
+  # bash() {
+  #  NO_SWITCH="yes" command bash "$@"
+  # }
+  # restart () {
+  #  exec $SHELL $SHELL_ARGS "$@"
+  # }
+
+# }}}
+
+# log out? set timeout in seconds {{{
+# TMOUT=1800
+# do not log out in some specific terminals:
+#  if [[ "${TERM}" == ([Exa]term*|rxvt|dtterm|screen*) ]]; then
+#    unset TMOUT
+#  fi
 # }}}
 
 # {{{ make sure our environment is clean regarding colors
@@ -979,4 +1061,4 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 # }}}
 
 ## END OF FILE #################################################################
-# vim:foldmethod=marker
+# vim:foldmethod=marker expandtab
