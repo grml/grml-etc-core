@@ -7,6 +7,7 @@ grml-etc-core (0.2.15) unstable; urgency=low
     - improved host completion (thanks for some code, Kai Wilke!)
     - added apache2-ssl-certificate() as Debian does not ship
       the script anymore *grml*
+    - support zsh profiling via $ZSH_PROFILE_RC and profile()
     - added alias 0 which does nothing else than 'return 0' (I like
       a clean prompt without error return codes inside but don't
       want to miss the feature itself, so just press 0<cr> and that's

@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Jän 05 00:00:23 CET 2007 [mika]
+# Latest change: Fre Jän 05 19:35:27 CET 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -11,6 +11,13 @@
 #
 # Global Order: zshenv, zprofile, zshrc, zlogin
 ################################################################################
+
+# zsh profiling {{{
+# just execute 'ZSH_PROFILE_RC=1 zsh' and run 'zprof' to get the details
+  if [[ -n $ZSH_PROFILE_RC ]] ; then
+     zmodload zsh/zprof
+  fi
+# }}}
 
 # {{{ check for version/system
 # check for versions (compatibility reasons)
@@ -256,7 +263,7 @@ fi
 # autoload zsh modules when they are referenced
   is4 && for opt mod in a  stat    \
                         a  zpty    \
-                        a  zprof   \
+                        ap zprof   \
                         ap mapfile ; do
              zmodload -${opt} zsh/${mod} ${mod}
          done ; unset opt mod
@@ -946,6 +953,11 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   }
   _uchange() { _files -W /usr/share/doc -/ }
   compdef _uchange uchange
+
+# zsh profiling
+  profile () {
+      ZSH_PROFILE_RC=1 $SHELL "$@"
+  }
 
 # edit alias via zle:
   edalias() {
