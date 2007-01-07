@@ -657,6 +657,12 @@ Enjoy your grml system with the zsh!$reset_color"
     alias zshskel="source /etc/skel/.zshrc" # source skeleton zshrc
   fi
 
+# sort installed Debian-packages by size
+  if [ -x /usr/bin/grep-status ] ; then
+     alias debs-by-size='grep-status -FStatus -sInstalled-Size,Package \
+                -n "install ok installed" | paste -sd "  \n" | sort -rn'
+  fi
+
 # if cdrecord is a symlink (to wodim) or isn't present at all warn:
   if [ -L /usr/bin/cdrecord -o ! -x =cdrecord ] ; then
      if [ -x =wodim ] ; then

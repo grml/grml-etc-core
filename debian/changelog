@@ -12,6 +12,7 @@ grml-etc-core (0.2.15) unstable; urgency=low
       a clean prompt without error return codes inside but don't
       want to miss the feature itself, so just press 0<cr> and that's
       it :))
+    - added alias debs-by-size
 
  -- Michael Prokop <mika@grml.org>  Fri,  5 Jan 2007 00:00:54 +0100
 
