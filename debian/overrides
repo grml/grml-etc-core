@@ -28,3 +28,4 @@ grml-scripts: statically-linked-binary ./usr/bin/ip-screen
 grml-scripts: statically-linked-binary ./usr/sbin/reread_partition_table
 grml-scripts: statically-linked-binary ./usr/bin/vmware-detect
 grml-scripts: statically-linked-binary ./usr/sbin/dpkg_not_running
+grml-scripts: script-with-language-extension usr/bin/gsuggest.pl
