@@ -1,3 +1,10 @@
+grml-scripts (0.9.11) unstable; urgency=low
+
+  * Added script gsuggest.pl: google suggest - ask google for
+    keyword suggestions
+
+ -- Michael Prokop <mika@grml.org>  Wed, 10 Jan 2007 23:49:16 +0100
+
 grml-scripts (0.9.10) unstable; urgency=low
 
   * grml-slrn: do not activate 'set charset isolatin' and
