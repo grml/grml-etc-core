@@ -13,6 +13,8 @@ grml-etc-core (0.2.15) unstable; urgency=low
       want to miss the feature itself, so just press 0<cr> and that's
       it :))
     - added alias debs-by-size
+    - added function deswap (useful after suspending), function hex
+      (print hex value of a number) and function peval (perl-eval)
 
  -- Michael Prokop <mika@grml.org>  Fri,  5 Jan 2007 00:00:54 +0100
 

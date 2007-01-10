@@ -797,7 +797,7 @@ grmlcomp() {
   [ -d $ZSHDIR/cache ] && zstyle ':completion:*' use-cache yes && \
                           zstyle ':completion::complete:*' cache-path $ZSHDIR/cache/
 
-# host completion
+# host completion /* add brackets as vim can't parse zsh's complex cmdlines 8-) {{{ */
   if is42 ; then
     [ -r ~/.ssh/known_hosts ] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
     [ -r /etc/hosts ] && : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(</etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}} || _etc_hosts=()
@@ -1042,6 +1042,27 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
      ps xauwww| grep "[$FIRSCHAR]$REST"
   fi
   }
+
+  # After resuming from suspend, system is paging heavilly, leading to very bad interactivity.
+  # taken from $LINUX-KERNELSOURCE/Documentation/power/swsusp.txt
+  [ -r /proc/1/maps ] && deswap() {
+     print 'Reading /proc/[0-9]*/maps and sending output to /dev/null, this might take a while.'
+     cat $(sed -ne 's:.* /:/:p' /proc/[0-9]*/maps | sort -u | grep -v '^/dev/')  > /dev/null
+     print 'Finished, running "swapoff -a; swapon -a" may also be useful.'
+  }
+
+  # print hex value of a number
+  hex() {
+    [ -n "$1" ] && printf "%x\n" $1 || { print 'Usage: hex <number-to-convert>' ; return 1 }
+  }
+
+  # calculate (or eval at all ;-)) with perl => p[erl-]eval
+  # hint: also take a look at zcalc -> 'autoload zcalc' -> 'man zshmodules | less -p MATHFUNC'
+  peval() {
+    [ -n "$1" ] && CALC="$*" || print "Usage: calc [expression]"
+    perl -e "print eval($CALC),\"\n\";"
+  }
+  functions peval &>/dev/null && alias calc=peval
 
   # Switching shell safely and efficiently? http://www.zsh.org/mla/workers/2001/msg02410.html
   # bash() {
