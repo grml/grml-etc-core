@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Jän 05 19:35:27 CET 2007 [mika]
+# Latest change: Son Jän 14 10:57:03 CET 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -564,7 +564,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
   # I like clean prompt, so provide simple way to get that
   alias 0 &>/dev/null || functions 0 &>/dev/null || alias 0='return 0'
 
-# truecrypt; use e.g. via 'truec /dev/ice' /mnt/ice' or 'truec -i'
+# truecrypt; use e.g. via 'truec /dev/ice /mnt/ice' or 'truec -i'
   if [ -x /usr/sbin/truecrypt ] ; then
      if isutfenv ; then
         alias truec='truecrypt --mount-options "rw,sync,dirsync,users,uid=1000,gid=users,umask=077,utf8" '
@@ -926,6 +926,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   # fast manual access
   if type -p qma &>/dev/null ; then
      manzsh()  { qma zshall "$1" }
+     compdef _man qma
   else
      manzsh()  { /usr/bin/man zshall |  vim -c "se ft=man| se hlsearch" +/"$1" - ; }
      # manzsh()  { /usr/bin/man zshall |  most +/"$1" ; }
