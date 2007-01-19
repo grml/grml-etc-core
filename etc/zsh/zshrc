@@ -393,7 +393,7 @@ fi
 
 # {{{ display battery status on right side of prompt via running 'BATTERY=1 zsh'
   if [ -n "$BATTERY" ] ; then
-     if [ -x =acpi ] ; then
+     if [ -x $(which acpi) ] ; then
         PERCENT="${(C)${(s| |)$(acpi 2>/dev/null)}[4]}"
         [ -z "$PERCENT" ] && PERCENT='acpi not present'
         if [ "${PERCENT%%%}" -lt 20 ] ; then
@@ -664,8 +664,8 @@ Enjoy your grml system with the zsh!$reset_color"
   fi
 
 # if cdrecord is a symlink (to wodim) or isn't present at all warn:
-  if [ -L /usr/bin/cdrecord -o ! -x =cdrecord ] ; then
-     if [ -x =wodim ] ; then
+  if [ -L /usr/bin/cdrecord -o ! -x $(which cdrecord) ] ; then
+     if [ -x $(which wodim) ] ; then
         alias cdrecord="echo 'cdrecord is not provided under its original name by Debian anymore.
 See #377109 in the BTS of Debian for more details.
 

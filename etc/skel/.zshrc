@@ -35,9 +35,9 @@
 # set default browser
   if [ -z "$BROWSER" ] ; then
      if [ -n "$DISPLAY" ] ; then
-        [ -x =firefox ] && export BROWSER=firefox
+        [ -x $(which firefox) ] && export BROWSER=firefox
      else
-        [ -x =w3m ] && export BROWSER=w3m
+        [ -x $(which w3m) ] && export BROWSER=w3m
      fi
   fi
   (( ${+PAGER} ))   || export PAGER="less"
@@ -776,7 +776,7 @@
   }
 
 # highlight important stuff in diff output, usage example: hg diff | hidiff
-  [ -x =histring ] && \
+  [ -x $(which histring) ] && \
   alias hidiff="histring -fE '^Comparing files .*|^diff .*' | histring -c yellow -fE '^\-.*' | histring -c green -fE '^\+.*'"
 
 # rename pictures based on information found in exif headers
