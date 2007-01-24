@@ -1,3 +1,11 @@
+grml-scripts (0.9.12) unstable; urgency=low
+
+  * Update make_chroot_jail script (see
+    http://www.fuschlberger.net/programs/ssh-scp-chroot-jail/ for
+    details), thanks for noticing - Wolfgang Fuschlberger!
+
+ -- Michael Prokop <mika@grml.org>  Wed, 24 Jan 2007 22:32:43 +0100
+
 grml-scripts (0.9.11) unstable; urgency=low
 
   * Added script gsuggest.pl: google suggest - ask google for
