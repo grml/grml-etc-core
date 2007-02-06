@@ -1,3 +1,10 @@
+grml-etc-core (0.2.18) unstable; urgency=low
+
+  * /etc/zsh/completion.d/grml-wallpaper: allow proper setting
+    of parameters for local directories [Closses: issue116]
+
+ -- Michael Prokop <mika@grml.org>  Tue,  6 Feb 2007 20:17:02 +0100
+
 grml-etc-core (0.2.17) unstable; urgency=low
 
   * zsh config files: fix handling of check for binaries, thanks
