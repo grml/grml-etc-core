@@ -19,7 +19,7 @@ else
    DEFAULTITEM=root
 fi
 
-function allover() {
+allover() {
 MENU=$($DIALOG --stdout --clear --title "$PN" --default-item $DEFAULTITEM --menu \
 "Please select the scripts you would like to run.
 

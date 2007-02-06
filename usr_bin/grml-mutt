@@ -362,7 +362,7 @@ case $retval in
 esac
 
 writecolors() {
-  if [ "$COLOR" == 'light' ] ; then
+  if [ "$COLOR" = 'light' ] ; then
     lightcolors
   fi
 }

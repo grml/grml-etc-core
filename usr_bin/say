@@ -4,10 +4,10 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Jän 30 14:38:30 CET 2005 [mika]
+# Latest change: Die Feb 06 20:38:24 CET 2007 [mika]
 ################################################################################
 
-if [[ "$#" -eq '0' ]] ; then
+if [ $# -eq 0 ] ; then
   echo "Usage: $0 <text_to_say>"
   exit -1
 fi

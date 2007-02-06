@@ -8,7 +8,7 @@
 ################################################################################
 
 # -U option basically means "terminal does not have UTF-8 support"
-if [ "$1" == "-U" ]; then
+if [ x$1 = "x-U" ]; then
     unset LC_CTYPE
 fi
 

@@ -13,7 +13,7 @@ PATH=${PATH:-'/bin/:/sbin/:/usr/bin:/usr/sbin'}
 DIALOG=$(which dialog)
 PN=$(basename $0)
 
-function allover() {
+allover() {
 MENU=$($DIALOG --stdout --clear --title "$PN" --menu \
 "Configure userland tools." 0 0 0 \
 "grml-mutt" "Configure the mutt MUA" \

@@ -261,7 +261,7 @@ Copying files in $CHROOT_USERNAME's \$HOME to \"$HOMEDIR\"
 usermod -d "$HOMEDIR" -m -s "$SHELL" $CHROOT_USERNAME && chmod 700 "$HOMEDIR"
 fi
 
-if [ "$CREATEUSER" == "yes" ] ; then {
+if [ "$CREATEUSER" = "yes" ] ; then {
 echo "Adding User \"$CHROOT_USERNAME\" to system"
 useradd -m -d "$HOMEDIR" -s "$SHELL" $CHROOT_USERNAME && chmod 700 "$HOMEDIR"
 

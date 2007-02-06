@@ -12,25 +12,25 @@ usage(){
     echo "supported values: at, de, ch, us"
 }
 
-if [[ $# -lt "1" ]] ; then
+if [ $# -lt "1" ] ; then
    usage
    exit -1
 fi
 
-if [[ $DISPLAY == "" ]] ;then
-  if [[ "$1" == "de" ]] ; then
+if [ -z "$DISPLAY" ] ;then
+  if [ "$1" = "de" ] ; then
     echo "Loading keymap for Germany..."
     sudo loadkeys i386/qwertz/de-latin1-nodeadkeys.kmap.gz
     echo -e "\nDone."
-  elif [[ "$1" == "at" ]] ; then
+  elif [ "$1" = "at" ] ; then
     echo "Loading keymap for Austria..."
     sudo loadkeys i386/qwertz/de-latin1-nodeadkeys.kmap.gz
     echo -e "\nDone."
-  elif [[ "$1" == "ch" ]] ; then
+  elif [ "$1" = "ch" ] ; then
     echo "Loading keymap for Switzerland..."
     sudo loadkeys i386/qwertz/sg-latin1.kmap.gz
     echo -e "\nDone."
-  elif [[ "$1" == "us" ]] ; then
+  elif [ "$1" = "us" ] ; then
     echo 'Loading keymap us...'
     # sudo loadkeys /etc/console/boottime.kmap.gz
     sudo loadkeys i386/qwerty/us-latin1.kmap.gz
@@ -41,23 +41,23 @@ Notice: Use loadkeys on console and setxkbmap when running X for
 modifying keyboard layout. Adjust \$LANG and \$LC_ALL for setting locales." ; exit 1
   fi
 else
-  if [[ $# == "0" ]] ; then
+  if [ $# = 0 ] ; then
       echo "Usage: $0 <language>"
       echo "supported values: at, de, ch, us"
   else
-    if [[ "$1" == "de" ]] ; then
+    if [ "$1" = "de" ] ; then
       echo "Loading keymap for Germany..."
       [ -r $HOME/.Xmodmap.german ] && xmodmap $HOME/.Xmodmap.german || setxkbmap de
       echo -e "\nDone."
-    elif [[ "$1" == "at" ]] ; then
+    elif [ "$1" = "at" ] ; then
       echo "Loading keymap for Austria..."
       setxkbmap de
       echo -e "\nDone."
-    elif [[ "$1" == "ch" ]] ; then
+    elif [ "$1" = "ch" ] ; then
       echo "Loading keymap for Switzerland..."
       setxkbmap ch
       echo -e "\nDone."
-    elif [[ "$1"  == "us" ]] ; then
+    elif [ "$1"  = "us" ] ; then
       echo 'Loading keymap us...'
       [ -r $HOME/.Xmodmap ] && xmodmap $HOME/.Xmodmap || setxkbmap us
       echo -e "\nDone."

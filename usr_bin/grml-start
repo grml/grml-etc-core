@@ -7,8 +7,8 @@
 # Latest change: Fre Jul 07 22:42:40 CEST 2006 [mika]
 ################################################################################
 
- (( ${+BROWSER} )) || BROWSER="w3m"
-#(( ${+BROWSER} )) || BROWSER="links2 -driver fb"
+BROWSER=${BROWSER:-w3m}
+#BROWSER=${BROWSER:-links2 -driver fb}
 exec $BROWSER /usr/share/doc/grml-docs/startpage.html
 
 ## END OF FILE #################################################################

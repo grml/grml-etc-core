@@ -1,3 +1,22 @@
+grml-scripts (0.9.13) unstable; urgency=low
+
+  * The 'fix bashism in several scripts' release. Thanks
+    to ft for the patches!
+
+    - say: fix bashism [Closes: issue114]
+    - make_chroot_jail: fix bashism [Closes: issue113]
+    - grml-start: fix bashism [Closes: issue112]
+    - grml-slrn: fix bashism [Closes: issue111]
+    - grml-muttng: fix bashism [Closes: issue110]
+    - grml-mutt: fix bashism [Closes: issue109]
+    - grml-lang: fix bashism [Closes: issue108]
+    - grml-config: fix bashism [Closes: issue107]
+    - grml-config-user: fix bashism [Closes: issue106]
+    - grml-config-root: fix bashism [Closes: issue105]
+    - attach-screen: fix bashism [Closes: issue103]
+
+ -- Michael Prokop <mika@grml.org>  Tue,  6 Feb 2007 20:38:40 +0100
+
 grml-scripts (0.9.12) unstable; urgency=low
 
   * Update make_chroot_jail script (see

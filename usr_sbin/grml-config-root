@@ -19,7 +19,7 @@ then
         exit 100
 fi
 
-function allover() {
+allover() {
 MENU=$($DIALOG --stdout --clear --title "$PN" --menu \
 "Configure your grml system.
 
