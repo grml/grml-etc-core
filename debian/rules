@@ -53,7 +53,7 @@ binary-arch: build install
 	dh_testroot
 	dh_installchangelogs
 	dh_installdocs
-	dh_installman manpages/grml-scripts.1 manpages/grml-bind.8 manpages/reread_partition_table.8 manpages/gtf.1 manpages/random-hostname.1 \
+	dh_installman manpages/grml-scripts.1 manpages/reread_partition_table.8 manpages/gtf.1 manpages/random-hostname.1 \
 	manpages/grml-setkeyboard.8 manpages/grml-setlang.8 manpages/getsf.1 manpages/grml-iptstate.8 manpages/qma.1 manpages/grml-swapon.8 \
 	manpages/grml2ram.8 manpages/gsuggest.1
 #	cp --no-dereference man/*.1.gz debian/grml-scripts/usr/share/man/man1/
@@ -85,7 +85,6 @@ binary-arch: build install
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/get_tw_cli.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grepc.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grepedit.1.gz \
-		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-bind.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-config.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-config-root.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-config-user.1.gz \

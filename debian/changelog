@@ -1,3 +1,9 @@
+grml-scripts (0.9.14) unstable; urgency=low
+
+  * Remove grml-bind, it's deprecated nowadays. [Closes: issue104]
+
+ -- Michael Prokop <mika@grml.org>  Wed,  7 Feb 2007 08:47:49 +0100
+
 grml-scripts (0.9.13) unstable; urgency=low
 
   * The 'fix bashism in several scripts' release. Thanks
