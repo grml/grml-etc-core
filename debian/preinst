@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Die Okt 03 20:33:19 CEST 2006 [mika]
+# Latest change: Fre Feb 09 15:24:01 CET 2007 [mika]
 ################################################################################
 
 set -e
@@ -18,21 +18,24 @@ divert_conffile() {
        cp -f "$CONFFILE" "$CONFFILE".original
     else
        [ -e "$CONFFILE" ] && cp -f "$CONFFILE" "$CONFFILE".grml-etc-core
-#       [ -e "$CONFFILE" ] && cp -f "$CONFFILE" "$CONFFILE".original
     fi
+
 }
 
 case "$1" in
    install|upgrade|configure)
+        TMP=$$
         # move files from package grml-etc to grml-etc-core, make sure
         # we don't lose any files...
         for file in /etc/zsh/zlogin /etc/zsh/zprofile /etc/zsh/zshenv /etc/zsh/zshrc \
                     /etc/zsh/zlogout /etc/vim/vimrc; do
+               [ -e "$file".original ] || cp -f "$file" "${file}.tmp.$$"
                divert_conffile $file && \
                [ -f "$file" ] && rm $file && \
                dpkg-divert --quiet --add --rename --package grml-etc-core --divert "$file".original $file  && \
                [ -f "$file".dpkg-bak ]      && mv -f "$file".dpkg-bak "$file"
                [ -f "$file".grml-etc-core ] && mv -f "$file".grml-etc-core "$file"
+	       [ -e "${file}.tmp.$$" ]      && mv -f "${file}.tmp.$$" "$file.original"
 
                # trying to overwrite `/etc/skel/.zshrc', which is also in package zsh
                # [ -f /etc/skel/.zshrc ] && \

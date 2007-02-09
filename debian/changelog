@@ -1,3 +1,12 @@
+grml-etc-core (0.2.19) unstable; urgency=low
+
+  * /etc/vim/vimrc: make sure we use 'syntax on' only when we
+    have vim with +syntax
+  * debian/preinst: another fix to improve keeping of original
+    configuration files
+
+ -- Michael Prokop <mika@grml.org>  Fri,  9 Feb 2007 15:24:14 +0100
+
 grml-etc-core (0.2.18) unstable; urgency=low
 
   * /etc/zsh/completion.d/grml-wallpaper: allow proper setting
