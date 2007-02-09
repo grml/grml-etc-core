@@ -1,3 +1,10 @@
+grml-scripts (0.9.15) unstable; urgency=low
+
+  * The "I love working on new architectures! :)" release.
+  * Add gcc and libc6-dev to Build-Depends.
+
+ -- Michael Prokop <mika@grml.org>  Fri,  9 Feb 2007 17:47:15 +0100
+
 grml-scripts (0.9.14) unstable; urgency=low
 
   * Remove grml-bind, it's deprecated nowadays. [Closes: issue104]
