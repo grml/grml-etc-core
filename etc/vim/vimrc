@@ -53,7 +53,7 @@
 " Just load the main syntax file when Vim was compiled with "+syntax".
   if has("syntax")
      syntax on
-  fi
+  endif
 
 " Debian uses compressed helpfiles. We must inform vim that the main
 " helpfiles is compressed. Other helpfiles are stated in the tags-file.
