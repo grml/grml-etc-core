@@ -1,3 +1,10 @@
+grml-etc-core (0.2.20) unstable; urgency=low
+
+  * Update of /etc/skel/.vimrc and /etc/vim/vimrc, added
+    /etc/skel/.vim/ftplugin/c.vim.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 10 Feb 2007 11:33:13 +0100
+
 grml-etc-core (0.2.19) unstable; urgency=low
 
   * /etc/vim/vimrc: make sure we use 'syntax on' only when we

@@ -3,7 +3,7 @@
 " Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 " Bug-Reports:   see http://grml.org/bugs/
 " License:       This file is licensed under the GPL v2.
-" Latest change: Mon Jun 05 16:30:29 CEST 2006 [mika]
+" Latest change: Sam Feb 10 11:20:38 CET 2007 [mika]
 "###############################################################################
 " Thanks to Sven Guckes for his template!
 "###############################################################################
@@ -20,6 +20,7 @@
 "  set list listchars=tab:»·,trail:·
   set listchars=eol:$,precedes:«,extends:»,tab:»·,trail:·
   set viminfo=%,'50,\"100,:100,n~/.viminfo
+  set tags=./tags,./TAGS,tags,TAGS,../tags,../../tags,../../../tags,../../../../tags
 
 " autocommands:
 " when the file type is "mail" then set the textwidth to "70":
@@ -33,6 +34,7 @@
 "  hi nontext  ctermfg=blue   ctermbg=black guifg=blue   guibg=black
 " switch on syntax coloring!! "bunt ist meine lieblingsfarbe!" :-)
   syn on
+" set t_Co=256                " number of colors
 
 " some useful mappings:
   set pastetoggle=<f11>
@@ -71,6 +73,11 @@
 
 " Kill quote spaces (when quoting a quote)
   map ,kqs mz:%s/^> >/>>/<cr>
+
+" Interface to Mercurial Version Control
+  if filereadable( "/usr/share/doc/mercurial/examples/vim/hg-menu.vim" )
+    source /usr/share/doc/mercurial/examples/vim/hg-menu.vim
+  endif
 
 " Vim 7 brings cool new features - see ':he version7'!
 " The coolest features of Vim7 by mika
