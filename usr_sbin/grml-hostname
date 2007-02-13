@@ -4,37 +4,37 @@
 # Authors:       (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Dez 17 16:23:34 CET 2006 [mika]
+# Latest change: Die Feb 13 12:16:57 CET 2007 [mika]
 ################################################################################
 
-if [ $UID != 0 ] ; then
-   echo Error: become root before starting $0 >& 2
-   exit 100
-fi
+source /etc/grml/script-functions
+
+check4root || exit 1
 
 PN='grml-hostname'
-TMP=$(mktemp)
 OLDHOSTNAME="$(hostname)"
 
-if [ -x /usr/bin/random-hostname ] ; then
-   HOSTNAME="$(/usr/bin/random-hostname)"
+case "$1" in -h|--help) echo "Usage: $0 [hostname]">&2; exit 1 ;; esac
+
+if [ -n "$1" ] ; then
+   HOSTNAME="$1"
+   NONINTERACTIVE=1
 else
-   HOSTNAME="$(hostname)"
+   if [ -x /usr/bin/random-hostname ] ; then
+      HOSTNAME="$(/usr/bin/random-hostname)"
+   else
+      HOSTNAME="$(hostname)"
+   fi
 fi
 
-bailout() {
-  rm -f $TMP
-  exit 1
-}
-trap bailout 1 2 3 15
-
-# running inside grml2hd? Don't warn because of hostname + X
-[ -n "$GRML2HD" ] || MSG='\n\nNotice: setting a different hostname while running X is *not* recommend!'
-
-HOSTNAME="$(dialog --stdout --title "${PN}" --extra-button --extra-label "Propose hostname" \
---inputbox "Set hostname (/etc/hostname, /etc/hosts and /etc/postfix/main.cf will be adjusted)\
-\n\nTip: press 'Propose hostname' for another proposal${MSG}" 14 70 $HOSTNAME)"
-retval=$?
+if [ -z "$NONINTERACTIVE" ] ; then
+   HOSTNAME="$(dialog --stdout --title "${PN}" --extra-button --extra-label "Propose hostname" \
+   --inputbox "Set hostname (/etc/hostname, /etc/hosts and /etc/postfix/main.cf will be adjusted)\
+\n\nTip: press 'Propose hostname' for another proposal" 14 70 $HOSTNAME)"
+  retval=$?
+else
+  retval=0
+fi
 
 case $retval in
   0)
@@ -46,7 +46,12 @@ case $retval in
        sed -i "s/^myhostname = .*/myhostname = $HOSTNAME/" /etc/postfix/main.cf && POSTFIX='
 Configuration of myhostname in /etc/postfix/main.cf has been adjusted as well. Do not forget to restart postfix if necessary.'
      fi
-     dialog --stdout --title "${PN}" --msgbox "Setting hostname to $HOSTNAME was successful.$POSTFIX" 0 0
+     if [ -z "$NONINTERACTIVE" ] ; then
+        dialog --stdout --title "${PN}" --msgbox "Setting hostname to $HOSTNAME was successful.$POSTFIX" 0 0
+     else
+        echo "Setting hostname to $HOSTNAME: done"
+     fi
+     exit 0
      ;;
   1)
      echo "Cancel pressed."
@@ -57,7 +62,5 @@ Configuration of myhostname in /etc/postfix/main.cf has been adjusted as well. D
      echo "ESC pressed."
      ;;
 esac
-
-rm -f $TMP 2>/dev/null
 
 ## END OF FILE #################################################################

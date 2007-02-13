@@ -1,3 +1,11 @@
+grml-scripts (0.9.16) unstable; urgency=low
+
+  * grml-hostname: support non-interactive mode and do not
+    set hostname via hostname(1) but write to according
+    files only so it does not break for example running X.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 13 Feb 2007 12:08:39 +0100
+
 grml-scripts (0.9.15) unstable; urgency=low
 
   * The "I love working on new architectures! :)" release.

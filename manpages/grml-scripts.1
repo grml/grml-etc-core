@@ -164,7 +164,11 @@ Central configuration interface to configure the grml system.
 .SS grml-config-root
 Configuration interface for admin tasks on the grml system.
 .SS grml-hostname
-Simple frontend to set hostname.
+Simple frontend to configure hostname in the corresponding
+files. When executed without a parameter a dialog based
+frontend will be used, when given a parameter the provided
+parameter will be used as hostname and script is executed in
+non-interactive mode.
 .SS grml-nessus
 Prepare nessus for use on grml system.
 .SS grml-postfix
