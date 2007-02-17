@@ -1,15 +1,11 @@
 #!/bin/dash
 # Filename:      grml-screen
-# Purpose:       wrapper for screen
+# Purpose:       wrapper for screen to start with appropriate configuration
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sun Jan 08 15:30:06 CET 2006 [mika]
+# Latest change: Sam Feb 17 12:15:05 CET 2007 [mika]
 ################################################################################
-
-# fix tty permissions
-#  sudo chmod 660      $TTY
-#  sudo chown root.tty $TTY
 
 # export variable USER for use withing GNU screen:
   export USER=`id -un`
@@ -21,12 +17,14 @@
 
 # now run screen with config
   cd $HOME     # important for e.g. hardcopy-feature
+  # do we have a utf8 enabled terminal?
+  [ -x /usr/bin/vt-is-UTF8 ] && /usr/bin/vt-is-UTF8 && UTF='-U'
   if [ `id -u` = 0 ] ; then
-    exec screen -c /etc/grml/screenrc
-  elif [ -r $HOME/.screenrc ] ; then
-    exec screen -c $HOME/.screenrc
+    exec screen $UTF -c /etc/grml/screenrc
+  elif [ -r "$HOME/.screenrc" ] ; then
+    exec screen $UTF -c "$HOME/.screenrc"
   else
-    exec screen -c /etc/grml/screenrc_grml
+    exec screen $UTF -c /etc/grml/screenrc_grml
   fi
 
 ## END OF FILE #################################################################
