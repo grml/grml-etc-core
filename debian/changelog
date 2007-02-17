@@ -1,3 +1,9 @@
+grml-scripts (0.9.18) unstable; urgency=low
+
+  * Remove unicode stuff from zsh-login. 
+
+ -- Michael Prokop <mika@grml.org>  Sat, 17 Feb 2007 13:58:23 +0100
+
 grml-scripts (0.9.17) unstable; urgency=low
 
   * grml-init-screen + grml-screen: check for UTF capable
