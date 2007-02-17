@@ -58,6 +58,7 @@
   isutfenv() {
     case "$LANG $CHARSET $LANGUAGE" in
       *utf*) return 0 ;;
+      *UTF*) return 0 ;;
       *)     return 1 ;;
     esac
   }

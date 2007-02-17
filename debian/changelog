@@ -1,3 +1,9 @@
+grml-etc-core (0.2.21) unstable; urgency=low
+
+  * /etc/zsh/zshrc: check for upper letters in isutfenv as well
+
+ -- Michael Prokop <mika@grml.org>  Sat, 17 Feb 2007 12:15:15 +0100
+
 grml-etc-core (0.2.20) unstable; urgency=low
 
   * Update of /etc/skel/.vimrc and /etc/vim/vimrc, added
