@@ -1,0 +1,10 @@
+## Information for DVB-T in Austria, for use with scan of dvb-utils
+## See also http://www.vdr-wiki.de/wiki/index.php/DVB-T_channels.conf
+# T freq bw fec_hi fec_lo mod transmission-mode guard-interval hierarchy
+T 754000000 8MHz 3/4 NONE QAM16 8k 1/4 NONE #K56, Eisenstadt (Burgenland)
+T 794000000 8MHz 3/4 NONE QAM16 8k 1/4 NONE #K61, Wien
+T 802000000 8MHz 3/4 NONE QAM16 8k 1/4 NONE #K62, Graz (Steiermark)
+T 818000000 8MHz 3/4 NONE QAM16 8k 1/4 NONE #K64, Linz (Oeber-Oe), Innsbruck (Tirol)
+T 826000000 8MHz 3/4 NONE QAM16 8k 1/4 NONE #K65, Salzburg, Bregenz (Vorarlberg)
+T 850000000 8MHz 3/4 NONE QAM16 8k 1/4 NONE #K68, St. Poelzen (Nieder-Oe)
+T 858000000 8MHz 3/4 NONE QAM16 8k 1/4 NONE #K69, Klagenfurt (Kaerten), Graz (Steiermark)

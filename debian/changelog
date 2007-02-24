@@ -1,3 +1,16 @@
+grml-etc-core (0.2.22) unstable; urgency=low
+
+  * Adding directory /etc/skel/.channels with the following files:
+    - Files for use with scan of dvb-utils:
+      * at-austria    -> austria in general
+      * at-graz       -> working file for Graz
+      * at-klagenfurt -> working file for Klagenfurt
+    - Already configured files for use with mplayer/xine/...:
+      * channels.conf-AT-graz       -> use DVB in Graz
+      * channels.conf-AT-klagenfurt -> use DVB in Klagenfurt
+
+ -- Michael Prokop <mika@grml.org>  Sat, 24 Feb 2007 12:02:16 +0100
+
 grml-etc-core (0.2.21) unstable; urgency=low
 
   * /etc/zsh/zshrc: check for upper letters in isutfenv as well

@@ -1,0 +1,14 @@
+# Filename:      channels.conf-AT-graz
+# Purpose:       channel configuration file for DVB-T in Graz/Austria.
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Sam Feb 24 12:00:47 CET 2007 [mika]
+################################################################################
+# Usage example: 'ln -s ~/.mplayer/channels.conf-AT-graz ~/.mplayer/channels.conf'
+################################################################################
+ORF1:802000000:INVERSION_AUTO:BANDWIDTH_8_MHZ:FEC_3_4:FEC_3_4:QAM_16:TRANSMISSION_MODE_8K:GUARD_INTERVAL_1_4:HIERARCHY_NONE:5010:5011:10101
+ORF2 St:802000000:INVERSION_AUTO:BANDWIDTH_8_MHZ:FEC_3_4:FEC_3_4:QAM_16:TRANSMISSION_MODE_8K:GUARD_INTERVAL_1_4:HIERARCHY_NONE:5020:5021:10112
+ATV+:802000000:INVERSION_AUTO:BANDWIDTH_8_MHZ:FEC_3_4:FEC_3_4:QAM_16:TRANSMISSION_MODE_8K:GUARD_INTERVAL_1_4:HIERARCHY_NONE:5040:5041:10120
+ORF2 B:802000000:INVERSION_AUTO:BANDWIDTH_8_MHZ:FEC_3_4:FEC_3_4:QAM_16:TRANSMISSION_MODE_8K:GUARD_INTERVAL_1_4:HIERARCHY_NONE:5020:5021:10132
+## END OF FILE #################################################################
