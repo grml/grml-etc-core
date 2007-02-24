@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Okt 26 00:04:38 CEST 2006 [mika]
+# Latest change: Sam Feb 24 17:32:18 CET 2007 [mika]
 ################################################################################
 # This file is sourced on all invocations of the shell.
 # If the -f flag is present or if the NO_RCS option is
@@ -22,7 +22,7 @@
 # the latter one is the default on Debian nowadays)
   [ -r /etc/environment    ] && source /etc/environment
   [ -r /etc/default/locale ] && source /etc/default/locale
-  [ -n "$LANG" ]          && export LANG        || export LANG="en_US.iso885915"
+  [ -n "$LANG" ]          && export LANG || export LANG="en_US.iso885915"
   [ -n "$LC_ALL" ]        && export LC_ALL
   [ -n "$LC_MESSAGES" ]   && export LC_MESSAGES
 
@@ -68,7 +68,10 @@
 #  export LESS=C
   export LESSOPEN="|lesspipe.sh %s"
   export READNULLCMD=${PAGER:-/usr/bin/pager}
+
+# allow zeroconf for distcc
   export DISTCC_HOSTS="+zeroconf"
+
 # MAKEDEV should be usable on udev as well by default:
   export WRITE_ON_UDEV=yes
 

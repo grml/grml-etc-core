@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Jän 14 10:57:03 CET 2007 [mika]
+# Latest change: Sam Feb 24 17:32:43 CET 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -80,6 +80,8 @@
 # {{{ set some variables
   export EDITOR=${EDITOR:-vim}
   export MAIL=${MAIL:-/var/mail/$USER}
+  # if we don't set $SHELL then aterm, rxvt,.. will use /bin/sh or /bin/bash :-/
+  export SHELL='/bin/zsh'
   [[ -f ~/.terminfo/m/mostlike ]] && MYLESS='LESS=C TERMINFO=~/.terminfo TERM=mostlike less' || MYLESS='less'
   [[ -x /usr/bin/dircolors ]] && eval `dircolors -b`
 
@@ -154,18 +156,18 @@ fi
    '...' '../..'
    '....' '../../..'
    'BG' '& exit'
-   'C' '|wc -l'
+   'C' '| wc -l'
    'G' '|& grep --color=auto'
-   'H' '|head'
+   'H' '| head'
    'Hl' ' --help |& less -r'
-   'L' '|less'
+   'L' '| less'
    'LL' '|& less -r'
-   'M' '|most'
+   'M' '| most'
    'N' '&>/dev/null'
    'R' '| tr A-z N-za-m'
    'SL' '| sort | less'
    'S' '| sort -u'
-   'T' '|tail'
+   'T' '| tail'
    'V' '|& vim -'
    'hide' "echo -en '\033]50;nil2\007'"
    'tiny' 'echo -en "\033]50;-misc-fixed-medium-r-normal-*-*-80-*-*-c-*-iso8859-15\007"'

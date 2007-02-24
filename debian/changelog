@@ -1,3 +1,13 @@
+grml-etc-core (0.2.23) unstable; urgency=low
+
+  * /etc/zsh/zshrc:
+    - export SHELL='/bin/zsh', otherwise aterm and rxvt use
+      /bin/sh or /bin/bash. :-/
+    - add a space character in some abbreviation expansions
+      so it's better readable.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 24 Feb 2007 17:30:11 +0100
+
 grml-etc-core (0.2.22) unstable; urgency=low
 
   * Adding directory /etc/skel/.channels with the following files:
