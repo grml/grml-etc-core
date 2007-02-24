@@ -6,6 +6,12 @@ grml-etc-core (0.2.23) unstable; urgency=low
     - add a space character in some abbreviation expansions
       so it's better readable.
     - added insert-unicode-char
+    - drop the check for
+      /usr/share/zsh/$ZSH_VERSION/functions/Prompts/promptinit and
+      /usr/share/zsh/$ZSH_VERSION/functions/Zle/url-quote-magic
+      because the check does not work for example with the zsh-beta
+      package. If you notice problems with the current code please
+      let me know.
   * /etc/skel/.zshrc:
     - added function ytdl (download video from youtube)
     - work around non utf8 capable software in utf environment

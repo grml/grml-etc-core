@@ -244,9 +244,7 @@ fi
   autoload history-search-end
 
   # we don't want to quote/espace URLs on our own...
-  # avoid 'url-quote-magic: function definition file not found' on some older boxes
-  if [ -f "/usr/share/zsh/$ZSH_VERSION/functions/Zle/url-quote-magic" ] && \
-     autoload -U url-quote-magic && zle -N self-insert url-quote-magic ; then
+  if autoload -U url-quote-magic ; then
      zle -N self-insert url-quote-magic
   else
      print 'Notice: no url-quote-magic available :('
@@ -414,7 +412,7 @@ fi
 # }}}
 
 # {{{ set prompt
-  if [ -f "/usr/share/zsh/$ZSH_VERSION/functions/Prompts/promptinit" ] && autoload promptinit && promptinit 2>/dev/null ; then
+  if autoload promptinit && promptinit 2>/dev/null ; then
      promptinit # people should be able to use their favourite prompt
   else
      print 'Notice: no promptinit available :('
