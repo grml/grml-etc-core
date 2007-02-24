@@ -14,7 +14,7 @@
 #    ( http://www.fsf.org/licenses/gpl.txt )
 
 # first Release: 2004-07-30
-# latest update: 2007-01-07
+# latest update: 2007-02-24
 #
 # The latest version of the script is available at
 #   http://www.fuschlberger.net/programs/ssh-scp-chroot-jail/
@@ -89,15 +89,15 @@ fi
 
 # Specify the apps you want to copy to the jail
 if [ "$DISTRO" = SUSE ]; then
-  APPS="/bin/bash /bin/cp /usr/bin/dircolors /bin/ls /bin/mkdir /bin/mv /bin/rm /bin/rmdir /bin/sh /bin/su /usr/bin/groups /usr/bin/id /usr/bin/netcat /usr/bin/rsync /usr/bin/ssh /usr/bin/scp /sbin/unix_chkpwd /usr/lib/ssh/sftp-server"
+  APPS="/bin/bash /bin/cp /usr/bin/dircolors /bin/ls /bin/mkdir /bin/mv /bin/rm /bin/rmdir /bin/sh /bin/su /usr/bin/groups /usr/bin/id /usr/bin/netcat /usr/bin/rsync /usr/bin/ssh /usr/bin/scp /sbin/unix_chkpwd"
 elif [ "$DISTRO" = FEDORA ]; then
-  APPS="/bin/bash /bin/cp /usr/bin/dircolors /bin/ls /bin/mkdir /bin/mv /bin/rm /bin/rmdir /bin/sh /bin/su /usr/bin/groups /usr/bin/id /usr/bin/nc /usr/bin/rsync /usr/bin/ssh /usr/bin/scp /sbin/unix_chkpwd /usr/libexec/openssh/sftp-server"
+  APPS="/bin/bash /bin/cp /usr/bin/dircolors /bin/ls /bin/mkdir /bin/mv /bin/rm /bin/rmdir /bin/sh /bin/su /usr/bin/groups /usr/bin/id /usr/bin/nc /usr/bin/rsync /usr/bin/ssh /usr/bin/scp /sbin/unix_chkpwd"
 elif [ "$DISTRO" = REDHAT ]; then
-  APPS="/bin/bash /bin/cp /usr/bin/dircolors /bin/ls /bin/mkdir /bin/mv /bin/rm /bin/rmdir /bin/sh /bin/su /usr/bin/groups /usr/bin/id /usr/bin/nc /usr/bin/rsync /usr/bin/ssh /usr/bin/scp /sbin/unix_chkpwd /usr/libexec/openssh/sftp-server"
+  APPS="/bin/bash /bin/cp /usr/bin/dircolors /bin/ls /bin/mkdir /bin/mv /bin/rm /bin/rmdir /bin/sh /bin/su /usr/bin/groups /usr/bin/id /usr/bin/nc /usr/bin/rsync /usr/bin/ssh /usr/bin/scp /sbin/unix_chkpwd"
 elif [ "$DISTRO" = DEBIAN ]; then
-  APPS="/bin/bash /bin/cp /usr/bin/dircolors /bin/ls /bin/mkdir /bin/mv /bin/rm /bin/rmdir /bin/sh /bin/su /usr/bin/groups /usr/bin/id /usr/bin/rsync /usr/bin/ssh /usr/bin/scp /sbin/unix_chkpwd /usr/lib/sftp-server"
+  APPS="/bin/bash /bin/cp /usr/bin/dircolors /bin/ls /bin/mkdir /bin/mv /bin/rm /bin/rmdir /bin/sh /bin/su /usr/bin/groups /usr/bin/id /usr/bin/rsync /usr/bin/ssh /usr/bin/scp /sbin/unix_chkpwd"
 else
-  APPS="/bin/bash /bin/cp /usr/bin/dircolors /bin/ls /bin/mkdir /bin/mv /bin/rm /bin/rmdir /bin/sh /bin/su /usr/bin/groups /usr/bin/id /usr/bin/rsync /usr/bin/ssh /usr/bin/scp /usr/sbin/unix_chkpwd /usr/lib/misc/sftp-server"
+  APPS="/bin/bash /bin/cp /usr/bin/dircolors /bin/ls /bin/mkdir /bin/mv /bin/rm /bin/rmdir /bin/sh /bin/su /usr/bin/groups /usr/bin/id /usr/bin/rsync /usr/bin/ssh /usr/bin/scp /usr/sbin/unix_chkpwd"
 fi
 
 # Check existence of necessary files
@@ -136,8 +136,7 @@ fi
 
 echo "Checking for dirname..." 
 if [ `which dirname` ]; then
-  echo "  OK
-";
+  echo "  OK";
 else 
   echo "  failed
 
@@ -146,6 +145,40 @@ Please install dirname-binary (to be found eg in the package coreutils)!
 "
 exit 1
 fi
+
+echo "Checking for awk..." 
+if [ `which awk` ]; then
+  echo "  OK
+";
+else 
+  echo "  failed
+
+awk not found!
+Please install (g)awk-package/binary!
+"
+exit 1
+fi
+
+# get location of sftp-server binary from /etc/ssh/sshd_config
+# check for existence of /etc/ssh/sshd_config and for
+# (uncommented) line with sftp-server filename. If neither exists, just skip
+# this step and continue without sftp-server
+#
+if  (test ! -f /etc/ssh/sshd_config &> /dev/null); then
+  echo "
+File /etc/ssh/sshd_config not found.
+Not checking for path to sftp-server.
+  ";
+else
+  if !(grep -v "^#" /etc/ssh/sshd_config | grep -i sftp-server &> /dev/null); then
+    echo "Obviously no sftp-server is running on this system.
+";
+  else SFTP_SERVER=$(grep -v "^#" /etc/ssh/sshd_config | grep -i sftp-server | awk  '{ print $3}')
+  fi
+fi
+
+#if !(grep -v "^#" /etc/ssh/sshd_config | grep -i sftp-server /etc/ssh/sshd_config | awk  '{ print $3}' &> /dev/null); then
+APPS="$APPS $SFTP_SERVER"
 
 # Get accountname to create
 CHROOT_USERNAME=$1
@@ -364,13 +397,13 @@ done
 if [ -e ${HOME}/ldlist2 ]; then
     rm ${HOME}/ldlist2
 fi
-for libs in `cat /root/ldlist`; do
+for libs in `cat ${HOME}/ldlist`; do
    frst_char="`echo $libs | cut -c1`"
    if [ "$frst_char" = "/" ]; then
-     echo "$libs" >> /root/ldlist2
+     echo "$libs" >> ${HOME}/ldlist2
    fi
 done
-for lib in `cat /root/ldlist2`; do
+for lib in `cat ${HOME}/ldlist2`; do
     mkdir -p .`dirname $lib` > /dev/null 2>&1
 
 	# If the files in the chroot are on the same file system as the original

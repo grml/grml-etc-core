@@ -1,3 +1,11 @@
+grml-scripts (0.9.20) unstable; urgency=low
+
+  * Updated make_chroot_jail to latest upstream version.
+    Thanks for notification, Wolfgang Fuschlberger!
+  * Updated iimage to latest upstream version (37).
+
+ -- Michael Prokop <mika@grml.org>  Sat, 24 Feb 2007 13:14:40 +0100
+
 grml-scripts (0.9.19) unstable; urgency=low
 
   * Add dirvish-setup, a simple script for setting up a basic

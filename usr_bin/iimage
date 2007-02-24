@@ -49,7 +49,7 @@
 #
 ######################################################################
 
-SVN_ID="$Id: iimage 36 2006-01-14 20:19:46Z ronsc $"
+SVN_ID="$Id: iimage 37 2006-08-22 13:50:17Z ronsc $"
 
 # old templates might still use CVS_VERSION
 CVS_VERSION="$SVN_ID"
@@ -436,7 +436,7 @@ function rotate_image() {
                 | grep Orientation | cut -d":" -f 2  | cut -d"," -f 1 `
    elif [ $JHEAD ]; then
      ORIENTATION=`jhead -v "$FILE" 2>/dev/null \
-                | grep "Orientation =" | cut -d '=' -f 2 | cut -c 2 `
+                | grep "Orientation =" | head -1 | cut -d '=' -f 2 | cut -c 2 `
    fi
    ORIENTATION=`echo $ORIENTATION`
 
