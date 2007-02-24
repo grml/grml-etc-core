@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Feb 24 19:06:28 CET 2007 [mika]
+# Latest change: Sam Feb 24 20:51:01 CET 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -138,6 +138,13 @@ fi
   bindkey '\e[7~' beginning-of-line       # home
   bindkey '\e[8~' end-of-line             # end
 #fi
+
+# insert unicode character
+# usage example: 'ctrl-x i' 00A7 'ctrl-x i' will give you an §
+# See for example http://unicode.org/charts/ for unicode characters code
+  autoload insert-unicode-char
+  zle -N insert-unicode-char
+  bindkey '^Xi' insert-unicode-char
 
 #  bindkey '\eq' push-line-or-edit
 # }}}
