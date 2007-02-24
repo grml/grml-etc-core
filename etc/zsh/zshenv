@@ -3,17 +3,20 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Feb 24 17:32:18 CET 2007 [mika]
+# Latest change: Sam Feb 24 18:59:11 CET 2007 [mika]
 ################################################################################
 # This file is sourced on all invocations of the shell.
-# If the -f flag is present or if the NO_RCS option is
-# set within this file, all other initialization files
-# are skipped.
+# It is the 1st file zsh reads; it's read for every shell,
+# even if started with -f (setopt NO_RCS), all other
+# initialization files are skipped.
 #
 # This file should contain commands to set the command
 # search path, plus other important environment variables.
 # This file should not contain commands that produce
 # output or assume the shell is attached to a tty.
+#
+# Notice: .zshenv is the same, execpt that it's not read
+# if zsh is started with -f
 #
 # Global Order: zshenv, zprofile, zshrc, zlogin
 ################################################################################

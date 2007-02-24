@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Feb 24 17:32:43 CET 2007 [mika]
+# Latest change: Sam Feb 24 19:06:28 CET 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,

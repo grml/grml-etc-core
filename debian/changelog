@@ -5,6 +5,11 @@ grml-etc-core (0.2.23) unstable; urgency=low
       /bin/sh or /bin/bash. :-/
     - add a space character in some abbreviation expansions
       so it's better readable.
+  * /etc/skel/.zshrc:
+    - added function ytdl (download video from youtube)
+    - work around non utf8 capable software in utf environment
+      using aliases for mrxvt, aterm and centericq
+  * /etc/zsh/*: improved documentation about startup of zsh
 
  -- Michael Prokop <mika@grml.org>  Sat, 24 Feb 2007 17:30:11 +0100
 

@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Dez 17 14:50:06 CET 2006 [mika]
+# Latest change: Sam Feb 24 19:21:35 CET 2007 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -166,6 +166,19 @@
 
 # check whether Debian's package management (dpkg) is running
   alias check_dpkg_running="$SUDO dpkg_running"
+
+# work around non utf8 capable software in utf environment
+  if [ -x /usr/bin/mrxvt ] ; then
+     isutfenv && [ -n "$LANG" ] && alias mrxvt="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} mrxvt"
+  fi
+
+  if [ -x /usr/bin/aterm ] ; then
+     isutfenv && [ -n "$LANG" ] && alias aterm="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} aterm"
+  fi
+
+  if [ -x /usr/bin/centericq ] ; then
+     isutfenv && [ -n "$LANG" ] && alias centericq="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} centericq"
+  fi
 # }}}
 
 ## useful functions {{{
@@ -207,6 +220,17 @@
   wodeb ()  { ${=BROWSER} "http://packages.debian.org/cgi-bin/search_contents.pl?word=$1&version=${2:-unstable}" }
 
   which google &>/dev/null && gex () { google "\"[ $1]\" $*" } # exact search at google
+
+  # download video from youtube
+  ytdl() {
+    if ! [ -n "$2" ] ; then
+       print "Usage: ydtl http://youtube.com/watch?v=.... outputfile.flv">&2
+       return 1
+    else
+       wget -O${2} "http://youtube.com/get_video?"${${${"$(wget -o/dev/null -O- "${1}" | grep -e watch_fullscreen)"}##*watch_fullscreen\?}%%\&fs=*}
+    fi
+  }
+
 
 # Function Usage: doc packagename
   doc() { cd /usr/share/doc/$1 && ls }
