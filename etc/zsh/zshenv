@@ -24,7 +24,11 @@
 # language settings (read in /etc/environment before /etc/default/locale as
 # the latter one is the default on Debian nowadays)
   [ -r /etc/environment    ] && source /etc/environment
-  [ -r /etc/default/locale ] && source /etc/default/locale
+  if [ -n "$LANG" ]  ; then
+     export LANG
+  else
+     [ -r /etc/default/locale ] && source /etc/default/locale
+  fi
   [ -n "$LANG" ]          && export LANG || export LANG="en_US.iso885915"
   [ -n "$LC_ALL" ]        && export LC_ALL
   [ -n "$LC_MESSAGES" ]   && export LC_MESSAGES

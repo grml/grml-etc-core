@@ -1,3 +1,12 @@
+grml-etc-core (0.2.24) unstable; urgency=low
+
+  * /etc/zsh/zshenv: source /etc/default/locale only if
+    $LANG is not set. If $LANG is not set at all fall
+    back to en_US.iso885915 as usual. This allows manual
+    overwriting of $LANG.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 25 Feb 2007 22:08:55 +0100
+
 grml-etc-core (0.2.23) unstable; urgency=low
 
   * /etc/zsh/zshrc:
