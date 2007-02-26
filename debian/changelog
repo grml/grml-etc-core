@@ -1,3 +1,10 @@
+grml-etc-core (0.2.25) unstable; urgency=low
+
+  * /etc/zsh/zshrc: user root should have umask 022 of course.
+    User has 002. Thanks for reporting, Tobias Walkowiak!
+
+ -- Michael Prokop <mika@grml.org>  Mon, 26 Feb 2007 18:44:45 +0100
+
 grml-etc-core (0.2.24) unstable; urgency=low
 
   * /etc/zsh/zshenv: source /etc/default/locale only if
