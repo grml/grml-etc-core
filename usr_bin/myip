@@ -9,13 +9,16 @@
 
 # little helper functions that skips the httpheader of a site
 function skip_httpheader {
-  for i in {1..6} ; do read -u $REPLY LINE; done
+   for i in {1..7} ; do
+	  read -u $REPLY LINE; 
+  	  if [[ "$LINE" == "" ]] ; then return ; fi
+  done
 }
 
 zmodload zsh/net/tcp
-HOST=showip.spamt.net
+HOST=v4.showip.spamt.net
 ztcp $HOST 80
-print -u $REPLY "GET / HTTP/1.1\r\nHost: $HOST\r\n\r\n"
+print -u $REPLY "GET / HTTP/1.0\r\nHost: $HOST\r\n\r\n"
 skip_httpheader
 read -u $REPLY LINE
 echo "$LINE"

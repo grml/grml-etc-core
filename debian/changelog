@@ -1,3 +1,9 @@
+grml-scripts (0.9.21) unstable; urgency=low
+
+  * Fix for myip, thanks to wuehlmaus and schula.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  1 Mar 2007 14:58:05 +0100
+
 grml-scripts (0.9.20) unstable; urgency=low
 
   * Updated make_chroot_jail to latest upstream version.
