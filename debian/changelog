@@ -1,3 +1,9 @@
+grml-etc-core (0.2.26) unstable; urgency=low
+
+  * Move /etc/skel/.channels to package grml-etc.
+
+ -- Michael Prokop <mika@grml.org>  Thu,  1 Mar 2007 14:59:51 +0100
+
 grml-etc-core (0.2.25) unstable; urgency=low
 
   * /etc/zsh/zshrc: user root should have umask 022 of course.
