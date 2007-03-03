@@ -14,12 +14,11 @@ set -e
 divert_conffile() {
     CONFFILE="$1"
 
-    if [ -e "$CONFFILE.dpkg-bak" ]; then
+    if [ -e "$CONFFILE.dpkg-bak" -a -e "$CONFFILE" ]; then
        cp -f "$CONFFILE" "$CONFFILE".original
     else
        [ -e "$CONFFILE" ] && cp -f "$CONFFILE" "$CONFFILE".grml-etc-core
     fi
-
 }
 
 case "$1" in
