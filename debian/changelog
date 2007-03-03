@@ -1,6 +1,7 @@
 grml-etc-core (0.2.26) unstable; urgency=low
 
   * Move /etc/skel/.channels to package grml-etc.
+  * Fix preinst failure of /etc/zsh/zlogin on Debian stable systems.
 
  -- Michael Prokop <mika@grml.org>  Thu,  1 Mar 2007 14:59:51 +0100
 

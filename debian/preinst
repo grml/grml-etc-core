@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Feb 09 15:24:01 CET 2007 [mika]
+# Latest change: Sam Mär 03 18:16:47 CET 2007 [mika]
 ################################################################################
 
 set -e
@@ -29,7 +29,7 @@ case "$1" in
         # we don't lose any files...
         for file in /etc/zsh/zlogin /etc/zsh/zprofile /etc/zsh/zshenv /etc/zsh/zshrc \
                     /etc/zsh/zlogout /etc/vim/vimrc; do
-               [ -e "$file".original ] || cp -f "$file" "${file}.tmp.$$"
+               [ -e "$file".original ] || cp -f "$file" "${file}.tmp.$$" || /bin/true
                divert_conffile $file && \
                [ -f "$file" ] && rm $file && \
                dpkg-divert --quiet --add --rename --package grml-etc-core --divert "$file".original $file  && \
