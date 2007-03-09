@@ -1,3 +1,10 @@
+grml-scripts (0.9.22) unstable; urgency=low
+
+  * dirvish-setup: support setting of tree (directory) that should
+    be included in the backup.
+
+ -- Michael Prokop <mika@grml.org>  Fri,  9 Mar 2007 19:46:11 +0100
+
 grml-scripts (0.9.21) unstable; urgency=low
 
   * Fix for myip, thanks to wuehlmaus and schula.

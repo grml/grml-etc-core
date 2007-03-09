@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Feb 23 23:49:58 CET 2007 [mika]
+# Latest change: Fre Mär 09 19:45:57 CET 2007 [mika]
 ################################################################################
 # Ressources:
 #   http://apt-get.dk/howto/backup/
@@ -91,6 +91,10 @@ client_name() {
   CLIENT="$(dialog --stdout --inputbox 'Please choose the name for your client instance, also known as vault' 0 0 client1)"
 }
 
+tree_name() {
+  TREE="$(dialog --stdout --inputbox 'Please choose the directory you want to backup from your client (also known as tree)' 0 0 /home)"
+}
+
 create_client_conf() {
   mkdir -p "${BACKUP_DIR}/${CLIENT}/dirvish"
   if [ -f "${BACKUP_DIR}/${CLIENT}/dirvish/default.conf" ] ; then
@@ -99,7 +103,7 @@ create_client_conf() {
      cat > "${BACKUP_DIR}/${CLIENT}/dirvish/default.conf" << EOF
 # Configuration file of client-side for dirvish created by $PN on $(date)
 client: $CLIENTNAME
-tree: /home
+tree: $TREE
 xdev: true
 index: gzip
 image-default: %Y-%m-%d
@@ -171,6 +175,7 @@ esac
 get_backup_dir     && \
 client_name        && \
 client_setup       && \
+tree_name          && \
 create_client_conf && \
 write_conffile     && \
 display_info
