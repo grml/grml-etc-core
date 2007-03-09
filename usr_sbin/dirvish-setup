@@ -174,8 +174,8 @@ esac
 # now run the funtions:
 get_backup_dir     && \
 client_name        && \
-client_setup       && \
 tree_name          && \
+client_setup       && \
 create_client_conf && \
 write_conffile     && \
 display_info
