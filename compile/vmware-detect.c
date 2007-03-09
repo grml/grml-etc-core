@@ -22,3 +22,4 @@ int main() {
     // returns 0 if running inside vmware, 1 otherwise
     return checkVmware();
 }
+// vim: foldmethod=marker
