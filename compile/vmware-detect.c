@@ -41,6 +41,7 @@ void printIdtr(const unsigned char* idtr, unsigned size)
     WRITE("\n");
 }
 
+// i386 {{{
 #if defined (__i386__)
 int checkVmware(const int debug)
 {
@@ -52,7 +53,7 @@ int checkVmware(const int debug)
 }
 int checkVmwareIO()
 {
-    unsigned int vmaj, vmin, magic, dout;
+    unsigned int vmaj, vmin, magic, dout = 11;
     __asm__ __volatile__(
             "mov $0x564D5868, %%eax; /* magic number */"
             "mov $0x3c6cf712, %%ebx; /* random number */"
@@ -64,8 +65,15 @@ int checkVmwareIO()
             "mov %%ecx, %2;"
             "mov %%edx, %3;"
         : "=r"(vmaj), "=r"(magic), "=r"(vmin), "=r"(dout));
+#ifdef DEBUG
+    fprintf(stderr, "version: major=%x, minor=%x, magic=%x, dout=%x\n",
+            vmaj, vmin, magic, dout);
+#endif
     return (0x564D5868 == magic) ? 1 : 0;
 }
+// }}}
+
+// x86-64 {{{
 #elif defined (__x86_64__)
 // only guessed, possible need to check against 0xffff?
 int checkVmware(const int debug)
@@ -77,11 +85,15 @@ int checkVmware(const int debug)
     return (0xff==idtr[9]) ? 1 : 0;
 }
 int checkVmwareIO() { return 0; }
+// }}}
+
+// others {{{
 #else
 // vmware runs only on the archs above
 int checkVmware(const int) { return 0; }
 int checkVmwareIO() { return 0; }
 #endif
+// }}}
 
 // returns 0 if running inside vmware, 1 otherwise
 int main(int argc, char* argv[]) {
@@ -95,9 +107,10 @@ int main(int argc, char* argv[]) {
     DWRITE("idt-check: ")
     if(!a) {
         DWRITE("false\n");
-        return 1;
-    }
-    DWRITE("true\n");
+        if(!debug)
+            return EXIT_FAILURE;
+    } else
+        DWRITE("true\n");
 
     // never returns if not running under vmware
     void dummy() { DWRITE("false\n"); exit(1); }
@@ -106,9 +119,10 @@ int main(int argc, char* argv[]) {
     b = checkVmwareIO();
     if(b) {
         DWRITE("true\n");
-        return 0;
+        return EXIT_SUCCESS;
     }
     // never reached
-    return 1;
+    WRITE("Error: IO check hasn't killed the program but no vmware found either!\n");
+    return EXIT_FAILURE;
 }
 // vim: foldmethod=marker
