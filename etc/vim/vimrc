@@ -3,7 +3,7 @@
 " Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 " Bug-Reports:   see http://grml.org/bugs/
 " License:       This file is licensed under the GPL v2.
-" Latest change: Sam Feb 10 11:07:20 CET 2007 [mika]
+" Latest change: Fre Mär 09 15:33:45 CET 2007 [mika]
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " All system-wide defaults are set in $VIMRUNTIME/debian.vim (usually just
@@ -93,6 +93,7 @@
 " When switching between different buffers you can't use undo without 'set hidden':
   set hidden            " Hide buffers when they are abandoned
 " set mouse=a           " Enable mouse usage (all modes) in terminals
+  set wildmenu          " command-line completion operates in an enhanced mode
 
   set pastetoggle=<f11>               " don't change text when copy/pasting
   set dictionary=/usr/share/dict/word " used with CTRL-X CTRL-K
