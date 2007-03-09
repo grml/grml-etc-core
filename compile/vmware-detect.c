@@ -2,6 +2,7 @@
 #include "unistd.h"
 #include "stdio.h"
 #include "stdlib.h"
+#include "signal.h"
 
 #define WRITE(x) write(1, x, strlen(x))
 #define DWRITE(x) do{ \
@@ -11,6 +12,12 @@
 } while(0);
 #define FALSE 0
 #define TRUE !FALSE
+
+/* doc:
+ * vmware IO backdoor: http://chitchat.at.infoseek.co.jp/vmware/backdoor.html
+ * http://www.honeynet.org/papers/bots/botnet-code.html
+ * http://www.codegurus.be/codegurus/Programming/virtualpc&vmware_en.htm
+ */
 
 // from libowfat {{{
 static inline char tohex(char c) {
@@ -33,7 +40,7 @@ unsigned int fmt_xlong(char *dest,unsigned long i) {
 void printIdtr(const unsigned char* idtr, unsigned size)
 {
     unsigned i;
-    for(i=0; i<=size; ++i) {
+    for(i=0; i<size; ++i) {
         char out[4] = {0};
         fmt_xlong(out, idtr[i]);
         WRITE(out);
