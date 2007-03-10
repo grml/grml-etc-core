@@ -1,7 +1,8 @@
 grml-scripts (0.9.22) unstable; urgency=low
 
   * dirvish-setup: support setting of tree (directory) that should
-    be included in the backup.
+    be included in the backup, do not move master.conf but create
+    it only if it does not exist yet.
 
  -- Michael Prokop <mika@grml.org>  Fri,  9 Mar 2007 19:46:11 +0100
 

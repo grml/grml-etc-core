@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Mär 09 19:45:57 CET 2007 [mika]
+# Latest change: Sam Mär 10 10:46:39 CET 2007 [mika]
 ################################################################################
 # Ressources:
 #   http://apt-get.dk/howto/backup/
@@ -23,16 +23,17 @@ check4progs dirvish rsync ssh-keygen ssh-copy-id
 PN="$0"
 CONFFILE=/etc/dirvish/master.conf
 
-# make sure we don't lose any files
-if [ -f "$CONFFILE" ] ; then
-   mv $CONFFILE $CONFFILE.$(date +%Y%m%d).$$
-fi
-
 set +e
 
 write_conffile() {
-  cat > $CONFFILE << EOF
-# Configuration file for dirvish, created by $PN on $(date)
+  if [ -f "$CONFFILE" ] ; then
+     MASTERINFO="Notice: $CONFFILE exists already so I will not touch it.
+Please do not forget to add $CLIENT to the file if you wan to use the 'Runall' functionality."
+  else
+     MASTERINFO="An initial master configuration ($CONFFILE) has been generated.
+Please adjust it according to your needs."
+     cat > $CONFFILE << EOF
+# Master configuration file for dirvish, created by $PN on $(date)
 
 bank:
      $BACKUP_DIR
@@ -42,18 +43,20 @@ exclude:
 #      core
 #      *~
 #      .nfs*
+#      /var/lib/nfs/*tab
 #      var/cache/apt/archives
 #      var/cache/man
-#      tmp
 #      var/tmp
-#       /var/lib/nfs/*tab
-#       .kde/share/cache/*
-#       .firefox/default/*/Cache/*
+#      tmp
+#      /dev
+#      .kde/share/cache/*
+#      .firefox/default/*/Cache/*
 
 Runall:
      $CLIENT 22:00
+     # add-another-client-here 22:00
 
-# See http://www.dirvish.org/debian.howto.html for further details:
+     # See http://www.dirvish.org/debian.howto.html for further details:
 expire-default: +30 days
 expire-rule:
 #       MIN HR    DOM MON       DOW  STRFTIME_FMT
@@ -64,6 +67,7 @@ expire-rule:
 #       *   *     *   *         2-7  +15 days
 
 EOF
+  fi
 }
 
 # TODO / integrate?
@@ -145,6 +149,7 @@ display_info() {
   einfo "Running $PN was successful. Enjoy using dirvish!" ; eend 0
   echo
   einfo "Please adjust ${BACKUP_DIR}/${CLIENT}/dirvish/default.conf according to your needs.
+$MASTERINFO  
 Then run the following command to create an initial backup:
 
   dirvish --summary long --vault $CLIENT --init
@@ -174,8 +179,8 @@ esac
 # now run the funtions:
 get_backup_dir     && \
 client_name        && \
-client_setup       && \
 tree_name          && \
+client_setup       && \
 create_client_conf && \
 write_conffile     && \
 display_info
