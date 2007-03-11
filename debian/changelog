@@ -1,3 +1,10 @@
+grml-etc-core (0.2.29) unstable; urgency=low
+
+  * /etc/skel/.zshrc: remove duplicate cl() definition, thanks - Jens
+    Kubieziel!
+
+ -- Michael Prokop <mika@grml.org>  Sun, 11 Mar 2007 12:45:25 +0100
+
 grml-etc-core (0.2.28) unstable; urgency=low
 
   * /etc/vim/vimrc: added 'set wildmenu' (thanks for suggestion, ft!)

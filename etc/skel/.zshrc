@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Feb 24 19:21:35 CET 2007 [mika]
+# Latest change: Son Mär 11 12:44:51 CET 2007 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -203,6 +203,7 @@
   fir()     { firefox -a firefox -remote "openURL($1)" }
   ggogle()  { ${=BROWSER} "http://groups.google.com/groups?q=$*" }
   google()  { ${=BROWSER} "http://www.google.com/search?&num=100&q=$*" }
+  mcd()     { mkdir -p "$@"; cd "$@" } # mkdir && cd
   mdiff()   { diff -udrP "$1" "$2" > diff.`date "+%Y-%m-%d"`."$1" }
   memusage(){ ps aux | awk '{if (NR > 1) print $5; if (NR > 2) print "+"} END { print "p" }' | dc }
   mggogle() { ${=BROWSER} "http://groups.google.com/groups?selm=$*" }
@@ -403,12 +404,6 @@
         read answer
         print -z "${cmd[$answer]#*$TAB}"
   }
-
-# mkdir && cd
-  mcd() { mkdir -p "$@"; cd "$@" }  # mkdir && cd
-
-# cd && ls
-  cl() { cd $1 && ls -a }
 
 # Use vim to convert plaintext to HTML
   2html() { vim -u NONE -n -c ':syntax on' -c ':so $VIMRUNTIME/syntax/2html.vim' -c ':wqa' $1 &>/dev/null }
