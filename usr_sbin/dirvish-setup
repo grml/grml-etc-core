@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Mär 09 19:45:57 CET 2007 [mika]
+# Latest change: Fre Feb 23 23:49:58 CET 2007 [mika]
 ################################################################################
 # Ressources:
 #   http://apt-get.dk/howto/backup/
@@ -23,17 +23,16 @@ check4progs dirvish rsync ssh-keygen ssh-copy-id
 PN="$0"
 CONFFILE=/etc/dirvish/master.conf
 
+# make sure we don't lose any files
+if [ -f "$CONFFILE" ] ; then
+   mv $CONFFILE $CONFFILE.$(date +%Y%m%d).$$
+fi
+
 set +e
 
 write_conffile() {
-  if [ -f "$CONFFILE" ] ; then
-     MASTERINFO="Notice: $CONFFILE exists already so I will not touch it.
-Please do not forget to add $CLIENT to the file if you wan to use the 'Runall' functionality."
-  else
-     MASTERINFO="An initial master configuration ($CONFFILE) has been generated.
-Please adjust it according to your needs."
-     cat > $CONFFILE << EOF
-# Master configuration file for dirvish, created by $PN on $(date)
+  cat > $CONFFILE << EOF
+# Configuration file for dirvish, created by $PN on $(date)
 
 bank:
      $BACKUP_DIR
@@ -43,18 +42,16 @@ exclude:
 #      core
 #      *~
 #      .nfs*
-#      /var/lib/nfs/*tab
 #      var/cache/apt/archives
 #      var/cache/man
-#      var/tmp
 #      tmp
-#      /dev
-#      .kde/share/cache/*
-#      .firefox/default/*/Cache/*
+#      var/tmp
+#       /var/lib/nfs/*tab
+#       .kde/share/cache/*
+#       .firefox/default/*/Cache/*
 
 Runall:
      $CLIENT 22:00
-     # add-another-client-here 22:00
 
 # See http://www.dirvish.org/debian.howto.html for further details:
 expire-default: +30 days
@@ -67,7 +64,6 @@ expire-rule:
 #       *   *     *   *         2-7  +15 days
 
 EOF
-  fi
 }
 
 # TODO / integrate?
@@ -95,10 +91,6 @@ client_name() {
   CLIENT="$(dialog --stdout --inputbox 'Please choose the name for your client instance, also known as vault' 0 0 client1)"
 }
 
-tree_name() {
-  TREE="$(dialog --stdout --inputbox 'Please choose the directory you want to backup from your client (also known as tree)' 0 0 /home)"
-}
-
 create_client_conf() {
   mkdir -p "${BACKUP_DIR}/${CLIENT}/dirvish"
   if [ -f "${BACKUP_DIR}/${CLIENT}/dirvish/default.conf" ] ; then
@@ -107,7 +99,7 @@ create_client_conf() {
      cat > "${BACKUP_DIR}/${CLIENT}/dirvish/default.conf" << EOF
 # Configuration file of client-side for dirvish created by $PN on $(date)
 client: $CLIENTNAME
-tree: $TREE
+tree: /home
 xdev: true
 index: gzip
 image-default: %Y-%m-%d
@@ -149,7 +141,6 @@ display_info() {
   einfo "Running $PN was successful. Enjoy using dirvish!" ; eend 0
   echo
   einfo "Please adjust ${BACKUP_DIR}/${CLIENT}/dirvish/default.conf according to your needs.
-$MASTERINFO
 Then run the following command to create an initial backup:
 
   dirvish --summary long --vault $CLIENT --init
@@ -179,7 +170,6 @@ esac
 # now run the funtions:
 get_backup_dir     && \
 client_name        && \
-tree_name          && \
 client_setup       && \
 create_client_conf && \
 write_conffile     && \
