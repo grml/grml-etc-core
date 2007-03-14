@@ -1,3 +1,12 @@
+grml-etc-core (0.2.30) unstable; urgency=low
+
+  * /etc/zsh/zshrc: added rationalise-dot (just type 'cd ...' to
+    get 'cd ../..'). Taken from Christian Schneider:
+    http://strcat.de/blog/archives/707-Schnelles-Verzeichniswechseln.html
+    Thanks for pointing, schula.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 14 Mar 2007 15:41:08 +0100
+
 grml-etc-core (0.2.29) unstable; urgency=low
 
   * /etc/skel/.zshrc: remove duplicate cl() definition, thanks - Jens
