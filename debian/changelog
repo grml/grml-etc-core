@@ -1,7 +1,8 @@
 grml-etc-core (0.2.30) unstable; urgency=low
 
   * /etc/zsh/zshrc: added rationalise-dot (just type 'cd ...' to
-    get 'cd ../..'). Taken from Christian Schneider:
+    get 'cd ../..'), but deactivated by default. Taken from
+    Christian Schneider:
     http://strcat.de/blog/archives/707-Schnelles-Verzeichniswechseln.html
     Thanks for pointing, schula.
 
