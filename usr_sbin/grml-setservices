@@ -1,0 +1,104 @@
+#!/bin/sh
+# Filename:      grml-setservices
+# Purpose:       interface for basic configuration of system startup
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Fre Mär 16 21:54:10 CET 2007 [mika]
+################################################################################
+
+PN="$(basename $0)"
+TMP=$(mktemp)
+DIALOG=dialog
+CONFFILE='/etc/runlevel.conf'
+
+. /etc/grml/script-functions
+. /etc/grml/lsb-functions
+
+check4root || exit 100
+
+bailout(){
+  rm -f "$TMP"
+  exit 0
+}
+
+trap bailout 1 2 3 15
+
+is_value_set(){
+ [ -n "$1" ] || return 2
+ [ -r "$TMP" ] || return 3
+ grep -q "$1" $TMP && return 0 || return 1
+}
+
+INFO="Which services would you like to have enabled on your system?
+
+Notice: this script will adjust your ${CONFFILE}, the
+file which provides the startup configuration for your
+system. You can edit the file manually as well.
+
+If you do not know what to choose just take the defaults
+or choose cancel.
+"
+
+# enable checks only if the according init script is present
+[ -r /etc/init.d/mdadm ]  && SRAID='mdadm!software-raid via mdadm!on'
+[ -r /etc/init.d/dmraid ] && MRAID='dmraid!software-raid via dmraid!off'
+[ -r /etc/init.d/dbus -o -r /etc/init.d/dbus-1 ] && DBUS='dbus!hal/dbus (important for KDE e.g.)!off'
+
+# adjust setup
+set_values(){
+  if is_value_set "mdadm"  ; then
+     update-rc.d -f mdadm remove >/dev/null 2>&1
+     update-rc.d mdadm-raid start 25 S . start 50 0 6 . >/dev/null 2>&1
+     update-rc.d mdadm defaults 25 >/dev/null 2>&1
+  else
+     update-rc.d -f mdadm remove >/dev/null 2>&1
+     update-rc.d mdadm stop 20 0 1 6 . >/dev/null 2>&1
+  fi
+
+  if is_value_set "dmraid" ; then
+     update-rc.d -f dmraid remove >/dev/null 2>&1
+     update-rc.d dmraid start 04 S . start 51 0 6 . >/dev/null
+  else
+     update-rc.d -f dmraid remove >/dev/null 2>&1
+     update-rc.d dmraid stop 20 0 1 6 . >/dev/null 2>&1
+  fi
+
+  if is_value_set "dbus" ; then
+     update-rc.d -f dbus remove >/dev/null 2>&1
+     update-rc.d dbus defaults >/dev/null 2>&1
+  else
+     update-rc.d -f dbus remove >/dev/null 2>&1
+     update-rc.d dbus stop 20 0 1 6 . >/dev/null 2>&1
+  fi
+}
+
+# the interface itself
+oifs="$IFS"
+IFS='!'
+$DIALOG --title "$PN" --checklist "$INFO" 30 65 8 $SRAID $MRAID $DBUS 2>$TMP
+
+retval="$?"
+case $retval in
+    (0)   set_values ;;
+    (1)   echo "Cancel pressed." ; exit 1 ;;
+    (255) echo "ESC pressed."    ; exit 1 ;;
+esac
+
+retval=$?
+case $retval in
+    (0)
+          $DIALOG --title "$PN" --stdout --msgbox "Adjusting system runlevel configuration via $CONFFILE was successful." 0 0
+          esyslog user.notice "$PN" "Writing language settings ($LANGUAGE) to $CONFFILE was successful."
+          ;;
+    *)
+          $DIALOG --title "$PN" --stdout --msgbox "Error writing settings to ${CONFFILE}." 0 0
+          esyslog user.notice "$PN" "Error writing settings to ${CONFFILE}."
+          ;;
+esac
+
+rm -f $TMP
+IFS="$oifs"
+
+## END OF FILE #################################################################
+# vim: ai tw=80 expandtab
