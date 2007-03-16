@@ -5,6 +5,7 @@ grml-etc-core (0.2.31) unstable; urgency=low
     - check for present /dev/softsynth and warn otherwise using flite
     - welcome user via flite with "Finished setting up software synthesizer"
       when finished execution of swspeak alias
+    [Closes: issue152]
 
  -- Michael Prokop <mika@grml.org>  Fri, 16 Mar 2007 22:17:27 +0100
 
