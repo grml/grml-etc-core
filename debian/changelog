@@ -1,7 +1,7 @@
 grml-scripts (0.9.23) unstable; urgency=low
 
   * Added grml-setservices (interface for basic configuration of system
-    startup/shutdown via /etc/runlevel.conf)
+    startup/shutdown via /etc/runlevel.conf) [Closes: issue89]
   * Removed todo note from manpage of grml-setkeyboard.
 
  -- Michael Prokop <mika@grml.org>  Fri, 16 Mar 2007 21:54:31 +0100
