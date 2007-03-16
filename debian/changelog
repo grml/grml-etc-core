@@ -1,3 +1,13 @@
+grml-etc-core (0.2.31) unstable; urgency=low
+
+  * /etc/zsh/zshrc: update swspeak alias:
+    - set mixer settings to 90 by default when running swspeak
+    - check for present /dev/softsynth and warn otherwise using flite
+    - welcome user via flite with "Finished setting up software synthesizer"
+      when finished execution of swspeak alias
+
+ -- Michael Prokop <mika@grml.org>  Fri, 16 Mar 2007 22:17:27 +0100
+
 grml-etc-core (0.2.30) unstable; urgency=low
 
   * /etc/zsh/zshrc: added rationalise-dot (just type 'cd ...' to

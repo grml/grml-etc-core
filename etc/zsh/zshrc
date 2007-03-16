@@ -577,7 +577,20 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
   alias rd='rmdir'
   alias md='mkdir'
 
-  alias swspeak="setopt singlelinezle ; unsetopt prompt_cr ; export PS1='%m%# ' ; speechd-up" # set up software synth.
+# set up software synthesizer via speakup
+  alias swspeak='
+    aumix -w 90 -v 90 -p 90 -m 90
+    if ! [ -r /dev/softsynth ] ; then
+       flite -o play -t "Sorry, software synthesizer not available. Did you boot with swspeak bootoption?"
+       return 1
+    else
+       setopt singlelinezle
+       unsetopt prompt_cr
+       export PS1="%m%# "
+       nice -n -20 speechd-up
+       flite -o play -t "Finished setting up software synthesizer"
+    fi
+  '
 
   # I like clean prompt, so provide simple way to get that
   alias 0 &>/dev/null || functions 0 &>/dev/null || alias 0='return 0'
