@@ -55,7 +55,7 @@ binary-arch: build install
 	dh_installdocs
 	dh_installman manpages/grml-scripts.1 manpages/reread_partition_table.8 manpages/gtf.1 manpages/random-hostname.1 \
 	manpages/grml-setkeyboard.8 manpages/grml-setlang.8 manpages/getsf.1 manpages/grml-iptstate.8 manpages/qma.1 manpages/grml-swapon.8 \
-	manpages/grml2ram.8 manpages/gsuggest.1 manpages/dirvish-setup.8
+	manpages/grml2ram.8 manpages/gsuggest.1 manpages/dirvish-setup.8 manpages/grml-setservices.8
 #	cp --no-dereference man/*.1.gz debian/grml-scripts/usr/share/man/man1/
 	dh_link /usr/sbin/blacklist /usr/sbin/unblacklist \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/align.1.gz \
