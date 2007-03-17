@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Feb 24 18:59:11 CET 2007 [mika]
+# Latest change: Sam Mär 17 12:18:26 CET 2007 [mika]
 ################################################################################
 # This file is sourced on all invocations of the shell.
 # It is the 1st file zsh reads; it's read for every shell,
@@ -34,6 +34,7 @@
   [ -n "$LC_MESSAGES" ]   && export LC_MESSAGES
 
   [ -r /etc/sysconfig/keyboard ] && source /etc/sysconfig/keyboard
+  [ -r /etc/timezone ] && source /etc/timezone
 
 # set environment variables (important for autologin on tty)
   [ -z "$HOSTNAME" ]      && export HOSTNAME=`hostname`

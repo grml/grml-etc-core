@@ -1,3 +1,10 @@
+grml-etc-core (0.2.32) unstable; urgency=low
+
+  * /etc/zsh/zshenv: source /etc/timezone if present
+    (We don't want to set TZ via /etc/default/locale any longer.)
+
+ -- Michael Prokop <mika@grml.org>  Sat, 17 Mar 2007 12:18:38 +0100
+
 grml-etc-core (0.2.31) unstable; urgency=low
 
   * /etc/zsh/zshrc: update swspeak alias:
