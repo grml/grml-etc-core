@@ -1,3 +1,13 @@
+grml-etc-core (0.2.35) unstable; urgency=low
+
+  * /etc/zsh/zshrc: added aliases for better iso<->utf handling:
+    - term2iso
+    - term2utf
+    - utf2iso
+    - iso2utf
+
+ -- Michael Prokop <mika@grml.org>  Sat, 17 Mar 2007 20:12:40 +0100
+
 grml-etc-core (0.2.34) unstable; urgency=low
 
   * /etc/grml/lsb-functions: set RC_NOCOLOR if nocolor string is
