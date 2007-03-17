@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Feb 17 13:58:14 CET 2007 [mika]
+# Latest change: Sam Mär 17 12:40:51 CET 2007 [mika]
 ################################################################################
 
 [ -r /etc/grml_version ] && GRMLVERSION=$(cat /etc/grml_version) || GRMLVERSION='(no version information available)'
@@ -25,12 +25,22 @@ Happy hacking!               http://grml.org/
 
 [ -r /etc/release_info ] && cat /etc/release_info
 
-if [ -x /usr/bin/flite ] ; then
- CMDLINE=$(cat /proc/cmdline)
- case "$CMDLINE" in
-   *swspeak*|*blind*|*brltty*|*speakup*) flite -o play -t "Finished booting" ;;
- esac
-fi
+CMDLINE=$(cat /proc/cmdline)
+case "$CMDLINE" in
+   *swspeak*|*blind*|*brltty*|*speakup*)
+      if [ -x /usr/bin/flite ] ; then
+         aumix -w 90 -v 90 -p 90 -m 90
+         flite -o play -t "Finished booting"
+      fi
+      ;;
+   noquick)
+      # do nothing
+      ;;
+   *) # by default run grml-quickconfig, but only if running as root
+      if [ $(id -u) = "0" ] ; then
+         [ -x /usr/sbin/grml-quickconfig ] && /usr/sbin/grml-quickconfig
+      fi
+esac
 
 exec /bin/zsh -l
 

@@ -1,3 +1,13 @@
+grml-scripts (0.9.24) unstable; urgency=low
+
+  * grml-setlang: do not set $TZ anymore, we want to handle it
+    via /etc/timezone.
+  * Integrate grml-quickconfig within zsh-login. grml-quickconfig
+    has been contributed by Michael Schierl - thanks!
+    [Closes: issue97]
+
+ -- Michael Prokop <mika@grml.org>  Fri, 16 Mar 2007 22:49:34 +0100
+
 grml-scripts (0.9.23) unstable; urgency=low
 
   * Added grml-setservices (interface for basic configuration of system

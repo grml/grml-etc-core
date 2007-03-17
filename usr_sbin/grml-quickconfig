@@ -1,0 +1,130 @@
+#!/usr/bin/perl 
+# Filename:      grml-quickconfig
+# Purpose:       get fast access to some basic grml-scripts
+# Authors:       Michael Schierl <schierlm-public@gmx.de>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Sam Mär 17 12:42:50 CET 2007 [mika]
+################################################################################
+
+# menu with quick config options
+
+# enable alternate charset support (needed for screen)
+print "\e(B\e)0";
+
+# variables for nice display
+$W = "\e[0;32;1m";     # White
+$N = "\x0f\e[0m";      # Normal
+$M = "\e[0;35;1m";     # Magenta (for commands)
+$B = "\e[0;34;1m\x0e"; # Blue, line drawing characters
+$HLINE=$B."x".$N;      # A single horizontal line drawing character
+
+# menu options
+%menu_commands = (
+	d => 'grml-lang de',
+	a => 'grml-lang at',
+	c => 'grml-lang ch',
+	n => 'grml-network',
+	e => 'netcardconfig',
+	i => 'grml-info',
+	h => 'grml2hd',
+	m => 'pdmenu -c',
+	q => 'exit',
+# x and Return are handled manually
+);
+
+# window managers
+%windowmanagers = (
+	d => 'dwm',
+	e => 'evilwm',
+	f => 'fluxbox',
+	i => 'ion3',
+	j => 'jwm',
+	k => 'pekwm',
+	p => 'pwm3',
+	t => 'twm',
+	v => 'fvwm',
+	2 => 'fvwm2', 
+	c => 'fvwm-crystal',
+	r => 'ratpoison',
+	9 => 'w9wm',
+	w => 'windowlab',
+	m => 'wmi',
+	i => 'wmii',
+	n => 'wm-ng',
+);
+
+# main loop
+while(1) {
+
+# disable input buffering, see
+# man perlfunc | less '+/   getc'
+# for details
+system "stty", '-icanon', 'eol', "\001";
+
+# main loop
+$command="";
+while($command eq "") {
+print <<"EOF";
+
+   ${B}lqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk${N}
+   $HLINE Welcome to ${M}grml-quickconfig${M}                            $HLINE 
+   $HLINE Press a highlighted key to perform an action, or press $HLINE
+   $HLINE ${W}Return${N} or ${W}q${N} to go back to the shell.                   $HLINE
+   ${B}tqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu${N}
+   $HLINE Set keyboard layout (${M}grml-lang${N}): ${W}d${N}e ${W}a${N}t ${W}c${N}h              $HLINE
+   $HLINE Configure ${W}n${N}etwork (${M}grml-network${N})                       $HLINE
+   $HLINE -> Configure ${W}e${N}thernet card directly (${M}netcardconfig${N})    $HLINE
+   ${B}tqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu${N}
+   $HLINE Show ${W}i${N}nformation about grml (${M}grml-info${N})                $HLINE
+   $HLINE Start ${W}x${N} (${M}grml-x${N})                                       $HLINE
+   $HLINE Show an application ${W}m${N}enu (${M}pdmenu${N})                      $HLINE
+   $HLINE Install grml to ${W}h${N}ard disk (${M}grml2hd${N})                    $HLINE
+   ${B}mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj${N}
+
+EOF
+print "Press a key: ".$M;
+$x = getc;
+print $N.$/.$/;
+if (defined($menu_commands{$x})) {
+	$command = $menu_commands{$x};
+} elsif ($x eq "\n") {
+	$command= 'exit';
+} elsif ($x eq "x") {
+	print <<"EOF";
+
+   ${B}lqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk${N}
+   $HLINE Select a window manager (unsorted list):               $HLINE 
+   $HLINE Press any other key to return to the main menu.        $HLINE
+   ${B}tqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu${N}
+   $HLINE ${W}f${N}luxbox ${W}d${N}wm ${W}e${N}vilwm ion${W}3${N} ${W}j${N}wm pe${W}k${N}wm ${W}p${N}wm3 ${W}t${N}wm ${W}r${N}atpoison   $HLINE
+   $HLINE f${W}v${N}wm fvwm${W}2${N} fvwm-${W}c${N}rystal w${W}9${N}wm ${W}w${N}indowlab w${W}m${N}i wm${W}i${N}i wm-${W}n${N}g  $HLINE
+   ${B}mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj${N}
+
+EOF
+	print "Press a key: ".$M;
+	$x = getc;
+	print $N.$/.$/;
+	if (defined($windowmanagers{$x})) {
+		$command = "su - grml -c 'grml-x ".$windowmanagers{$x}."'";
+	} else {
+		print "Unknown key.\n";
+	}
+} else {
+	print "Unknown key.\n";
+}
+}
+
+# reenable input buffering
+system "stty", 'icanon', 'eol', '^@';
+
+if ($command eq "exit") {
+	last;
+}
+print $W . "Running command: " . $M . $command . $N . $/;
+system($command);
+print $/;
+}
+print "Happy hacking!\n";
+
+## END OF FILE #################################################################
