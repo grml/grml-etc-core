@@ -1,0 +1,27 @@
+#!/bin/sh
+# Filename:      iso-term
+# Purpose:       wrapper script to run x-terminal-emulator in iso885915 mode
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+# Latest change: Sam Mär 17 19:56:13 CET 2007 [mika]
+################################################################################
+
+isutfenv() {
+case "$LANG $CHARSET $LANGUAGE" in
+        (*utf*) return 0 ;;
+        (*UTF*) return 0 ;;
+        (*) return 1 ;;
+esac
+}
+
+if isutfenv ; then
+   for ENV in `env | grep UTF` ; do
+       eval export "$(echo $ENV | sed 's/UTF-8/iso885915/')"
+   done
+   x-terminal-emulator
+else
+   x-terminal-emulator
+fi
+
+## END OF FILE #################################################################

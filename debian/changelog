@@ -1,3 +1,10 @@
+grml-scripts (0.9.26) unstable; urgency=low
+
+  * Added iso-term (wrapper script to run x-terminal-emulator in iso885915
+    mode).
+
+ -- Michael Prokop <mika@grml.org>  Sat, 17 Mar 2007 19:59:09 +0100
+
 grml-scripts (0.9.25) unstable; urgency=low
 
   * zsh-login: do not run grml-quickconfig when booting with 'nocolor'
