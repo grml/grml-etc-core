@@ -1,3 +1,10 @@
+grml-etc-core (0.2.34) unstable; urgency=low
+
+  * /etc/grml/lsb-functions: set RC_NOCOLOR if nocolor string is
+    present in /proc/cmdline
+
+ -- Michael Prokop <mika@grml.org>  Sat, 17 Mar 2007 15:17:45 +0100
+
 grml-etc-core (0.2.33) unstable; urgency=low
 
   * /etc/zsh/zshenv: fix sourcing of /etc/timezone

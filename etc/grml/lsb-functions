@@ -160,6 +160,9 @@ RC_QUIET_STDOUT="no"
 RC_VERBOSE="${RC_VERBOSE:-no}"
 
 # Should we use color?
+if [ -r /proc/cmdline ] ; then
+   grep -q ' nocolor' /proc/cmdline && RC_NOCOLOR='yes'
+fi
 RC_NOCOLOR="${RC_NOCOLOR:-no}"
 # Can the terminal handle endcols?
 RC_ENDCOL="yes"
