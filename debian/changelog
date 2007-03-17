@@ -1,3 +1,9 @@
+grml-scripts (0.9.25) unstable; urgency=low
+
+  * zsh-login: do not run grml-quickconfig when booting with 'nocolor'
+
+ -- Michael Prokop <mika@grml.org>  Sat, 17 Mar 2007 15:17:10 +0100
+
 grml-scripts (0.9.24) unstable; urgency=low
 
   * grml-setlang: do not set $TZ anymore, we want to handle it
