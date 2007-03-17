@@ -1,3 +1,9 @@
+grml-scripts (0.9.27) unstable; urgency=low
+
+  * Depend on sudo, we definitely need it.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 17 Mar 2007 23:47:11 +0100
+
 grml-scripts (0.9.26) unstable; urgency=low
 
   * Added iso-term (wrapper script to run x-terminal-emulator in iso885915
