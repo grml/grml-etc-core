@@ -4,13 +4,18 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mon Dez 18 00:31:53 CET 2006 [mika]
+# Latest change: Son Mär 18 17:23:34 CET 2007 [mika]
 ################################################################################
 
 PATH=${PATH:-'/bin/:/sbin/:/usr/local/bin:/usr/bin:/usr/sbin'}
 PN=$(basename "$0")
 USER=$(grep \`whoami\` /etc/passwd | cut -d: -f5 | cut -d, -f1)
 HOST=$(hostname -f)
+
+if [ -r /etc/grml/script-functions ] ; then
+   . /etc/grml/script-functions
+   check4progs dialog slrn || { echo "Sorry, can't continue. Exiting.">&2 ; exit 1 ; }
+fi
 
 [ -z "$EDITOR" ] && EDITOR='vim'
 [ -z "$NNTPSERVER" ] && NNTPSERVER="news.`hostname`"
@@ -316,17 +321,15 @@ case $retval in
         0) 
           writeslrnrc && writecolors && \
           dialog --stdout --title "$PN" --msgbox "Writing $SLRNRC was successful." 7 65 || \
-          dialog --stdout --title "$PN" --msgbox "Error $?: writing $SLRNRC failed." 7 65
+	  { dialog --stdout --title "$PN" --msgbox "Error $?: writing $SLRNRC failed." 7 65 ; exit 1 ; }
           ;;
-#        *) exit 1 ;;
       esac
     else
        writeslrnrc && writecolors && \
        dialog --stdout --title "$PN" --msgbox "Writing $SLRNRC was successfull." 7 65 || \
-       dialog --stdout --title "$PN" --msgbox "Error $?: writing $SLRNRC failed." 7 65
+       { dialog --stdout --title "$PN" --msgbox "Error $?: writing $SLRNRC failed." 7 65 ; exit 1 ; }
     fi
     ;;
-#  *) exit 1 ;;
 esac
 
 infoscreen
@@ -337,9 +340,9 @@ retval=$?
 case $retval in
   0) 
      slrn -create -h $NEWSSERVER -f $HOME/.newsrc_$NEWSSERVER -i $SLRNRC && \
-     echo ""
-     echo "Start slrn with taken settings via:
-$ slrn -h $NEWSSERVER -f $HOME/.newsrc_$NEWSSERVER -i $SLRNRC
+     echo "
+Start slrn with taken settings via:
+% slrn -h $NEWSSERVER -f $HOME/.newsrc_$NEWSSERVER -i $SLRNRC
 
 Thanks for using $PN and have fun with slrn!"
      ;;
