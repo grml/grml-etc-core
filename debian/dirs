@@ -4,3 +4,4 @@ etc/postfix
 usr/bin
 usr/sbin
 sbin
+usr/share/grml-scripts
