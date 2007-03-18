@@ -4,10 +4,15 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Mai 27 15:12:24 CEST 2006 [mika]
+# Latest change: Son Mär 18 16:41:49 CET 2007 [mika]
 ################################################################################
 
 PN=$0
+
+if [ -r /etc/grml/script-functions ] ; then
+   . /etc/grml/script-functions
+   check4progs vlock xlock sudo chpasswd dialog || { echo "Sorry, can't continue. Exiting.">&2 ; exit 1 }
+fi
 
 if [ -r /etc/grml_version ] ; then
 else
