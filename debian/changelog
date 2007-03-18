@@ -1,6 +1,8 @@
 grml-scripts (0.9.31) unstable; urgency=low
 
   * Added xlockmore to suggests, added check for vlock in grml-lock.
+  * Check for mutt/muttng binaries in grml-mutt[ng]. Removed deprecated
+    URL in grml-muttng.
 
  -- Michael Prokop <mika@grml.org>  Sun, 18 Mar 2007 16:44:53 +0100
 

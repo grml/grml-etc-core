@@ -4,11 +4,16 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Sep 21 20:00:07 CEST 2006 [mika]
+# Latest change: Son Mär 18 17:15:16 CET 2007 [mika]
 ################################################################################
 
 PATH=${PATH:-'/bin/:/sbin/:/usr/local/bin:/usr/bin:/usr/sbin'}
-PN=`basename "$0"`
+PN=$(basename "$0")
+
+if [ -r /etc/grml/script-functions ] ; then
+   . /etc/grml/script-functions
+   check4progs dialog muttng || echo "Warning - muttng is not available. Continuing anyway.">&2
+fi
 
 writemuttngrc() {
 cat > $MUTTRC << EOF
@@ -410,13 +415,13 @@ case $retval in
         0) 
           writemuttngrc && writecolors && \
           dialog --stdout --title "$PN" --msgbox "Writing $MUTTRC was successful." 7 65 || \
-          dialog --stdout --title "$PN" --msgbox "Error $?: writing $MUTTRC failed." 7 65
+          { dialog --stdout --title "$PN" --msgbox "Error $?: writing $MUTTRC failed." 7 65 ; exit 1 ; }
           ;;
       esac
     else
        writemuttngrc && writecolors && \
        dialog --stdout --title "$PN" --msgbox "Writing $MUTTRC was successfull." 7 65 || \
-       dialog --stdout --title "$PN" --msgbox "Error $?: writing $MUTTRC failed." 7 65
+       { dialog --stdout --title "$PN" --msgbox "Error $?: writing $MUTTRC failed." 7 65 ; exit 1 ; }
     fi
     ;;
 esac
@@ -431,7 +436,6 @@ Manuals: man 1 muttng
 Webpages:
 http://mutt-ng.berlios.de/
 http://mutt-ng.supersized.org/
-http://www.strcat.de/muttng/pmwiki.php
 
 #######################################################
 

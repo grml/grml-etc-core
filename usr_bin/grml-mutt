@@ -4,11 +4,16 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Apr 24 16:55:51 CEST 2005 [mika]
+# Latest change: Son Mär 18 17:15:41 CET 2007 [mika]
 ################################################################################
 
 PATH=${PATH:-'/bin/:/sbin/:/usr/local/bin:/usr/bin:/usr/sbin'}
-PN=`basename "$0"`
+PN=$(basename "$0")
+
+if [ -r /etc/grml/script-functions ] ; then
+   . /etc/grml/script-functions
+   check4progs dialog mutt || echo "Warning - mutt is not available. Continuing anyway.">&2
+fi
 
 writemuttrc() {
 cat > $MUTTRC << EOF
@@ -382,17 +387,15 @@ case $retval in
         0) 
           writemuttrc && writecolors && \
           dialog --stdout --title "$PN" --msgbox "Writing $MUTTRC was successful." 7 65 || \
-          dialog --stdout --title "$PN" --msgbox "Error $?: writing $MUTTRC failed." 7 65
+          { dialog --stdout --title "$PN" --msgbox "Error $?: writing $MUTTRC failed." 7 65 ; exit 1 ; }
           ;;
-#        *) exit 1 ;;
       esac
     else
        writemuttrc && writecolors && \
        dialog --stdout --title "$PN" --msgbox "Writing $MUTTRC was successfull." 7 65 || \
-       dialog --stdout --title "$PN" --msgbox "Error $?: writing $MUTTRC failed." 7 65
+       { dialog --stdout --title "$PN" --msgbox "Error $?: writing $MUTTRC failed." 7 65 ; exit 1 ; }
     fi
     ;;
-#  *) exit 1 ;;
 esac
 
 dialog --stdout --title "$PN" --msgbox "Thanks for using $PN!
