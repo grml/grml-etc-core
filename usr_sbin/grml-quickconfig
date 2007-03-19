@@ -1,7 +1,7 @@
 #!/usr/bin/perl 
 # Filename:      grml-quickconfig
 # Purpose:       get fast access to some basic grml-scripts
-# Authors:       Michael Schierl <schierlm-public@gmx.de>
+# Authors:       Michael Schierl <schierlm-public@gmx.de>, Alexander Wirt <formorer@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
 # Latest change: Sam Mär 17 12:42:50 CET 2007 [mika]
@@ -24,6 +24,7 @@ $HLINE=$B."x".$N;      # A single horizontal line drawing character
 	d => 'grml-lang de',
 	a => 'grml-lang at',
 	c => 'grml-lang ch',
+	u => 'grml-lang us', 
 	n => 'grml-network',
 	e => 'netcardconfig',
 	i => 'grml-info',
@@ -72,7 +73,7 @@ print <<"EOF";
    $HLINE Press a highlighted key to perform an action, or press $HLINE
    $HLINE ${W}Return${N} or ${W}q${N} to go back to the shell.                   $HLINE
    ${B}tqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu${N}
-   $HLINE Set keyboard layout (${M}grml-lang${N}): ${W}d${N}e ${W}a${N}t ${W}c${N}h              $HLINE
+   $HLINE Set keyboard layout (${M}grml-lang${N}): ${W}d${N}e ${W}a${N}t ${W}c${N}h ${W}u${N}s           $HLINE
    $HLINE Configure ${W}n${N}etwork (${M}grml-network${N})                       $HLINE
    $HLINE -> Configure ${W}e${N}thernet card directly (${M}netcardconfig${N})    $HLINE
    ${B}tqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu${N}
