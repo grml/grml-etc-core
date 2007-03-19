@@ -12,11 +12,23 @@
 # enable alternate charset support (needed for screen)
 print "\e(B\e)0";
 
+open (my $fh, '/proc/cmdline'); 
+my $cmdline = <$fh>; 
+close($fh); 
+
+my $color = 1 unless $cmdline =~ /nocolor/; 
+
 # variables for nice display
-$W = "\e[0;32;1m";     # White
-$N = "\x0f\e[0m";      # Normal
-$M = "\e[0;35;1m";     # Magenta (for commands)
-$B = "\e[0;34;1m\x0e"; # Blue, line drawing characters
+if ($color) {
+    $W = "\e[0;32;1m";     # White
+    $N = "\x0f\e[0m";      # Normal
+    $M = "\e[0;35;1m";     # Magenta (for commands)
+    $B = "\e[0;34;1m\x0e"; # Blue, line drawing characters
+} else {
+    $B = "\x0e";
+    $N = "\x0f";
+}
+
 $HLINE=$B."x".$N;      # A single horizontal line drawing character
 
 # menu options
