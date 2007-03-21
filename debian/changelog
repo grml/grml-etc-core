@@ -1,3 +1,9 @@
+grml-etc-core (0.2.36) unstable; urgency=low
+
+  * Another version of dpkg-divert handling for debian/preinst.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 21 Mar 2007 19:03:38 +0100
+
 grml-etc-core (0.2.35) unstable; urgency=low
 
   * /etc/zsh/zshrc: added aliases for better iso<->utf handling:

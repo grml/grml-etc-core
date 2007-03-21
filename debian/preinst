@@ -4,20 +4,20 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Mär 03 18:16:47 CET 2007 [mika]
+# Latest change: Mit Mär 21 19:03:31 CET 2007 [mika]
 ################################################################################
 
 set -e
 
 # check for files from rm_conffile() in debian/preinst of grml-etc
 # make sure we don't lose any files...
-divert_conffile() {
+backup_conffile() {
     CONFFILE="$1"
 
     if [ -e "$CONFFILE.dpkg-bak" -a -e "$CONFFILE" ]; then
        cp -f "$CONFFILE" "$CONFFILE".original
     else
-       [ -e "$CONFFILE" ] && cp -f "$CONFFILE" "$CONFFILE".grml-etc-core
+       [ -e "$CONFFILE" ] && cp -f "$CONFFILE" "$CONFFILE".grml-etc-core || true
     fi
 }
 
@@ -29,7 +29,7 @@ case "$1" in
         for file in /etc/zsh/zlogin /etc/zsh/zprofile /etc/zsh/zshenv /etc/zsh/zshrc \
                     /etc/zsh/zlogout /etc/vim/vimrc; do
                [ -e "$file".original ] || cp -f "$file" "${file}.tmp.$$" || /bin/true
-               divert_conffile $file && \
+               backup_conffile $file && \
                [ -f "$file" ] && rm $file && \
                dpkg-divert --quiet --add --rename --package grml-etc-core --divert "$file".original $file  && \
                [ -f "$file".dpkg-bak ]      && mv -f "$file".dpkg-bak "$file"
