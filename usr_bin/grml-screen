@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Feb 17 12:15:05 CET 2007 [mika]
+# Latest change: Mit Mär 21 15:39:00 CET 2007 [mika]
 ################################################################################
 
 # export variable USER for use withing GNU screen:
@@ -18,7 +18,7 @@
 # now run screen with config
   cd $HOME     # important for e.g. hardcopy-feature
   # do we have a utf8 enabled terminal?
-  [ -x /usr/bin/vt-is-UTF8 ] && /usr/bin/vt-is-UTF8 && UTF='-U'
+  [ -x /usr/bin/vt-is-UTF8 ] && /usr/bin/vt-is-UTF8 -q && UTF='-U'
   if [ `id -u` = 0 ] ; then
     exec screen $UTF -c /etc/grml/screenrc
   elif [ -r "$HOME/.screenrc" ] ; then

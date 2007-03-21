@@ -1,3 +1,11 @@
+grml-scripts (0.9.33) unstable; urgency=low
+
+  * grml*screen-scripts: use vt-is-UTF8 with quiet option, otherwise
+    detection of non-UTF8 terminals fails for us. Thanks for the
+    bug report, Gebi!
+
+ -- Michael Prokop <mika@grml.org>  Wed, 21 Mar 2007 15:39:10 +0100
+
 grml-scripts (0.9.32) unstable; urgency=low
 
   * Added alignmargins (adjust the margins and the position of the printed
