@@ -69,8 +69,15 @@
     else
       PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/local/sbin:/usr/local/bin:/usr/NX/bin$ADDONS"
     fi
-#  fi
   fi
+
+  # Solaris 
+  # case $(uname 2>/dev/null) in
+  #   SunOS)
+  #      PATH="/usr/bin:/usr/sbin:/usr/ccs/bin:/usr/sfw/bin:/opt/sfw/bin:/opt/bin:/usr/local/bin:/usr/openwin/bin:/usr/dt/bin:/usr/ucb:/usr/proc/bin:~/bin"
+  #      # LD_LIBRARY_PATH="/opt/csw/lib:/opt/sfw/lib:/usr/lib:/usr/local/lib:/usr/ccs/lib:/usr/openwin/lib:/usr/ucb/lib"
+  #      # MANPATH="$MANPATH:/opt/csw/man:/usr/man:/usr/share/man:/usr/local/man:/opt/sfw/man"
+  #esac
 
 # less (:=pager) options:
 #  export LESS=C

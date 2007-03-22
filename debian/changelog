@@ -1,3 +1,9 @@
+grml-etc-core (0.2.37) unstable; urgency=low
+
+  * Add solaris examples to /etc/zsh/zshenv
+
+ -- Michael Prokop <mika@grml.org>  Thu, 22 Mar 2007 12:30:55 +0100
+
 grml-etc-core (0.2.36) unstable; urgency=low
 
   * Another version of dpkg-divert handling for debian/preinst.
