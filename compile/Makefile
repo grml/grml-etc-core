@@ -29,6 +29,7 @@ dpkg_not_running: dpkg_not_running.c
 	diet $(CC) $(CFLAGS) -o $@ $^
 
 align: align.c
+	$(CC) -Wall -o align align.c
 
 reread_partition_table: reread_partition_table.c
 	diet $(CC) $(CFLAGS) -o $@ $^

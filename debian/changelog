@@ -1,3 +1,9 @@
+grml-scripts (0.9.34) unstable; urgency=low
+
+  * Makefile fixes for align.c, -O2 produces wrong results. 
+
+ -- Michael Gebetsroither <gebi@grml.org>  Wed, 28 Mar 2007 14:02:26 +0200
+
 grml-scripts (0.9.33) unstable; urgency=low
 
   * grml*screen-scripts: use vt-is-UTF8 with quiet option, otherwise
