@@ -50,7 +50,7 @@ void printIdtr(const unsigned char* idtr, unsigned size)
     WRITE("\n");
 }
 
-// i386 {{{
+// i386 and x86-64 {{{
 #if defined (__i386__) || defined (__x86_64__)
 int checkVmware(const int debug)
 {
