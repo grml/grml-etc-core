@@ -43,19 +43,23 @@ void printIdtr(const unsigned char* idtr, unsigned size)
     for(i=0; i<size; ++i) {
         char out[4] = {0};
         fmt_xlong(out, idtr[i]);
+        if(strlen(out) == 1)
+            WRITE("0");
         WRITE(out);
     }
     WRITE("\n");
 }
 
 // i386 {{{
-#if defined (__i386__)
+#if defined (__i386__) || defined (__x86_64__)
 int checkVmware(const int debug)
 {
-    unsigned char idtr[6] = {0};
+    unsigned char idtr[10] = {0};
     asm("sidt %0" : "=m" (idtr));
     if(debug)
-        printIdtr(idtr, 6);
+        printIdtr(idtr, sizeof(idtr));
+    // should normally be the case on amd64, but does not work
+    //return (0xff==idtr[9]) ? 1 : 0;
     return (0xff==idtr[5]) ? 1 : 0;
 }
 int checkVmwareIO()
@@ -80,20 +84,6 @@ int checkVmwareIO()
 }
 // }}}
 
-// x86-64 {{{
-#elif defined (__x86_64__)
-// only guessed, possible need to check against 0xffff?
-int checkVmware(const int debug)
-{
-    unsigned char idtr[10];
-    asm("sidt %0" : "=m" (idtr));
-    if(debug)
-        printIdtr(idtr, 10);
-    return (0xff==idtr[9]) ? 1 : 0;
-}
-int checkVmwareIO() { return 0; }
-// }}}
-
 // others {{{
 #else
 // vmware runs only on the archs above
@@ -101,6 +91,8 @@ int checkVmware(const int) { return 0; }
 int checkVmwareIO() { return 0; }
 #endif
 // }}}
+
+static int Killed = FALSE;
 
 // returns 0 if running inside vmware, 1 otherwise
 int main(int argc, char* argv[]) {
@@ -120,16 +112,24 @@ int main(int argc, char* argv[]) {
         DWRITE("true\n");
 
     // never returns if not running under vmware
-    void dummy() { DWRITE("false\n"); exit(1); }
+    void dummy() { Killed=TRUE; DWRITE("false\n"); exit(1); }
     signal(SIGSEGV, dummy);
     DWRITE("ioport-check: ");
     b = checkVmwareIO();
     if(b) {
         DWRITE("true\n");
         return EXIT_SUCCESS;
+    } else {
+        if(!Killed) {
+            // check unuseable or not implemented
+            DWRITE("false\n");
+            DWRITE("Check not implemented, yet!\n");
+            return a ? EXIT_SUCCESS : EXIT_FAILURE;
+        } else {
+            // never reached
+            WRITE("Error: IO check hasn't killed the program but no vmware found either!\n");
+            return EXIT_FAILURE;
+        }
     }
-    // never reached
-    WRITE("Error: IO check hasn't killed the program but no vmware found either!\n");
-    return EXIT_FAILURE;
 }
 // vim: foldmethod=marker
