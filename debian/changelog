@@ -1,3 +1,10 @@
+grml-etc-core (0.2.38) unstable; urgency=low
+
+  * /etc/zsh/zshrc: added new aliases ati (aptitude install) and up
+    (aptitude update, aptitude upgrade) - thanks for suggestion - Otti!
+
+ -- Michael Prokop <mika@grml.org>  Wed, 28 Mar 2007 20:45:21 +0200
+
 grml-etc-core (0.2.37) unstable; urgency=low
 
   * Add solaris examples to /etc/zsh/zshenv
