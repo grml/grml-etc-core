@@ -1,6 +1,8 @@
 grml-scripts (0.9.34) unstable; urgency=low
 
   * Makefile fixes for align.c, -O2 produces wrong results. 
+  * Update of vmware-detect so we should have less false positives,
+    including an update for amd64.
 
  -- Michael Gebetsroither <gebi@grml.org>  Wed, 28 Mar 2007 14:02:26 +0200
 
