@@ -1,3 +1,10 @@
+grml-scripts (0.9.35) unstable; urgency=low
+
+  * zsh-login: drop nocolor check as grml-quickconfig can handle
+    it on its own; do not run grml-quickconfig on grml-small.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 29 Mar 2007 16:02:09 +0200
+
 grml-scripts (0.9.34) unstable; urgency=low
 
   * Makefile fixes for align.c, -O2 produces wrong results. 
