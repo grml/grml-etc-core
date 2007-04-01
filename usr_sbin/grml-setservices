@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Mär 16 21:54:10 CET 2007 [mika]
+# Latest change: Son Apr 01 11:00:24 CEST 2007 [mika]
 ################################################################################
 
 PN="$(basename $0)"
@@ -47,29 +47,35 @@ or choose cancel.
 
 # adjust setup
 set_values(){
-  if is_value_set "mdadm"  ; then
-     update-rc.d -f mdadm remove >/dev/null 2>&1
-     update-rc.d mdadm-raid start 25 S . start 50 0 6 . >/dev/null 2>&1
-     update-rc.d mdadm defaults 25 >/dev/null 2>&1
-  else
-     update-rc.d -f mdadm remove >/dev/null 2>&1
-     update-rc.d mdadm stop 20 0 1 6 . >/dev/null 2>&1
+  if [ -n "$SRAID" ] ; then
+     if is_value_set "mdadm"  ; then
+        update-rc.d -f mdadm remove >/dev/null 2>&1
+        update-rc.d mdadm-raid start 25 S . start 50 0 6 . >/dev/null 2>&1
+        update-rc.d mdadm defaults 25 >/dev/null 2>&1
+     else
+        update-rc.d -f mdadm remove >/dev/null 2>&1
+        update-rc.d mdadm stop 20 0 1 6 . >/dev/null 2>&1
+     fi
   fi
 
-  if is_value_set "dmraid" ; then
-     update-rc.d -f dmraid remove >/dev/null 2>&1
-     update-rc.d dmraid start 04 S . start 51 0 6 . >/dev/null
-  else
-     update-rc.d -f dmraid remove >/dev/null 2>&1
-     update-rc.d dmraid stop 20 0 1 6 . >/dev/null 2>&1
+  if [ -n "$MRAID" ] ; then
+     if is_value_set "dmraid" ; then
+        update-rc.d -f dmraid remove >/dev/null 2>&1
+        update-rc.d dmraid start 04 S . start 51 0 6 . >/dev/null
+     else
+        update-rc.d -f dmraid remove >/dev/null 2>&1
+        update-rc.d dmraid stop 20 0 1 6 . >/dev/null 2>&1
+     fi
   fi
 
-  if is_value_set "dbus" ; then
-     update-rc.d -f dbus remove >/dev/null 2>&1
-     update-rc.d dbus defaults >/dev/null 2>&1
-  else
-     update-rc.d -f dbus remove >/dev/null 2>&1
-     update-rc.d dbus stop 20 0 1 6 . >/dev/null 2>&1
+  if [ -n "$DBUS" ] ; then
+     if is_value_set "dbus" ; then
+        update-rc.d -f dbus remove >/dev/null 2>&1
+        update-rc.d dbus defaults >/dev/null 2>&1
+     else
+        update-rc.d -f dbus remove >/dev/null 2>&1
+        update-rc.d dbus stop 20 0 1 6 . >/dev/null 2>&1
+     fi
   fi
 }
 

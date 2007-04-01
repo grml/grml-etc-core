@@ -1,3 +1,11 @@
+grml-scripts (0.9.36) unstable; urgency=low
+
+  * grml-setservices: execute update-rc.d commands only for present
+    software packages
+  * grml-setlang: fix handling of check for supported languages
+
+ -- Michael Prokop <mika@grml.org>  Sun,  1 Apr 2007 11:00:34 +0200
+
 grml-scripts (0.9.35) unstable; urgency=low
 
   * zsh-login: drop nocolor check as grml-quickconfig can handle

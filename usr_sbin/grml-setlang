@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Mär 16 22:49:29 CET 2007 [mika]
+# Latest change: Sam Mär 31 23:26:35 CEST 2007 [mika]
 ################################################################################
 
 PN="$(basename $0)"
@@ -159,7 +159,7 @@ else # non-interactive
   LANGUAGE="$1"
 fi
 
-if ! grep -q "${LANGUAGE})" $LANGFUNC ; then
+if ! grep -qe "${LANGUAGE})" -qe "${LANGUAGE}|" $LANGFUNC ; then
    ewarn "Language ${LANGUAGE} not supported, using default." ; eend 0
 fi
 
