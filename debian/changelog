@@ -1,7 +1,9 @@
 grml-etc-core (0.2.39) unstable; urgency=low
 
-  * /etc/zsh/zshrc: added alias mdstat for 'cat /proc/mdstat' and
-    alias ... which does a 'cd ../../'. Thanks, gebi!
+  * /etc/zsh/zshrc:
+    - added alias mdstat for 'cat /proc/mdstat' and
+      alias ... which does a 'cd ../../'. Thanks, gebi!
+    - check for 'most' before assigning aliases dchange and uchange
 
  -- Michael Prokop <mika@grml.org>  Thu, 29 Mar 2007 00:22:28 +0200
 

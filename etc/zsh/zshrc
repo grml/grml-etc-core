@@ -984,33 +984,35 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
      # manzsh()  { man zshall | $MYLESS -p $1 ; }
   fi
 
-# use "dchange <package-name>" to view Debian's changelog of the package:
-  dchange() {
-    if [ -r /usr/share/doc/${1}/changelog.Debian.gz ] ; then
-       most /usr/share/doc/${1}/changelog.Debian.gz
-    else
-       if [ -r /usr/share/doc/${1}/changelog.gz ] ; then
-          most /usr/share/doc/${1}/changelog.gz
-       else
-          echo "No changelog for package $1 found, sorry."
-          return 1
-       fi
-    fi
-  }
-  _dchange() { _files -W /usr/share/doc -/ }
-  compdef _dchange dchange
-
-# use "uchange <package-name>" to view upstream's changelog of the package:
-  uchange() {
-    if [ -r /usr/share/doc/${1}/changelog.gz ] ; then
-       most /usr/share/doc/${1}/changelog.gz
-    else
-       echo "No changelog for package $1 found, sorry."
-       return 1
-    fi
-  }
-  _uchange() { _files -W /usr/share/doc -/ }
-  compdef _uchange uchange
+  if [ -x /usr/bin/most ] ; then
+  # use "dchange <package-name>" to view Debian's changelog of the package:
+    dchange() {
+      if [ -r /usr/share/doc/${1}/changelog.Debian.gz ] ; then
+         most /usr/share/doc/${1}/changelog.Debian.gz
+      else
+         if [ -r /usr/share/doc/${1}/changelog.gz ] ; then
+            most /usr/share/doc/${1}/changelog.gz
+         else
+            echo "No changelog for package $1 found, sorry."
+            return 1
+         fi
+      fi
+    }
+    _dchange() { _files -W /usr/share/doc -/ }
+    compdef _dchange dchange
+  
+  # use "uchange <package-name>" to view upstream's changelog of the package:
+    uchange() {
+      if [ -r /usr/share/doc/${1}/changelog.gz ] ; then
+         most /usr/share/doc/${1}/changelog.gz
+      else
+         echo "No changelog for package $1 found, sorry."
+         return 1
+      fi
+    }
+    _uchange() { _files -W /usr/share/doc -/ }
+    compdef _uchange uchange
+  fi
 
 # zsh profiling
   profile () {
