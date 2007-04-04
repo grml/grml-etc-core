@@ -3,7 +3,7 @@
 " Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 " Bug-Reports:   see http://grml.org/bugs/
 " License:       This file is licensed under the GPL v2.
-" Latest change: Sam Feb 10 11:20:38 CET 2007 [mika]
+" Latest change: Son Apr 01 19:33:19 CEST 2007 [mika]
 "###############################################################################
 " Thanks to Sven Guckes for his template!
 "###############################################################################
@@ -15,7 +15,8 @@
 " turn these OFF ("no" prefix):
   set noeb noet nosol
 " non-toggles:
-  set bs=2 fo=cqrt ls=2 shm=at tw=72 ww=<,>,h,l
+  set bs=2 fo=cqrt ls=2 shm=at ww=<,>,h,l
+" set bs=2 fo=cqrt ls=2 shm=at tw=72 ww=<,>,h,l
   set comments=b:#,:%,fb:-,n:>,n:)
 "  set list listchars=tab:»·,trail:·
   set listchars=eol:$,precedes:«,extends:»,tab:»·,trail:·
