@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Sep 16 13:08:16 CEST 2006 [mika]
+# Latest change: Fre Apr 06 22:42:04 CEST 2007 [mika]
 ################################################################################
 
 # {{{ set default PATH
@@ -14,7 +14,7 @@ setpath(){
 
 # {{{ check for root-permissions
 check4root(){
-  if [ "$UID" != 0 ] ; then
+  if [ "$(id -u 2>/dev/null)" != 0 ] ; then
     echo 1>&2 "Error: please run this script with uid 0 (root)." ; return 1
   fi
 }
@@ -22,7 +22,7 @@ check4root(){
 
 # {{{ check for user permissions
 check4user(){
-  if [ "$UID" == 0 ] ; then
+  if [ "$(id -u 2>/dev/null)" = 0 ] ; then
     echo 1>&2 "Error: please do not run this script with uid 0 (root)." ; return 1
   fi
 }
