@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fri Apr 21 02:02:54 CEST 2006 [mika]
+# Latest change: Mon Apr 09 13:04:40 CEST 2007 [mika]
 ################################################################################
 
 usage(){
@@ -32,7 +32,6 @@ if [ -z "$DISPLAY" ] ;then
     echo -e "\nDone."
   elif [ "$1" = "us" ] ; then
     echo 'Loading keymap us...'
-    # sudo loadkeys /etc/console/boottime.kmap.gz
     sudo loadkeys i386/qwerty/us-latin1.kmap.gz
     echo -e "\nDone."
   else echo "No valid parameter given.
@@ -40,6 +39,8 @@ if [ -z "$DISPLAY" ] ;then
 Notice: Use loadkeys on console and setxkbmap when running X for
 modifying keyboard layout. Adjust \$LANG and \$LC_ALL for setting locales." ; exit 1
   fi
+  # switch to unicode mode on console
+  case $LANG in *UTF-8) kbd_mode -u ; ;; esac
 else
   if [ $# = 0 ] ; then
       echo "Usage: $0 <language>"

@@ -1,3 +1,10 @@
+grml-scripts (0.9.37) unstable; urgency=low
+
+  * grml-lang: execute 'kbd_mode -u' when running in utf8 mode
+    on plain console
+
+ -- Michael Prokop <mika@grml.org>  Mon,  9 Apr 2007 13:04:16 +0200
+
 grml-scripts (0.9.36) unstable; urgency=low
 
   * grml-setservices: execute update-rc.d commands only for present
