@@ -9,6 +9,8 @@
 
 # menu with quick config options
 
+use Term::ReadKey;
+
 # enable alternate charset support (needed for screen)
 print "\e(B\e)0";
 
@@ -33,38 +35,38 @@ $HLINE=$B."x".$N;      # A single horizontal line drawing character
 
 # menu options
 %menu_commands = (
-	d => 'grml-lang de',
-	a => 'grml-lang at',
-	c => 'grml-lang ch',
-	u => 'grml-lang us', 
-	n => 'grml-network',
-	e => 'netcardconfig',
-	i => 'grml-info',
-	h => 'grml2hd',
-	m => 'pdmenu -c',
-	q => 'exit',
+    d => 'grml-lang de',
+    a => 'grml-lang at',
+    c => 'grml-lang ch',
+    u => 'grml-lang us', 
+    n => 'grml-network',
+    e => 'netcardconfig',
+    i => 'grml-info',
+    h => 'grml2hd',
+    m => 'pdmenu -c',
+    q => 'exit',
 # x and Return are handled manually
 );
 
 # window managers
 %windowmanagers = (
-	d => 'dwm',
-	e => 'evilwm',
-	f => 'fluxbox',
-	i => 'ion3',
-	j => 'jwm',
-	k => 'pekwm',
-	p => 'pwm3',
-	t => 'twm',
-	v => 'fvwm',
-	2 => 'fvwm2', 
-	c => 'fvwm-crystal',
-	r => 'ratpoison',
-	9 => 'w9wm',
-	w => 'windowlab',
-	m => 'wmi',
-	i => 'wmii',
-	n => 'wm-ng',
+    d => 'dwm',
+    e => 'evilwm',
+    f => 'fluxbox',
+    i => 'ion3',
+    j => 'jwm',
+    k => 'pekwm',
+    p => 'pwm3',
+    t => 'twm',
+    v => 'fvwm',
+    2 => 'fvwm2', 
+    c => 'fvwm-crystal',
+    r => 'ratpoison',
+    9 => 'w9wm',
+    w => 'windowlab',
+    m => 'wmi',
+    i => 'wmii',
+    n => 'wm-ng',
 );
 
 # main loop
@@ -73,12 +75,12 @@ while(1) {
 # disable input buffering, see
 # man perlfunc | less '+/   getc'
 # for details
-system "stty", '-icanon', 'eol', "\001";
+    system "stty", '-icanon', 'eol', "\001";
 
 # main loop
-$command="";
-while($command eq "") {
-print <<"EOF";
+    $command="";
+    while($command eq "") {
+	print <<"EOF";
 
    ${B}lqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk${N}
    $HLINE Welcome to ${M}grml-quickconfig${M}                            $HLINE 
@@ -96,15 +98,20 @@ print <<"EOF";
    ${B}mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj${N}
 
 EOF
-print "Press a key: ".$M;
-$x = getc;
-print $N.$/.$/;
-if (defined($menu_commands{$x})) {
-	$command = $menu_commands{$x};
-} elsif ($x eq "\n") {
-	$command= 'exit';
-} elsif ($x eq "x") {
-	print <<"EOF";
+	print "Press a key: ".$M;
+	ReadMode 4; # Turn off controls keys
+	while (not defined ($x = ReadKey(-1))) {
+	    # No key yet
+	}
+	ReadMode 0; # Reset tty mode before exiting
+
+	print $N.$/.$/;
+	if (defined($menu_commands{$x})) {
+	    $command = $menu_commands{$x};
+	} elsif ($x eq "\n") {
+	    $command= 'exit';
+	} elsif ($x eq "x") {
+	    print <<"EOF";
 
    ${B}lqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk${N}
    $HLINE Select a window manager (unsorted list):               $HLINE 
@@ -115,28 +122,33 @@ if (defined($menu_commands{$x})) {
    ${B}mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj${N}
 
 EOF
-	print "Press a key: ".$M;
-	$x = getc;
-	print $N.$/.$/;
-	if (defined($windowmanagers{$x})) {
+	    print "Press a key: ".$M;
+	    ReadMode 4; # Turn off controls keys
+	    while (not defined ($x = ReadKey(-1))) {
+		# No key yet
+	    }
+	    ReadMode 0; # Reset tty mode before exiting
+
+	    print $N.$/.$/;
+	    if (defined($windowmanagers{$x})) {
 		$command = "su - grml -c 'grml-x ".$windowmanagers{$x}."'";
-	} else {
+	    } else {
 		print "Unknown key.\n";
+	    }
+	} else {
+	    print "Unknown key.\n";
 	}
-} else {
-	print "Unknown key.\n";
-}
-}
+    }
 
 # reenable input buffering
-system "stty", 'icanon', 'eol', '^@';
+    system "stty", 'icanon', 'eol', '^@';
 
-if ($command eq "exit") {
+    if ($command eq "exit") {
 	last;
-}
-print $W . "Running command: " . $M . $command . $N . $/;
-system($command);
-print $/;
+    }
+    print $W . "Running command: " . $M . $command . $N . $/;
+    system($command);
+    print $/;
 }
 print "Happy hacking!\n";
 
