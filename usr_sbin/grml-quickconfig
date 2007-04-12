@@ -112,13 +112,14 @@ EOF
   } elsif ($x eq "x") {
       print <<"EOF";
 
-   ${B}lqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk${N}
-   $HLINE Select a window manager (unsorted list):               $HLINE
-   $HLINE Press any other key to return to the main menu.        $HLINE
-   ${B}tqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu${N}
-   $HLINE ${W}d${N}wm ${W}e${N}vilwm ${W}f${N}luxbox f${W}v${N}wm fvwm${W}2${N} fvwm-${W}c${N}rystal             $HLINE
-   $HLINE w${W}9${N}wm ${W}w${N}indowlab wm${W}i${N}i wmi-${W}n${N}g                             $HLINE
-   ${B}mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj${N}
+   ${B}lqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk${N}
+   $HLINE Select a window manager (unsorted list):                $HLINE
+   $HLINE Press any other key to return to the main menu.         $HLINE
+   ${B}tqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu${N}
+   $HLINE ${W}d${N}wm ${W}e${N}vilwm ${W}f${N}luxbox f${W}v${N}wm fvwm${W}2${N} fvwm-${W}c${N}rystal ion${W}3         ${N}$HLINE
+   $HLINE ${W}j${N}wm pe${W}k${N}wm ${W}p${N}wm3 ${W}t${N}wm ${W}r${N}atpoison  w${W}9${N}wm ${W}w${N}indowlab            ${N}$HLINE
+   $HLINE wm${W}i${N}i wmi-${W}n${N}g                                             ${N}$HLINE
+   ${B}mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj${N}
 
 EOF
       print "Press a key: ".$M;
@@ -132,7 +133,7 @@ EOF
       if (defined($windowmanagers{$x})) {
     $command = "su - grml -c 'grml-x ".$windowmanagers{$x}."'";
       } else {
-    print "Unknown key.\n";
+    print "Unknown key. Returning to main menu.\n";
       }
   } else {
       print "Unknown key.\n";

@@ -5,9 +5,10 @@ grml-scripts (0.9.38) unstable; urgency=low
     - fixed indenting
     - reset inputbuffering properly (switch to Term::Readkey
       instead of getc) [Testing: #194]
-    - use list of window managers
-    [Michael Prokop]
     - update list of window managers
+    [Michael Prokop]
+    - update list of window managers once more
+    - update 'Unknown key'-tex for grml-x
     - replace tabs with spaces, add vim-line to EOF
 
  -- Michael Prokop <mika@grml.org>  Thu, 12 Apr 2007 13:40:46 +0200
