@@ -1,3 +1,11 @@
+grml-scripts (0.9.39) unstable; urgency=low
+
+  [Alexander Wirt]
+  * grml-quickconfig: fix while-loop causing high cpu-load ->
+    sleep 0.5 secs between keyboard polling
+
+ -- Michael Prokop <mika@grml.org>  Thu, 12 Apr 2007 17:14:58 +0200
+
 grml-scripts (0.9.38) unstable; urgency=low
 
   * update of grml-quickconf:
