@@ -53,18 +53,11 @@ $HLINE=$B."x".$N;      # A single horizontal line drawing character
     d => 'dwm',
     e => 'evilwm',
     f => 'fluxbox',
-    i => 'ion3',
-    j => 'jwm',
-    k => 'pekwm',
-    p => 'pwm3',
-    t => 'twm',
     v => 'fvwm',
     2 => 'fvwm2', 
     c => 'fvwm-crystal',
-    r => 'ratpoison',
     9 => 'w9wm',
     w => 'windowlab',
-    m => 'wmi',
     i => 'wmii',
     n => 'wm-ng',
 );
@@ -117,8 +110,8 @@ EOF
    $HLINE Select a window manager (unsorted list):               $HLINE 
    $HLINE Press any other key to return to the main menu.        $HLINE
    ${B}tqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu${N}
-   $HLINE ${W}f${N}luxbox ${W}d${N}wm ${W}e${N}vilwm ion${W}3${N} ${W}j${N}wm pe${W}k${N}wm ${W}p${N}wm3 ${W}t${N}wm ${W}r${N}atpoison   $HLINE
-   $HLINE f${W}v${N}wm fvwm${W}2${N} fvwm-${W}c${N}rystal w${W}9${N}wm ${W}w${N}indowlab w${W}m${N}i wm${W}i${N}i wm-${W}n${N}g  $HLINE
+   $HLINE ${W}d${N}wm ${W}e${N}vilwm ${W}f${N}luxbox f${W}v${N}wm fvwm${W}2${N} fvwm-${W}c${N}rystal             $HLINE 
+   $HLINE w${W}9${N}wm ${W}w${N}indowlab wm${W}i${N}i wmi-${W}n${N}g                             $HLINE
    ${B}mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj${N}
 
 EOF
