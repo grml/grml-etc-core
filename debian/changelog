@@ -1,3 +1,17 @@
+grml-scripts (0.9.38) unstable; urgency=low
+
+  * update of grml-quickconf:
+    [Alexander Wirt]
+    - fixed indenting
+    - reset inputbuffering properly (switch to Term::Readkey
+      instead of getc) [Testing: #194]
+    - use list of window managers
+    [Michael Prokop]
+    - update list of window managers
+    - replace tabs with spaces, add vim-line to EOF
+
+ -- Michael Prokop <mika@grml.org>  Thu, 12 Apr 2007 13:40:46 +0200
+
 grml-scripts (0.9.37) unstable; urgency=low
 
   * grml-lang: execute 'kbd_mode -u' when running in utf8 mode

@@ -1,10 +1,10 @@
-#!/usr/bin/perl 
+#!/usr/bin/perl
 # Filename:      grml-quickconfig
 # Purpose:       get fast access to some basic grml-scripts
 # Authors:       Michael Schierl <schierlm-public@gmx.de>, Alexander Wirt <formorer@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Mär 17 12:42:50 CET 2007 [mika]
+# Latest change: Don Apr 12 13:47:04 CEST 2007 [mika]
 ################################################################################
 
 # menu with quick config options
@@ -14,11 +14,11 @@ use Term::ReadKey;
 # enable alternate charset support (needed for screen)
 print "\e(B\e)0";
 
-open (my $fh, '/proc/cmdline'); 
-my $cmdline = <$fh>; 
-close($fh); 
+open (my $fh, '/proc/cmdline');
+my $cmdline = <$fh>;
+close($fh);
 
-my $color = 1 unless $cmdline =~ /nocolor/; 
+my $color = 1 unless $cmdline =~ /nocolor/;
 
 # variables for nice display
 if ($color) {
@@ -38,7 +38,7 @@ $HLINE=$B."x".$N;      # A single horizontal line drawing character
     d => 'grml-lang de',
     a => 'grml-lang at',
     c => 'grml-lang ch',
-    u => 'grml-lang us', 
+    u => 'grml-lang us',
     n => 'grml-network',
     e => 'netcardconfig',
     i => 'grml-info',
@@ -54,8 +54,14 @@ $HLINE=$B."x".$N;      # A single horizontal line drawing character
     e => 'evilwm',
     f => 'fluxbox',
     v => 'fvwm',
-    2 => 'fvwm2', 
+    2 => 'fvwm2',
     c => 'fvwm-crystal',
+    i => 'ion3',
+    j => 'jwm',
+    p => 'pekwm',
+    3 => 'pwm3',
+    r => 'ratpoison',
+    t => 'twm',
     9 => 'w9wm',
     w => 'windowlab',
     i => 'wmii',
@@ -73,10 +79,10 @@ while(1) {
 # main loop
     $command="";
     while($command eq "") {
-	print <<"EOF";
+  print <<"EOF";
 
    ${B}lqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk${N}
-   $HLINE Welcome to ${M}grml-quickconfig${M}                            $HLINE 
+   $HLINE Welcome to ${M}grml-quickconfig${M}                            $HLINE
    $HLINE Press a highlighted key to perform an action, or press $HLINE
    $HLINE ${W}Return${N} or ${W}q${N} to go back to the shell.                   $HLINE
    ${B}tqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu${N}
@@ -91,53 +97,53 @@ while(1) {
    ${B}mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj${N}
 
 EOF
-	print "Press a key: ".$M;
-	ReadMode 4; # Turn off controls keys
-	while (not defined ($x = ReadKey(-1))) {
-	    # No key yet
-	}
-	ReadMode 0; # Reset tty mode before exiting
+  print "Press a key: ".$M;
+  ReadMode 4; # Turn off controls keys
+  while (not defined ($x = ReadKey(-1))) {
+      # No key yet
+  }
+  ReadMode 0; # Reset tty mode before exiting
 
-	print $N.$/.$/;
-	if (defined($menu_commands{$x})) {
-	    $command = $menu_commands{$x};
-	} elsif ($x eq "\n") {
-	    $command= 'exit';
-	} elsif ($x eq "x") {
-	    print <<"EOF";
+  print $N.$/.$/;
+  if (defined($menu_commands{$x})) {
+      $command = $menu_commands{$x};
+  } elsif ($x eq "\n") {
+      $command= 'exit';
+  } elsif ($x eq "x") {
+      print <<"EOF";
 
    ${B}lqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk${N}
-   $HLINE Select a window manager (unsorted list):               $HLINE 
+   $HLINE Select a window manager (unsorted list):               $HLINE
    $HLINE Press any other key to return to the main menu.        $HLINE
    ${B}tqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu${N}
-   $HLINE ${W}d${N}wm ${W}e${N}vilwm ${W}f${N}luxbox f${W}v${N}wm fvwm${W}2${N} fvwm-${W}c${N}rystal             $HLINE 
+   $HLINE ${W}d${N}wm ${W}e${N}vilwm ${W}f${N}luxbox f${W}v${N}wm fvwm${W}2${N} fvwm-${W}c${N}rystal             $HLINE
    $HLINE w${W}9${N}wm ${W}w${N}indowlab wm${W}i${N}i wmi-${W}n${N}g                             $HLINE
    ${B}mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj${N}
 
 EOF
-	    print "Press a key: ".$M;
-	    ReadMode 4; # Turn off controls keys
-	    while (not defined ($x = ReadKey(-1))) {
-		# No key yet
-	    }
-	    ReadMode 0; # Reset tty mode before exiting
+      print "Press a key: ".$M;
+      ReadMode 4; # Turn off controls keys
+      while (not defined ($x = ReadKey(-1))) {
+    # No key yet
+      }
+      ReadMode 0; # Reset tty mode before exiting
 
-	    print $N.$/.$/;
-	    if (defined($windowmanagers{$x})) {
-		$command = "su - grml -c 'grml-x ".$windowmanagers{$x}."'";
-	    } else {
-		print "Unknown key.\n";
-	    }
-	} else {
-	    print "Unknown key.\n";
-	}
+      print $N.$/.$/;
+      if (defined($windowmanagers{$x})) {
+    $command = "su - grml -c 'grml-x ".$windowmanagers{$x}."'";
+      } else {
+    print "Unknown key.\n";
+      }
+  } else {
+      print "Unknown key.\n";
+  }
     }
 
 # reenable input buffering
     system "stty", 'icanon', 'eol', '^@';
 
     if ($command eq "exit") {
-	last;
+  last;
     }
     print $W . "Running command: " . $M . $command . $N . $/;
     system($command);
@@ -146,3 +152,4 @@ EOF
 print "Happy hacking!\n";
 
 ## END OF FILE #################################################################
+# vim: ai expandtab ft=perl
