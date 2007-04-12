@@ -1,3 +1,10 @@
+grml-etc-core (0.2.42) unstable; urgency=low
+
+  * Update and cleanup /etc/apt/sources.list.grml. Thanks for hints,
+    Ronny Plattner!
+
+ -- Michael Prokop <mika@grml.org>  Thu, 12 Apr 2007 12:48:14 +0200
+
 grml-etc-core (0.2.41) unstable; urgency=low
 
   * /etc/grml/script-functions: replace $UID with 'id -u' so we improve

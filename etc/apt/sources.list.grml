@@ -3,12 +3,13 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mit Nov 29 23:24:27 CET 2006 [mika]
+# Latest change: Don Apr 12 12:50:26 CEST 2007 [mika]
 ################################################################################
 # Notice: because of ressource limits some lines might have been commented
 #         out on the grml live CD system. Just uncomment lines containing
 #         '#1#' at the beginning to get a "full featured" debian system on your
-#         hard disc.
+#         hard disc. But please notice that enabling non-official pools can be
+#         dangerous!
 #
 # See sources.list(5) for more information, especialy
 # Remember that you can only use http, ftp or file URIs
@@ -19,6 +20,9 @@
 #      http://www.debianforum.de/wiki/WoodyBackports
 #      http://www.backports.org/
 ##############################################################################
+
+##############################################################################
+## main repositories:
 
 # stable grml repository:
   deb     http://deb.grml.org/ grml-stable  main
@@ -54,10 +58,12 @@
 #  deb     http://ftp.tu-graz.ac.at/mirror/debian        experimental        main contrib non-free
 #  deb-src http://ftp.tu-graz.ac.at/mirror/debian        experimental        main contrib non-free
 
-# Security updates:
-#1#  deb     http://security.debian.org stable/updates main contrib non-free
-#1#  deb-src http://security.debian.org stable/updates main contrib non-free
+##############################################################################
 
+################################################################################
+## Unsorted stuff:
+## ===============
+#
 # gebi's packages for grml (grml-terminalserver, grml-vpn, grml-crypt,...):
 #1#  deb     http://einsteinmg.dyndns.org/debian unstable/
 #1#  deb-src http://einsteinmg.dyndns.org/debian unstable/
@@ -74,13 +80,16 @@
 #1#  deb     http://www.debian-multimedia.org sid main
 #1#  deb-src http://www.debian-multimedia.org sid main
 
-# kwtools:
-#  deb     ftp://ftp.berlios.de/pub/netzworkk/scripts/kwtools/Debian/stable/ ./
-#  deb-src ftp://ftp.berlios.de/pub/netzworkk/scripts/kwtools/Debian/stable/ ./
-#1#  deb     ftp://server.mamemu.de/pub/kwtools/Debian/unstable/ ./
-#1#  deb-src ftp://server.mamemu.de/pub/kwtools/Debian/unstable/ ./
-#1#  deb     ftp://server.mamemu.de/pub/kwtools/Debian/stable/ ./
-#1#  deb-src ftp://server.mamemu.de/pub/kwtools/Debian/stable/ ./
+# kwtools - unstable:
+#1# deb     ftp://ftp.berlios.de/pub/netzworkk/scripts/kwtools/Debian/unstable ./
+#1# deb-src ftp://ftp.berlios.de/pub/netzworkk/scripts/kwtools/Debian/unstable ./
+# deb     ftp://server.mamemu.de/kwtools/Debian/unstable ./
+# deb-src ftp://server.mamemu.de/kwtools/Debian/unstable ./
+# kwtools - stable:
+# deb     ftp://ftp.berlios.de/pub/netzworkk/scripts/kwtools/Debian/stable ./
+# deb-src ftp://ftp.berlios.de/pub/netzworkk/scripts/kwtools/Debian/stable ./
+# deb     ftp://server.mamemu.de/kwtools/Debian/stable ./
+# deb-src ftp://server.mamemu.de/kwtools/Debian/stable ./
 
 # cpm
 #1#  deb     http://debian.harry-b.de/ binary/
@@ -119,10 +128,10 @@
 # musepack-decoder musepack-encoder musepack-replaygain
 # be careful with libfaad2 <-> mplayer!
 ##1#  deb http://www.rarewares.org/debian/packages/unstable/ ./
-
-################################################################################
-# Diff stuff:
-# ===========
+#
+# Security updates for stable:
+#1#  deb     http://security.debian.org stable/updates main contrib non-free
+#1#  deb-src http://security.debian.org stable/updates main contrib non-free
 #
 # get specific debian package:
 #  deb http://snapshot.debian.net/archive/2005/03/27/debian unstable main contrib non-free
@@ -161,58 +170,32 @@
 #  deb http://dl.sourceforge.net/sourceforge/jedit ./
 #  deb-src http://dl.sourceforge.net/sourceforge/jedit ./
 
-# packages for the Debian stable (aka "Sarge") distribution:
+# Dotdeb is an unofficial repository containing many packages for the Debian stable distribution:
+# PHP, versions 4 & 5, MySQL,versions 4.1 & 5.0, Qmail,Vpopmail...
 #  deb     http://packages.dotdeb.org stable all
 #  deb-src http://packages.dotdeb.org stable all
-
-# nobses packages:
-#  deb     http://people.debian.org/~nobse/debian/ unstable/
-#  deb-src http://people.debian.org/~nobse/debian/ unstable/
 
 # e17/elive:
 #  deb http://idefix.eup.uva.es/elive elive main efl elive
 #  deb http://www.soulmachine.net/debian/ unstable
-
-# libcairo, libpixman1 (-> wmii):
-#  deb     http://cairographics.org/packages/debian/ unstable/
-#  deb-src http://cairographics.org/packages/debian/ unstable/
-
-# moc / mutt-ng:
-#  deb     http://www.lxtec.de/debarchiv binary-i386/
-#  deb-src http://www.lxtec.de/debarchiv sources/
 
 # debian.pkgs.cpan.org -- debified CPAN packages:
 #  deb http://debian.pkgs.cpan.org/debian unstable main
 
 # Very latest bleeding edge XFCE releases
 # To include the signing key use this command,
-# wget -O - http://www.corsac.net/corsac.asc | sudo apt-key add -
+# wget -O - http://debian.corsac.net/repository.gpg | sudo apt-key add -
 #
-#  deb http://xfce.corsac.net      sid        main
-#  deb http://xfce.corsac.net      unstable   main
-#  deb-src http://xfce.corsac.net  unstable   main
-
-# centericq (4.9.12-4) by Julien Lemoine:
-#  deb     http://debian.speedblue.org ./
-#  deb-src http://debian.speedblue.org ./
-# centericq-cvs (out of date - 20041120):
-#  deb     http://debian.parsed.net unstable main
-#  deb-src http://debian.parsed.net unstable main
-# centericq by Marc Thoben (includes quote/ask-quit patches @cicq 4.9.10-8):
-#  deb     http://ipxserver.dyndns.org/debian unstable centericq
+#  deb http://debian.corsac.net      sid        main
+#  deb http://debian.corsac.net      unstable   main
+#  deb-src http://debian.corsac.net  unstable   main
 
 # opengroupware:
 #  deb     http://download.opengroupware.org/nightly/packages/debian/dists/sid/trunk/binary-i386/ ./
 
-# bitlbee devel-version:
-#  deb http://get.bitlbee.org/devel/ ./
-
 # kanotix-packages:
 #  deb     http://kanotix.com/files/debian/ ./
 #  deb-src http://kanotix.com/files/debian/ ./
-
-# kde 3.5:
-#  deb http://pkg-kde.alioth.debian.org/3.5.3/ ./
 
 # http://xoomer.virgilio.it/flavio.stanchina/debian/fglrx-installer.html
 #  deb     http://www.stanchina.net/~flavio/debian/ ./
@@ -231,15 +214,15 @@
 # Joey Hess's bleeding edge repository (get any of his packages, before they hit Incoming)
 #  deb http://kitenet.net/~joey/debian/unstable/ ./
 
-# remaster:
-#  deb http://debian.tu-bs.de/knoppix/remaster/ ./
-
-# Ubuntu (releases: warty / hoary / breezy / dapper / edgy):
-#  deb http://archive.ubuntu.com/ubuntu/ hoary main restricted universe multiverse
-#  deb http://archive.ubuntu.com/ubuntu/ hoary main universe
+# Ubuntu (releases: warty / hoary / breezy / dapper / edgy / feisty):
 #  deb http://archive.ubuntu.com/ubuntu/ breezy main restricted universe multiverse
-#  deb     http://security.ubuntu.com/ubuntu/ hoary-security main restricted
-#  deb-src http://security.ubuntu.com/ubuntu/ hoary-security main restricted
+#  deb http://archive.ubuntu.com/ubuntu/ dapper main restricted universe multiverse
+#  deb http://archive.ubuntu.com/ubuntu/ edgy   main restricted universe multiverse
+#  deb http://archive.ubuntu.com/ubuntu/ feisty main restricted universe multiverse
+#  deb http://archive.ubuntu.com/ubuntu/ hoary  main restricted universe multiverse
+#  deb http://archive.ubuntu.com/ubuntu/ warty  main restricted universe multiverse
+#  deb     http://security.ubuntu.com/ubuntu/ feisty-security main restricted
+#  deb-src http://security.ubuntu.com/ubuntu/ feisty-security main restricted
 
 # acx100 firmware:
 #  deb http://stef.tvk.rwth-aachen.de/~nazgul/debian acx100/
