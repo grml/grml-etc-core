@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Mär 11 12:44:51 CET 2007 [mika]
+# Latest change: Fre Apr 13 18:00:42 CEST 2007 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -826,6 +826,9 @@
 
   # build debian package
     alias hbp='hg-buildpackage'
+
+  # execute commands on the versioned patch-queue from the current repos
+    alias mq='hg -R $(readlink -f $(hg root)/.hg/patches)'
 
   # diffstat for specific version of a mercurial repository
   #   hgstat      => display diffstat between last revision and tip

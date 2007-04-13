@@ -4,6 +4,8 @@ grml-etc-core (0.2.43) unstable; urgency=low
     - applied patch by ft for generic file completion (thanks!)
     - added function sll (list symlinks in more details), thanks
       for the code base, Manuel Fuhr and ft!
+  * /etc/skel/.zshrc: added alias mq (execute commands on the
+    versioned patch-queue from the current repos) [thanks, gebi]
 
  -- Michael Prokop <mika@grml.org>  Fri, 13 Apr 2007 17:35:15 +0200
 
