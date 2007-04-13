@@ -976,7 +976,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 
   # list symlinks in detail (more detailed version of 'readlink -f' and 'whence -s')
   sll() {
-    [ -z "$1" ] && printf 'usage: %s <file>\n' "$0" && exit 1
+    [ -z "$1" ] && printf 'Usage: %s <file>\n' "$0" && return 1
     for i in "$@" ; do
       file=$i
       while [ -h "$file" ] ; do
