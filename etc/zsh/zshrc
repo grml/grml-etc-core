@@ -974,18 +974,16 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   }
   compdef _functions reload freload
 
-  # list symlinks in detail (more detailed version of 'readlinkg -f')
+  # list symlinks in detail (more detailed version of 'readlink -f' and 'whence -s')
   sll() {
-     if [ -z "$1" ] ; then
-        print 'Usage: sll <file>' >&2
-        return 1
-     fi
-     for i in $* ; do
-         ls --color=auto -la "$i"
-         if [ -L "$i" ] ; then
-            sll $(readlink "$i")
-         fi
-     done
+    [ -z "$1" ] && printf 'usage: %s <file>\n' "$0" && exit 1
+    for i in $* ; do
+      file=$i
+      while [ -h "$file" ] ; do
+        ls -l $file
+        file=$(readlink "$file")
+      done
+    done
   }
 
   # fast manual access
