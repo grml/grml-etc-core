@@ -1,3 +1,12 @@
+grml-etc-core (0.2.43) unstable; urgency=low
+
+  * /etc/zsh/zshrc:
+    - applied patch by ft for generic file completion (thanks!)
+    - added function sll (list symlinks in more details), thanks
+      for the code base, Manuel Fuhr!
+
+ -- Michael Prokop <mika@grml.org>  Fri, 13 Apr 2007 17:35:15 +0200
+
 grml-etc-core (0.2.42) unstable; urgency=low
 
   * Update and cleanup /etc/apt/sources.list.grml. Thanks for hints,

@@ -810,20 +810,20 @@ grmlcomp() {
     }
 # some people don't like the automatic correction - so run 'NOCOR=1 zsh' to deactivate it
   if [[ -n "$NOCOR" ]] ; then
-    zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete
+    zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete _files
     setopt nocorrect # do not try to correct the spelling if possible
   else
-#    zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete _correct _approximate
+#    zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete _correct _approximate _files
     setopt correct  # try to correct the spelling if possible
     zstyle -e ':completion:*' completer '
         if [[ $_last_try != "$HISTNO$BUFFER$CURSOR" ]]; then
           _last_try="$HISTNO$BUFFER$CURSOR"
-          reply=(_complete _match _prefix)
+          reply=(_complete _match _prefix _files)
         else
           if [[ $words[1] = (rm|mv) ]]; then
-            reply=(_complete)
+            reply=(_complete _files)
           else
-            reply=(_oldlist _expand _force_rehash _complete _correct _approximate)
+            reply=(_oldlist _expand _force_rehash _complete _correct _approximate _files)
           fi
         fi'
   fi
@@ -973,6 +973,20 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
    fi
   }
   compdef _functions reload freload
+
+  # list symlinks in detail (more detailed version of 'readlinkg -f')
+  sll() {
+     if [ -z "$1" ] ; then
+        print 'Usage: sll <file>' >&2
+        return 1
+     fi
+     for i in $* ; do
+         ls --color=auto -la "$i"
+         if [ -L "$i" ] ; then
+            sll $(readlink "$i")
+         fi
+     done
+  }
 
   # fast manual access
   if type -p qma &>/dev/null ; then
