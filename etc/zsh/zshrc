@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Mär 17 20:12:26 CET 2007 [mika]
+# Latest change: Sam Apr 14 11:01:58 CEST 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -722,6 +722,13 @@ See #377109 in the BTS of Debian for more details.
 
 Please use the wodim binary instead' ; return 1"
      fi
+  fi
+
+# get_tw_cli has been renamed into get_3ware
+  if [ -x /usr/bin/get_3ware ] ; then
+     get_tw_cli() {
+       echo 'Warning: get_tw_cli has been renamed into get_3ware. Invoking get_3ware for you.'>&2
+       get_3ware
   fi
 
 # I hate lacking backward compability, so provide an alternative therefore

@@ -1,3 +1,10 @@
+grml-etc-core (0.2.44) unstable; urgency=low
+
+  * /etc/zsh/zshrc: add check regarding get_twi_cl->get_3ware
+    change.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 14 Apr 2007 11:06:12 +0200
+
 grml-etc-core (0.2.43) unstable; urgency=low
 
   * /etc/zsh/zshrc:
