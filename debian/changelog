@@ -1,3 +1,11 @@
+grml-scripts (0.9.40) unstable; urgency=low
+
+  * Rename get_tw_cli into get_3ware as we support 3DM2 as well now,
+    updated the software versions and providing release-note URLs
+    as well.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 14 Apr 2007 10:59:21 +0200
+
 grml-scripts (0.9.39) unstable; urgency=low
 
   [Alexander Wirt]
