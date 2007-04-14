@@ -729,6 +729,7 @@ Please use the wodim binary instead' ; return 1"
      get_tw_cli() {
        echo 'Warning: get_tw_cli has been renamed into get_3ware. Invoking get_3ware for you.'>&2
        get_3ware
+     }
   fi
 
 # I hate lacking backward compability, so provide an alternative therefore

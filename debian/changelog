@@ -1,3 +1,9 @@
+grml-etc-core (0.2.45) unstable; urgency=low
+
+  * /etc/zsh/zshrc: fix syntax error in get_twi_cl.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 14 Apr 2007 11:11:42 +0200
+
 grml-etc-core (0.2.44) unstable; urgency=low
 
   * /etc/zsh/zshrc: add check regarding get_twi_cl->get_3ware
