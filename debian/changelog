@@ -2,6 +2,7 @@ grml-scripts (0.9.41) unstable; urgency=low
 
   * grml-setservices: do not execute mdadm-raid when deactivating
     mdadm as well.
+  * Depend on build-essential instead of gcc and libc6-dev.
 
  -- Michael Prokop <mika@grml.org>  Sun, 15 Apr 2007 10:57:24 +0200
 

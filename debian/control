@@ -2,7 +2,7 @@ Source: grml-scripts
 Section: utils
 Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
-Build-Depends: debhelper (>= 4.0.0), dietlibc-dev, gcc, libc6-dev
+Build-Depends: debhelper (>= 4.0.0), dietlibc-dev, build-essential
 Standards-Version: 3.7.2
 XS-X-Vcs-Hg: http://hg.grml.org/grml-scripts
 
