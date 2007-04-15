@@ -1,3 +1,10 @@
+grml-etc-core (0.2.46) unstable; urgency=low
+
+  * /etc/zsh/zshrc: deactivate url-quote-magic by default and
+    provide it as alias url-quote instead.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 15 Apr 2007 22:36:28 +0200
+
 grml-etc-core (0.2.45) unstable; urgency=low
 
   * /etc/zsh/zshrc: fix syntax error in get_twi_cl.
