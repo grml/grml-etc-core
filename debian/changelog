@@ -1,7 +1,8 @@
 grml-etc-core (0.2.46) unstable; urgency=low
 
   * /etc/zsh/zshrc: deactivate url-quote-magic by default and
-    provide it as alias url-quote instead.
+    provide it as alias url-quote instead. Added zstyle for
+    url-quote-magic as well, thanks ft!
 
  -- Michael Prokop <mika@grml.org>  Sun, 15 Apr 2007 22:36:28 +0200
 
