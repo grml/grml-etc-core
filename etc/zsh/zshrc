@@ -88,8 +88,16 @@
 # Search path for the cd comman
 #  cdpath=(.. ~)
 
-# Support our own site-functions
-  [ -d /etc/zsh/site-functions ] && FPATH=/etc/zsh/site-functions:$FPATH
+# completion functions go to /etc/zsh/completion.d
+# function files may be put into /etc/zsh/functions.d, from where they
+# will be automatically autoloaded.
+  [[ -d /etc/zsh/completion.d ]] && fpath+=( /etc/zsh/completion.d )
+  if [[ -d /etc/zsh/functions.d ]] ; then
+    fpath+=( /etc/zsh/functions.d )
+    for func in /etc/zsh/functions.d/[^_]*[^~] ; do
+      autoload -U ${func:t}
+    done
+  fi
 
 # automatically remove duplicates from these arrays
   typeset -U path cdpath fpath manpath
@@ -763,12 +771,6 @@ Run "grml-tips ssl-certificate" if you need further instructions.
 # }}}
 
 # {{{ completion stuff
-
-# Where to look for autoloaded function definitions
-  if [ -d /etc/zsh/completion.d ] ; then
-    local comp=/etc/zsh/completion.d
-    for func in $comp/*(N-.:t); . ${comp}/${func}
-  fi
 
 # called later (via is4 && grmlcomp)
 # notice: use 'zstyle' for getting current settings

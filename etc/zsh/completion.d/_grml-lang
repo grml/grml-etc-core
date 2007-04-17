@@ -1,0 +1,3 @@
+#compdef grml-lang
+
+compadd at ch de us

@@ -1,2 +1,0 @@
-  _debian_rules() { words=(make -f debian/rules) _make }
-  compdef _debian_rules debian/rules # type debian/rules <TAB> inside a source package

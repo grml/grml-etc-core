@@ -1,3 +1,10 @@
+grml-etc-core (0.2.47) unstable; urgency=low
+
+  * Big rewrite of /etc/zsh/completion.d/, thanks to ft!
+    [Testing: issue201]
+
+ -- Michael Prokop <mika@grml.org>  Tue, 17 Apr 2007 09:21:03 +0200
+
 grml-etc-core (0.2.46) unstable; urgency=low
 
   * /etc/zsh/zshrc: deactivate url-quote-magic by default and

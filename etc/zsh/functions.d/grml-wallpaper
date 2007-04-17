@@ -1,0 +1,5 @@
+if [ -f /usr/share/grml/"$1" ] ; then
+   Esetroot -scale /usr/share/grml/"$1"
+else
+   Esetroot -scale "$@"
+fi
