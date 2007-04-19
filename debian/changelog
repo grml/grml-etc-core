@@ -1,3 +1,9 @@
+grml-scripts (0.9.42) unstable; urgency=low
+
+  * mkdosswapfile: remove german umlauts to avoid utf8 console problem.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 20 Apr 2007 00:40:22 +0200
+
 grml-scripts (0.9.41) unstable; urgency=low
 
   * grml-setservices: do not execute mdadm-raid when deactivating

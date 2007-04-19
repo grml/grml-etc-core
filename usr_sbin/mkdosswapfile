@@ -4,7 +4,7 @@
 # Authors:       (c) Klaus Knopper Mar 2001, (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mit Okt 04 11:52:06 CEST 2006 [mika]
+# Latest change: Fre Apr 20 00:40:15 CEST 2007 [mika]
 ################################################################################
 
 PATH="/bin:/sbin:/usr/bin:/usr/sbin"
@@ -63,7 +63,7 @@ for p in $DOSPARTITIONS; do
 # Language-dependent Messages
 case "$LANGUAGE" in
 de|at|ch)
-MESSAGE1="Möchten Sie eine SWAP-Datei 'grml.swp' für GRML auf Ihrer bestehenden DOS-Partition $p anlegen? Eine solche SWAP-Datei ermöglicht es Ihnen, trotz geringem Hauptspeicher Programmpakete wie KDE zu benutzen. Sie können diese Datei nach Beendigung Ihrer GRML-Session gefahrlos wieder löschen."
+MESSAGE1="Moechten Sie eine SWAP-Datei 'grml.swp' fuer GRML auf Ihrer bestehenden DOS-Partition $p anlegen? Eine solche SWAP-Datei ermoeglicht es Ihnen, trotz geringem Hauptspeicher Programmpakete wie KDE zu benutzen. Sie koennen diese Datei nach Beendigung Ihrer GRML-Session gefahrlos wieder loeschen."
 MESSAGE2="Bitte geben Sie an, wieviel MB Sie als SWAP verwenden wollen. Empfohlen: 60 - 128. Frei: "
 MESSAGE3="Erzeuge swapfile 'grml.swp' auf $p..."
 ERROR1="Leider ist nicht genug Platz auf dieser Partition ($p), es sollten mindestens 60 MB frei sein."
