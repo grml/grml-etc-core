@@ -38,7 +38,6 @@ install: build
 	install -m 755 compile/align                  debian/grml-scripts/usr/bin/align
 	install -m 755 compile/cpu-screen             debian/grml-scripts/usr/bin/cpu-screen
 	install -m 755 compile/ip-screen              debian/grml-scripts/usr/bin/ip-screen
-	install -m 755 compile/gtf                    debian/grml-scripts/usr/bin/gtf
 	install -m 755 compile/pong                   debian/grml-scripts/usr/sbin/pong
 	install -m 755 compile/vmware-detect          debian/grml-scripts/usr/bin/vmware-detect
 	install -m 755 compile/dpkg_not_running       debian/grml-scripts/usr/sbin/dpkg_not_running
@@ -54,7 +53,7 @@ binary-arch: build install
 	dh_testroot
 	dh_installchangelogs
 	dh_installdocs
-	dh_installman manpages/grml-scripts.1 manpages/reread_partition_table.8 manpages/gtf.1 manpages/random-hostname.1 \
+	dh_installman manpages/grml-scripts.1 manpages/reread_partition_table.8 manpages/random-hostname.1 \
 	manpages/grml-setkeyboard.8 manpages/grml-setlang.8 manpages/getsf.1 manpages/grml-iptstate.8 manpages/qma.1 manpages/grml-swapon.8 \
 	manpages/grml2ram.8 manpages/gsuggest.1 manpages/dirvish-setup.8 manpages/grml-setservices.8 manpages/grml-quickconfig.8 \
 	manpages/iso-term.1 manpages/alignmargins.8 manpages/get_3ware.1

@@ -1,4 +1,4 @@
-PROGS = ip-screen pong vmware-detect align cpu-screen dpkg_not_running reread_partition_table gtf
+PROGS = ip-screen pong vmware-detect align cpu-screen dpkg_not_running reread_partition_table
 
 #ifndef CFLAGS
 CFLAGS = -O2 -Wall -s
@@ -33,9 +33,6 @@ align: align.c
 
 reread_partition_table: reread_partition_table.c
 	diet $(CC) $(CFLAGS) -o $@ $^
-
-gtf: gtf.c
-	$(CC) gtf.c -lm -Wall -o gtf
 
 clean:
 	rm -f $(PROGS)

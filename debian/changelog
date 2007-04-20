@@ -1,3 +1,10 @@
+grml-scripts (0.9.43) unstable; urgency=low
+
+  * Stop shipping gtf binary and manpage as server-xorg-core
+    (version 2:1.2.99.905-2) ships it now.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 20 Apr 2007 14:13:29 +0200
+
 grml-scripts (0.9.42) unstable; urgency=low
 
   * mkdosswapfile: remove german umlauts to avoid utf8 console problem.
