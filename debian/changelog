@@ -1,3 +1,9 @@
+grml-scripts (0.9.44) unstable; urgency=low
+
+  * Depend on libterm-readkey-perl as it is needed for grml-quickconfig.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 21 Apr 2007 12:52:11 +0200
+
 grml-scripts (0.9.43) unstable; urgency=low
 
   * Stop shipping gtf binary and manpage as server-xorg-core
