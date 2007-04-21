@@ -443,7 +443,9 @@ fi
 
   # precmd () { setopt promptsubst; [[ -o interactive ]] && jobs -l;
 
-  setopt transient_rprompt # make sure to use right prompt only when not running a command
+  # make sure to use right prompt only when not running a command
+  is4 && setopt transient_rprompt
+
   is4 && [[ -z $NOPRECMD ]] && precmd () {
       [[ -n $NOPRECMD ]] && return 0
       # allow manual overwriting of RPROMPT
@@ -1027,7 +1029,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
     }
     _dchange() { _files -W /usr/share/doc -/ }
     compdef _dchange dchange
-  
+
   # use "uchange <package-name>" to view upstream's changelog of the package:
     uchange() {
       if [ -r /usr/share/doc/${1}/changelog.gz ] ; then
