@@ -1,3 +1,10 @@
+grml-etc-core (0.2.49) unstable; urgency=low
+
+  * /etc/zsh/zshrc: restore old behaviour of RPROMPT, the 'allow
+    manual overriding of RPROMPT' is just too broken currently.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 22 Apr 2007 18:37:27 +0200
+
 grml-etc-core (0.2.48) unstable; urgency=low
 
   * /etc/zsh/zshrc:
