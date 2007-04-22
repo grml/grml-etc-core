@@ -449,7 +449,10 @@ fi
   is4 && [[ -z $NOPRECMD ]] && precmd () {
       [[ -n $NOPRECMD ]] && return 0
       # allow manual overwriting of RPROMPT
-      # [[ -n $RPROMPT ]] && return 0
+      if [[ -n $RPROMPT ]] ; then
+         [[ $TERM == screen* ]] && echo -n $'\ekzsh\e\\'
+         return 0
+      fi
       # just use DONTSETRPROMPT=1 to be able to overwrite RPROMPT
       if [[ -z $DONTSETRPROMPT ]] ; then
          if [[ -n $BATTERY ]] ; then
