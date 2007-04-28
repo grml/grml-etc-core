@@ -2,6 +2,8 @@ grml-scripts (0.9.45) unstable; urgency=low
 
   * bt-audio: use /etc/grml/script-functions, some more small
     improvements in status messages.
+  * grml-setlang: fix small typo, it's package locales and not
+    locale of course. Thanks for notifying, David Vilar Benet!
 
  -- Michael Prokop <mika@grml.org>  Sat, 28 Apr 2007 17:32:47 +0200
 
