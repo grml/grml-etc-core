@@ -8,11 +8,9 @@
 ################################################################################
 
 . /etc/grml/lsb-functions
+. /etc/grml/script-functions
 
-if [ $UID != 0 ] ; then
-   eerror "Need root privileges. Please run $0 as user root." ; eend 1
-   exit 1
-fi
+check4root || exit 1
 
 HCID_CONF='/etc/bluetooth/bt_headset.conf'
 [ -n "$PIN" ] || PIN='0000'
@@ -22,7 +20,7 @@ case "$1" in
    einfo "Starting bluetooth support."
     eindent
 
-    if ! [ -r $HCID_CONF ] ; then
+    if ! [ -r "$HCID_CONF" ] ; then
       ewarn "$HCID_CONF does not exist. Setting it up."
       cat > $HCID_CONF <<EOF
 # Bluetooth headset configuration file created by bt-audio.
@@ -140,9 +138,18 @@ EOF
     rm -f $SUCCESS $ERROR
     ;;
   stop)
-    einfo "Stopping hcid."
-    killall hcid ; eend $? # workaround because start-stop-daemon does not work :-/
+    HCIDAEMON=$(pgrep hcid)
+    if [ -n "$HCIDAEMON" ] ; then
+       einfo "Stopping hcid."
+       kill $HCIDAEMON
+       eend $? # workaround because start-stop-daemon does not work :-/
+    else
+       einfo "No running hcid found, nothing to stop."
+       eend 0
+    fi
+
     ewarn "Will not stop dbus as it might be used by other services." ; eend 0
+
     einfo "Disconnecting all human input devices."
     logger -t "bluez-connect" "disconnected all human input devices"
     hidd --killall ; eend $?
