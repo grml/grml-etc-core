@@ -7,14 +7,18 @@
 # Latest change: Fre Jul 14 01:29:42 CEST 2006 [mika]
 ################################################################################
 
-if [ -x /usr/bin/wmiipsel ] ; then
-  flite -o play -t "$(wmiipsel)"
+if [ -x /usr/bin/sselp ] ; then       # package dwm-tools
+   flite -o play -t "$(sselp)"
+elif [ -x /usr/bin/xclip ] ; then     # package xclip
+   flite -o play -t "$(xclip -o)"
+elif [ -x /usr/bin/wmiipsel ] ; then  # old wmii package
+   flite -o play -t "$(wmiipsel)"
+elif [ -x /usr/bin/wmiiplumb ] ; then # old wmii package
+   flite -o play -t "$(wmiiplumb)"
+elif [ -x /usr/bin/wmiplumb ] ; then  # deprecated wmi package
+   flite -o play -t "$(wmiplumb)"
 else
-  if [ -x /usr/bin/wmiiplumb ] ; then
-    flite -o play -t "$(wmiiplumb)"
-  else
-    flite -o play -t "$(wmiplumb)"
-  fi
+  echo "error, no program for reading X selection found" | flite
 fi
 
 ## END OF FILE #################################################################

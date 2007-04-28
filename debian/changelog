@@ -4,6 +4,8 @@ grml-scripts (0.9.45) unstable; urgency=low
     improvements in status messages.
   * grml-setlang: fix small typo, it's package locales and not
     locale of course. Thanks for notifying, David Vilar Benet!
+  * xsay: add support for sselp and xclip; output error message
+    if not a single binary for reading X selection can be found.
 
  -- Michael Prokop <mika@grml.org>  Sat, 28 Apr 2007 17:32:47 +0200
 
