@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Apr 22 18:37:24 CEST 2007 [mika]
+# Latest change: Son Apr 29 13:16:44 CEST 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -624,6 +624,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
        unsetopt prompt_cr
        export PS1="%m%# "
        nice -n -20 speechd-up
+       sleep 2
        flite -o play -t "Finished setting up software synthesizer"
     fi
   '

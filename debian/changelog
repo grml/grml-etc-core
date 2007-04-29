@@ -1,3 +1,10 @@
+grml-etc-core (0.2.50) unstable; urgency=low
+
+  * /etc/zsh/zshrc: sleep 2 seconds before running flite in
+    swspeak alias.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 29 Apr 2007 13:16:48 +0200
+
 grml-etc-core (0.2.49) unstable; urgency=low
 
   * /etc/zsh/zshrc: improve code for 'manual overriding of RPROMPT'
