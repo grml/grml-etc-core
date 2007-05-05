@@ -109,7 +109,7 @@ EOF
   print $N.$/.$/;
   if (defined($menu_commands{$x})) {
       $command = $menu_commands{$x};
-  } elsif ($x eq "\n") {
+  } elsif ($x eq "\n" || $x eq ' ') {
       $command= 'exit';
   } elsif ($x eq "x") {
       print <<"EOF";
