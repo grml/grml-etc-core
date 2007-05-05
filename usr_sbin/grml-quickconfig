@@ -136,7 +136,8 @@ EOF
       if (defined($windowmanagers{$x})) {
     $command = "su - grml -c 'grml-x ".$windowmanagers{$x}."'";
       } else {
-    print "Unknown key. Returning to main menu.\n";
+    print "Unknown key, not bound to a windowmanager.\n";
+    print "Returning to main menu.\n";
       }
   } else {
       print "Unknown key.\n";
