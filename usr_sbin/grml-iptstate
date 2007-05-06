@@ -8,20 +8,26 @@
 ################################################################################
 
 . /etc/grml/script-functions
+. /etc/grml/lsb-functions
 check4progs iptstate || exit 1
 
-if grep -q ip_conntrack /proc/modules ; then
+if grep -q '_conntrack' /proc/modules ; then
    iptstate
 else
-   echo "Module ip_conntrack is not present. Can not start iptstate therefore."
-   echo -n "Do you want to load it and invoke iptstate afterwards? [YES|no] "
-   read a
-   if [ "$a" = YES -o "$a" = yes -o "$a" = '' -o "$a" = y -o "$a" = Y ] ; then
-      modprobe ip_conntrack && exec iptstate
-   else
-      echo "Aborting as requested."
-      exit 1
-   fi
+   einfo "iptstate is a top-like display of IP Tables state table entries."
+   echo
+   ewarn "Module ip_conntrack is not present. Can not start iptstate therefore."
+   eindent
+     einfon "Do you want to load it and invoke iptstate afterwards? [YES|no] "
+     read a
+     if [ "$a" = YES -o "$a" = yes -o "$a" = '' -o "$a" = y -o "$a" = Y ] ; then
+        modprobe ip_conntrack ; RC=$?
+	eend $RC
+	[ "$RC" = 0 ] && exec iptstate
+     else
+        echo "Aborting as requested."
+        exit 1
+     fi
 fi
 
 ## END OF FILE #################################################################
