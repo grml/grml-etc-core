@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Mär 18 16:41:49 CET 2007 [mika]
+# Latest change: Son Mai 06 15:52:16 CEST 2007 [mika]
 ################################################################################
 
 PN=$0
@@ -21,7 +21,7 @@ it might not work as intended." 7 70
 fi
 
 welcome_screen() {
-dialog --stdout --title "$PN" --msgbox "Welcome to $PN!
+dialog --stdout --title "$PN" --yes-label Continue --no-label Quit --yesno "Welcome to $PN!
 
 This script will lock virtual consoles when running
 on console or lock X server when running X.
@@ -34,6 +34,13 @@ GNU screen)!
 Report bugs, send wishes and feedback to the grml team:
 http://www.grml.org/ - contact (at) grml.org
 " 16 65
+
+  case $? in
+      (0)   # everything ok
+            ;;
+      (1)   echo "Cancel pressed." ; exit 1 ;;
+      (255) echo "ESC pressed."    ; exit 255 ;;
+  esac
 }
 
 lockcons()
@@ -51,7 +58,7 @@ askxlock()
   dialog --stdout --title "$PN" --yesno "Now lock X?" 0 0
   retval=$?
   case $retval in
-    0) 
+    0)
        lockx
        ;;
   esac
@@ -73,7 +80,7 @@ askpwd()
 dialog --stdout --title "$PN" --yesno "Set password for user $USER?" 0 0
 retval=$?
 case $retval in
-  0) 
+  0)
      while [ -z "$PASSWD" ] ; do
        PASSWD=$(dialog --stdout --title "$PN" --passwordbox "Set password (hidden typing):" 0 0)
        if [ -n "$PASSWD" ] ; then

@@ -1,3 +1,9 @@
+grml-scripts (0.9.47) unstable; urgency=low
+
+  * grml-lock: provide quit option in welcome screen.
+
+ -- Michael Prokop <mika@grml.org>  Sun,  6 May 2007 15:52:36 +0200
+
 grml-scripts (0.9.46) unstable; urgency=low
 
   * grml-iptstate: check for '_conntrack' module instead of
