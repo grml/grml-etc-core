@@ -1151,6 +1151,17 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   }
   functions peval &>/dev/null && alias calc=peval
 
+  # brltty seems to have problems with utf8 environment and/or font Uni3-Terminus16 under
+  # certain circumstances, so work around it, no matter which environment we have
+  brltty() {
+    if [ -z "$DISPLAY" ] ; then
+       consolechars -f /usr/share/consolefonts/default8x16.psf.gz
+       command brltty "$@"
+    else
+       command brltty "$@"
+    fi
+  }
+
   # Switching shell safely and efficiently? http://www.zsh.org/mla/workers/2001/msg02410.html
   # bash() {
   #  NO_SWITCH="yes" command bash "$@"

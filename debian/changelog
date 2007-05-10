@@ -1,3 +1,19 @@
+grml-etc-core (0.2.51) unstable; urgency=low
+
+  * /etc/zsh/zshrc:
+    * added function wrapper brltty which loads a default
+      console font, works around problem in UTF-8 environment.
+      Thanks for reporting, Hermann 'steppenwolf2'!
+  * /etc/skel/.zshrc: added some functions (thanks, ft!):
+    - hl: highlighted less
+    - ic_get: queries imap servers for capabilities
+    - j2v: open file in vim and jump to line
+    - mkmaildir: creates a Maildir/ with its {new,cur,tmp} subdirs
+    - xtrename: rename xterm from within GNU-screen
+    - zurl: create small urls via tinyurl.com using wget, grep and sed
+
+ -- Michael Prokop <mika@grml.org>  Fri, 11 May 2007 01:07:27 +0200
+
 grml-etc-core (0.2.50) unstable; urgency=low
 
   * /etc/zsh/zshrc: sleep 2 seconds before running flite in

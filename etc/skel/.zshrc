@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Apr 13 18:00:42 CEST 2007 [mika]
+# Latest change: Fre Mai 11 00:35:57 CEST 2007 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -814,6 +814,125 @@
        fi
     fi
   }
+
+# open file in vim and jump to line
+# http://www.downgra.de/archives/2007/05/08/T19_21_11/
+  j2v() {
+    local -a params
+    params=(${*//(#m):[0-9]*:/\\n+${MATCH//:/}}) # replace ':23:' to '\n+23'
+    params=(${(s|\n|)${(j|\n|)params}}) # join array using '\n', then split on all '\n'
+    vim ${params}
+  }
+
+# get_ic() - queries imap servers for capabilities; real simple. no imaps
+  ic_get() {
+    local port
+    if [[ ! -z $1 ]]; then
+      port=${2:-143}
+      print "querying imap server on $1:${port}...\n";
+      print "a1 capability\na2 logout\n" | nc $1 ${port}
+    else
+      print "usage:\n  $0 <imap-server> [port]"
+    fi
+  }
+
+# creates a Maildir/ with its {new,cur,tmp} subdirs
+  mkmaildir() {
+    local root subdir
+    root=${MAILDIR_ROOT:-${HOME}/Mail}
+    if [[ -z ${1} ]] ; then print "Usage\n $0 <dirname>" ; fi
+    subdir=${1}
+    mkdir -p ${root}/${subdir}/{cur,new,tmp}
+  }
+
+# xtrename() rename xterm from within GNU-screen
+  xtrename() {
+    if [[ -z ${DISPLAY} ]] ; then
+      printf 'xtrename only makes sense in X11.\n'
+      return 1
+    fi
+    if [[ -z ${1} ]] ; then
+      printf 'usage: xtrename() "title for xterm"\n'
+      printf '  renames the title of xterm from _within_ screen.\n'
+      printf '  Also works without screen.\n'
+      return 0
+    fi
+    print -n "\eP\e]0;${1}\C-G\e\\"
+    return 0
+  }
+
+# hl() highlighted less
+# http://ft.bewatermyfriend.org/comp/data/zsh/zfunct.html
+  if [[ -x $(which highlight) ]] ; then
+    function hl() {
+      local theme lang
+      theme=${HL_THEME:-""}
+      case ${1} in
+        (-l|--list)
+          ( printf 'available languages (syntax parameter):\n\n' ;
+            highlight --list-langs ; ) | less -SMr
+          ;;
+        (-t|--themes)
+          ( printf 'available themes (style parameter):\n\n' ;
+            highlight --list-themes ; ) | less -SMr
+          ;;
+        (-h|--help)
+          printf 'usage: hl <syntax[:theme]> <file>\n'
+          printf '    available options: --list (-l), --themes (-t), --help (-h)\n\n'
+          printf '  Example: hl c main.c\n'
+          ;;
+        (*)
+          if [[ -z ${2} ]] || (( ${#argv} > 2 )) ; then
+            printf 'usage: hl <syntax[:theme]> <file>\n'
+            printf '    available options: --list (-l), --themes (-t), --help (-h)\n'
+            (( ${#argv} > 2 )) && printf '  Too many arguments.\n'
+            return 1
+          fi
+          lang=${1%:*}
+          [[ ${1} == *:* ]] && [[ -n ${1#*:} ]] && theme=${1#*:}
+          if [[ -n ${theme} ]] ; then
+            highlight --xterm256 --syntax ${lang} --style ${theme} ${2} | less -SMr
+          else
+            highlight --ansi --syntax ${lang} ${2} | less -SMr
+          fi
+          ;;
+      esac
+      return 0
+    }
+    # ... and a proper completion for hl()
+    # needs 'highlight' as well, so it fits fine in here.
+    function _hl_genarg()  {
+      local expl
+      if [[ -prefix 1 *: ]] ; then
+        local themes
+        themes=(${${${(f)"$(LC_ALL=C highlight --list-themes)"}/ #/}:#*(Installed|Use name)*})
+        compset -P 1 '*:'
+        _wanted -C list themes expl theme compadd ${themes}
+      else
+        local langs
+        langs=(${${${(f)"$(LC_ALL=C highlight --list-langs)"}/ #/}:#*(Installed|Use name)*})
+        _wanted -C list languages expl languages compadd -S ':' -q ${langs}
+      fi
+    }
+    function _hl_complete() {
+      _arguments -s '1: :_hl_genarg' '2:files:_path_files'
+    }
+    compdef _hl_complete hl
+  fi
+
+# create small urls via tinyurl.com using wget, grep and sed
+  zurl() {
+  [[ -z ${1} ]] && print "please give an url to shrink." && return 1
+  local url=${1}
+  local tiny="http://tinyurl.com/create.php?url="
+  #print "${tiny}${url}" ; return
+  wget  -O-             \
+        -o/dev/null     \
+        "${tiny}${url}" \
+    | grep -Eio 'value="(http://tinyurl.com/.*)"' \
+    | sed 's/value=//;s/"//g'
+}
+
 # }}}
 
 # mercurial related stuff {{{
