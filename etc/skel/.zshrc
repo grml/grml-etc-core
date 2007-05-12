@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Mai 11 00:35:57 CEST 2007 [mika]
+# Latest change: Sam Mai 12 23:22:28 CEST 2007 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -160,6 +160,7 @@
 # ignore ~/.ssh/known_hosts entries
 #  alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null" -o "PreferredAuthentications=keyboard-interactive"'
   alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
+  alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 
 # use colors when browsing man pages (if not using pinfo or PAGER=most)
   [ -d ~/.terminfo/ ] && alias man='TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man'

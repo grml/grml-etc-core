@@ -235,6 +235,7 @@ fi
    'fbmplayer' 'mplayer -vo -fs -zoom fbdev'
    'fblinks' 'links2 -driver fb'
    'insecssh' 'ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
+   'insecscp' 'scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
    'fori' 'for i ({..}) { }'
    'cx' 'chmod +x'
    'e'  'print -l'

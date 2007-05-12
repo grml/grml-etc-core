@@ -1,3 +1,10 @@
+grml-etc-core (0.2.52) unstable; urgency=low
+
+  * /etc/zsh/zshrc and /etc/skel/.zshrc:
+    Added alias and powerglob insecscp (like insecssh but for scp).
+
+ -- Michael Prokop <mika@grml.org>  Sat, 12 May 2007 23:22:32 +0200
+
 grml-etc-core (0.2.51) unstable; urgency=low
 
   * /etc/zsh/zshrc:
