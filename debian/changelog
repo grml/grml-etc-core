@@ -1,3 +1,10 @@
+grml-etc-core (0.2.53) unstable; urgency=low
+
+  * Add /etc/skel/.emacs which enables UTF-8 mode by default.
+    Thanks to Josef Teske for the bugreport!
+
+ -- Michael Prokop <mika@grml.org>  Sun, 13 May 2007 00:14:18 +0200
+
 grml-etc-core (0.2.52) unstable; urgency=low
 
   * /etc/zsh/zshrc and /etc/skel/.zshrc:
