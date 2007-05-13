@@ -696,12 +696,12 @@ Enjoy your grml system with the zsh!$reset_color"
     alias acs='apt-cache search'
     alias acsh='apt-cache show'
     alias acp='apt-cache policy'
-    alias adg="$SUDO apt-get dist-upgrade"
-    alias agi="$SUDO apt-get install"
-    alias ati="$SUDO aptitude install"
-    alias ag="$SUDO apt-get upgrade"
-    alias au="$SUDO apt-get update"
-    alias up="$SUDO aptitude update ; $SUDO aptitude upgrade"
+    [ -n "$SUDO" ] && alias adg="$SUDO apt-get dist-upgrade" || alias adg="apt-get dist-upgrade"
+    [ -n "$SUDO" ] && alias agi="$SUDO apt-get install"      || alias agi="apt-get install"
+    [ -n "$SUDO" ] && alias ati="$SUDO aptitude install"     || alias ati="aptitude install"
+    [ -n "$SUDO" ] && alias ag="$SUDO apt-get upgrade"       || alias ag="apt-get upgrade"
+    [ -n "$SUDO" ] && alias au="$SUDO apt-get update"        || alias au="apt-get update"
+    [ -n "$SUDO" ] && alias up="$SUDO aptitude update ; $SUDO aptitude upgrade" || alias up="aptitude update ; aptitude upgrade"
     alias dbp='dpkg-buildpackage'
     alias ge='grep-excuses'
 

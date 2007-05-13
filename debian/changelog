@@ -1,3 +1,10 @@
+grml-etc-core (0.3.0) unstable; urgency=low
+
+  * /etc/zsh/zshrc: check for $SUDO and do not use it when running
+    as root so we have the command in the zsh history.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 13 May 2007 12:19:36 +0200
+
 grml-etc-core (0.2.53) unstable; urgency=low
 
   * Add /etc/skel/.emacs which enables UTF-8 mode by default.
