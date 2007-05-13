@@ -1,3 +1,9 @@
+grml-scripts (1.0.1) unstable; urgency=low
+
+  * We have a new stable release!
+
+ -- Michael Prokop <mika@grml.org>  Sun, 13 May 2007 11:20:30 +0200
+
 grml-scripts (0.9.47) unstable; urgency=low
 
   * grml-lock: provide quit option in welcome screen.
