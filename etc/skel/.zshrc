@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Mai 12 23:22:28 CEST 2007 [mika]
+# Latest change: Die Mai 15 11:21:56 CEST 2007 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -13,6 +13,11 @@
   if [ -r ~/.zshrc.global ] ; then
      . ~/.zshrc.global
   fi
+# }}}
+
+# autoloading stuff {{{
+  # associate types and extensions:
+  autoload zsh-mime-setup && zsh-mime-setup
 # }}}
 
 # completion system {{{

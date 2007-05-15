@@ -1,3 +1,9 @@
+grml-etc-core (0.3.2) unstable; urgency=low
+
+  * /etc/skel/.zshrc: added zsh-mime-setup, thanks wuehlmaus!
+
+ -- Michael Prokop <mika@grml.org>  Tue, 15 May 2007 11:11:12 +0200
+
 grml-etc-core (0.3.1) unstable; urgency=low
 
   * /etc/zsh/zshrc:
