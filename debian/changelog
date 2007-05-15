@@ -1,3 +1,11 @@
+grml-etc-core (0.3.1) unstable; urgency=low
+
+  * /etc/zsh/zshrc:
+    - Applied patch by ft for better $SUDO handling via salias, thanks!
+    - Added alias debian2hd.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 15 May 2007 10:53:59 +0200
+
 grml-etc-core (0.3.0) unstable; urgency=low
 
   * /etc/zsh/zshrc: check for $SUDO and do not use it when running

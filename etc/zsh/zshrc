@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Apr 29 13:16:44 CEST 2007 [mika]
+# Latest change: Die Mai 15 10:53:41 CEST 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -65,6 +65,41 @@
 
 # check for user, if not running as root set $SUDO to sudo
  (( EUID != 0 )) && SUDO='sudo' || SUDO=''
+
+  function salias() {
+    # creates an alias and precedes the command with
+    # sudo if $EUID is not zero.
+    local only=0 ; local multi=0
+    while [[ ${1} == -* ]] ; do
+      case ${1} in
+        (-o) only=1 ;;
+        (-a) multi=1 ;;
+        (--) shift ; break ;;
+        (-h)
+          printf 'usage: salias [-h|-o|-a] <alias-expression>\n'
+          printf '  -h      shows this help text.\n'
+          printf '  -a      replace '\'' ; '\'' sequences with '\'' ; sudo '\''.\n'
+          printf '          be careful using this option.\n'
+          printf '  -o      only sets an alias if a preceding sudo would be needed.\n'
+          return 0
+          ;;
+        (*) printf "unkown option: '%s'\n" "${1}" ; return 1 ;;
+      esac
+      shift
+    done
+    if (( ${#argv} > 1 )) ; then
+      printf 'Too many arguments %s\n' "${#argv}"
+      return 1
+    fi
+    key="${1%%\=*}" ;  val="${1#*\=}"
+    if (( EUID == 0 )) && (( only == 0 )); then
+      alias -- "${key}=${val}"
+    elif (( EUID > 0 )) ; then
+      (( multi > 0 )) && val="${val// ; / ; sudo }"
+      alias -- "${key}=sudo ${val}"
+    fi
+    return 0
+  }
 
 # change directory to home on first invocation of zsh
 # important for rungetty -> autologin
@@ -696,12 +731,12 @@ Enjoy your grml system with the zsh!$reset_color"
     alias acs='apt-cache search'
     alias acsh='apt-cache show'
     alias acp='apt-cache policy'
-    [ -n "$SUDO" ] && alias adg="$SUDO apt-get dist-upgrade" || alias adg="apt-get dist-upgrade"
-    [ -n "$SUDO" ] && alias agi="$SUDO apt-get install"      || alias agi="apt-get install"
-    [ -n "$SUDO" ] && alias ati="$SUDO aptitude install"     || alias ati="aptitude install"
-    [ -n "$SUDO" ] && alias ag="$SUDO apt-get upgrade"       || alias ag="apt-get upgrade"
-    [ -n "$SUDO" ] && alias au="$SUDO apt-get update"        || alias au="apt-get update"
-    [ -n "$SUDO" ] && alias up="$SUDO aptitude update ; $SUDO aptitude upgrade" || alias up="aptitude update ; aptitude upgrade"
+    salias adg="apt-get dist-upgrade"
+    salias agi="apt-get install"
+    salias ati="aptitude install"
+    salias ag="apt-get upgrade"
+    salias au="apt-get update"
+    salias -a up="aptitude update ; aptitude upgrade"
     alias dbp='dpkg-buildpackage'
     alias ge='grep-excuses'
 
@@ -951,6 +986,10 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 
   if [ -x /usr/sbin/rebuildfstab ] ; then
      alias grml-rebuildfstab='rebuildfstab -v -r -config'
+  fi
+
+  if [ -x /usr/sbin/grml-debootstrap ] ; then
+     alias debian2hd='print "Installing debian to harddisk is possible via using grml-debootstrap." ; return 1'
   fi
 }
 # }}}
