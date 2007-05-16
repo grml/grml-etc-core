@@ -1,3 +1,10 @@
+grml-scripts (1.0.1) unstable; urgency=low
+
+  * grml-lock: allow using it on grml-small too. Thanks for
+    information, Niklas Schnelle!
+
+ -- Michael Prokop <mika@grml.org>  Wed, 16 May 2007 22:35:29 +0200
+
 grml-scripts (1.0.0) unstable; urgency=low
 
   * We have a new stable release!

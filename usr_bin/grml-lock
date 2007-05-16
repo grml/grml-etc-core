@@ -11,7 +11,11 @@ PN=$0
 
 if [ -r /etc/grml/script-functions ] ; then
    . /etc/grml/script-functions
-   check4progs vlock xlock sudo chpasswd dialog || { echo "Sorry, can't continue. Exiting.">&2 ; exit 1 }
+   if [ -x /usr/bin/X ] ; then
+     check4progs vlock xlock sudo chpasswd dialog || { echo "Sorry, can't continue. Exiting.">&2 ; exit 1 }
+   else
+     check4progs sudo chpasswd dialog || { echo "Sorry, can't continue. Exiting.">&2 ; exit 1 }
+   fi
 fi
 
 if [ -r /etc/grml_version ] ; then
