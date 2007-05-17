@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Die Mai 15 11:21:56 CEST 2007 [mika]
+# Latest change: Don Mai 17 15:08:21 CEST 2007 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -938,6 +938,26 @@
     | grep -Eio 'value="(http://tinyurl.com/.*)"' \
     | sed 's/value=//;s/"//g'
 }
+
+# change fluxbox keys from 'Alt-#' to 'Alt-F#' and vice versa
+  fluxkey-change() {
+    [ -n "$FLUXKEYS" ] || local FLUXKEYS="$HOME/.fluxbox/keys"
+    if ! [ -r "$FLUXKEYS" ] ; then
+       echo "Sorry, \$FLUXKEYS file $FLUXKEYS could not be read - nothing to be done."
+       return 1
+    else
+       if grep -q 'Mod1 F[0-9] :Workspace [0-9]' $FLUXKEYS ; then
+          echo -n 'Switching to Alt-# mode in ~/.fluxbox/keys: '
+          sed -i -e 's|^\(Mod[0-9]\+[: space :]\+\)F\([0-9]\+[: space :]\+:Workspace.*\)|\1\2|' $FLUXKEYS && echo done || echo failed
+       elif grep -q 'Mod1 [0-9] :Workspace [0-9]' $FLUXKEYS ; then
+          echo -n 'Switching to Alt-F# mode in ~/.fluxbox/keys: '
+          sed -i -e 's|^\(Mod[0-9]\+[: space :]\+\)\([0-9]\+[: space :]\+:Workspace.*\)|\1F\2|' $FLUXKEYS && echo done || echo failed
+       else
+          echo 'Sorry, do not know what to do.'
+          return 1
+       fi
+    fi
+  }
 
 # }}}
 

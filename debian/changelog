@@ -1,3 +1,11 @@
+grml-etc-core (0.3.3) unstable; urgency=low
+
+  * /etc/skel/.zshrc:
+    - added function fluxkey-change to change fluxbox keys
+      from 'Alt-#' to 'Alt-F#' and vice versa
+
+ -- Michael Prokop <mika@grml.org>  Thu, 17 May 2007 15:08:57 +0200
+
 grml-etc-core (0.3.2) unstable; urgency=low
 
   * /etc/skel/.zshrc: added zsh-mime-setup, thanks wuehlmaus!
