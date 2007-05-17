@@ -14,7 +14,7 @@ if [ -r /etc/grml/script-functions ] ; then
    if [ -x /usr/bin/X ] ; then
      check4progs vlock xlock sudo chpasswd dialog || { echo "Sorry, can't continue. Exiting.">&2 ; exit 1 }
    else
-     check4progs sudo chpasswd dialog || { echo "Sorry, can't continue. Exiting.">&2 ; exit 1 }
+     check4progs vlock sudo chpasswd dialog || { echo "Sorry, can't continue. Exiting.">&2 ; exit 1 }
    fi
 fi
 
