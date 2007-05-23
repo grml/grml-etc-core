@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Die Mai 15 10:53:41 CEST 2007 [mika]
+# Latest change: Mit Mai 23 10:22:10 CEST 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -448,7 +448,7 @@ fi
   if [[ -f ~/.zdirs ]] && [[ ${#dirstack[*]} -eq 0 ]]; then
      dirstack=( ${(uf)"$(< ~/.zdirs)"} )
      # "cd -" won't work after login by just setting $OLDPWD, so
-     cd $dirstack[0] && cd $OLDPWD
+     [[ -d $dirstack[0] ]] && cd $dirstack[0] && cd $OLDPWD
   fi
   chpwd() {
     builtin dirs -pl >! ~/.zdirs

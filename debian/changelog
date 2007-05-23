@@ -1,3 +1,10 @@
+grml-etc-core (0.3.4) unstable; urgency=low
+
+  * /etc/zsh/zshrc: check for present directory inside dirstack
+    code before switching between directories.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 23 May 2007 10:22:14 +0200
+
 grml-etc-core (0.3.3) unstable; urgency=low
 
   * /etc/skel/.zshrc:
