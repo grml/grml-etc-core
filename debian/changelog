@@ -1,3 +1,13 @@
+grml-etc-core (0.3.5) unstable; urgency=low
+
+  * /etc/zsh/zshrc + /etc/skel/.zshrc: unify way of checking for
+    present binaries/executables
+  * /etc/zsh/zshrc: check for potentially old files in 'completion.d',
+    thanks for the patch - ft!
+  * /etc/skel/.zshrc: added alias ips for 'ipython -p sh'
+
+ -- Michael Prokop <mika@grml.org>  Fri, 25 May 2007 01:30:39 +0200
+
 grml-etc-core (0.3.4) unstable; urgency=low
 
   * /etc/zsh/zshrc: check for present directory inside dirstack

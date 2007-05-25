@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Mai 17 15:08:21 CEST 2007 [mika]
+# Latest change: Fre Mai 25 01:27:47 CEST 2007 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -157,6 +157,8 @@
 # some useful aliases
   alias md='mkdir -p'
 
+  [ -x $(which ipython) ] && alias ips='ipython -p sh'
+
 # console stuff
   alias cmplayer='mplayer -vo fbdev'
   alias fbmplayer='mplayer -vo fbdev -fs -zoom'
@@ -174,15 +176,15 @@
   salias check_dpkg_running="dpkg_running"
 
 # work around non utf8 capable software in utf environment
-  if [ -x /usr/bin/mrxvt ] ; then
+  if [ -x $(which mrxvt) ] ; then
      isutfenv && [ -n "$LANG" ] && alias mrxvt="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} mrxvt"
   fi
 
-  if [ -x /usr/bin/aterm ] ; then
+  if [ -x $(which aterm) ] ; then
      isutfenv && [ -n "$LANG" ] && alias aterm="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} aterm"
   fi
 
-  if [ -x /usr/bin/centericq ] ; then
+  if [ -x $(which centericq) ] ; then
      isutfenv && [ -n "$LANG" ] && alias centericq="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} centericq"
   fi
 # }}}
@@ -869,7 +871,7 @@
 
 # hl() highlighted less
 # http://ft.bewatermyfriend.org/comp/data/zsh/zfunct.html
-  if [[ -x $(which highlight) ]] ; then
+  if [ -x $(which highlight) ] ; then
     function hl() {
       local theme lang
       theme=${HL_THEME:-""}
@@ -1038,7 +1040,7 @@
 
 # Work around ion/xterm resize bug.
 #if [ "$SHLVL" = 1 ]; then
-#       if [ -x `which resize 2>/dev/null` ]; then
+#       if [ -x $(which resize) ]; then
 #               eval `resize </dev/null`
 #       fi
 #fi

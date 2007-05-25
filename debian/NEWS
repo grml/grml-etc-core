@@ -1,3 +1,35 @@
+grml-etc-core (0.3.5) unstable; urgency=low
+
+  * Please notice, that the setup of zsh's completion functions has
+    been changed. The setup has been cleaned up but as a sideeffect
+    you might notice a problem like:
+
+     "_tags:comptags:67: can only be called from completion function"
+
+    when starting zsh. The reason for this change is because the files
+    inside /etc/zsh/completion.d/ have been renamed from 'foo' to
+    '_foo' and their content has been adjusted according to the new
+    setup too. If you added functions to completion.d yourself, please
+    consider moving them to /etc/zsh/functions.d/. Files in that
+    directory, not starting with an underscore are marked for
+    automatic loading by default (so that is quite convenient).
+
+    So to avoid above error message make sure you don't have any
+    dpkg-files *not* starting with a '_' in /etc/zsh/completion.d/
+    laying around. If there are files *not* starting with an
+    underscore from an older grml-etc-core in completion.d, you may
+    safely remove them.
+
+    Information regarding upgrading can be found also at:
+
+      http://wiki.grml.org/doku.php?id=upgrading
+
+    Information regarding (changing) zsh setup can be found at:
+
+      http://grml.org/zsh/#grmlzshrefcard
+
+ -- Michael Prokop <mika@grml.org>  Fri, 25 May 2007 01:32:27 +0200
+
 grml-etc-core (0.1-31) unstable; urgency=low
 
   * Please notice, that the behaviour of global aliases in /etc/skel/.zshrc

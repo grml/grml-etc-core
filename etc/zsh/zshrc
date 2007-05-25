@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mit Mai 23 10:22:10 CEST 2007 [mika]
+# Latest change: Fre Mai 25 02:03:29 CEST 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -17,6 +17,31 @@
   if [[ -n $ZSH_PROFILE_RC ]] ; then
      zmodload zsh/zprof
   fi
+# }}}
+
+# check for potentially old files in 'completion.d' {{{
+  setopt extendedglob
+  xof=(/etc/zsh/completion.d/*~/etc/zsh/completion.d/_*(N))
+  if (( ${#xof} > 0 )) ; then
+    printf '\n -!- INFORMATION\n\n'
+    printf ' -!- %s file(s) not starting with an underscore (_) found in\n' ${#xof}
+    printf ' -!- /etc/zsh/completion.d/.\n\n'
+    printf ' -!- While this has been the case in old versions of grml-etc-core,\n'
+    printf ' -!- recent versions of the grml-zsh-setup have all these files rewritten\n'
+    printf ' -!- and renamed. Furthermore, the grml-zsh-setup will *only* add files\n'
+    printf ' -!- named _* to that directory.\n\n'
+    printf ' -!- If you added functions to completion.d yourself, please consider\n'
+    printf ' -!- moving them to /etc/zsh/functions.d/. Files in that directory, not\n'
+    printf ' -!- starting with an underscore are marked for automatic loading\n'
+    printf ' -!- by default (so that is quite convenient).\n\n'
+    printf ' -!- If there are files *not* starting with an underscore from an older\n'
+    printf ' -!- grml-etc-core in completion.d, you may safely remove them.\n\n'
+    printf ' -!- Delete the files for example via running:\n\n'
+    printf "      rm ${xof}\n\n"
+    printf ' -!- Note, that this message will *not* go away, unless you yourself\n'
+    printf ' -!- resolve the situation manually.\n\n'
+  fi
+  unset xof
 # }}}
 
 # {{{ check for version/system
@@ -118,7 +143,7 @@
   # if we don't set $SHELL then aterm, rxvt,.. will use /bin/sh or /bin/bash :-/
   export SHELL='/bin/zsh'
   [[ -f ~/.terminfo/m/mostlike ]] && MYLESS='LESS=C TERMINFO=~/.terminfo TERM=mostlike less' || MYLESS='less'
-  [[ -x /usr/bin/dircolors ]] && eval `dircolors -b`
+  [ -x $(which dircolors) ] && eval `dircolors -b`
 
 # Search path for the cd comman
 #  cdpath=(.. ~)
@@ -669,7 +694,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
   alias 0 &>/dev/null || functions 0 &>/dev/null || alias 0='return 0'
 
 # truecrypt; use e.g. via 'truec /dev/ice /mnt/ice' or 'truec -i'
-  if [ -x /usr/sbin/truecrypt ] ; then
+  if [ -x $(which truecrypt) ] ; then
      if isutfenv ; then
         alias truec='truecrypt --mount-options "rw,sync,dirsync,users,uid=1000,gid=users,umask=077,utf8" '
      else
@@ -764,7 +789,7 @@ Enjoy your grml system with the zsh!$reset_color"
   fi
 
 # sort installed Debian-packages by size
-  if [ -x /usr/bin/grep-status ] ; then
+  if [ -x $(which grep-status) ] ; then
      alias debs-by-size='grep-status -FStatus -sInstalled-Size,Package \
                 -n "install ok installed" | paste -sd "  \n" | sort -rn'
   fi
@@ -780,7 +805,7 @@ Please use the wodim binary instead' ; return 1"
   fi
 
 # get_tw_cli has been renamed into get_3ware
-  if [ -x /usr/bin/get_3ware ] ; then
+  if [ -x $(which get_3ware) ] ; then
      get_tw_cli() {
        echo 'Warning: get_tw_cli has been renamed into get_3ware. Invoking get_3ware for you.'>&2
        get_3ware
@@ -788,7 +813,7 @@ Please use the wodim binary instead' ; return 1"
   fi
 
 # I hate lacking backward compability, so provide an alternative therefore
-  if ! [ -x /usr/sbin/apache2-ssl-certificate ] ; then
+  if ! [ -x $(which apache2-ssl-certificate) ] ; then
    function apache2-ssl-certificate(){
 
      print 'Debian does not ship apache2-ssl-certificate anymore (see #398520). :('
@@ -978,17 +1003,17 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
     fi
   }
 
-  if [ -x /usr/sbin/915resolution ] ; then
+  if [ -x $(which 915resolution) ] ; then
      alias 855resolution='echo -e "Please use 915resolution as resolution modify tool for Intel graphic chipset."; return -1'
   fi
 
   alias grml-version='cat /etc/grml_version'
 
-  if [ -x /usr/sbin/rebuildfstab ] ; then
+  if [ -x $(which rebuildfstab) ] ; then
      alias grml-rebuildfstab='rebuildfstab -v -r -config'
   fi
 
-  if [ -x /usr/sbin/grml-debootstrap ] ; then
+  if [ -x $(which grml-debootstrap) ] ; then
      alias debian2hd='print "Installing debian to harddisk is possible via using grml-debootstrap." ; return 1'
   fi
 }
@@ -1057,7 +1082,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
      # manzsh()  { man zshall | $MYLESS -p $1 ; }
   fi
 
-  if [ -x /usr/bin/most ] ; then
+  if [ -x $(which most) ] ; then
   # use "dchange <package-name>" to view Debian's changelog of the package:
     dchange() {
       if [ -r /usr/share/doc/${1}/changelog.Debian.gz ] ; then
