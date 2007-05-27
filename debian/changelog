@@ -1,3 +1,10 @@
+grml-etc-core (0.3.6) unstable; urgency=low
+
+  * /etc/zsh/zshrc: do not even add completion directories if
+    broken setup has been detected.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 27 May 2007 19:12:30 +0200
+
 grml-etc-core (0.3.5) unstable; urgency=low
 
   * /etc/zsh/zshrc + /etc/skel/.zshrc: unify way of checking for

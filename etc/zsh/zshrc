@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Mai 25 02:03:29 CEST 2007 [mika]
+# Latest change: Son Mai 27 19:12:26 CEST 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -40,6 +40,7 @@
     printf "      rm ${xof}\n\n"
     printf ' -!- Note, that this message will *not* go away, unless you yourself\n'
     printf ' -!- resolve the situation manually.\n\n'
+    BROKEN_COMPLETION_DIR=1
   fi
   unset xof
 # }}}
@@ -151,12 +152,16 @@
 # completion functions go to /etc/zsh/completion.d
 # function files may be put into /etc/zsh/functions.d, from where they
 # will be automatically autoloaded.
-  [[ -d /etc/zsh/completion.d ]] && fpath+=( /etc/zsh/completion.d )
-  if [[ -d /etc/zsh/functions.d ]] ; then
-    fpath+=( /etc/zsh/functions.d )
-    for func in /etc/zsh/functions.d/[^_]*[^~] ; do
-      autoload -U ${func:t}
-    done
+  if [ -n "$BROKEN_COMPLETION_DIR" ] ; then
+     print 'Warning: not setting completion directories because broken files have been found.'>&2
+  else
+     [[ -d /etc/zsh/completion.d ]] && fpath+=( /etc/zsh/completion.d )
+     if [[ -d /etc/zsh/functions.d ]] ; then
+       fpath+=( /etc/zsh/functions.d )
+       for func in /etc/zsh/functions.d/[^_]*[^~] ; do
+         autoload -U ${func:t}
+       done
+     fi
   fi
 
 # automatically remove duplicates from these arrays
