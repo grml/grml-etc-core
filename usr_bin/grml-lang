@@ -63,7 +63,7 @@ else
       echo -e "\nDone."
     elif [ "$1" = "jp" ] ; then
       echo "Loading keymap for Japan..."
-      setxkbmap jp
+      setxkbmap -model jp106 -layout jp
       echo -e "\nDone."
     elif [ "$1"  = "us" ] ; then
       echo 'Loading keymap us...'
