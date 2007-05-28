@@ -4,12 +4,12 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mon Apr 09 13:04:40 CEST 2007 [mika]
+# Latest change: Mon Mai 28 13:30:05 CEST 2007 [mika]
 ################################################################################
 
 usage(){
     echo "Usage: $0 <language>"
-    echo "supported values: at, de, ch, us"
+    echo "supported values: at, de, ch, jp, us"
 }
 
 if [ $# -lt "1" ] ; then
@@ -34,6 +34,10 @@ if [ -z "$DISPLAY" ] ;then
     echo 'Loading keymap us...'
     sudo loadkeys i386/qwerty/us-latin1.kmap.gz
     echo -e "\nDone."
+  elif [ "$1" = "jp" ] ; then
+    echo 'Loading keymap jp...'
+    sudo loadkeys i386/qwerty/jp106.kmap.gz
+    echo -e "\nDone."
   else echo "No valid parameter given.
 
 Notice: Use loadkeys on console and setxkbmap when running X for
@@ -43,8 +47,7 @@ modifying keyboard layout. Adjust \$LANG and \$LC_ALL for setting locales." ; ex
   case $LANG in *UTF-8) kbd_mode -u ; ;; esac
 else
   if [ $# = 0 ] ; then
-      echo "Usage: $0 <language>"
-      echo "supported values: at, de, ch, us"
+     usage
   else
     if [ "$1" = "de" ] ; then
       echo "Loading keymap for Germany..."
@@ -57,6 +60,10 @@ else
     elif [ "$1" = "ch" ] ; then
       echo "Loading keymap for Switzerland..."
       setxkbmap ch
+      echo -e "\nDone."
+    elif [ "$1" = "jp" ] ; then
+      echo "Loading keymap for Japan..."
+      setxkbmap jp
       echo -e "\nDone."
     elif [ "$1"  = "us" ] ; then
       echo 'Loading keymap us...'

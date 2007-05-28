@@ -1,3 +1,9 @@
+grml-scripts (1.0.2) unstable; urgency=low
+
+  * grml-lang: add support for 'jp'.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 28 May 2007 13:30:11 +0200
+
 grml-scripts (1.0.1) unstable; urgency=low
 
   * grml-lock: allow using it on grml-small too. Thanks for
