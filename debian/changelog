@@ -1,3 +1,10 @@
+grml-etc-core (0.3.7) unstable; urgency=low
+
+  * /etc/zsh/zshrc and /etc/skel/.zshrc: some more checks whether
+    the global file has been read.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 29 May 2007 16:31:19 +0200
+
 grml-etc-core (0.3.6) unstable; urgency=low
 
   * /etc/zsh/zshrc: do not even add completion directories if

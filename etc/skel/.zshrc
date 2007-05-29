@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Mai 25 01:27:47 CEST 2007 [mika]
+# Latest change: Die Mai 29 16:31:10 CEST 2007 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -15,9 +15,15 @@
   fi
 # }}}
 
+# check whether global file has been read {{{
+  if [ -z "$ZSHRC_GLOBAL_HAS_BEEN_READ" ] ; then
+     print 'Warning: global zsh config has not been read'>&2
+  fi
+# }}}
+
 # autoloading stuff {{{
-  # associate types and extensions:
-  autoload zsh-mime-setup && zsh-mime-setup
+# associate types and extensions:
+  type zsh-mime-setup &>/dev/null || { autoload zsh-mime-setup && zsh-mime-setup }
 # }}}
 
 # completion system {{{
@@ -173,19 +179,21 @@
   [ -d ~/.terminfo/ ] && alias man='TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man'
 
 # check whether Debian's package management (dpkg) is running
-  salias check_dpkg_running="dpkg_running"
+  type salias &>/dev/null && salias check_dpkg_running="dpkg_running"
 
 # work around non utf8 capable software in utf environment
-  if [ -x $(which mrxvt) ] ; then
-     isutfenv && [ -n "$LANG" ] && alias mrxvt="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} mrxvt"
-  fi
-
-  if [ -x $(which aterm) ] ; then
-     isutfenv && [ -n "$LANG" ] && alias aterm="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} aterm"
-  fi
-
-  if [ -x $(which centericq) ] ; then
-     isutfenv && [ -n "$LANG" ] && alias centericq="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} centericq"
+  if type isutfenv &>/dev/null ; then
+     if [ -x $(which mrxvt) ] ; then
+        isutfenv && [ -n "$LANG" ] && alias mrxvt="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} mrxvt"
+     fi
+   
+     if [ -x $(which aterm) ] ; then
+        isutfenv && [ -n "$LANG" ] && alias aterm="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} aterm"
+     fi
+   
+     if [ -x $(which centericq) ] ; then
+        isutfenv && [ -n "$LANG" ] && alias centericq="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} centericq"
+     fi
   fi
 # }}}
 
@@ -244,7 +252,7 @@
 # Function Usage: doc packagename
   doc() { cd /usr/share/doc/$1 && ls }
   _doc() { _files -W /usr/share/doc -/ }
-  compdef _doc doc
+  type compdef &>/dev/null && compdef _doc doc
 
 # make screenshot of current desktop (use 'import' from ImageMagic)
   sshot() {
