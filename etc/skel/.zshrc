@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Die Mai 29 16:31:10 CEST 2007 [mika]
+# Latest change: Don Mai 31 17:19:00 CEST 2007 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -22,8 +22,8 @@
 # }}}
 
 # autoloading stuff {{{
-# associate types and extensions:
-  type zsh-mime-setup &>/dev/null || { autoload zsh-mime-setup && zsh-mime-setup }
+# associate types and extensions (be aware with perl scripts and anwanted behaviour!)
+#  type zsh-mime-setup &>/dev/null || { autoload zsh-mime-setup && zsh-mime-setup }
 # }}}
 
 # completion system {{{
