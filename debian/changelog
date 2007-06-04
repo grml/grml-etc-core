@@ -1,3 +1,9 @@
+grml-scripts (1.0.3) unstable; urgency=low
+
+  * grml-lang: support dvorak keyboard layout
+
+ -- Michael Prokop <mika@grml.org>  Mon, 04 Jun 2007 22:33:36 +0200
+
 grml-scripts (1.0.2) unstable; urgency=low
 
   * grml-lang: add support for 'jp'.
