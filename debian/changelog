@@ -1,6 +1,7 @@
 grml-scripts (1.0.3) unstable; urgency=low
 
   * grml-lang: support dvorak keyboard layout
+  * grml-lock: support fast execution on hd-install [Closes: issue220]
 
  -- Michael Prokop <mika@grml.org>  Mon, 04 Jun 2007 22:33:36 +0200
 
