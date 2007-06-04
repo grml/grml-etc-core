@@ -1,3 +1,13 @@
+grml-etc-core (0.3.9) unstable; urgency=low
+
+  * /etc/zsh/zshrc:
+    - added functions aoeu() and asdf() to just press 'asdf' keys to
+      toggle between dvorak and us keyboard layout
+    - added function uiae() to just press 'asdf' key to toggle from
+      neon layout to us keyboard layout
+
+ -- Michael Prokop <mika@grml.org>  Mon, 04 Jun 2007 23:25:17 +0200
+
 grml-etc-core (0.3.8) unstable; urgency=low
 
   * /etc/zsh/zshrc:

@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Die Mai 29 16:30:03 CEST 2007 [mika]
+# Latest change: Mon Jun 04 23:21:01 CEST 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -695,7 +695,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
     fi
   '
 
-  # I like clean prompt, so provide simple way to get that
+# I like clean prompt, so provide simple way to get that
   alias 0 &>/dev/null || functions 0 &>/dev/null || alias 0='return 0'
 
 # truecrypt; use e.g. via 'truec /dev/ice /mnt/ice' or 'truec -i'
@@ -1231,6 +1231,28 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
     else
        command brltty "$@"
     fi
+  }
+
+  # just press 'asdf' keys to toggle between dvorak and us keyboard layout
+  aoeu() {
+     if [ -n "$XKEYBOARD" -a -n "$KEYTABLE" ] ; then
+        echo -n "Switching to $KEYTABLE keyboard layout: "
+        [ -z "$DISPLAY" ] && $SUDO loadkeys $KEYTABLE &>/dev/null || setxkbmap $XKEYBOARD &>/dev/null
+     else
+        echo -n 'Switching to us keyboard layout: '
+        [ -z "$DISPLAY" ] && $SUDO loadkeys us &>/dev/null || setxkbmap us &>/dev/null
+     fi
+     echo 'Done'
+  }
+  asdf() {
+     echo -n 'Switching to dvorak keyboard layout: '
+     [ -z "$DISPLAY" ] && $SUDO loadkeys dvorak &>/dev/null || setxkbmap dvorak &>/dev/null
+     echo 'Done'
+  }
+  # just press 'asdf' key to toggle from neon layout to us keyboard layout
+  uiae() {
+     echo -n 'Switching to us keyboard layout: '
+     setxkbmap us && echo 'Done' || echo 'Failed'
   }
 
   # Switching shell safely and efficiently? http://www.zsh.org/mla/workers/2001/msg02410.html
