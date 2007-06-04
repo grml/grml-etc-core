@@ -24,6 +24,7 @@
 # autoloading stuff {{{
 # associate types and extensions (be aware with perl scripts and anwanted behaviour!)
 #  type zsh-mime-setup &>/dev/null || { autoload zsh-mime-setup && zsh-mime-setup }
+#  alias -s pl='perl -S'
 # }}}
 
 # completion system {{{

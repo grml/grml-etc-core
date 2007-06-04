@@ -1,3 +1,12 @@
+grml-etc-core (0.3.8) unstable; urgency=low
+
+  * /etc/zsh/zshrc:
+    - Mention "alias -s pl='perl -S'" within the zsh-mime-setup stuff
+    - Use 'sudo -s' for alias su.
+    - Added alias llog for "$PAGER /var/log/syslog"
+
+ -- Michael Prokop <mika@grml.org>  Mon, 04 Jun 2007 10:43:51 +0200
+
 grml-etc-core (0.3.7) unstable; urgency=low
 
   * /etc/zsh/zshrc and /etc/skel/.zshrc: some more checks whether

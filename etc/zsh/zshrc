@@ -788,8 +788,9 @@ Enjoy your grml system with the zsh!$reset_color"
       fi
     }
 
-    isgrmlcd && alias su="sudo su"          # change to user root
-    alias tlog="tail -f /var/log/syslog"    # take a look at the syslog
+    isgrmlcd && alias su="sudo -s"          # get a root shell
+    alias llog="$PAGER /var/log/syslog"     # take a look at the syslog
+    alias tlog="tail -f /var/log/syslog"    # follow the syslog
     alias zshskel="source /etc/skel/.zshrc" # source skeleton zshrc
   fi
 
