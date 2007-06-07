@@ -202,8 +202,8 @@ fi
 #if [[ "$TERM" == screen ]]; then
   bindkey '\e[1~' beginning-of-line       # home
   bindkey '\e[4~' end-of-line             # end
-  bindkey "^[[A"  up-line-or-search       # cursor up
-  bindkey "^[[B"  down-line-or-search     # <ESC>-
+  bindkey '\e[A'  up-line-or-search       # cursor up
+  bindkey '\e[B'  down-line-or-search     # <ESC>-
   bindkey '^x'    history-beginning-search-backward # alternative ways of searching the shell history
 # bindkey -s '^L' "|less\n"             # ctrl-L pipes to less
 # bindkey -s '^B' " &\n"                # ctrl-B runs it in the background
