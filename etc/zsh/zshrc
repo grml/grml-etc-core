@@ -183,14 +183,14 @@
   [[ -z "$terminfo[kcuf1]" ]] || bindkey -M viins "$terminfo[kcuf1]" vi-forward-char
   [[ -z "$terminfo[kcub1]" ]] || bindkey -M viins "$terminfo[kcub1]" vi-backward-char
   # ncurses stuff:
-  [[ "$terminfo[kcuu1]" == "O"* ]] && bindkey -M viins "${terminfo[kcuu1]/O/[}" vi-up-line-or-history
-  [[ "$terminfo[kcud1]" == "O"* ]] && bindkey -M viins "${terminfo[kcud1]/O/[}" vi-down-line-or-history
-  [[ "$terminfo[kcuf1]" == "O"* ]] && bindkey -M viins "${terminfo[kcuf1]/O/[}" vi-forward-char
-  [[ "$terminfo[kcub1]" == "O"* ]] && bindkey -M viins "${terminfo[kcub1]/O/[}" vi-backward-char
-  [[ "$terminfo[khome]" == "O"* ]] && bindkey -M viins "${terminfo[khome]/O/[}" beginning-of-line
-  [[ "$terminfo[kend]"  == "O"* ]] && bindkey -M viins "${terminfo[kend]/O/[}"  end-of-line
-  [[ "$terminfo[khome]" == "O"* ]] && bindkey -M emacs "${terminfo[khome]/O/[}" beginning-of-line
-  [[ "$terminfo[kend]"  == "O"* ]] && bindkey -M emacs "${terminfo[kend]/O/[}"  end-of-line
+  [[ "$terminfo[kcuu1]" == $'\eO'* ]] && bindkey -M viins "${terminfo[kcuu1]/O/[}" vi-up-line-or-history
+  [[ "$terminfo[kcud1]" == $'\eO'* ]] && bindkey -M viins "${terminfo[kcud1]/O/[}" vi-down-line-or-history
+  [[ "$terminfo[kcuf1]" == $'\eO'* ]] && bindkey -M viins "${terminfo[kcuf1]/O/[}" vi-forward-char
+  [[ "$terminfo[kcub1]" == $'\eO'* ]] && bindkey -M viins "${terminfo[kcub1]/O/[}" vi-backward-char
+  [[ "$terminfo[khome]" == $'\eO'* ]] && bindkey -M viins "${terminfo[khome]/O/[}" beginning-of-line
+  [[ "$terminfo[kend]"  == $'\eO'* ]] && bindkey -M viins "${terminfo[kend]/O/[}"  end-of-line
+  [[ "$terminfo[khome]" == $'\eO'* ]] && bindkey -M emacs "${terminfo[khome]/O/[}" beginning-of-line
+  [[ "$terminfo[kend]"  == $'\eO'* ]] && bindkey -M emacs "${terminfo[kend]/O/[}"  end-of-line
 fi
 
 ## keybindings (run 'bindkeys' for details, more details via man zshzle)
@@ -576,12 +576,12 @@ fi
      WHITE="%{${fg[white]}%}"
      NO_COLOUR="%{${reset_color}%}"
   else
-     BLUE="%{[1;34m%}"
-     RED="%{[1;31m%}"
-     GREEN="%{[1;32m%}"
-     CYAN="%{[1;36m%}"
-     WHITE="%{[1;37m%}"
-     NO_COLOUR="%{[0m%}"
+     BLUE=$'%{\e[1;34m%}'
+     RED=$'%{\e[1;31m%}'
+     GREEN=$'%{\e[1;32m%}'
+     CYAN=$'%{\e[1;36m%}'
+     WHITE=$'%{\e[1;37m%}'
+     NO_COLOUR=$'%{\e[0m%}'
   fi
 
   EXITCODE="%(?..%?%1v )"
@@ -665,8 +665,8 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
   alias md='mkdir'
 
   # see http://www.cl.cam.ac.uk/~mgk25/unicode.html#term for details
-  alias term2iso="echo 'Setting terminal to iso mode' ; echo -e '%@'"
-  alias term2utf="echo 'Setting terminal to utf-8 mode'; echo -e '%G'"
+  alias term2iso="echo 'Setting terminal to iso mode' ; print -n '\e%@'"
+  alias term2utf="echo 'Setting terminal to utf-8 mode'; print -n '\e%G'"
 
   alias utf2iso='if isutfenv ; then
    for ENV in `env | grep UTF` ; do

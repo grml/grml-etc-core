@@ -1,7 +1,7 @@
 grml-etc-core (0.3.10) unstable; urgency=low
 
   * /etc/zsh/zshrc: use \e instead of the escape-sequence.
-    Thanks ft!
+    Thanks for the patches, ft! [Closes: issue229, issue230]
 
  -- Michael Prokop <mika@grml.org>  Thu, 07 Jun 2007 14:51:38 +0200
 
