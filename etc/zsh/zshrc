@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mon Jun 04 23:21:01 CEST 2007 [mika]
+# Latest change: Sam Jun 09 00:44:57 CEST 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -1253,6 +1253,44 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   uiae() {
      echo -n 'Switching to us keyboard layout: '
      setxkbmap us && echo 'Done' || echo 'Failed'
+  }
+
+  # set up an ipv6 tunnel
+  ipv6-tunnel() {
+    case $1 in
+      start)
+       if ifconfig sit1 2>/dev/null | grep -q 'inet6 addr: 2002:.*:1::1' ; then
+          print 'ipv6 tunnel already set up, nothing to be done.'
+          print 'execute: "ifconfig sit1 down ; ifconfig sit0 down" to remove ipv6-tunnel.' ; return 1
+       else
+          [ -n "$PUBLIC_IP" ] || local PUBLIC_IP=$(ifconfig $(route -n | awk '/^0\.0\.0\.0/{print $8; exit}') | \
+                                             awk '/inet addr:/ {print $2}' | tr -d 'addr:')
+          [ -n "$PUBLIC_IP" ] || { print 'No $PUBLIC_IP set and could not determine default one.' ; return 1 }
+          local IPV6ADDR=$(printf "2002:%02x%02x:%02x%02x:1::1" $(print ${PUBLIC_IP//./ }))
+          print -n "Setting up ipv6 tunnel $IPV6ADDR via ${PUBLIC_IP}: "
+          ifconfig sit0 tunnel ::192.88.99.1 up
+          ifconfig sit1 add "$IPV6ADDR" && print done || print failed
+       fi
+       ;;
+      status)
+       if ifconfig sit1 2>/dev/null | grep -q 'inet6 addr: 2002:.*:1::1' ; then
+          print 'ipv6 tunnel available' ; return 0
+       else
+          print 'ipv6 tunnel not available' ; return 1
+       fi
+       ;;
+      stop)
+       if ifconfig sit1 2>/dev/null | grep -q 'inet6 addr: 2002:.*:1::1' ; then
+          print -n 'Stopping ipv6 tunnel (sit0 + sit1): '
+          ifconfig sit1 down ; ifconfig sit0 down && print done || print failed
+       else
+          print 'No ipv6 tunnel found, nothing to be done.' ; return 1
+       fi
+       ;;
+      *)
+       print "Usage: ipv6-tunnel [start|stop|status]">&2 ; return 1
+       ;;
+    esac
   }
 
   # Switching shell safely and efficiently? http://www.zsh.org/mla/workers/2001/msg02410.html

@@ -1,3 +1,9 @@
+grml-etc-core (0.3.11) unstable; urgency=low
+
+  * /etc/zsh/zshrc: added alias ipv6-tunnel
+
+ -- Michael Prokop <mika@grml.org>  Sat, 09 Jun 2007 00:45:05 +0200
+
 grml-etc-core (0.3.10) unstable; urgency=low
 
   * /etc/zsh/zshrc: use \e instead of the escape-sequence.
