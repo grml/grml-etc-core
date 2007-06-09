@@ -1,4 +1,5 @@
 # /etc/network/interfaces -- configuration file for ifup(8), ifdown(8)
+# Also check out /usr/share/doc/ifupdown/examples/network-interfaces.gz
 
 # The loopback interface
 # automatically added when upgrading
@@ -70,8 +71,8 @@ iface lo inet loopback
 #	map 192.168.0.90/24 192.168.0.42 home
 #	map 129.27.140.238/24 129.27.140.241 spsc
 #	map 192.168.0.90/24 192.168.0.100 sevian7
-#	map 192.168.0.90/24 192.168.0.1 annenhof
-#	map 195.177.251.50/255.255.255.224 195.177.251.33 kunstlabor
+#	map 192.168.0.90/24 192.168.0.1 work
+#	map 195.177.251.50/255.255.255.224 195.177.251.33 office
 #
 # iface home inet static
 #	address 192.168.0.90
@@ -82,7 +83,6 @@ iface lo inet loopback
 #	up cp /etc/apt/sources.list.home /etc/apt/sources.list
 #	up cp /etc/resolv.conf.home /etc/resolv.conf
 #
-#
 # iface spsc inet static
 #	address 129.27.140.238
 #	netmask 255.255.255.0
@@ -91,16 +91,52 @@ iface lo inet loopback
 #	up cp /etc/apt/sources.list.spsc /etc/apt/sources.list
 #	up cp /etc/resolv.conf.spsc /etc/resolv.conf
 #
-# iface annenhof inet static
+# iface work inet static
 #	address 192.168.0.90
 #	netmask 255.255.255.0
 #	gateway 192.168.0.1
 #
-#	up cp /etc/resolv.conf.annenhof /etc/resolv.conf
+#	up cp /etc/resolv.conf.work /etc/resolv.conf
 #
-# iface sevian7 inet dhcp
+# iface dhcp inet dhcp
 #
-# iface kunstlabor inet dhcp
-#	up cp /etc/apt/sources.list.kunstlabor /etc/apt/sources.list
-
+# iface office inet dhcp
+#	up cp /etc/apt/sources.list.office /etc/apt/sources.list
+#
+# iface realraum inet static
+#      wireless_essid graz.funkfeuer.at
+#      wireless_ap 08:CA:FF:EE:BA:BE
+#      wireless-mode Ad-Hoc
+#      address 10.13.0.13
+#      netmask 255.255.255.224
+#      gateway 10.13.0.1
+#      dns-nameservers 83.64.208.23
+#
+## Madwifi - http://madwifi.org/wiki/UserDocs/Distro/Debian/ConfiguringtheMadWifidevice
+# iface ath0 inet static
+#      pre-up wlanconfig ath0 create wlandev wifi0 wlanmode ap
+#      post-down wlanconfig ath0 destroy
+#      wireless-essid my-essid
+#
+# iface home inet dhcp
+#      wireless-mode Managed
+#      wireless-essid secret
+#      wpa-ssid secret
+#      wpa-psk secret
+#
+# iface wpa inet dhcp
+#      wpa-conf /etc/wpa_supplicant.conf
+#
+# iface nat inet static
+#      address 10.23.42.1
+#      netmask 255.255.255.0
+#      up iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+#      up echo "1" > /proc/sys/net/ipv4/ip_forward
+#
+# iface oldwpa inet dhcp
+#      wireless-mode Managed
+#      wireless-essid mikaasus
+#      pre-up wpa_supplicant -Dwext -iipw -c/etc/wpa_supplicant.conf -B
+#      down killall wpa_supplicant
+#
 # EOF

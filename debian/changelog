@@ -1,3 +1,9 @@
+grml-etc-core (0.3.12) unstable; urgency=low
+
+  * Added some more examples to /etc/network/interfaces.examples.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 10 Jun 2007 00:04:08 +0200
+
 grml-etc-core (0.3.11) unstable; urgency=low
 
   * /etc/zsh/zshrc:
