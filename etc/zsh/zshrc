@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Jun 09 00:44:57 CEST 2007 [mika]
+# Latest change: Sam Jun 09 18:44:38 CEST 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -92,7 +92,7 @@
 # check for user, if not running as root set $SUDO to sudo
  (( EUID != 0 )) && SUDO='sudo' || SUDO=''
 
-  function salias() {
+  salias() {
     # creates an alias and precedes the command with
     # sudo if $EUID is not zero.
     local only=0 ; local multi=0
@@ -349,7 +349,7 @@ fi
      function compdef { }
   fi
 
-  is4 && autoload -U zed                  # use ZLE editor to edit a file or function
+  is4 && autoload -U zed # use ZLE editor to edit a file or function
 
   is4 && for mod in complist deltochar mathfunc ; do
              zmodload -i zsh/${mod} 2>/dev/null || print "Notice: no ${mod} available :("
@@ -820,7 +820,7 @@ Please use the wodim binary instead' ; return 1"
 
 # I hate lacking backward compability, so provide an alternative therefore
   if ! [ -x $(which apache2-ssl-certificate) ] ; then
-   function apache2-ssl-certificate(){
+     apache2-ssl-certificate(){
 
      print 'Debian does not ship apache2-ssl-certificate anymore (see #398520). :('
      print 'You might want to take a look at Debian the package ssl-cert as well.'
@@ -919,7 +919,7 @@ grmlcomp() {
 # zstyle ':completion:*' expand prefix suffix
 
 # automatic rehash? Credits go to Frank Terbeck
-# function my_accept () {
+# my_accept() {
 #   local buf
 #   [[ -z ${BUFFER} ]] && zle accept-line && return
 #   buf=( ${(z)BUFFER}  )
@@ -987,7 +987,7 @@ grmlcomp() {
 # {{{ grmlstuff
 grmlstuff() {
 # people should use 'grml-x'!
-  function startx() {
+  startx() {
     if [ -e /etc/X11/xorg.conf ] ; then
        [ -x /usr/bin/startx ] && /usr/bin/startx || /usr/X11R6/bin/startx
     else
@@ -998,7 +998,7 @@ If you want to use startx anyway please call \"/usr/bin/startx\"."
     fi
   }
 
-  function xinit() {
+  xinit() {
     if [ -e /etc/X11/xorg.conf ] ; then
        [ -x /usr/bin/xinit ] && /usr/bin/xinit || /usr/X11R6/bin/xinit
     else
@@ -1291,6 +1291,11 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
        print "Usage: ipv6-tunnel [start|stop|status]">&2 ; return 1
        ;;
     esac
+  }
+
+  # run dhclient for wireless device
+  iwclient() {
+    salias dhclient "$(wavemon -d | awk '/device/{print $2}')"
   }
 
   # Switching shell safely and efficiently? http://www.zsh.org/mla/workers/2001/msg02410.html

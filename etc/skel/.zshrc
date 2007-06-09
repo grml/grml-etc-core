@@ -857,7 +857,7 @@
   mkmaildir() {
     local root subdir
     root=${MAILDIR_ROOT:-${HOME}/Mail}
-    if [[ -z ${1} ]] ; then print "Usage\n $0 <dirname>" ; fi
+    if [[ -z ${1} ]] ; then print "Usage:\n $0 <dirname>" ; return 1 ; fi
     subdir=${1}
     mkdir -p ${root}/${subdir}/{cur,new,tmp}
   }

@@ -1,6 +1,11 @@
 grml-etc-core (0.3.11) unstable; urgency=low
 
-  * /etc/zsh/zshrc: added alias ipv6-tunnel
+  * /etc/zsh/zshrc:
+    - added function ipv6-tunnel (set up an ipv6 tunnel)
+    - added function iwclient (run dhclient for wireless device),
+      thanks Niels Giesen!
+    - improved usage info of mkmaildir()
+    - removed some "function" keywords
 
  -- Michael Prokop <mika@grml.org>  Sat, 09 Jun 2007 00:45:05 +0200
 
