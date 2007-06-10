@@ -1,3 +1,10 @@
+grml-scripts (1.0.4) unstable; urgency=low
+
+  * zsh-login: do not run grml-quickconfig when bootoption startx
+    is present. Thanks for the bugreport, Darshaka Pathirana!
+
+ -- Michael Prokop <mika@grml.org>  Sun, 10 Jun 2007 13:11:38 +0200
+
 grml-scripts (1.0.3) unstable; urgency=low
 
   * grml-lang: support dvorak keyboard layout

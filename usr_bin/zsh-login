@@ -33,7 +33,7 @@ case "$CMDLINE" in
          flite -o play -t "Finished booting"
       fi
       ;;
-   noquick)
+   noquick*|startx*)
       # do nothing
       ;;
    *) # by default run grml-quickconfig, but only if running as root
