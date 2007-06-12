@@ -1,3 +1,10 @@
+grml-etc-core (0.3.13) unstable; urgency=low
+
+  * /etc/zsh/zshrc: added function dnews (to view Debian's NEWS file of the
+    package).
+
+ -- Michael Prokop <mika@grml.org>  Tue, 12 Jun 2007 14:00:55 +0200
+
 grml-etc-core (0.3.12) unstable; urgency=low
 
   * Added some more examples to /etc/network/interfaces.examples.

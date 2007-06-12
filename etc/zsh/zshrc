@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Jun 09 18:44:38 CEST 2007 [mika]
+# Latest change: Die Jun 12 14:00:47 CEST 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -1104,6 +1104,22 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
     }
     _dchange() { _files -W /usr/share/doc -/ }
     compdef _dchange dchange
+
+  # use "dnews <package-name>" to view Debian's NEWS file of the package:
+    dnews() {
+      if [ -r /usr/share/doc/${1}/NEWS.Debian.gz ] ; then
+         most /usr/share/doc/${1}/NEWS.Debian.gz
+      else
+         if [ -r /usr/share/doc/${1}/NEWS.gz ] ; then
+            most /usr/share/doc/${1}/NEWS.gz
+         else
+            echo "No NEWS file for package $1 found, sorry."
+            return 1
+         fi
+      fi
+    }
+    _dnews() { _files -W /usr/share/doc -/ }
+    compdef _dnews dnews
 
   # use "uchange <package-name>" to view upstream's changelog of the package:
     uchange() {
