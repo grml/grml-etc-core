@@ -1,13 +1,15 @@
-grml-etc-core (0.3.13) unstable; urgency=low
-
-  * /etc/zsh/zshrc: added function dnews (to view Debian's NEWS file of the
-    package).
-
- -- Michael Prokop <mika@grml.org>  Tue, 12 Jun 2007 14:00:55 +0200
-
 grml-etc-core (0.3.12) unstable; urgency=low
 
   * Added some more examples to /etc/network/interfaces.examples.
+  * /etc/zsh/zshrc:
+    - move environment stuff from /etc/zsh/zshenv to
+      /etc/zsh/zshrc so we don't have all the environment variables
+      in 'zsh -f', thanks for the patch - ft!
+    - added function dnews (to view Debian's NEWS file of the package)
+    - added function minimal-shell (spawn a minimally set up ksh),
+      thanks ft!
+    - added keybinding ctrl-x1 to jump behind the first word on the
+      cmdline, thanks again ft!
 
  -- Michael Prokop <mika@grml.org>  Sun, 10 Jun 2007 00:04:08 +0200
 

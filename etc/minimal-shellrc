@@ -1,0 +1,80 @@
+# vim:ft=sh:fdm=marker
+#
+# configuration used for an absolute minimal ksh shell.
+# Reason: reference no files in /usr/, so that FS can be umounted.
+
+# skip this setup for non-interactive shells
+[[ -o interactive && -t 0 ]] || return
+
+export PATH="/bin:/sbin/:/usr/bin/:/usr/sbin:/usr/local/bin:/usr/local/sbin:${HOME}/bin:/opt/bin"
+export EDITOR='ed'
+
+if [[ -x $(which vim) ]] ; then
+    export VISUAL='vim'
+else
+    export VISUAL='vi'
+fi
+if [[ -x $(which less) ]] ; then
+    export PAGER='less'
+else
+    export PAGER='more'
+fi
+
+FPATH=/usr/share/ksh/functions
+HISTSIZE=500
+HISTEDIT="$EDITOR"
+
+# some options.
+set -o emacs -o trackall -o globstar
+
+# aliases for various command shortcuts
+alias ls='ls --color=auto'  # we're on grml, so we do have GNU ls.
+alias ll='ls -lFb'
+alias la='ls -LaFb'
+alias pu='ps -fu $USER'
+
+# Use keyboard trap to map keys to other keys
+# note that escape sequences vary for different terminals so these
+# may not work for you
+trap '.sh.edchar=${keymap[${.sh.edchar}]:-${.sh.edchar}}' KEYBD
+
+if [[ -x $(which infocmp) ]] && [[ -x $(which sed) ]] ; then
+    # reading some special keys from terminfo database.
+    # should work everywhere. hopefully.
+    typeset -A keymap
+    infocmp -L | sed '1,2d;s/\t//;s/, /\n/g;s/,$//' | \
+        while read -r line ; do
+            key="${line%=*}"
+            seq="${line#*=}"
+            case "$key" in
+                key_left)       keymap+=( [$(print "$seq")]=$'\cb' ) ;;
+                key_right)      keymap+=( [$(print "$seq")]=$'\cf' ) ;;
+                key_up)         keymap+=( [$(print "$seq")]=$'\cp' ) ;;
+                key_down)       keymap+=( [$(print "$seq")]=$'\cn' ) ;;
+                key_home)       keymap+=( [$(print "$seq")]=$'\ca' ) ;;
+                key_end)        keymap+=( [$(print "$seq")]=$'\ce' ) ;;
+                key_backspace)  keymap+=( [$(print "$seq")]=$'\ch' ) ;;
+                key_dc)         keymap+=( [$(print "$seq")]=$'\cd' ) ;;
+            esac
+        done
+else
+    # fallback, does not work in all terminals.
+    keymap=(
+        [$'\eOD']=$'\eb'   # Ctrl-Left  -> move word left
+        [$'\eOC']=$'\ef'   # Ctrl-Right -> move word right
+        [$'\e[3~']=$'\cd'  # Delete     -> delete to right
+        [$'\e[1~']=$'\ca'  # Home       -> move to beginning of line
+        [$'\e[4~']=$'\ce'  # End        -> move to end of line
+    )
+fi
+
+# put the current directory and history number in the prompt.
+# use a wrapper for 'cd' to get '~' instead of /home/foo/.
+function _cd {
+    "cd" "$@"
+    [[ $PWD = $HOME* && $HOME != / ]] && _pwd=\~"${PWD#$HOME}" && return
+    _pwd="$PWD"
+}
+alias cd=_cd
+_cd .
+PS1='(!)-$_pwd\$ '

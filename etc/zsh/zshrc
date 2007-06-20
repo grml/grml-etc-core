@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Die Jun 12 14:00:47 CEST 2007 [mika]
+# Latest change: Mit Jun 20 10:28:28 CEST 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -17,6 +17,20 @@
   if [[ -n $ZSH_PROFILE_RC ]] ; then
      zmodload zsh/zprof
   fi
+# }}}
+
+# locale setup {{{
+  if [ -n "$LANG" ]  ; then
+     export LANG
+  else
+     [ -r /etc/default/locale ] && source /etc/default/locale
+  fi
+  [ -n "$LANG" ]          && export LANG || export LANG="en_US.iso885915"
+  [ -n "$LC_ALL" ]        && export LC_ALL
+  [ -n "$LC_MESSAGES" ]   && export LC_MESSAGES
+
+  [ -r /etc/sysconfig/keyboard ] && source /etc/sysconfig/keyboard
+  [ -r /etc/timezone ] && TZ=$(cat /etc/timezone)
 # }}}
 
 # check for potentially old files in 'completion.d' {{{
@@ -413,6 +427,21 @@ fi
   }
   zle -N sudo-command-line _sudo-command-line
   bindkey "^Os" sudo-command-line
+
+### jump behind the first word on the cmdline.
+### useful to add options.
+  function jump_after_first_word() {
+    local words
+    words=(${(z)BUFFER})
+    if (( ${#words} <= 1 )) ; then
+      CURSOR=${#BUFFER}
+    else
+      CURSOR=${#${words[1]}}
+    fi
+  }
+  zle -N jump_after_first_word
+  bindkey '^x1' jump_after_first_word
+
 # }}}
 
 # {{{ set some important options
@@ -1312,6 +1341,11 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   # run dhclient for wireless device
   iwclient() {
     salias dhclient "$(wavemon -d | awk '/device/{print $2}')"
+  }
+
+  # spawn a minimally set up ksh - useful if you want to umount /usr/.
+  minimal-shell() {
+    exec env -i ENV="/etc/minimal-shellrc" HOME="$HOME" TERM="$TERM" ksh
   }
 
   # Switching shell safely and efficiently? http://www.zsh.org/mla/workers/2001/msg02410.html
