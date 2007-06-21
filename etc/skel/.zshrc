@@ -217,8 +217,10 @@
   [ -d ~/.terminfo/ ] && alias man='TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man'
 
 # check whether Debian's package management (dpkg) is running
-  #a2# Check whether a dpkg instance is currently running
-  type salias &>/dev/null && salias check_dpkg_running="dpkg_running"
+  if type salias &>/dev/null ; then
+    #a2# Check whether a dpkg instance is currently running
+    salias check_dpkg_running="dpkg_running"
+  fi
 
 # work around non utf8 capable software in utf environment
   if type isutfenv &>/dev/null ; then

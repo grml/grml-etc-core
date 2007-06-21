@@ -406,7 +406,7 @@ fi
 # press "ctrl-e d" to insert the actual date in the form yyyy-mm-dd
   _bkdate() { BUFFER="$BUFFER$(date '+%F')"; CURSOR=$#BUFFER; }
   #k# Insert a timestamp on the commandline (yyyy-mm-dd)
-  bindkey '\C-ed' _bkdate
+  bindkey '^Ed' _bkdate
   zle -N _bkdate
 
 # press esc-m for inserting last typed word again (thanks to caphuso!)
@@ -864,7 +864,7 @@ Enjoy your grml system with the zsh!$reset_color"
     }
 
     isgrmlcd && alias su="sudo -s"          # get a root shell
-    #a1# Take a look at the syslog: \kbd{$PAGER /var/log/syslog}
+    #a1# Take a look at the syslog: \kbd{\$PAGER /var/log/syslog}
     alias llog="$PAGER /var/log/syslog"     # take a look at the syslog
     #a1# Take a look at the syslog: \kbd{tail -f /var/log/syslog}
     alias tlog="tail -f /var/log/syslog"    # follow the syslog
