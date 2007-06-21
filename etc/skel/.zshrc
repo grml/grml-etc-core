@@ -47,18 +47,23 @@
 # set default browser
   if [ -z "$BROWSER" ] ; then
      if [ -n "$DISPLAY" ] ; then
+        #v# If X11 is running
         [ -x $(which firefox) ] && export BROWSER=firefox
      else
+        #v# If no X11 is running
         [ -x $(which w3m) ] && export BROWSER=w3m
      fi
   fi
+  #v#
   (( ${+PAGER} ))   || export PAGER="less"
 
 # export qtdir
+  #m# v QTDIR \kbd{/usr/share/qt[34]}\quad [for non-root only]
   [ -d /usr/share/qt3 ] && export QTDIR=/usr/share/qt3
   [ -d /usr/share/qt4 ] && export QTDIR=/usr/share/qt4
 
 # support running 'jikes *.java && jamvm HelloWorld' OOTB:
+  #v# [for non-root only]
   [ -f /usr/share/classpath/glibj.zip ] && export JIKESPATH=/usr/share/classpath/glibj.zip
 # }}}
 
@@ -120,59 +125,91 @@
 #  fi
 
 # general
+  #a2# Execute \kbd{du -sch}
   alias da='du -sch'
+  #a2# Execute \kbd{jobs -l}
   alias j='jobs -l'
 #  alias u='translate -i'          # translate
 
 # compile stuff
+  #a2# Execute \kbd{./configure}
   alias CO="./configure"
+  #a2# Execute \kbd{./configure --help}
   alias CH="./configure --help"
 
 # http://conkeror.mozdev.org/
+  #a2# Run a keyboard driven firefox
   alias conkeror='firefox -chrome chrome://conkeror/content'
 
 # arch/tla stuff
   if type -p tla &>/dev/null ; then
+     #a2# Execute \kbd{tla what-changed --diffs | less}
      alias tdi='tla what-changed --diffs | less'
+     #a2# Execute \kbd{tla-buildpackage}
      alias tbp='tla-buildpackage'
+     #a2# Execute \kbd{tla archive-mirror}
      alias tmi='tla archive-mirror'
+     #a2# Execute \kbd{tla commit}
      alias tco='tla commit'
+     #a2# Execute \kbd{tla star-merge}
      alias tme='tla star-merge'
   fi
 
 # listing stuff
+  #a2# Execute \kbd{ls -lSrah}
   alias dir="ls -lSrah"
+  #a2# Only show dot-directories
   alias lad='ls -d .*(/)'                # only show dot-directories
+  #a2# Only show dot-files
   alias lsa='ls -a .*(.)'                # only show dot-files
+  #a2# Only files with setgid/setuid/sticky flag
   alias lss='ls -l *(s,S,t)'             # only files with setgid/setuid/sticky flag
+  #a2# Only show 1st ten symlinks
   alias lsl='ls -l *(@[1,10])'           # only symlinks
+  #a2# Display only executables
   alias lsx='ls -l *(*[1,10])'           # only executables
+  #a2# Display world-{readable,writable,executable} files
   alias lsw='ls -ld *(R,W,X.^ND/)'       # world-{readable,writable,executable} files
+  #a2# Display the ten biggest files
   alias lsbig="ls -flh *(.OL[1,10])"     # display the biggest files
+  #a2# Only show directories
   alias lsd='ls -d *(/)'                 # only show directories
+  #a2# Only show empty directories
   alias lse='ls -d *(/^F)'               # only show empty directories
+  #a2# Display the ten newest files
   alias lsnew="ls -rl *(D.om[1,10])"     # display the newest files
+  #a2# Display the ten oldest files
   alias lsold="ls -rtlh *(D.om[1,10])"   # display the oldest files
+  #a2# Display the ten smallest files
   alias lssmall="ls -Srl *(.oL[1,10])"   # display the smallest files
 
 # chmod
+  #a2# Execute \kbd{chmod 600}
   alias rw-='chmod 600'
+  #a2# Execute \kbd{chmod 700}
   alias rwx='chmod 700'
+  #m# a2 r-{}- Execute \kbd{chmod 644}
   alias r--='chmod 644'
+  #a2# Execute \kbd{chmod 755}
   alias r-x='chmod 755'
 
 # some useful aliases
+  #a2# Execute \kbd{mkdir -o}
   alias md='mkdir -p'
 
   [ -x $(which ipython) ] && alias ips='ipython -p sh'
 
 # console stuff
+  #a2# Execute \kbd{mplayer -vo fbdev}
   alias cmplayer='mplayer -vo fbdev'
+  #a2# Execute \kbd{mplayer -vo fbdev -fs -zoom}
   alias fbmplayer='mplayer -vo fbdev -fs -zoom'
+  #a2# Execute \kbd{links2 -driver fb}
   alias fblinks='links2 -driver fb'
 
 # ignore ~/.ssh/known_hosts entries
 #  alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null" -o "PreferredAuthentications=keyboard-interactive"'
+  #a2# ssh with StrictHostKeyChecking=no \\&\quad and UserKnownHostsFile unset
   alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
   alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 
@@ -180,6 +217,7 @@
   [ -d ~/.terminfo/ ] && alias man='TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man'
 
 # check whether Debian's package management (dpkg) is running
+  #a2# Check whether a dpkg instance is currently running
   type salias &>/dev/null && salias check_dpkg_running="dpkg_running"
 
 # work around non utf8 capable software in utf environment
@@ -200,44 +238,81 @@
 
 ## useful functions {{{
 
-# functions without detailed explanation:
+# searching
+  #f4# Search for newspostings from authors
   agoogle() { ${=BROWSER} "http://groups.google.com/groups?as_uauthors=$*" ; }
-  bk()      { cp -b ${1} ${1}_`date --iso-8601=m` }
-  cdiff()   { diff -crd "$*" | egrep -v "^Only in |^Binary files " }
-  cl()      { cd $1 && ls -a }        # cd && ls
-  cvsa()    { cvs add $* && cvs com -m 'initial checkin' $* }
-  cvsd()    { cvs diff -N $* |& $PAGER }
-  cvsl()    { cvs log $* |& $PAGER }
-  cvsq()    { cvs -nq update }
-  cvsr()    { rcs2log $* | $PAGER }
-  cvss()    { cvs status -v $* }
+  #f4# Search Debian Bug Tracking System by BugID in mbox format
   debbug()  { ${=BROWSER} "http://bugs.debian.org/$*" }
+  #f4# Search Debian Bug Tracking System
   debbugm() { bts show --mbox $1 } # provide bugnummer as "$1"
-  disassemble(){ gcc -pipe -S -o - -O -g $* | as -aldh -o /dev/null }
+  #f4# Search DMOZ
   dmoz()    { ${=BROWSER} http://search.dmoz.org/cgi-bin/search\?search=${1// /_} }
+  #f4# Search German   Wiktionary
   dwicti()  { ${=BROWSER} http://de.wiktionary.org/wiki/${(C)1// /_} }
+  #f4# Search English  Wiktionary
   ewicti()  { ${=BROWSER} http://en.wiktionary.org/wiki/${(C)1// /_} }
-  fir()     { firefox -a firefox -remote "openURL($1)" }
+  #f4# Search Google Groups
   ggogle()  { ${=BROWSER} "http://groups.google.com/groups?q=$*" }
+  #f4# Search Google
   google()  { ${=BROWSER} "http://www.google.com/search?&num=100&q=$*" }
-  mcd()     { mkdir -p "$@"; cd "$@" } # mkdir && cd
-  mdiff()   { diff -udrP "$1" "$2" > diff.`date "+%Y-%m-%d"`."$1" }
-  memusage(){ ps aux | awk '{if (NR > 1) print $5; if (NR > 2) print "+"} END { print "p" }' | dc }
+  #f4# Search Google Groups for MsgID
   mggogle() { ${=BROWSER} "http://groups.google.com/groups?selm=$*" }
+  #f4# Search Netcraft
   netcraft(){ ${=BROWSER} "http://toolbar.netcraft.com/site_report?url=$1" }
-  oleo()    { ${=BROWSER} "http://dict.leo.org/?search=$*" }
-  shtar()   { gunzip -c $1 | tar -tf - -- | $PAGER }
-  shtgz()   { tar -ztf $1 | $PAGER }
-  shzip()   { unzip -l $1 | $PAGER }
-  sig()     { agrep -d '^-- $' "$*" ~/.Signature }
+  #f4# Use German Wikipedia's full text search
   swiki()   { ${=BROWSER} http://de.wikipedia.org/wiki/Spezial:Search/${(C)1} }
-  udiff()   { diff -urd $* | egrep -v "^Only in |^Binary files " }
-  viless()  { vim --cmd 'let no_plugin_maps = 1' -c "so \$VIMRUNTIME/macros/less.vim" "${@:--}" }
+  #f4# search \kbd{dict.leo.org}
+  oleo()    { ${=BROWSER} "http://dict.leo.org/?search=$*" }
+  #f4# Search German   Wikipedia
   wikide () { ${=BROWSER} http://de.wikipedia.org/wiki/"${(C)*}" }
+  #f4# Search English  Wikipedia
   wikien()  { ${=BROWSER} http://en.wikipedia.org/wiki/"$*" }
+  #f4# Search official debs
   wodeb ()  { ${=BROWSER} "http://packages.debian.org/cgi-bin/search_contents.pl?word=$1&version=${2:-unstable}" }
-
+  #m# f4 gex() Exact search via Google
   which google &>/dev/null && gex () { google "\"[ $1]\" $*" } # exact search at google
+
+# misc
+  #f5# Backup \kbd{file {\rm to} file\_timestamp}
+  bk()      { cp -b ${1} ${1}_`date --iso-8601=m` }
+  #f5# Copied diff
+  cdiff()   { diff -crd "$*" | egrep -v "^Only in |^Binary files " }
+  #f5# cd to directoy and list files
+  cl()      { cd $1 && ls -a }        # cd && ls
+  #f5# Cvs add
+  cvsa()    { cvs add $* && cvs com -m 'initial checkin' $* }
+  #f5# Cvs diff
+  cvsd()    { cvs diff -N $* |& $PAGER }
+  #f5# Cvs log
+  cvsl()    { cvs log $* |& $PAGER }
+  #f5# Cvs update
+  cvsq()    { cvs -nq update }
+  #f5# Rcs2log
+  cvsr()    { rcs2log $* | $PAGER }
+  #f5# Cvs status
+  cvss()    { cvs status -v $* }
+  #f5# Disassemble source files using gcc and as
+  disassemble(){ gcc -pipe -S -o - -O -g $* | as -aldh -o /dev/null }
+  #f5# Firefox remote control - open given URL
+  fir()     { firefox -a firefox -remote "openURL($1)" }
+  #f5# Create Directoy and \kbd{cd} to it
+  mcd()     { mkdir -p "$@"; cd "$@" } # mkdir && cd
+  #f5# Unified diff to timestamped outputfile
+  mdiff()   { diff -udrP "$1" "$2" > diff.`date "+%Y-%m-%d"`."$1" }
+  #f5# Memory overview
+  memusage(){ ps aux | awk '{if (NR > 1) print $5; if (NR > 2) print "+"} END { print "p" }' | dc }
+  #f5# Show contents of tar file
+  shtar()   { gunzip -c $1 | tar -tf - -- | $PAGER }
+  #f5# Show contents of tgz file
+  shtgz()   { tar -ztf $1 | $PAGER }
+  #f5# Show contents of zip file
+  shzip()   { unzip -l $1 | $PAGER }
+  #f5# Greps signature from file
+  sig()     { agrep -d '^-- $' "$*" ~/.Signature }
+  #f5# Unified diff
+  udiff()   { diff -urd $* | egrep -v "^Only in |^Binary files " }
+  #f5# (Mis)use \kbd{vim} as \kbd{less}
+  viless()  { vim --cmd 'let no_plugin_maps = 1' -c "so \$VIMRUNTIME/macros/less.vim" "${@:--}" }
 
   # download video from youtube
   ytdl() {
@@ -251,11 +326,12 @@
 
 
 # Function Usage: doc packagename
+  #f5# \kbd{cd} to /usr/share/doc/\textit{package}
   doc() { cd /usr/share/doc/$1 && ls }
   _doc() { _files -W /usr/share/doc -/ }
   type compdef &>/dev/null && compdef _doc doc
 
-# make screenshot of current desktop (use 'import' from ImageMagic)
+#f5# Make screenshot
   sshot() {
         [[ ! -d ~/shots  ]] && mkdir ~/shots
         #cd ~/shots ; sleep 5 ; import -window root -depth 8 -quality 80 `date "+%Y-%m-%d--%H:%M:%S"`.png
@@ -273,7 +349,7 @@
     fi
   }
 
-# create pdf file from source code
+#f5# Create PDF file from source code
   makereadable() {
      output=$1
      shift
@@ -283,30 +359,35 @@
 
 # zsh with perl-regex - use it e.g. via:
 # regcheck '\s\d\.\d{3}\.\d{3} Euro' ' 1.000.000 Euro'
+#f5# Checks whether a regex matches or not.\\&\quad Example: \kbd{regcheck '.\{3\} EUR' '500 EUR'}
   regcheck() {
     zmodload -i zsh/pcre
     pcre_compile $1 && \
     pcre_match $2 && echo "regex matches" || echo "regex does not match"
   }
 
-# list files which have been modified within the last x days
+#f5# List files which have been modified within the last {\it n} days
   new() { print -l *(m-$1) }
 
-# grep the history
+#f5# Grep in history
   greph () { history 0 | grep $1 }
-  (grep --help 2>/dev/null |grep -- --color) >/dev/null && \
-    alias grep='grep --color=auto' # use colors when GNU grep with color-support
+  # use colors when GNU grep with color-support
+  #a2# Execute \kbd{grep -{}-color=auto}
+  (grep --help 2>/dev/null |grep -- --color) >/dev/null && alias grep='grep --color=auto'
+  #a2# Execute \kbd{grep -i -{}-color=auto}
   alias GREP='grep -i --color=auto'
 
 # one blank line between each line
   if [ -r ~/.terminfo/m/mostlike ] ; then
 #     alias man2='MANPAGER="sed -e G |less" TERMINFO=~/.terminfo TERM=mostlike /usr/bin/man'
+     #f5# Watch manpages in a stretched style
      man2() { PAGER='dash -c "sed G | /usr/bin/less"' TERM=mostlike /usr/bin/man "$@" ; }
   fi
 
 # jump between directories
 # Copyright 2005 Nikolai Weibull <nikolai@bitwi.se>
 # notice: option AUTO_PUSHD has to be set
+  #f5# Jump between directories
   d(){
     emulate -L zsh
     autoload -U colors
@@ -327,8 +408,8 @@
     cd ~$dir
   }
 
-# find out which libs define a symbol
 # usage example: 'lcheck strcpy'
+#f5# Find out which libs define a symbol
   lcheck() {
      if [ -n "$1" ] ; then
         nm -go /usr/lib/lib*.a 2>/dev/null | grep ":[[:xdigit:]]\{8\} . .*$1"
@@ -337,7 +418,7 @@
      fi
   }
 
-# clean up directory
+#f5# Clean up directory - remove well known tempfiles
   purge() {
         FILES=(*~(N) .*~(N) \#*\#(N) *.o(N) a.out(N) *.core(N) *.cmo(N) *.cmi(N) .*.swp(N))
         NBFILES=${#FILES}
@@ -365,6 +446,7 @@
 # Use the following oneliner to turn back the sort order:
 #  $ awk -F ':' '{ print $2" : "$1" "$3 }' \
 #    /usr/local/lib/words/en-de.ISO-8859-1.vok > ~/.translate/de-en.ISO-8859-1.vok
+#f5# Translates a word
   trans() {
         case "$1" in
                 -[dD]*) translate -l de-en $2
@@ -394,7 +476,7 @@
 #  vimpm ()      { vim `perldoc -l $1 | sed -e 's/pod$/pm/'` }
 #  vimhelp ()    { vim -c "help $1" -c on -c "au! VimEnter *" }
 
-# plap foo -- list all occurrences of program in the current PATH
+#f5# List all occurrences of programm in current PATH
   plap() {
         if [[ $# = 0 ]]
         then
@@ -407,6 +489,7 @@
   }
 
 # Found in the mailinglistarchive from Zsh (IIRC ~1996)
+#f5# Select items for specific command(s) from history
   selhist() {
         emulate -L zsh
         local TAB=$'\t';
@@ -423,10 +506,11 @@
   }
 
 # Use vim to convert plaintext to HTML
+  #f5# Transform files to html with highlighting
   2html() { vim -u NONE -n -c ':syntax on' -c ':so $VIMRUNTIME/syntax/2html.vim' -c ':wqa' $1 &>/dev/null }
 
 # Usage: simple-extract <file>
-# Description: extracts archived files (maybe)
+#f5# Smart archive extractor
   simple-extract () {
         if [[ -f $1 ]]
         then
@@ -451,7 +535,7 @@
   }
 
 # Usage: smartcompress <file> (<type>)
-# Description: compresses files or a directory.  Defaults to tar.gz
+#f5# Smart archive creator
   smartcompress() {
         if [ $2 ]; then
                 case $2 in
@@ -471,7 +555,7 @@
   }
 
 # Usage: show-archive <archive>
-# Description: view archive without unpack
+#f5# List an archive's content
   show-archive() {
         if [[ -f $1 ]]
         then
@@ -488,7 +572,7 @@
         fi
   }
 
-# follow symlinks
+#f5# Follow symlinks
   folsym() {
     if [[ -e $1 || -h $1 ]]; then
         file=$1
@@ -519,13 +603,12 @@
     fi
   }
 
-# Use 'view' to read manpages, if u want colors, regex - search, ...
-# like vi(m).
 # It's shameless stolen from <http://www.vim.org/tips/tip.php?tip_id=167>
+#f5# Use \kbd{vim} as your manpage reader
   vman() { man $* | col -b | view -c 'set ft=man nomod nolist' - }
 
-# search for various types or README file in dir and display them in $PAGER
 # function readme() { $PAGER -- (#ia3)readme* }
+#f5# View all README-like files in current directory in pager
   readme() {
         local files
         files=(./(#i)*(read*me|lue*m(in|)ut)*(ND))
@@ -536,8 +619,8 @@
         fi
   }
 
-# find all suid files in $PATH
 # suidfind() { ls -latg $path | grep '^...s' }
+#f5# Find all files in \$PATH with setuid bit set
   suidfind() { ls -latg $path/*(sN) }
 
 # See above but this is /better/ ... anywise ..
@@ -550,7 +633,7 @@
     print 'Finished'
   }
 
-# Reload functions.
+#f5# Reload given functions
   refunc() {
         for func in $argv
         do
@@ -561,6 +644,7 @@
 
 # a small check to see which DIR is located on which server/partition.
 # stolen and modified from Sven's zshrc.forall
+  #f5# Report diskusage of a directory
   dirspace() {
     if [ -n "$1" ] ; then
        for dir in $* ; do
@@ -582,6 +666,7 @@
   }
 
 # % slow_print `cat /etc/passwd`
+#f5# Slowly print out parameters
   slow_print() {
         for argument in "${@}"
         do
@@ -594,7 +679,7 @@
         print ""
   }
 
-# display system state
+#f5# Show some status info
   status() {
         print ""
         print "Date..: "$(date "+%Y-%m-%d %H:%M:%S")""
@@ -607,6 +692,7 @@
   }
 
 # Rip an audio CD
+  #f5# Rip an audio CD
   audiorip() {
         mkdir -p ~/ripps
         cd ~/ripps
@@ -625,6 +711,7 @@
   }
 
 # and burn it
+  #f5# Burn an audio CD (in combination with audiorip)
   audioburn() {
         cd ~/ripps
         cdrdao write --device $DEVICE --driver generic-mmc audiocd.toc
@@ -640,7 +727,7 @@
         fi
   }
 
-# Make an audio CD from all mp3 files
+#f5# Make an audio CD from all mp3 files
   mkaudiocd() {
         cd ~/ripps
         for i in *.[Mm][Pp]3; do mv "$i" `echo $i | tr '[A-Z]' '[a-z]'`; done
@@ -650,7 +737,7 @@
         for i in *.wav; do sox $i.wav -r 44100 $i.wav resample; done
   }
 
-# Create an ISO image. You are prompted for volume name, filename and directory
+#f5# Create an ISO image. You are prompted for\\&\quad volume name, filename and directory
   mkiso() {
         echo " * Volume name "
         read volume
@@ -661,7 +748,7 @@
         mkisofs -o ~/$iso -A $volume -allow-multidot -J -R -iso-level 3 -V $volume -R $files
   }
 
-# simple thumbnails generator
+#f5# Simple thumbnails generator
   genthumbs () {
     rm -rf thumb-* index.html
     echo "
@@ -680,7 +767,7 @@
 </html>" >> index.html
   }
 
-# unset all limits (see zshbuiltins(1) /ulimit for details)
+#f5# Set all ulimit parameters to \kbd{unlimited}
   allulimit() {
     ulimit -c unlimited
     ulimit -d unlimited
@@ -696,14 +783,14 @@
     oggdec -o - ${1} | lame -b 192 - ${1:r}.mp3
   }
 
-# RFC 2396 URL encoding in Z-Shell
+#f5# RFC 2396 URL encoding in Z-Shell
   urlencode() {
    setopt localoptions extendedglob
    input=( ${(s::)1} )
    print ${(j::)input/(#b)([^A-Za-z0-9_.!~*\'\(\)-])/%$(([##16]#match))}
   }
 
-# get x-lite voip software
+#f5# Install x-lite (VoIP software)
   getxlite() {
     setopt local_options
     setopt errreturn
@@ -720,7 +807,7 @@
     fi
    }
 
-# get skype
+#f5# Install skype
   getskype() {
     setopt local_options
     setopt errreturn
@@ -730,7 +817,7 @@
     $SUDO dpkg -i skype_debian-*.deb && echo "skype installed."
   }
 
-# get beta-version of skype
+#f5# Install beta-version of skype
   getskypebeta() {
     setopt local_options
     setopt errreturn
@@ -739,7 +826,7 @@
     $SUDO dpkg -i skype-beta*.deb && echo "skype installed."
   }
 
-# get gzimo (VoIP software)
+#f5# Install gizmo (VoIP software)
   getgizmo() {
     setopt local_options
     setopt errreturn
@@ -750,7 +837,7 @@
     $SUDO dpkg -i libsipphoneapi*.deb bonjour_*.deb gizmo-*.deb && echo "gizmo installed."
   }
 
-# get AIR - Automated Image and Restore
+#f5# Get and run AIR (Automated Image and Restore)
   getair() {
     setopt local_options
     setopt errreturn
@@ -763,7 +850,7 @@
     [ -x /usr/local/bin/air ] && [ -n "$DISPLAY" ] && $SUDO air
   }
 
-# get specific git commitdiff
+#f5# Get specific git commitdiff
   git-get-diff() {
     if [ -z $GITTREE ] ; then
       GITTREE='linux/kernel/git/torvalds/linux-2.6.git'
@@ -775,7 +862,7 @@
     fi
   }
 
-# get specific git commit
+#f5# Get specific git commit
   git-get-commit() {
     if [ -z $GITTREE ] ; then
       GITTREE='linux/kernel/git/torvalds/linux-2.6.git'
@@ -787,7 +874,7 @@
     fi
   }
 
-# get specific git diff
+#f5# Get specific git diff
   git-get-plaindiff() {
     if [ -z $GITTREE ] ; then
       GITTREE='linux/kernel/git/torvalds/linux-2.6.git'
@@ -799,23 +886,25 @@
     fi
   }
 
-# log 'make install' output
 # http://strcat.de/blog/index.php?/archives/335-Software-sauber-deinstallieren...html
+#f5# Log 'make install' output
   mmake() {
     [[ ! -d ~/.errorlogs ]] && mkdir ~/.errorlogs
     =make -n install > ~/.errorlogs/${PWD##*/}-makelog
   }
 
-# indent source code
+#f5# Indent source code
   smart-indent() {
     indent -npro -kr -i8 -ts8 -sob -l80 -ss -ncs $*
   }
 
 # highlight important stuff in diff output, usage example: hg diff | hidiff
+  #m# a2 hidiff \kbd{histring} oneliner for diffs
   [ -x $(which histring) ] && \
   alias hidiff="histring -fE '^Comparing files .*|^diff .*' | histring -c yellow -fE '^\-.*' | histring -c green -fE '^\+.*'"
 
 # rename pictures based on information found in exif headers
+  #f5# Rename pictures based on information found in exif headers
   exirename() {
     if [ $# -lt 1 ] ; then
        echo 'Usage: jpgrename $FILES' >& 2
@@ -976,11 +1065,13 @@
   if type -p hg &>/dev/null ; then
   # gnu like diff for mercurial
   # http://www.selenic.com/mercurial/wiki/index.cgi/TipsAndTricks
+    #f5# GNU like diff for mercurial
     hgdi() {
       for i in `hg status -marn "$@"` ; diff -ubwd <(hg cat "$i") "$i"
     }
 
   # build debian package
+    #a2# Alias for \kbd{hg-buildpackage}
     alias hbp='hg-buildpackage'
 
   # execute commands on the versioned patch-queue from the current repos
@@ -989,11 +1080,13 @@
   # diffstat for specific version of a mercurial repository
   #   hgstat      => display diffstat between last revision and tip
   #   hgstat 1234 => display diffstat between revision 1234 and tip
+    #f5# Diffstat for specific version of a mercurial repos
     hgstat() {
       [ -n "$1" ] && hg diff -r $1 -r tip | diffstat || hg export tip | diffstat
     }
 
   # get current mercurial tip via hg itself
+    #f5# Get current mercurial tip via hg itself
     gethgclone() {
       setopt local_options
       setopt errreturn
@@ -1022,6 +1115,7 @@
   fi # end of check whether we have the 'hg'-executable
 
   # get current mercurial snapshot
+    #f5# Get current mercurial snapshot
     gethgsnap() {
       setopt local_options
       setopt errreturn
@@ -1109,5 +1203,7 @@
   fi
 # }}}
 
+### doc strings for external functions from files
+#m# f5 grml-wallpaper() Sets a wallpaper (try completion for possible values)
 ## END OF FILE #################################################################
 # vim:foldmethod=marker
