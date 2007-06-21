@@ -76,17 +76,20 @@
   fi
 
 # grml specific stuff
+#f1# Checks whether or not you're running grml
   isgrml(){
     [ -f /etc/grml_version ] && return 0
     return 1
   }
 
+#f1# Checks whether or not you're running a grml cd
   isgrmlcd(){
     [ -f /etc/grml_cd ] && return 0
     return 1
   }
 
   if isgrml ; then
+  #f1# Checks whether or not you're running grml-small
     isgrmlsmall() {
     [[ ${${${(f)"$(</etc/grml_version)"}%% *}##*-} == 'small' ]] && return 0 ; return 1
   }
@@ -94,7 +97,7 @@
     isgrmlsmall() { return 1 }
   fi
 
-  # are we running within an utf environment?
+#f1# are we running within an utf environment?
   isutfenv() {
     case "$LANG $CHARSET $LANGUAGE" in
       *utf*) return 0 ;;
@@ -153,7 +156,9 @@
 # }}}
 
 # {{{ set some variables
+  #v#
   export EDITOR=${EDITOR:-vim}
+  #v#
   export MAIL=${MAIL:-/var/mail/$USER}
   # if we don't set $SHELL then aterm, rxvt,.. will use /bin/sh or /bin/bash :-/
   export SHELL='/bin/zsh'
@@ -231,6 +236,7 @@ fi
 # See for example http://unicode.org/charts/ for unicode characters code
   autoload insert-unicode-char
   zle -N insert-unicode-char
+  #k# Insert Unicode character
   bindkey '^Xi' insert-unicode-char
 
 # just type 'cd ...' to get 'cd ../..'
@@ -256,24 +262,25 @@ fi
   setopt extendedglob
   setopt interactivecomments
   abk=(
-   # key  # value
-   'C'    '| wc -l'
+   # key  # value                (#d additional doc string)
+#A# start
    '...' '../..'
    '....' '../../..'
    'BG' '& exit'
    'C' '| wc -l'
    'G' '|& grep --color=auto'
    'H' '| head'
-   'Hl' ' --help |& less -r'
+   'Hl' ' --help |& less -r'      #d (Display help in pager)
    'L' '| less'
    'LL' '|& less -r'
    'M' '| most'
-   'N' '&>/dev/null'
-   'R' '| tr A-z N-za-m'
+   'N' '&>/dev/null'              #d (No Output)
+   'R' '| tr A-z N-za-m'          #d (ROT13)
    'SL' '| sort | less'
    'S' '| sort -u'
    'T' '| tail'
    'V' '|& vim -'
+#A# end
    'hide' "echo -en '\033]50;nil2\007'"
    'tiny' 'echo -en "\033]50;-misc-fixed-medium-r-normal-*-*-80-*-*-c-*-iso8859-15\007"'
    'small' 'echo -en "\033]50;6x10\007"'
@@ -351,6 +358,7 @@ fi
   # fi
   alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magic'
 
+  #m# k ESC-h Call \kbd{run-help} for the 1st word on the commandline
   alias run-help >&/dev/null && unalias run-help
   autoload run-help # use via 'esc-h'
 
@@ -379,27 +387,33 @@ fi
 
   is4 && autoload -U insert-files && \
   zle -N insert-files && \
+  #k# Insert files
   bindkey "^Xf" insert-files # C-x-f
 
   bindkey ' '   magic-space    # also do history expansion on space
+  #k# Trigger menu-complete
   bindkey '\ei' menu-complete  # menu completion via esc-i
 
 # press esc-e for editing command line in $EDITOR or $VISUAL
   is4 && autoload -U edit-command-line && \
   zle -N edit-command-line && \
+  #k# Edit the current line in \kbd{\$EDITOR}
   bindkey '\ee' edit-command-line
 
-# menu selection: pick item but stay in the menu (press esc-return)
+#k# menu selection: pick item but stay in the menu
   is4 && bindkey -M menuselect '\e^M' accept-and-menu-complete
 
 # press "ctrl-e d" to insert the actual date in the form yyyy-mm-dd
   _bkdate() { BUFFER="$BUFFER$(date '+%F')"; CURSOR=$#BUFFER; }
+  #k# Insert a timestamp on the commandline (yyyy-mm-dd)
   bindkey '\C-ed' _bkdate
   zle -N _bkdate
 
 # press esc-m for inserting last typed word again (thanks to caphuso!)
   insert-last-typed-word() { zle insert-last-word -- 0 -1 }; \
-  zle -N insert-last-typed-word; bindkey "\em" insert-last-typed-word
+  zle -N insert-last-typed-word;
+  #k# Insert last typed word
+  bindkey "\em" insert-last-typed-word
 
 # set command prediction from history, see 'man 1 zshcontrib'
 #  is4 && autoload -U predict-on && \
@@ -408,7 +422,7 @@ fi
 #  bindkey "^X^Z" predict-on && \
 #  bindkey "^Z" predict-off
 
-# put job into foreground via ctrl-z:
+#k# Shortcut for \kbd{fg<enter>}
   bindkey -s '^z' "fg\n"
 
 # press ctrl-q to quote line:
@@ -426,6 +440,7 @@ fi
     [[ $BUFFER != sudo\ * ]] && LBUFFER="sudo $LBUFFER"
   }
   zle -N sudo-command-line _sudo-command-line
+#k# Put the current commandline into a \kbd{sudo} call
   bindkey "^Os" sudo-command-line
 
 ### jump behind the first word on the cmdline.
@@ -445,6 +460,11 @@ fi
 # }}}
 
 # {{{ set some important options
+# Please update these tags, if you change the umask settings below.
+#o# r_umask     002
+#o# r_umaskstr  rwxrwxr-x
+#o# umask       022
+#o# umaskstr    rwxr-xr-x
   (( EUID != 0 )) && umask 002 || umask 022
 
 # history:
@@ -492,11 +512,14 @@ fi
     zle backward-kill-word
   }
   zle -N slash-backward-kill-word
-  bindkey '\ev' slash-backward-kill-word # press esc-v to delete a word until its last '/' (not the same as ctrl-w!)
+# press esc-v to delete a word until its last '/' (not the same as ctrl-w!)
+#k# Kill everything in a word up to its last \kbd{/}
+  bindkey '\ev' slash-backward-kill-word
 # }}}
 
 # {{{ history
   export ZSHDIR=$HOME/.zsh
+  #v#
   HISTFILE=$HOME/.zsh_history
   isgrmlcd && HISTSIZE=500  || HISTSIZE=5000
   isgrmlcd && SAVEHIST=1000 || SAVEHIST=10000 # useful for setopt append_history
@@ -648,6 +671,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
 # }}}
 
 # {{{ 'hash' some often used directories
+  #d# start
   hash -d deb=/var/cache/apt/archives
   hash -d doc=/usr/share/doc
   hash -d linux=/lib/modules/$(command uname -r)/build/
@@ -657,6 +681,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
   hash -d templ=/usr/share/doc/grml-templates
   hash -d tt=/usr/share/doc/texttools-doc
   hash -d www=/var/www
+  #d# end
 # }}}
 
 # {{{ some aliases
@@ -668,11 +693,17 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
      [ -r /etc/grml/screenrc_grml ] && alias screen='/usr/bin/screen -c /etc/grml/screenrc_grml'
   fi
 
+  # do we have GNU ls with color-support?
   if ls --help 2>/dev/null |grep -- --color= >/dev/null && [ "$TERM" != dumb ] ; then
-     alias ls='ls -b -CF --color=auto' # do we have GNU ls with color-support?
+     #a1# execute \kbd{@a@}:\quad ls with colors
+     alias ls='ls -b -CF --color=auto'
+     #a1# execute \kbd{@a@}:\quad list all files, with colors
      alias la='ls -la --color=auto'
+     #a1# long colored list, without dotfiles (@a@)
      alias ll='ls -l --color=auto'
+     #a1# long colored list, human readable sizes (@a@)
      alias lh='ls -hAl --color=auto'
+     #a1# List files, append qualifier to filenames \\&\quad(\kbd{/} for directories, \kbd{@} for symlinks ...)
      alias l='ls -lF --color=auto'
   else
      alias ls='ls -b -CF'
@@ -690,7 +721,9 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
   alias mv='nocorrect mv'         # no spelling correction on mv
   alias rm='nocorrect rm'         # no spelling correction on rm
 
+  #a1# Execute \kbd{rmdir}
   alias rd='rmdir'
+  #a1# Execute \kbd{rmdir}
   alias md='mkdir'
 
   # see http://www.cl.cam.ac.uk/~mgk25/unicode.html#term for details
@@ -736,6 +769,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
      fi
   fi
 
+#f1# Hints for the use of zsh on grml
   zsh-help(){print "$bg[white]$fg[black]
 zsh-help - hints for use of zsh on grml
 =======================================$reset_color
@@ -787,19 +821,31 @@ Enjoy your grml system with the zsh!$reset_color"
 
 # debian stuff
   if [ -r /etc/debian_version ] ; then
+    #a3# Execute \kbd{apt-cache search}
     alias acs='apt-cache search'
+    #a3# Execute \kbd{apt-cache show}
     alias acsh='apt-cache show'
+    #a3# Execute \kbd{apt-cache policy}
     alias acp='apt-cache policy'
+    #a3# Execute \kbd{apt-get dist-upgrade}
     salias adg="apt-get dist-upgrade"
+    #a3# Execute \kbd{apt-get install}
     salias agi="apt-get install"
+    #a3# Execute \kbd{aptitude install}
     salias ati="aptitude install"
+    #a3# Execute \kbd{apt-get upgrade}
     salias ag="apt-get upgrade"
+    #a3# Execute \kbd{apt-get update}
     salias au="apt-get update"
+    #a3# Execute \kbd{aptitude update ; aptitude upgrade}
     salias -a up="aptitude update ; aptitude upgrade"
+    #a3# Execute \kbd{dpkg-buildpackage}
     alias dbp='dpkg-buildpackage'
+    #a3# Execute \kbd{grep-excuses}
     alias ge='grep-excuses'
 
     # debian upgrade
+    #f3# Execute \kbd{apt-get update \&\& }\\&\quad \kbd{apt-get dist-upgrade}
     upgrade () {
       if [ -z "$1" ] ; then
           $SUDO apt-get update
@@ -818,15 +864,18 @@ Enjoy your grml system with the zsh!$reset_color"
     }
 
     isgrmlcd && alias su="sudo -s"          # get a root shell
+    #a1# Take a look at the syslog: \kbd{$PAGER /var/log/syslog}
     alias llog="$PAGER /var/log/syslog"     # take a look at the syslog
+    #a1# Take a look at the syslog: \kbd{tail -f /var/log/syslog}
     alias tlog="tail -f /var/log/syslog"    # follow the syslog
+    #a1# (Re)-source \kbd{/etc/skel/.zshrc}
     alias zshskel="source /etc/skel/.zshrc" # source skeleton zshrc
   fi
 
 # sort installed Debian-packages by size
   if [ -x $(which grep-status) ] ; then
-     alias debs-by-size='grep-status -FStatus -sInstalled-Size,Package \
-                -n "install ok installed" | paste -sd "  \n" | sort -rn'
+     #a3# List installed Debian-packages sorted by size
+     alias debs-by-size='grep-status -FStatus -sInstalled-Size,Package -n "install ok installed" | paste -sd "  \n" | sort -rn'
   fi
 
 # if cdrecord is a symlink (to wodim) or isn't present at all warn:
@@ -1042,9 +1091,11 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
      alias 855resolution='echo -e "Please use 915resolution as resolution modify tool for Intel graphic chipset."; return -1'
   fi
 
+  #a1# Output version of running grml
   alias grml-version='cat /etc/grml_version'
 
   if [ -x $(which rebuildfstab) ] ; then
+     #a1# Rebuild /etc/fstab
      alias grml-rebuildfstab='rebuildfstab -v -r -config'
   fi
 
@@ -1080,8 +1131,11 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 # }}}
 
 # shell functions {{{
+  #f1# Provide csh compatibility
   setenv()  { typeset -x "${1}${1:+=}${(@)argv[2,$#]}" }  # csh compatibility
+  #f1# Reload an autoloadable function
   freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
+  #f1# Reload zsh setup
   reload () {
    if [[ "$#*" -eq 0 ]]; then
       [ -r ~/.zshrc ] && . ~/.zshrc
@@ -1095,7 +1149,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   }
   compdef _functions reload freload
 
-  # list symlinks in detail (more detailed version of 'readlink -f' and 'whence -s')
+  #f1# List symlinks in detail (more detailed version of 'readlink -f' and 'whence -s')
   sll() {
     [ -z "$1" ] && printf 'Usage: %s <file(s)>\n' "$0" && return 1
     for i in "$@" ; do
@@ -1109,6 +1163,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 
   # fast manual access
   if type -p qma &>/dev/null ; then
+  #f1# View the zsh manual
      manzsh()  { qma zshall "$1" }
      compdef _man qma
   else
@@ -1118,7 +1173,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   fi
 
   if [ -x $(which most) ] ; then
-  # use "dchange <package-name>" to view Debian's changelog of the package:
+  #f1# View Debian's changelog of a given package
     dchange() {
       if [ -r /usr/share/doc/${1}/changelog.Debian.gz ] ; then
          most /usr/share/doc/${1}/changelog.Debian.gz
@@ -1134,7 +1189,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
     _dchange() { _files -W /usr/share/doc -/ }
     compdef _dchange dchange
 
-  # use "dnews <package-name>" to view Debian's NEWS file of the package:
+  #f1# View Debian's NEWS of a given package
     dnews() {
       if [ -r /usr/share/doc/${1}/NEWS.Debian.gz ] ; then
          most /usr/share/doc/${1}/NEWS.Debian.gz
@@ -1150,7 +1205,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
     _dnews() { _files -W /usr/share/doc -/ }
     compdef _dnews dnews
 
-  # use "uchange <package-name>" to view upstream's changelog of the package:
+  #f1# View upstream's changelog of a given package
     uchange() {
       if [ -r /usr/share/doc/${1}/changelog.gz ] ; then
          most /usr/share/doc/${1}/changelog.gz
@@ -1168,19 +1223,24 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
       ZSH_PROFILE_RC=1 $SHELL "$@"
   }
 
-# edit alias via zle:
+#f1# Edit an alias via zle
   edalias() {
     [ -z "$1" ] && { echo "Usage: edalias <alias_to_edit>" ; return 1 } || vared aliases'[$1]' ;
   }
   compdef _aliases edalias
 
-# edit function via zle:
+#f1# Edit a function via zle
   edfunc() {
     [ -z "$1" ] && { echo "Usage: edfun <function_to_edit>" ; return 1 } || zed -f "$1" ;
   }
   compdef _functions edfunc
 
 # use it e.g. via 'Restart apache2'
+#m# f6 Start() \kbd{/etc/init.d/\em{process}}\quad\kbd{start}
+#m# f6 Restart() \kbd{/etc/init.d/\em{process}}\quad\kbd{restart}
+#m# f6 Stop() \kbd{/etc/init.d/\em{process}}\quad\kbd{stop}
+#m# f6 Reload() \kbd{/etc/init.d/\em{process}}\quad\kbd{reload}
+#m# f6 Force-Reload() \kbd{/etc/init.d/\em{process}}\quad\kbd{force-reload}
  if [ -d /etc/init.d ] ; then
   for i in Start Restart Stop Force-Reload Reload ; do
     eval "$i() { $SUDO /etc/init.d/\$1 ${i:l} \$2 ; }"
@@ -1189,7 +1249,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   compctl -g "$(echo /etc/init.d/*(:t))" Start Restart Stop Force-Reload Reload
  fi
 
-# provide useful information on globbing
+  #f1# Provides useful information on globbing
   H-Glob() {
   echo -e "
       /      directories
@@ -1382,6 +1442,11 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
      fc -R ~/.important_commands
   fi
 # }}}
+
+## genrefcard.pl settings {{{
+### example: split funtions-search 8,16,24,32
+#@# split functions-search 8
+## }}}
 
 # add variable to be able to check whether the file has been read {{{
   ZSHRC_GLOBAL_HAS_BEEN_READ=1
