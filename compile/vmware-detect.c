@@ -1,3 +1,11 @@
+/* Filename:      vmware-detect.c
+*  Purpose:       Detect if running inside vmware
+*  Authors:       grml-team (grml.org), (c) Michael Gebetsroither <gebi@grml.org>
+*  Bug-Reports:   see http://grml.org/bugs/
+*  License:       This file is licensed under the GPL v2.
+*******************************************************************************/
+// return 0 if running inside vmware, 1 otherwise
+
 #include "string.h"
 #include "unistd.h"
 #include "stdio.h"
