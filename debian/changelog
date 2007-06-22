@@ -1,6 +1,10 @@
 grml-scripts (1.0.5) unstable; urgency=low
 
+  [Michael Prokop]
   * grml-quickconfig: replace ion3 with openbox
+
+  [Michael Gebetsroither]
+  * vmware-detect.c: adding header
 
  -- Michael Prokop <mika@grml.org>  Sat, 23 Jun 2007 00:05:06 +0200
 
