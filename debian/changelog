@@ -1,3 +1,9 @@
+grml-scripts (1.0.5) unstable; urgency=low
+
+  * grml-quickconfig: replace ion3 with openbox
+
+ -- Michael Prokop <mika@grml.org>  Sat, 23 Jun 2007 00:05:06 +0200
+
 grml-scripts (1.0.4) unstable; urgency=low
 
   * zsh-login: do not run grml-quickconfig when bootoption startx
