@@ -1,17 +1,59 @@
 #!/bin/sh
 # Filename:      zsh-login
-# Purpose:       run zsh with login option
+# Purpose:       customized zsh login welcome screen for use at grml
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Mär 29 16:02:01 CEST 2007 [mika]
+# Latest change: Sam Jun 23 23:53:09 CEST 2007 [mika]
 ################################################################################
 
+. /etc/grml/sh-lib
+
 [ -r /etc/grml_version ] && GRMLVERSION=$(cat /etc/grml_version) || GRMLVERSION='(no version information available)'
+[ -r /etc/hostname ] && HOSTNAME=$(cat /etc/hostname) || HOSTNAME='grml'
 
-echo "
+# allow customized release information
+[ -r /etc/release_info ] && cat /etc/release_info
 
-Welcome to grml ${GRMLVERSION}!
+PATH=$HOME/bin:/bin:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/home/grml/bin
+
+CMDLINE=$(cat /proc/cmdline)
+case "$CMDLINE" in
+   # allow customized startup via bootoption startup:
+   *startup*)
+       script="$(getBootParam startup)"
+       if [ -x $(which $script) ] ; then
+          $script
+       fi
+       ;;
+   # turn on speakers for accessibility users:
+   *swspeak*|*blind*|*brltty*|*speakup*)
+      if [ -x /usr/bin/flite ] ; then
+         aumix -w 90 -v 90 -p 90 -m 90
+         flite -o play -t "Finished booting"
+      fi
+      ;;
+
+   # do nothing if booting with noquick:
+   noquick)
+      ;;
+   *) # by default run grml-quickconfig, but only if running as root
+      if [ $(id -u) = "0" ] ; then
+	 # do not run grml-quickconfig on grml-small
+	 if ! grep -q small /etc/grml_version ; then
+            [ -x /usr/sbin/grml-quickconfig ] && /usr/sbin/grml-quickconfig
+         fi
+      fi
+esac
+
+# just print out one single line if bootoption nowelcome is present,
+# otherwise print usual welcome screen
+if grep nowelcome /proc/cmdline 2>/dev/null ; then
+   echo
+else
+   echo "
+
+Welcome to $HOSTNAME ${GRMLVERSION}!
 
 New to grml? Want to read some documentation?
 Start via running 'grml-info'.
@@ -22,28 +64,7 @@ Switch to other consoles via alt-F<number> keys.
 
 Happy hacking!               http://grml.org/
 "
-
-[ -r /etc/release_info ] && cat /etc/release_info
-
-CMDLINE=$(cat /proc/cmdline)
-case "$CMDLINE" in
-   *swspeak*|*blind*|*brltty*|*speakup*)
-      if [ -x /usr/bin/flite ] ; then
-         aumix -w 90 -v 90 -p 90 -m 90
-         flite -o play -t "Finished booting"
-      fi
-      ;;
-   noquick*|startx*)
-      # do nothing
-      ;;
-   *) # by default run grml-quickconfig, but only if running as root
-      if [ $(id -u) = "0" ] ; then
-	 # do not run grml-quickconfig on grml-small
-	 if ! grep -q small /etc/grml_version ; then
-            [ -x /usr/sbin/grml-quickconfig ] && /usr/sbin/grml-quickconfig
-         fi
-      fi
-esac
+fi
 
 exec /bin/zsh -l
 
