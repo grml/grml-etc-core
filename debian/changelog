@@ -10,6 +10,8 @@ grml-etc-core (0.3.12) unstable; urgency=low
       thanks ft!
     - added keybinding ctrl-x1 to jump behind the first word on the
       cmdline, thanks again ft!
+    - added keywords/strings for automatic building of grml' zsh
+      reference card [and once more thanks to ft! :)]
 
  -- Michael Prokop <mika@grml.org>  Sun, 10 Jun 2007 00:04:08 +0200
 
