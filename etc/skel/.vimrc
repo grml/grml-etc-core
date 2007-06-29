@@ -3,7 +3,7 @@
 " Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 " Bug-Reports:   see http://grml.org/bugs/
 " License:       This file is licensed under the GPL v2.
-" Latest change: Sam Jun 30 01:26:33 CEST 2007 [mika]
+" Latest change: Sam Jun 30 01:28:53 CEST 2007 [mika]
 "###############################################################################
 " Thanks to Sven Guckes for his template!
 "###############################################################################
@@ -81,8 +81,8 @@
   endif
 
 " source local configuration file
-  if filereadable("$HOME/.vimrc.local")
-    source $HOME/.vimrc.local
+  if filereadable(expand("$HOME/.vimrc.local"))
+     source $HOME/.vimrc.local
   endif
 
 " Vim 7 brings cool new features - see ':he version7'!
