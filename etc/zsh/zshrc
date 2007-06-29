@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mit Jun 20 10:28:28 CEST 2007 [mika]
+# Latest change: Fre Jun 29 11:46:37 CEST 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -15,7 +15,7 @@
 # zsh-refcard-tag documentation:
 #   You may notice strange looking comments in the zshrc (and ~/.zshrc as
 #   well). These are there for a purpose. grml's zsh-refcard can now be
-#   automatically generated from the contents of the actual comfiguration
+#   automatically generated from the contents of the actual configuration
 #   files. However, we need a little extra information on which comments
 #   and what lines of code to take into account (and for what purpose).
 #
@@ -48,7 +48,7 @@
 #                   #m# k ESC-h Call the run-help function
 #               That would add a refcard entry in the keybindings table
 #               for 'ESC-h' with the given comment.
-#           So the systax is: #m# <section> <argument> <comment>
+#           So the syntax is: #m# <section> <argument> <comment>
 #   #o#     This tag lets you insert entries to the 'other' hash.
 #           Generally, this should not be used. It is there for
 #           things that cannot be done easily in another way.
@@ -72,20 +72,18 @@
 #         5 -> "shortcuts"
 #         6 -> "services"
 #
-#   So, the following will add an entrie to the 'functions' table in the
+#   So, the following will add an entry to the 'functions' table in the
 #   'system' section, with a (hopefully) descriptive comment:
 #       #f1# Edit an alias via zle
 #       edalias() {
 #
 #   It will then show up in the @@INSERT-aliases-system@@ replacement tag
 #   that can be found in 'grml-zsh-refcard.tex.in'.
-#   If the section number is ommited, the 'default' section is assumed.
+#   If the section number is omitted, the 'default' section is assumed.
 #   Furthermore, in 'grml-zsh-refcard.tex.in' @@INSERT-aliases@@ is
 #   exactly the same as @@INSERT-aliases-default@@. If you want a list of
 #   *all* aliases, for example, use @@INSERT-aliases-all@@.
 #}}}
-#
-
 
 # zsh profiling {{{
 # just execute 'ZSH_PROFILE_RC=1 zsh' and run 'zprof' to get the details
@@ -240,7 +238,7 @@
   [[ -f ~/.terminfo/m/mostlike ]] && MYLESS='LESS=C TERMINFO=~/.terminfo TERM=mostlike less' || MYLESS='less'
   [ -x $(which dircolors) ] && eval `dircolors -b`
 
-# Search path for the cd comman
+# Search path for the cd command
 #  cdpath=(.. ~)
 
 # completion functions go to /etc/zsh/completion.d
@@ -433,7 +431,7 @@ fi
   # fi
   alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magic'
 
-  #m# k ESC-h Call \kbd{run-help} for the 1st word on the commandline
+  #m# k ESC-h Call \kbd{run-help} for the 1st word on the command line
   alias run-help >&/dev/null && unalias run-help
   autoload run-help # use via 'esc-h'
 
@@ -480,7 +478,7 @@ fi
 
 # press "ctrl-e d" to insert the actual date in the form yyyy-mm-dd
   _bkdate() { BUFFER="$BUFFER$(date '+%F')"; CURSOR=$#BUFFER; }
-  #k# Insert a timestamp on the commandline (yyyy-mm-dd)
+  #k# Insert a timestamp on the command line (yyyy-mm-dd)
   bindkey '^Ed' _bkdate
   zle -N _bkdate
 
@@ -515,7 +513,7 @@ fi
     [[ $BUFFER != sudo\ * ]] && LBUFFER="sudo $LBUFFER"
   }
   zle -N sudo-command-line _sudo-command-line
-#k# Put the current commandline into a \kbd{sudo} call
+#k# Put the current command line into a \kbd{sudo} call
   bindkey "^Os" sudo-command-line
 
 ### jump behind the first word on the cmdline.
@@ -571,7 +569,7 @@ fi
   setopt nobeep               # avoid "beep"ing
 
   MAILCHECK=30       # mailchecks
-  REPORTTIME=5       # report about cpu-/system-/user-time of command if running longer than 5 secondes
+  REPORTTIME=5       # report about cpu-/system-/user-time of command if running longer than 5 seconds
   watch=(notme root) # watch for everyone but me and root
 
 # define word separators (for stuff like backward-word, forward-word, backward-kill-word,..)
@@ -677,7 +675,7 @@ fi
   # get the name of the program currently running and hostname of local machine
   # set screen window title if running in a screen
       if [[ "$TERM" == screen* ]]; then
-         # local CMD=${1[(wr)^(*=*|sudo|ssh|-*)]}       # dont't use hostname
+         # local CMD=${1[(wr)^(*=*|sudo|ssh|-*)]}       # don't use hostname
          local CMD="${1[(wr)^(*=*|sudo|ssh|-*)]}$NAME" # use hostname
          echo -ne "\ek$CMD\e\\"
       fi
@@ -971,7 +969,7 @@ Please use the wodim binary instead' ; return 1"
      }
   fi
 
-# I hate lacking backward compability, so provide an alternative therefore
+# I hate lacking backward compatibility, so provide an alternative therefore
   if ! [ -x $(which apache2-ssl-certificate) ] ; then
      apache2-ssl-certificate(){
 
@@ -1379,7 +1377,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   fi
   }
 
-  # After resuming from suspend, system is paging heavilly, leading to very bad interactivity.
+  # After resuming from suspend, system is paging heavily, leading to very bad interactivity.
   # taken from $LINUX-KERNELSOURCE/Documentation/power/swsusp.txt
   [ -r /proc/1/maps ] && deswap() {
      print 'Reading /proc/[0-9]*/maps and sending output to /dev/null, this might take a while.'
@@ -1517,7 +1515,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 # }}}
 
 ## genrefcard.pl settings {{{
-### example: split funtions-search 8,16,24,32
+### example: split functions-search 8,16,24,32
 #@# split functions-search 8
 ## }}}
 
