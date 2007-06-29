@@ -3,7 +3,7 @@
 " Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 " Bug-Reports:   see http://grml.org/bugs/
 " License:       This file is licensed under the GPL v2.
-" Latest change: Son Apr 01 19:33:19 CEST 2007 [mika]
+" Latest change: Sam Jun 30 01:19:56 CEST 2007 [mika]
 "###############################################################################
 " Thanks to Sven Guckes for his template!
 "###############################################################################
@@ -147,6 +147,11 @@ if version >= 700
   "  highlight PmenuSel   ctermbg=7      guifg=Black   guibg=Orange               " selected item
   "  highlight PmenuSbar  ctermbg=7      guifg=#CCCCCC guibg=#CCCCCC              " scrollbar
   "  highlight PmenuThumb cterm=reverse  gui=reverse guifg=Black   guibg=#AAAAAA  " thumb of the scrollbar
+
+  " source local configuration file
+  if filereadable("~/.vimrc.local")
+    source ~/.vimrc.local
+  endif
 
 endif
 "# END OF FILE #################################################################
