@@ -1245,8 +1245,6 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   for i in Start Restart Stop Force-Reload Reload ; do
     eval "$i() { $SUDO /etc/init.d/\$1 ${i:l} \$2 ; }"
   done
-  # now the completion for this:
-  compctl -g "$(echo /etc/init.d/*(:t))" Start Restart Stop Force-Reload Reload
  fi
 
   #f1# Provides useful information on globbing
