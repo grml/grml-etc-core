@@ -6,6 +6,8 @@ grml-etc-core (0.3.12) unstable; urgency=low
       /etc/zsh/zshrc so we don't have all the environment variables
       in 'zsh -f', thanks for the patch - ft!
     - added function dnews (to view Debian's NEWS file of the package)
+    - compctl definition shadowed _grmlinitd. Found by Anthony
+      Charles and forwared by ft. Thanks!
     - added function minimal-shell (spawn a minimally set up ksh),
       thanks ft!
     - added keybinding ctrl-x1 to jump behind the first word on the
