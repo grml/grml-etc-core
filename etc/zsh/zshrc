@@ -11,6 +11,81 @@
 #
 # Global Order: zshenv, zprofile, zshrc, zlogin
 ################################################################################
+#
+# zsh-refcard-tag documentation:
+#   You may notice strange looking comments in the zshrc (and ~/.zshrc as
+#   well). These are there for a purpose. grml's zsh-refcard can now be
+#   automatically generated from the contents of the actual comfiguration
+#   files. However, we need a little extra information on which comments
+#   and what lines of code to take into account (and for what purpose).
+#
+# Here is what they mean:
+#{{{
+# List of tags (comment types) used:
+#   #a#     Next line contains an important alias, that should
+#           be included in the grml-zsh-refcard.
+#           (placement tag: @@INSERT-aliases@@)
+#   #f#     Next line contains the beginning of an important function.
+#           (placement tag: @@INSERT-functions@@)
+#   #v#     Next line contains an important variable.
+#           (placement tag: @@INSERT-variables@@)
+#   #k#     Next line contains an important keybinding.
+#           (placement tag: @@INSERT-keybindings@@)
+#   #d#     Hashed directories list generation:
+#               start   denotes the start of a list of 'hash -d'
+#                       definitions.
+#               end     denotes its end.
+#           (placement tag: @@INSERT-hasheddirs@@)
+#   #A#     Abbreviation expansion list generation:
+#               start   denotes the beginning of abbreviations.
+#               end     denotes their end.
+#           Lines within this section that end in '#d .*' provide
+#           extra documentation to be included in the refcard.
+#           (placement tag: @@INSERT-abbrev@@)
+#   #m#     This tag allows you to manually generate refcard entries
+#           for code lines that are hard/impossible to parse.
+#               Example:
+#                   #m# k ESC-h Call the run-help function
+#               That would add a refcard entry in the keybindings table
+#               for 'ESC-h' with the given comment.
+#           So the systax is: #m# <section> <argument> <comment>
+#   #o#     This tag lets you insert entries to the 'other' hash.
+#           Generally, this should not be used. It is there for
+#           things that cannot be done easily in another way.
+#           (placement tag: @@INSERT-other-foobar@@)
+#
+#   All of these tags (except for m and o) take two arguments, the first
+#   within the tag, the other after the tag:
+#
+#   #<tag><section># <comment>
+#
+#   Where <section> is really just a number, which are defined by the
+#   @secmap array on top of 'genrefcard.pl'. The reason for numbers
+#   instead of names is, that for the reader, the tag should not differ
+#   much from a regular comment. For zsh, it is a regular comment indeed.
+#   The numbers have got the following meanings:
+#         0 -> "default"
+#         1 -> "system"
+#         2 -> "user"
+#         3 -> "debian"
+#         4 -> "search"
+#         5 -> "shortcuts"
+#         6 -> "services"
+#
+#   So, the following will add an entrie to the 'functions' table in the
+#   'system' section, with a (hopefully) descriptive comment:
+#       #f1# Edit an alias via zle
+#       edalias() {
+#
+#   It will then show up in the @@INSERT-aliases-system@@ replacement tag
+#   that can be found in 'grml-zsh-refcard.tex.in'.
+#   If the section number is ommited, the 'default' section is assumed.
+#   Furthermore, in 'grml-zsh-refcard.tex.in' @@INSERT-aliases@@ is
+#   exactly the same as @@INSERT-aliases-default@@. If you want a list of
+#   *all* aliases, for example, use @@INSERT-aliases-all@@.
+#}}}
+#
+
 
 # zsh profiling {{{
 # just execute 'ZSH_PROFILE_RC=1 zsh' and run 'zprof' to get the details
