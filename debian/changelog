@@ -1,3 +1,12 @@
+grml-etc-core (0.3.13) unstable; urgency=low
+
+  * /etc/zsh/zshrc:
+    - aoeu(): do not use $XKEYBOARD and $KEYTABLE as booting
+      with bootoption dvorak might be not so amusing for people
+      not being used to dvorak keyboard layout :)
+
+ -- Michael Prokop <mika@grml.org>  Sun, 01 Jul 2007 23:05:58 +0200
+
 grml-etc-core (0.3.12) unstable; urgency=low
 
   * Added some more examples to /etc/network/interfaces.examples.

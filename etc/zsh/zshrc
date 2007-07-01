@@ -1411,13 +1411,8 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 
   # just press 'asdf' keys to toggle between dvorak and us keyboard layout
   aoeu() {
-     if [ -n "$XKEYBOARD" -a -n "$KEYTABLE" ] ; then
-        echo -n "Switching to $KEYTABLE keyboard layout: "
-        [ -z "$DISPLAY" ] && $SUDO loadkeys $KEYTABLE &>/dev/null || setxkbmap $XKEYBOARD &>/dev/null
-     else
-        echo -n 'Switching to us keyboard layout: '
-        [ -z "$DISPLAY" ] && $SUDO loadkeys us &>/dev/null || setxkbmap us &>/dev/null
-     fi
+     echo -n 'Switching to us keyboard layout: '
+     [ -z "$DISPLAY" ] && $SUDO loadkeys us &>/dev/null || setxkbmap us &>/dev/null
      echo 'Done'
   }
   asdf() {
