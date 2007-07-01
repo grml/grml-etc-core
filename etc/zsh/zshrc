@@ -789,6 +789,11 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
   alias mdstat='cat /proc/mdstat'
   alias ...='cd ../../'
 
+  # generate alias named "$KERNELVERSION-reboot" so you can use boot with kexec:
+  if [ -x /sbin/kexec ] ; then
+     alias "$(uname -r)-reboot"="kexec -l --initrd=/boot/initrd.img-"$(uname -r)" --command-line=\"$(cat /proc/cmdline)\" /boot/vmlinuz-"$(uname -r)""
+  fi
+
   alias cp='nocorrect cp'         # no spelling correction on cp
   alias mkdir='nocorrect mkdir'   # no spelling correction on mkdir
   alias mv='nocorrect mv'         # no spelling correction on mv

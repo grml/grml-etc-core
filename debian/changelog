@@ -4,6 +4,7 @@ grml-etc-core (0.3.13) unstable; urgency=low
     - aoeu(): do not use $XKEYBOARD and $KEYTABLE as booting
       with bootoption dvorak might be not so amusing for people
       not being used to dvorak keyboard layout :)
+    - added alias "$(uname -r)-reboot for fast rebooting via kexec
 
  -- Michael Prokop <mika@grml.org>  Sun, 01 Jul 2007 23:05:58 +0200
 
