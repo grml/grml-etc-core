@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Jun 29 11:46:37 CEST 2007 [mika]
+# Latest change: Mon Jul 02 18:17:08 CEST 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -1256,8 +1256,13 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
       if [ -r /usr/share/doc/${1}/changelog.Debian.gz ] ; then
          most /usr/share/doc/${1}/changelog.Debian.gz
       else
-         if [ -r /usr/share/doc/${1}/changelog.gz ] ; then
-            most /usr/share/doc/${1}/changelog.gz
+         if type -p aptitude &>/dev/null ; then
+            echo "No changelog for package $1 found, using aptitude to retrieve it."
+            if isgrml ; then
+              aptitude -t unstable changelog tsclient
+            else
+              aptitude changelog ${1}
+            fi
          else
             echo "No changelog for package $1 found, sorry."
             return 1
