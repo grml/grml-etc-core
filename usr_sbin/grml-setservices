@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Apr 15 10:57:18 CEST 2007 [mika]
+# Latest change: Mit Jul 04 10:53:22 CEST 2007 [mika]
 ################################################################################
 
 PN="$(basename $0)"
@@ -41,12 +41,30 @@ or choose cancel.
 "
 
 # enable checks only if the according init script is present
+[ -r /etc/init.d/lvm2 ]   && LVM='lvm!logical volume management!on'
 [ -r /etc/init.d/mdadm ]  && SRAID='mdadm!software-raid via mdadm!on'
 [ -r /etc/init.d/dmraid ] && MRAID='dmraid!software-raid via dmraid!off'
 [ -r /etc/init.d/dbus -o -r /etc/init.d/dbus-1 ] && DBUS='dbus!hal/dbus (important for KDE e.g.)!off'
 
-# adjust setup
+## adjust setup
+# logic:
+# if is_value_set
+#    remove_from_runlevel.conf
+#    set_up_defaults_as_intented_in_/var/lib/dpkg/info/$PACKAGE.postinst
+# else
+#    remove_from_runlevel.conf
+#    set_up_only_for_stop_to_prevent_reactivation_via_maintainer_scripts_on_upgrade
 set_values(){
+  if [ -n "$LVM" ] ; then
+     if is_value_set "lvm" ; then
+        update-rc.d -f lvm2 remove >/dev/null 2>&1
+        update-rc.d lvm2 start 26 S . start 50 0 6 .
+     else
+        update-rc.d -f lvm2 remove >/dev/null 2>&1
+        update-rc.d lvm2 stop 20 0 1 6 . >/dev/null 2>&1
+     fi
+  fi
+
   if [ -n "$SRAID" ] ; then
      if is_value_set "mdadm"  ; then
         update-rc.d -f mdadm remove >/dev/null 2>&1
@@ -84,7 +102,7 @@ set_values(){
 # the interface itself
 oifs="$IFS"
 IFS='!'
-$DIALOG --title "$PN" --checklist "$INFO" 30 65 8 $SRAID $MRAID $DBUS 2>$TMP
+$DIALOG --title "$PN" --checklist "$INFO" 30 65 8 $LVM $SRAID $MRAID $DBUS 2>$TMP
 
 retval="$?"
 case $retval in
