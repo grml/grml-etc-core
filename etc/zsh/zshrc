@@ -790,7 +790,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
   alias ...='cd ../../'
 
   # generate alias named "$KERNELVERSION-reboot" so you can use boot with kexec:
-  if [ -x /sbin/kexec ] ; then
+  if [ -x /sbin/kexec -a -r /proc/cmdline ] ; then
      alias "$(uname -r)-reboot"="kexec -l --initrd=/boot/initrd.img-"$(uname -r)" --command-line=\"$(cat /proc/cmdline)\" /boot/vmlinuz-"$(uname -r)""
   fi
 

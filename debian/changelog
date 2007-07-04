@@ -1,3 +1,9 @@
+grml-etc-core (0.3.14) unstable; urgency=low
+
+  * /etc/zsh/zshrc: yse kexec alias only if /proc/cmdline can be read.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 04 Jul 2007 12:41:29 +0200
+
 grml-etc-core (0.3.13) unstable; urgency=low
 
   * /etc/zsh/zshrc:
