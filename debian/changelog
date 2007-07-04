@@ -1,3 +1,11 @@
+grml-scripts (1.0.8) unstable; urgency=low
+
+  * cpufreq-detect.sh: merge in code from /etc/init.d/loadcpufreq for
+    using acpi-cpufreq on systems supporting est when using kernel
+    >=2.6.20. [Related to issue238]
+
+ -- Michael Prokop <mika@grml.org>  Wed, 04 Jul 2007 12:16:10 +0200
+
 grml-scripts (1.0.7) unstable; urgency=low
 
   * grml-setservices: support lvm [Closes: issue239]

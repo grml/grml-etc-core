@@ -4,9 +4,12 @@
 # Authors:       grml-team (grml.org), (C) Ubuntu, (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Tue Apr 18 19:09:55 CEST 2006 [mika]
+# Latest change: Mit Jul 04 12:15:57 CEST 2007 [mika]
 ################################################################################
-# Notice: taken from http://people.ubuntulinux.org/~scott/patches/powernowd/
+# Notice: also check out /etc/init.d/loadcpufreq of current cpufrequtils in Debian.
+#
+# Notice: based on http://people.ubuntulinux.org/~scott/patches/powernowd/ and
+# scripts found in the powernowd package version 0.97-1ubuntu6 on Ubuntu.
 ################################################################################
 
 /usr/sbin/laptop-detect 2>/dev/null && LAPTOP=1
@@ -63,8 +66,16 @@ case "$VENDOR_ID" in
     GenuineIntel*)
     # If the CPU has the est flag, it supports enhanced speedstep and should
     # use the speedstep-centrino driver
-    if [ "`grep est $CPUINFO`" ]; then
-        MODULE=speedstep-centrino;
+    if [ "$(grep est $CPUINFO)" ]; then
+        case "$(uname -r)" in
+            2.6.2[0-9]*)
+                # Prefer acpi-cpufreq for kernels after 2.6.20
+                MODULE=acpi-cpufreq
+                ;;
+            *)
+                MODULE=speedstep-centrino
+                ;;
+        esac
     elif [ $CPU_FAMILY = 15 ]; then
     # Right. Check if it's a P4 without est.
         # Could be speedstep-ich, or could be p4-clockmod.
