@@ -567,6 +567,7 @@ fi
   setopt auto_pushd           # make cd push the old directory onto the directory stack.
   setopt nonomatch            # try to avoid the 'zsh: no matches found...'
   setopt nobeep               # avoid "beep"ing
+  setopt pushd_ignore_dups    # don't push the same dir twice.
 
   MAILCHECK=30       # mailchecks
   REPORTTIME=5       # report about cpu-/system-/user-time of command if running longer than 5 seconds
@@ -601,7 +602,7 @@ fi
 # dirstack handling {{{
   DIRSTACKSIZE=20
   if [[ -f ~/.zdirs ]] && [[ ${#dirstack[*]} -eq 0 ]]; then
-     dirstack=( ${(uf)"$(< ~/.zdirs)"} )
+     dirstack=( ${(f)"$(< ~/.zdirs)"} )
      # "cd -" won't work after login by just setting $OLDPWD, so
      [[ -d $dirstack[0] ]] && cd $dirstack[0] && cd $OLDPWD
   fi
