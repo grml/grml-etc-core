@@ -1,8 +1,10 @@
 grml-etc-core (0.3.15) unstable; urgency=low
 
-  * /etc/zsh/zshrc: activate 'setopt pushd_ignore_dups' to avoid
-    duplicates in ~/.zdirs (thanks to wuehlmaus for bringing up
-    and for the appropriate configuration thanks to ft!)
+  * /etc/zsh/zshrc:
+    - activate 'setopt pushd_ignore_dups' to avoid duplicates
+      in ~/.zdirs (thanks to wuehlmaus for bringing up
+      and for the appropriate configuration thanks to ft!)
+    - dchange() function: remove hardcoded option
 
  -- Michael Prokop <mika@grml.org>  Sat, 07 Jul 2007 10:52:03 +0200
 

@@ -1260,7 +1260,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
          if type -p aptitude &>/dev/null ; then
             echo "No changelog for package $1 found, using aptitude to retrieve it."
             if isgrml ; then
-              aptitude -t unstable changelog tsclient
+              aptitude -t unstable changelog ${1}
             else
               aptitude changelog ${1}
             fi
