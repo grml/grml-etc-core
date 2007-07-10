@@ -1256,6 +1256,8 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
     dchange() {
       if [ -r /usr/share/doc/${1}/changelog.Debian.gz ] ; then
          most /usr/share/doc/${1}/changelog.Debian.gz
+      elif [ -r /usr/share/doc/${1}/changelog.gz ] ; then
+         most /usr/share/doc/${1}/changelog.gz
       else
          if type -p aptitude &>/dev/null ; then
             echo "No changelog for package $1 found, using aptitude to retrieve it."

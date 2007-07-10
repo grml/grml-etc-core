@@ -1,3 +1,11 @@
+grml-etc-core (0.3.16) unstable; urgency=low
+
+  * /etc/zsh/zshrc: dchange() - restore old behaviour with
+    fallback to /usr/share/doc/$PACKAGE/changelog.gz before
+    trying to download the changelog via aptitude
+
+ -- Michael Prokop <mika@grml.org>  Tue, 10 Jul 2007 16:19:54 +0200
+
 grml-etc-core (0.3.15) unstable; urgency=low
 
   * /etc/zsh/zshrc:
