@@ -43,6 +43,7 @@ case $retval in
      sed -i "s/^::1[ \t]*ip6-localhost ip6-loopback[ \t]*$OLDHOSTNAME/::1     ip6-localhost ip6-loopback $HOSTNAME/" /etc/hosts
      POSTFIX=''
      if [ -r /etc/postfix/main.cf ] ; then
+       sed -i "s/^mydestination = .*/mydestination = $HOSTNAME, localhost, localhost.localdomain/" /etc/postfix/main.cf && \
        sed -i "s/^myhostname = .*/myhostname = $HOSTNAME/" /etc/postfix/main.cf && POSTFIX='
 Configuration of myhostname in /etc/postfix/main.cf has been adjusted as well. Do not forget to restart postfix if necessary.'
      fi

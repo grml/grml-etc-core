@@ -1,3 +1,9 @@
+grml-scripts (1.0.9) unstable; urgency=low
+
+  * grml-hostname: adjust mydestination as well in /etc/postfix/main.cf.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 11 Jul 2007 21:31:52 +0200
+
 grml-scripts (1.0.8) unstable; urgency=low
 
   * cpufreq-detect.sh: merge in code from /etc/init.d/loadcpufreq for
