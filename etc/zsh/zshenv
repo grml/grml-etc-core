@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Mär 17 12:51:25 CET 2007 [mika]
+# Latest change: Die Jul 17 23:23:26 CEST 2007 [mika]
 ################################################################################
 # This file is sourced on all invocations of the shell.
 # It is the 1st file zsh reads; it's read for every shell,
@@ -70,7 +70,11 @@
 
 # less (:=pager) options:
 #  export LESS=C
-  export LESSOPEN="|lesspipe.sh %s"
+  if [ -x /usr/bin/lesspipe ] ; then
+     export LESSOPEN="|lesspipe %s"
+  elif [ -x /usr/bin/lesspipe.sh ] ; then
+     export LESSOPEN="|lesspipe.sh %s"
+  fi
   export READNULLCMD=${PAGER:-/usr/bin/pager}
 
 # allow zeroconf for distcc
