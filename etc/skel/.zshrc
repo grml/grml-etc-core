@@ -1088,7 +1088,7 @@
                    cat $FILE
            else
                    DATE=$(grep 'UTC' $FILE | sed 's#.* /##')
-                   TEMPERATURE=$(awk '/Temperature/ { print $4"° Celcius / " $2"° Fahrenheit" }' $FILE| tr -d '(')
+                   TEMPERATURE=$(awk '/Temperature/ { print $4" degree Celcius / " $2" degree Fahrenheit" }' $FILE| tr -d '(')
                    echo "date: $DATE"
                    echo "temp:  $TEMPERATURE"
            fi
