@@ -11,8 +11,8 @@
 #
 # Global Order: zshenv, zprofile, zshrc, zlogin
 ################################################################################
-#
-# zsh-refcard-tag documentation:
+
+# zsh-refcard-tag documentation: {{{
 #   You may notice strange looking comments in the zshrc (and ~/.zshrc as
 #   well). These are there for a purpose. grml's zsh-refcard can now be
 #   automatically generated from the contents of the actual configuration
@@ -20,7 +20,7 @@
 #   and what lines of code to take into account (and for what purpose).
 #
 # Here is what they mean:
-#{{{
+#
 # List of tags (comment types) used:
 #   #a#     Next line contains an important alias, that should
 #           be included in the grml-zsh-refcard.
@@ -838,6 +838,13 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
 
 # I like clean prompt, so provide simple way to get that
   alias 0 &>/dev/null || functions 0 &>/dev/null || alias 0='return 0'
+
+# for really lazy people like mika:
+  type S &>/dev/null || alias S='screen'
+  type s &>/dev/null || alias s='ssh'
+
+# get top 10 shell commands:
+  alias top10='print -l ? ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
 
 # truecrypt; use e.g. via 'truec /dev/ice /mnt/ice' or 'truec -i'
   if [ -x $(which truecrypt) ] ; then

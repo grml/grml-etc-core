@@ -1,3 +1,16 @@
+grml-etc-core (0.3.17) unstable; urgency=low
+
+  The 'Man, what a lazy folk'-release
+  * /etc/skel/.zshrc:
+    - added function weather() to retrieve weather information on
+      the console
+  * /etc/zsh/zshrc:
+    - added alias S for screen
+    - alias s for ssh
+    - added alias top10 to get the top 10 shell commands from the history
+
+ -- Michael Prokop <mika@grml.org>  Tue, 17 Jul 2007 15:48:48 +0200
+
 grml-etc-core (0.3.16) unstable; urgency=low
 
   * /etc/zsh/zshrc: dchange() - restore old behaviour with

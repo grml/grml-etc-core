@@ -227,11 +227,11 @@
      if [ -x $(which mrxvt) ] ; then
         isutfenv && [ -n "$LANG" ] && alias mrxvt="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} mrxvt"
      fi
-   
+
      if [ -x $(which aterm) ] ; then
         isutfenv && [ -n "$LANG" ] && alias aterm="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} aterm"
      fi
-   
+
      if [ -x $(which centericq) ] ; then
         isutfenv && [ -n "$LANG" ] && alias centericq="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} centericq"
      fi
@@ -1060,6 +1060,45 @@
        fi
     fi
   }
+
+# retrieve weather information on the console
+# Usage example: 'weather LOWG'
+  weather () {
+   [ -n "$1" ] || {
+           print 'Usage: weather <station_id>' >&2
+           return 1
+   }
+
+   local PLACE="${1:u}"
+   local FILE="$HOME/.weather/$PLACE"
+   local LOG="$HOME/.weather/log"
+
+   [ -d $HOME/.weather ] || {
+           print -n "Creating $HOME/.weather: "
+           mkdir $HOME/.weather
+           print 'done'
+   }
+
+   print "Retrieving information for ${PLACE}:"
+   print
+   wget -T 10 --no-verbose --output-file=$LOG --output-document=$FILE --timestamping http://weather.noaa.gov/pub/data/observations/metar/decoded/$PLACE.TXT
+
+   if [[ $? = 0 ]] ; then
+           if [ -n "$VERBOSE" ] ; then
+                   cat $FILE
+           else
+                   DATE=$(grep 'UTC' $FILE | sed 's#.* /##')
+                   TEMPERATURE=$(awk '/Temperature/ { print $4"° Celcius / " $2"° Fahrenheit" }' $FILE| tr -d '(')
+                   echo "date: $DATE"
+                   echo "temp:  $TEMPERATURE"
+           fi
+   else
+           print "There was an error retrieving the weather information for $PLACE" >&2
+           cat $LOG
+           return 1
+   fi
+  }
+
 
 # }}}
 
