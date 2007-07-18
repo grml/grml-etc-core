@@ -8,6 +8,8 @@ grml-etc-core (0.3.17) unstable; urgency=low
     - added alias S for screen
     - alias s for ssh
     - added alias top10 to get the top 10 shell commands from the history
+    - make sure we provide arguments for startx in the function as well
+      (thanks for reporting the issue, Kevin Krammer!)
   * /etc/zsh/zshenv:
     - check for presence of lesspipe[.sh] before setting $LESSOPEN
 
