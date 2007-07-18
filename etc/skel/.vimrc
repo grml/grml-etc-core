@@ -3,7 +3,7 @@
 " Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 " Bug-Reports:   see http://grml.org/bugs/
 " License:       This file is licensed under the GPL v2.
-" Latest change: Sam Jun 30 01:28:53 CEST 2007 [mika]
+" Latest change: Don Jul 19 00:02:50 CEST 2007 [mika]
 "###############################################################################
 " Thanks to Sven Guckes for his template!
 "###############################################################################
@@ -12,6 +12,7 @@
   set nocp
 " turn these ON:
   set digraph ek hidden ruler sc vb wmnu
+" set digraph
 " turn these OFF ("no" prefix):
   set noeb noet nosol
 " non-toggles:

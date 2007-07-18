@@ -12,6 +12,9 @@ grml-etc-core (0.3.17) unstable; urgency=low
       (thanks for reporting the issue, Kevin Krammer!)
   * /etc/zsh/zshenv:
     - check for presence of lesspipe[.sh] before setting $LESSOPEN
+  * /etc/skel/.vimrc:
+    - deactivate digraph option causing too many headaches for people
+      not being used to that option
 
  -- Michael Prokop <mika@grml.org>  Tue, 17 Jul 2007 15:48:48 +0200
 
