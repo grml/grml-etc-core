@@ -1,3 +1,10 @@
+grml-etc-core (0.3.18) unstable; urgency=low
+
+  * /etc/zsh/zshrc:
+    - use aptitude safe-upgrade instead of aptitude upgrade
+
+ -- Michael Prokop <mika@grml.org>  Mon, 23 Jul 2007 11:46:54 +0200
+
 grml-etc-core (0.3.17) unstable; urgency=low
 
   The 'Man, what a lazy folk'-release
