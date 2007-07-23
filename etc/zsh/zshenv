@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Die Jul 17 23:23:26 CEST 2007 [mika]
+# Latest change: Mon Jul 23 11:37:26 CEST 2007 [mika]
 ################################################################################
 # This file is sourced on all invocations of the shell.
 # It is the 1st file zsh reads; it's read for every shell,
@@ -76,6 +76,15 @@
      export LESSOPEN="|lesspipe.sh %s"
   fi
   export READNULLCMD=${PAGER:-/usr/bin/pager}
+
+# support termcap colors when using PAGER=less:
+  export LESS_TERMCAP_mb=$'\E[01;31m'
+  export LESS_TERMCAP_md=$'\E[01;31m'
+  export LESS_TERMCAP_me=$'\E[0m'
+  export LESS_TERMCAP_se=$'\E[0m'
+  export LESS_TERMCAP_so=$'\E[01;44;33m'
+  export LESS_TERMCAP_ue=$'\E[0m'
+  export LESS_TERMCAP_us=$'\E[01;32m'
 
 # allow zeroconf for distcc
   export DISTCC_HOSTS="+zeroconf"

@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Mai 31 17:19:00 CEST 2007 [mika]
+# Latest change: Mon Jul 23 11:40:12 CEST 2007 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -213,8 +213,10 @@
   alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
   alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 
-# use colors when browsing man pages (if not using pinfo or PAGER=most)
-  [ -d ~/.terminfo/ ] && alias man='TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man'
+# use colors when browsing man pages, but only if not using LESS_TERMCAP_* from /etc/zsh/zshenv:
+  if [ -z "$LESS_TERMCAP_md" ] ; then
+     [ -d ~/.terminfo/ ] && alias man='TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man'
+  fi
 
 # check whether Debian's package management (dpkg) is running
   if type salias &>/dev/null ; then

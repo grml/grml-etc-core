@@ -235,7 +235,6 @@
   export MAIL=${MAIL:-/var/mail/$USER}
   # if we don't set $SHELL then aterm, rxvt,.. will use /bin/sh or /bin/bash :-/
   export SHELL='/bin/zsh'
-  [[ -f ~/.terminfo/m/mostlike ]] && MYLESS='LESS=C TERMINFO=~/.terminfo TERM=mostlike less' || MYLESS='less'
   [ -x $(which dircolors) ] && eval `dircolors -b`
 
 # Search path for the cd command
@@ -1255,6 +1254,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   else
      manzsh()  { /usr/bin/man zshall |  vim -c "se ft=man| se hlsearch" +/"$1" - ; }
      # manzsh()  { /usr/bin/man zshall |  most +/"$1" ; }
+     # [[ -f ~/.terminfo/m/mostlike ]] && MYLESS='LESS=C TERMINFO=~/.terminfo TERM=mostlike less' || MYLESS='less'
      # manzsh()  { man zshall | $MYLESS -p $1 ; }
   fi
 

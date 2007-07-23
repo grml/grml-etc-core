@@ -4,6 +4,7 @@ grml-etc-core (0.3.17) unstable; urgency=low
   * /etc/skel/.zshrc:
     - added function weather() to retrieve weather information on
       the console
+    - use mostlike manpage browser only if LESS_TERMCAP_* is not set
   * /etc/zsh/zshrc:
     - added alias S for screen
     - alias s for ssh
@@ -12,6 +13,7 @@ grml-etc-core (0.3.17) unstable; urgency=low
       (thanks for reporting the issue, Kevin Krammer!)
   * /etc/zsh/zshenv:
     - check for presence of lesspipe[.sh] before setting $LESSOPEN
+    - added LESS_TERMCAP_*
   * /etc/skel/.vimrc:
     - deactivate digraph option causing too many headaches for people
       not being used to that option
