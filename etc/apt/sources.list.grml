@@ -3,14 +3,8 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Apr 12 12:50:26 CEST 2007 [mika]
+# Latest change: Mon Jul 23 12:04:42 CEST 2007 [mika]
 ################################################################################
-# Notice: because of ressource limits some lines might have been commented
-#         out on the grml live CD system. Just uncomment lines containing
-#         '#1#' at the beginning to get a "full featured" debian system on your
-#         hard disc. But please notice that enabling non-official pools can be
-#         dangerous!
-#
 # See sources.list(5) for more information, especialy
 # Remember that you can only use http, ftp or file URIs
 # CDROMs are managed through the apt-cdrom tool.
@@ -53,8 +47,8 @@
 #  deb-src http://ftp2.de.debian.org/debian-volatile stable/volatile main
 
 # Experimental:
-#1#  deb     http://ftp.de.debian.org/debian/ experimental main contrib non-free
-#1#  deb-src http://ftp.de.debian.org/debian/ experimental main contrib non-free
+#  deb     http://ftp.de.debian.org/debian/ experimental main contrib non-free
+#  deb-src http://ftp.de.debian.org/debian/ experimental main contrib non-free
 #  deb     http://ftp.tu-graz.ac.at/mirror/debian        experimental        main contrib non-free
 #  deb-src http://ftp.tu-graz.ac.at/mirror/debian        experimental        main contrib non-free
 
@@ -65,24 +59,24 @@
 ## ===============
 #
 # gebi's packages for grml (grml-terminalserver, grml-vpn, grml-crypt,...):
-#1#  deb     http://einsteinmg.dyndns.org/debian unstable/
-#1#  deb-src http://einsteinmg.dyndns.org/debian unstable/
+#  deb     http://einsteinmg.dyndns.org/debian unstable/
+#  deb-src http://einsteinmg.dyndns.org/debian unstable/
 
 # jimmy's packages for grml (gcom):
-#1#  deb     http://debian.g-tec.co.at/ unstable main
-#1#  deb-src http://debian.g-tec.co.at/ unstable main
+#  deb     http://debian.g-tec.co.at/ unstable main
+#  deb-src http://debian.g-tec.co.at/ unstable main
 
 # unofficial debian packages:
-#1#  deb     http://ftp.debian-unofficial.org/debian sarge main contrib non-free restricted
-#1#  deb-src http://ftp.debian-unofficial.org/debian sarge main contrib non-free restricted
+#  deb     http://ftp.debian-unofficial.org/debian sarge main contrib non-free restricted
+#  deb-src http://ftp.debian-unofficial.org/debian sarge main contrib non-free restricted
 
 # MPEG, divx...:
-#1#  deb     http://www.debian-multimedia.org sid main
-#1#  deb-src http://www.debian-multimedia.org sid main
+#  deb     http://www.debian-multimedia.org sid main
+#  deb-src http://www.debian-multimedia.org sid main
 
 # kwtools - unstable:
-#1# deb     ftp://ftp.berlios.de/pub/netzworkk/scripts/kwtools/Debian/unstable ./
-#1# deb-src ftp://ftp.berlios.de/pub/netzworkk/scripts/kwtools/Debian/unstable ./
+# deb     ftp://ftp.berlios.de/pub/netzworkk/scripts/kwtools/Debian/unstable ./
+# deb-src ftp://ftp.berlios.de/pub/netzworkk/scripts/kwtools/Debian/unstable ./
 # deb     ftp://server.mamemu.de/kwtools/Debian/unstable ./
 # deb-src ftp://server.mamemu.de/kwtools/Debian/unstable ./
 # kwtools - stable:
@@ -92,46 +86,49 @@
 # deb-src ftp://server.mamemu.de/kwtools/Debian/stable ./
 
 # cpm
-#1#  deb     http://debian.harry-b.de/ binary/
+#  deb     http://debian.harry-b.de/ binary/
 
 # ara, pcopy,...:
-#1#  deb     ftp://ftp.uni-sofia.bg/debian-addons-bg ./
-#1#  deb-src ftp://ftp.uni-sofia.bg/debian-addons-bg ./
+#  deb     ftp://ftp.uni-sofia.bg/debian-addons-bg ./
+#  deb-src ftp://ftp.uni-sofia.bg/debian-addons-bg ./
 
 # tex-refs:
-#1#  deb     http://www.miwie.org/ ./
+#  deb     http://www.miwie.org/ ./
 
 # bkp:
-#1#  deb     http://opensource.polytechnique.org/debian/ ./
-#1#  deb-src http://opensource.polytechnique.org/debian/ ./
+#  deb     http://opensource.polytechnique.org/debian/ ./
+#  deb-src http://opensource.polytechnique.org/debian/ ./
 
 # camgrab update-apt:
-#1#  deb     http://www.steve.org.uk/apt     sarge main contrib non-free
-#1#  deb-src http://www.steve.org.uk/apt     sarge main contrib non-free
+#  deb     http://www.steve.org.uk/apt     sarge main contrib non-free
+#  deb-src http://www.steve.org.uk/apt     sarge main contrib non-free
 
 # olsr:
-#1#  deb     http://www.skyhub.de/debian/ unstable main
-#1#  deb-src http://www.skyhub.de/debian/ unstable main
+#  deb     http://www.skyhub.de/debian/ unstable main
+#  deb-src http://www.skyhub.de/debian/ unstable main
 
 # ext3rminator:
-#1#  deb     http://web.glandium.org/debian/repository/experimental/ ./
-#1#  deb-src http://web.glandium.org/debian/repository/experimental/ ./
+#  deb     http://web.glandium.org/debian/repository/experimental/ ./
+#  deb-src http://web.glandium.org/debian/repository/experimental/ ./
 
 # kenny
-#1#  deb     http://www.cgarbs.de/stuff ./
-#1#  deb-src http://www.cgarbs.de/stuff ./
+#  deb     http://www.cgarbs.de/stuff ./
+#  deb-src http://www.cgarbs.de/stuff ./
 
 # synctree:
-#1#  deb     http://www.knizefamily.net/russ/software/debian/ ./
-#1#  deb-src http://www.knizefamily.net/russ/software/debian/ ./
+#  deb     http://www.knizefamily.net/russ/software/debian/ ./
+#  deb-src http://www.knizefamily.net/russ/software/debian/ ./
+
+# cryptobox-server (http://cryptobox.org/):
+#  deb http://systemausfall.org/toolforge/debian unstable main
 
 # musepack-decoder musepack-encoder musepack-replaygain
 # be careful with libfaad2 <-> mplayer!
-##1#  deb http://www.rarewares.org/debian/packages/unstable/ ./
+#  deb http://www.rarewares.org/debian/packages/unstable/ ./
 #
 # Security updates for stable:
-#1#  deb     http://security.debian.org stable/updates main contrib non-free
-#1#  deb-src http://security.debian.org stable/updates main contrib non-free
+#  deb     http://security.debian.org stable/updates main contrib non-free
+#  deb-src http://security.debian.org stable/updates main contrib non-free
 #
 # get specific debian package:
 #  deb http://snapshot.debian.net/archive/2005/03/27/debian unstable main contrib non-free

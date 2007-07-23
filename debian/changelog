@@ -2,6 +2,10 @@ grml-etc-core (0.3.18) unstable; urgency=low
 
   * /etc/zsh/zshrc:
     - use aptitude safe-upgrade instead of aptitude upgrade
+  * /etc/apt/sources.list.grml:
+    - added entry for cryptobox-server
+    - drop the '#1#'-stuff as we provide all packages via the
+      grml repository now
 
  -- Michael Prokop <mika@grml.org>  Mon, 23 Jul 2007 11:46:54 +0200
 
