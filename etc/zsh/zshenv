@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mon Jul 23 11:37:26 CEST 2007 [mika]
+# Latest change: Mit Jul 25 15:02:01 CEST 2007 [mika]
 ################################################################################
 # This file is sourced on all invocations of the shell.
 # It is the 1st file zsh reads; it's read for every shell,
@@ -26,9 +26,12 @@
   [ -r /etc/environment    ] && source /etc/environment
 
 # set environment variables (important for autologin on tty)
-  [ -z "$HOSTNAME" ]      && export HOSTNAME=`hostname`
-  [ -z "$USER" ]          && export USER=`id -un`
-  [[ $LOGNAME == LOGIN ]] && LOGNAME=$(id -un)
+  [ -z "$HOSTNAME" ]      && export HOSTNAME=$(hostname)
+  # make sure /usr/bin/id is available
+  if [ -x /usr/bin/id ] ; then
+     [ -z "$USER" ]          && export USER=$(/usr/bin/id -un)
+     [[ $LOGNAME == LOGIN ]] && LOGNAME=$(/usr/bin/id -un)
+  fi
 
 # workaround for live-cd mode as $HOME is not set via rungetty
   if [ -f /etc/grml_cd ] ; then

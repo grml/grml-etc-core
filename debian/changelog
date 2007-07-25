@@ -1,3 +1,9 @@
+grml-etc-core (0.3.19) unstable; urgency=low
+
+  * /etc/zsh/zshenv: make sure /usr/bin/id is available
+
+ -- Michael Prokop <mika@grml.org>  Wed, 25 Jul 2007 15:02:08 +0200
+
 grml-etc-core (0.3.18) unstable; urgency=low
 
   * /etc/zsh/zshrc:
