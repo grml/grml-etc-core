@@ -1,3 +1,16 @@
+grml-scripts (1.0.11) unstable; urgency=low
+
+  * grml-setservices: support HAL daemon
+  * grml-mutt:
+    - change 'set autoedit' into 'unset autoedit'
+    - add 'set auto_tag=yes'
+    - set postponed=+postponed
+    - add deactivated:
+      * set sendmail="/usr/bin/msmtp"
+      * set use_envelope_from
+
+ -- Michael Prokop <mika@grml.org>  Wed, 25 Jul 2007 18:35:08 +0200
+
 grml-scripts (1.0.10) unstable; urgency=low
 
   * grml-setservices: support NFS

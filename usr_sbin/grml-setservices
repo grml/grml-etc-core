@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mit Jul 18 02:16:12 CEST 2007 [mika]
+# Latest change: Mit Jul 25 18:34:57 CEST 2007 [mika]
 ################################################################################
 
 PN="$(basename $0)"
@@ -45,6 +45,7 @@ or choose cancel.
 [ -r /etc/init.d/mdadm ]  && SRAID='mdadm!software-raid via mdadm!on'
 [ -r /etc/init.d/dmraid ] && MRAID='dmraid!software-raid via dmraid!off'
 [ -r /etc/init.d/dbus -o -r /etc/init.d/dbus-1 ] && DBUS='dbus!hal/dbus (important for KDE e.g.)!off'
+[ -r /etc/init.d/hal ]    && HAL='hal!Hardware Abstraction Layer daemon (important for KDE e.g.)!off'
 [ -r /etc/init.d/nfs-common ] && NFS='nfs!Network File System (client setup)!off'
 
 ## adjust setup
@@ -99,6 +100,16 @@ set_values(){
      fi
   fi
 
+  if [ -n "$HAL" ] ; then
+     if is_value_set "hal" ; then
+        update-rc.d -f hal remove >/dev/null 2>&1
+        update-rc.d hal start 24 2 3 4 5. stop 16 0 1 6 . >/dev/null 2>&1
+     else
+        update-rc.d -f hal remove >/dev/null 2>&1
+        update-rc.d hal stop 20 0 1 6 . >/dev/null 2>&1
+     fi
+  fi
+
   if [ -n "$NFS" ] ; then
      if is_value_set "nfs" ; then
         update-rc.d -f nfs-common remove >/dev/null 2>&1
@@ -113,7 +124,7 @@ set_values(){
 # the interface itself
 oifs="$IFS"
 IFS='!'
-$DIALOG --title "$PN" --checklist "$INFO" 30 65 8 $LVM $SRAID $MRAID $DBUS $NFS 2>$TMP
+$DIALOG --title "$PN" --checklist "$INFO" 30 65 8 $LVM $SRAID $MRAID $DBUS $HAL $NFS 2>$TMP
 
 retval="$?"
 case $retval in

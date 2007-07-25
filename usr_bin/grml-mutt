@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Mär 18 17:15:41 CET 2007 [mika]
+# Latest change: Mit Jul 25 18:37:29 CEST 2007 [mika]
 ################################################################################
 
 PATH=${PATH:-'/bin/:/sbin/:/usr/local/bin:/usr/bin:/usr/sbin'}
@@ -22,7 +22,7 @@ cat > $MUTTRC << EOF
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Apr 24 16:55:51 CEST 2005 [mika]
+# Latest change: Mit Jul 25 18:37:29 CEST 2007 [mika]
 ################################################################################
 
 # important variables - adjust them if necessary
@@ -38,7 +38,8 @@ $IMAPDATA
     set allow_8bit           # send data as it is.  no conversion.
   unset arrow_cursor         #  Show current mail with an inverse bar.
     set ascii_chars          # set: use ASCII characters to build the thread tree
-    set autoedit             # call editor without prompting for To: and Subject:
+  unset autoedit             # call editor without prompting for To: and Subject:?
+    set auto_tag=yes         # the next operation applies to the tagged messages automatically
   unset confirmappend        # set: prompt for confirmation on appending mail to folder
     set confirmcreate        # set: prompt for confirmation on creation of folders
     set copy                 # Always keep a copy of my mails!
@@ -57,6 +58,7 @@ $IMAPDATA
     set pager_context=1      # number of lines that overlap on paging
 #   set pager_index_lines=0  # number of lines to see from the index
     set pager_stop           # "next_page" won't jump to next message at end of messages
+    set postponed=+postponed # where save postponed messages?
 #   set print_command="mp|lpr" # pipe message to "mp" for formattting - then on to "lpr"
   unset prompt_after         # set: gives you a prompt when pager exits
     set quote_regexp="^>"    # some people just use '>' - *sigh*
@@ -67,6 +69,7 @@ $IMAPDATA
     set reverse_alias        # show the name of sender as set with my alias for him
     set reverse_name         # reply as the user to whom the mail was sent to
     set save_name            # set: save outbound mail to =username if it exists
+#    set sendmail="/usr/bin/msmtp" # which sendmail program should be used?
 #   set shell=zsh            # use the zsh for shell commands
     set sort=threads         # sorting method - I definitely like "threads" best
     set status_on_top        # set: present the status bar at top, ie before the index
@@ -76,7 +79,9 @@ $IMAPDATA
     set tmpdir="/tmp"        # directory where temporary files are to be placed
     set to_chars="X+TCF"     # message flags: non-personal,personal,To:,Cc:,From:
     set use_from             # 'set from=' requires a 'set use_from'!
+#    set use_envelope_from   # when set, mutt will use $envelope_from_address as the envelope sender
     set write_inc=10         # update number after each tenth read mail
+
 
 # Options with a long value:
 #   set alternates=...
@@ -323,7 +328,7 @@ ASKPOP=$(dialog --stdout --title "$PN" --yesno "Configure POP3?" 0 0)
 retval=$?
 
 case $retval in
-  0) 
+  0)
      GETPOP3=$(dialog --stdout --title "$PN" --inputbox  "Your POP3 account (pop[s]://[user]@hostname[:port]):" 0 56 "pop://") || exit 0
      POP3=${GETPOP3}
      askpop && \
@@ -345,7 +350,7 @@ ASKIMAP=$(dialog --stdout --title "$PN" --yesno "Configure IMAP?" 0 0)
 retval=$?
 
 case $retval in
-  0) 
+  0)
      GETIMAP=$(dialog --stdout --title "$PN" --inputbox  "Your IMAP account (imap[s]://[user@]hostname[:port]/mailbox):" 0 65 "imap://") || exit 0
      IMAP=${GETIMAP}
      askimap && \
@@ -379,12 +384,12 @@ WRITEMUTTRC=$(dialog --stdout --title "$PN" --yesno "Write $MUTTRC?" 5 65)
 retval=$?
 
 case $retval in
-  0) 
+  0)
     if [ -f "$MUTTRC" ] ; then
       dialog --stdout --title "$PN" --yesno "$MUTTRC exists. Overwrite?" 5 65
       retval=$?
       case $retval in
-        0) 
+        0)
           writemuttrc && writecolors && \
           dialog --stdout --title "$PN" --msgbox "Writing $MUTTRC was successful." 7 65 || \
           { dialog --stdout --title "$PN" --msgbox "Error $?: writing $MUTTRC failed." 7 65 ; exit 1 ; }
