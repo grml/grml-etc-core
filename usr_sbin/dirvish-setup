@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Mär 10 10:46:39 CET 2007 [mika]
+# Latest change: Don Jul 26 17:21:31 CEST 2007 [mika]
 ################################################################################
 # Ressources:
 #   http://apt-get.dk/howto/backup/
@@ -18,7 +18,7 @@ set -e
 . /etc/grml/lsb-functions
 
 check4root
-check4progs dirvish rsync ssh-keygen ssh-copy-id
+check4progs dialog dirvish rsync ssh-keygen ssh-copy-id
 
 PN="$0"
 CONFFILE=/etc/dirvish/master.conf
