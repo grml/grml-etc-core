@@ -771,7 +771,7 @@ else
 fi
 
 if [[ ${RC_ENDCOL} == yes ]]; then
-	ENDCOL=$'\e[A\e['$(( COLS - 7 ))'G'
+	ENDCOL=$'\e[A\e['$(( COLS - 8 ))'G'
 else
 	ENDCOL=''
 fi

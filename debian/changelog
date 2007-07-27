@@ -1,3 +1,11 @@
+grml-etc-core (0.3.20) unstable; urgency=low
+
+  * /etc/grml/lsb-functions: put log_end_msg exactly one char to
+    the left so look'n'feel with current Debian lsb-functions
+    is better.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 28 Jul 2007 01:15:23 +0200
+
 grml-etc-core (0.3.19) unstable; urgency=low
 
   * /etc/zsh/zshenv: make sure /usr/bin/id is available
