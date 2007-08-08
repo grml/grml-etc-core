@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mon Jul 23 11:40:12 CEST 2007 [mika]
+# Latest change: Mit Aug 08 21:22:03 CEST 2007 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -224,18 +224,18 @@
     salias check_dpkg_running="dpkg_running"
   fi
 
-# work around non utf8 capable software in utf environment
-  if type isutfenv &>/dev/null ; then
+# work around non utf8 capable software in utf environment via $LANG and luit
+  if type isutfenv &>/dev/null && type luit &>/dev/null; then
      if [ -x $(which mrxvt) ] ; then
-        isutfenv && [ -n "$LANG" ] && alias mrxvt="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} mrxvt"
+        isutfenv && [ -n "$LANG" ] && alias mrxvt="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit mrxvt"
      fi
 
      if [ -x $(which aterm) ] ; then
-        isutfenv && [ -n "$LANG" ] && alias aterm="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} aterm"
+        isutfenv && [ -n "$LANG" ] && alias aterm="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit aterm"
      fi
 
      if [ -x $(which centericq) ] ; then
-        isutfenv && [ -n "$LANG" ] && alias centericq="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} centericq"
+        isutfenv && [ -n "$LANG" ] && alias centericq="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit centericq"
      fi
   fi
 # }}}
