@@ -508,10 +508,11 @@ fi
 #  zle -N mquote && bindkey '^q' mquote
 
 # run command line as user root via sudo:
-  _sudo-command-line() {
-    [[ $BUFFER != sudo\ * ]] && LBUFFER="sudo $LBUFFER"
+  sudo-command-line() {
+    [[ -z $BUFFER ]] && zle up-history
+    [[ $BUFFER != sudo\ * ]] && BUFFER="sudo $BUFFER"
   }
-  zle -N sudo-command-line _sudo-command-line
+  zle -N sudo-command-line
 #k# Put the current command line into a \kbd{sudo} call
   bindkey "^Os" sudo-command-line
 
