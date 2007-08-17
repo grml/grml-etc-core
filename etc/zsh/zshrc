@@ -1018,7 +1018,7 @@ Run "grml-tips ssl-certificate" if you need further instructions.
 grmlcomp() {
 ## completion system
   zstyle ':completion:*:approximate:'    max-errors 'reply=( $((($#PREFIX+$#SUFFIX)/3 )) numeric )' # allow one error for every three characters typed in approximate completer
-  zstyle ':completion:*:complete:-command-::commands' ignored-patterns '*\~' # don't complete backup files as executables
+  zstyle ':completion:*:complete:-command-::commands' ignored-patterns '(aptitude-*|*\~)' # don't complete backup files as executables
   zstyle ':completion:*:correct:*'       insert-unambiguous true             # start menu completion only if it could find no unambiguous initial string
   zstyle ':completion:*:corrections'     format $'%{\e[0;31m%}%d (errors: %e)%{\e[0m%}' #
   zstyle ':completion:*:correct:*'       original true                       #
@@ -1062,20 +1062,20 @@ grmlcomp() {
     }
 # some people don't like the automatic correction - so run 'NOCOR=1 zsh' to deactivate it
   if [[ -n "$NOCOR" ]] ; then
-    zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete _files
+    zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete _files _ignored
     setopt nocorrect # do not try to correct the spelling if possible
   else
-#    zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete _correct _approximate _files
+#    zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete _ignored _correct _approximate _files
     setopt correct  # try to correct the spelling if possible
     zstyle -e ':completion:*' completer '
         if [[ $_last_try != "$HISTNO$BUFFER$CURSOR" ]]; then
           _last_try="$HISTNO$BUFFER$CURSOR"
-          reply=(_complete _match _prefix _files)
+          reply=(_complete _match _ignored _prefix _files)
         else
           if [[ $words[1] = (rm|mv) ]]; then
             reply=(_complete _files)
           else
-            reply=(_oldlist _expand _force_rehash _complete _correct _approximate _files)
+            reply=(_oldlist _expand _force_rehash _complete _ignored _correct _approximate _files)
           fi
         fi'
   fi
