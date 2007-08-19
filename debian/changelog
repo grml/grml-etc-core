@@ -1,3 +1,13 @@
+grml-etc-core (0.3.22) unstable; urgency=low
+
+  [Frank Terbeck]
+  * /etc/zsh/zshrc:
+    - Ignoring commands that match 'aptitude-*'. Using _ignored in addition.
+      That way, you can always get aptitude-* by 'aptitude-<tab>'.
+    - Let sudo-command-line() do something sensible on an empty buffer.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 19 Aug 2007 10:50:43 +0200
+
 grml-etc-core (0.3.21) unstable; urgency=low
 
   * /etc/skel/.zshrc: use luit for utf<->iso-hacks.
