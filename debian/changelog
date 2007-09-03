@@ -1,3 +1,10 @@
+grml-scripts (1.0.13) unstable; urgency=low
+
+  * iso-term: support additional arguments on the commandline so they
+    reach the final terminal
+
+ -- Michael Prokop <mika@grml.org>  Mon,  3 Sep 2007 23:31:41 +0200
+
 grml-scripts (1.0.12) unstable; urgency=low
 
   * dirvish-setup: check for existence of dialog as well
