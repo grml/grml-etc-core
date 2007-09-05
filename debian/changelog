@@ -1,3 +1,11 @@
+grml-etc-core (0.3.23) unstable; urgency=low
+
+  * /etc/zsh/zshenv: switch direction of check for lesspipe vs.
+    lesspipe.sh so we use the extended version by default if 
+    it's available.
+
+ -- Michael Prokop <mika@grml.org>  Wed,  5 Sep 2007 18:22:57 +0200
+
 grml-etc-core (0.3.22) unstable; urgency=low
 
   [Frank Terbeck]
