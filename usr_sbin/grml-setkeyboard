@@ -118,10 +118,10 @@ retval=$?
 case $retval in
     (0)
           # everything ok
-          $DIALOG --stdout --msgbox "Writing keyboard settings ($KEYTABLE) to /etc/sysconfig/keyboard was successful." 0 0
+          LANG=C $DIALOG --stdout --msgbox "Writing keyboard settings ($KEYTABLE) to /etc/sysconfig/keyboard was successful." 0 0
           ;;
     *)
-          $DIALOG --stdout --msgbox "Error writing settings for $KEYTABLE to /etc/sysconfig/keyboard." 0 0
+          LANG=C $DIALOG --stdout --msgbox "Error writing settings for $KEYTABLE to /etc/sysconfig/keyboard." 0 0
           ;;
 esac
 

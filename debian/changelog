@@ -1,3 +1,11 @@
+grml-scripts (1.0.14) unstable; urgency=low
+
+  * grml-setkeyboard: execute dialog using LANG=C
+  * grml-setlang: execute dialog using LANC=C and adjust modification
+    of /etc/default/locale according to what Debian ships now.
+
+ -- Michael Prokop <mika@grml.org>  Wed,  5 Sep 2007 18:33:35 +0200
+
 grml-scripts (1.0.13) unstable; urgency=low
 
   * iso-term: support additional arguments on the commandline so they

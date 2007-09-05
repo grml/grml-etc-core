@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Apr 28 17:38:28 CEST 2007 [mika]
+# Latest change: Mit Sep 05 18:33:23 CEST 2007 [mika]
 ################################################################################
 
 PN="$(basename $0)"
@@ -40,8 +40,11 @@ fi
 setvalue(){
   [ -n "$2" ] || return 1
   # already present in conffile?
-  if grep -q ${1} $CONFFILE ; then
-     sed -i "s#^${1}.*#${1}${2}#"   $CONFFILE
+  if grep -q "^${1}" "$CONFFILE" ; then
+     sed -i "s#^${1}.*#${1}${2}#"  $CONFFILE
+  # is the new Debian style /etc/default/locale present?
+  elif grep -q "^# ${1}$" "$CONFFILE" ; then
+     sed -i "s#^\# ${1}#${1}${2}#" $CONFFILE
   else
      echo "$1${2}" >> $CONFFILE
   fi
@@ -50,7 +53,7 @@ setvalue(){
 # grml-small does not provide any further locales
 if grep -q small /etc/grml_version 2>/dev/null ; then
    if [ -z "$NONINTERACTIVE" ] ; then
-      $DIALOG --stdout --msgbox "Notice: grml-small does not provide a full language setup.
+      LANG=C $DIALOG --stdout --msgbox "Notice: grml-small does not provide a full language setup.
 
 You have to make sure the appropriate packages are installed." 0 0
       exit 1
@@ -68,7 +71,7 @@ if [ -z "$DEFAULT_LANGUAGE" ] ; then
 fi
 
 if [ -z "$NONINTERACTIVE" ] ; then
-   LANGUAGE=$($DIALOG --stdout --title "$PN" --default-item $DEFAULT_LANGUAGE --radiolist \
+   LANGUAGE=$(LANG=C $DIALOG --stdout --title "$PN" --default-item $DEFAULT_LANGUAGE --radiolist \
 "Which language do you want to use?
 
 This will affect \$LANG, \$LANGUAGE and \$LC_MESSAGES.
@@ -191,7 +194,7 @@ retval=$?
 case $retval in
     (0)
           if [ -z "$NONINTERACTIVE" ] ; then
-             $DIALOG --stdout --msgbox "Writing language settings ($LANGUAGE) to $CONFFILE was successful." 0 0
+             LANG=C $DIALOG --stdout --msgbox "Writing language settings ($LANGUAGE) to $CONFFILE was successful." 0 0
           else
              einfo "Writing language settings ($LANGUAGE) to $CONFFILE was successful."
              esyslog user.notice "$PN" "Writing language settings ($LANGUAGE) to $CONFFILE was successful." ; eend 0
@@ -199,7 +202,7 @@ case $retval in
           ;;
     *)
           if [ -z "$NONINTERACTIVE" ] ; then
-             $DIALOG --stdout --msgbox "Error writing settings for $LANGUAGE to $CONFFILE." 0 0
+             LANG=C $DIALOG --stdout --msgbox "Error writing settings for $LANGUAGE to $CONFFILE." 0 0
           else
              eerror "Error writing settings for $LANGUAGE to $CONFFILE." ; eend 1
              esyslog user.notice "$PN" "Error writing settings for $LANGUAGE to $CONFFILE."
