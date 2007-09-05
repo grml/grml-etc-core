@@ -1,3 +1,10 @@
+grml-scripts (1.0.15) unstable; urgency=low
+
+  * grml-setkeyboard: add one further LANG=C dialog run and
+    use check4root from script-functions.
+
+ -- Michael Prokop <mika@grml.org>  Wed,  5 Sep 2007 19:08:34 +0200
+
 grml-scripts (1.0.14) unstable; urgency=low
 
   * grml-setkeyboard: execute dialog using LANG=C
