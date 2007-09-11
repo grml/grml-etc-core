@@ -264,7 +264,7 @@ esyslog() {
 		tag="$2"
 
 		shift 2
-		[[ -z "$*" ]] && return 0
+		[ -z "$*" ] && return 0
 
 		/usr/bin/logger -p "${pri}" -t "${tag}" -- "$*"
 	fi
@@ -318,8 +318,8 @@ einfo() {
 #    show an informative message (without a newline)
 #
 einfon() {
-	[[ ${RC_QUIET_STDOUT} == yes ]] && return 0
-	[[ ${RC_ENDCOL} != yes && ${LAST_E_CMD} == ebegin ]] && echo
+	[ "${RC_QUIET_STDOUT}" = "yes" ] && return 0
+	[ "${RC_ENDCOL}" != "yes" ] && [ "${LAST_E_CMD}" = "ebegin" ] && echo
 	echo -ne " ${GOOD}*${NORMAL} ${RC_INDENTATION}$*"
 	LAST_E_CMD=einfon
 	return 0
@@ -330,10 +330,10 @@ einfon() {
 #    show a warning message + log it
 #
 ewarn() {
-	if [[ ${RC_QUIET_STDOUT} == yes ]]; then
+	if [ "${RC_QUIET_STDOUT}" = "yes" ]; then
 		echo " $*"
 	else
-		[[ ${RC_ENDCOL} != yes && ${LAST_E_CMD} == ebegin ]] && echo
+		[ "${RC_ENDCOL}" != "yes" ] && [ "${LAST_E_CMD}" = "ebegin" ] && echo
 		echo -e " ${WARN}*${NORMAL} ${RC_INDENTATION}$*"
 	fi
 
@@ -349,10 +349,10 @@ ewarn() {
 #    show an error message + log it
 #
 eerror() {
-	if [[ ${RC_QUIET_STDOUT} == yes ]]; then
+	if [ "${RC_QUIET_STDOUT}" = "yes" ]; then
 		echo " $*" >/dev/stderr
 	else
-		[[ ${RC_ENDCOL} != yes && ${LAST_E_CMD} == ebegin ]] && echo
+		[ "${RC_ENDCOL}" != "yes" ] && [ "${LAST_E_CMD}" = "ebegin" ] && echo
 		echo -e " ${BAD}*${NORMAL} ${RC_INDENTATION}$*"
 	fi
 
@@ -368,18 +368,21 @@ eerror() {
 #    show a message indicating the start of a process
 #
 ebegin() {
-	local msg="$*" dots spaces=${RC_DOT_PATTERN//?/ }
-	[[ ${RC_QUIET_STDOUT} == yes ]] && return 0
+	local msg="$*" dots spaces
+	spaces="$(printf '%'"${#RC_DOT_PATTERN}"'s' '')"
+	[ "${RC_QUIET_STDOUT}" = "yes" ] && return 0
 
-	if [[ -n ${RC_DOT_PATTERN} ]]; then
+	if [ -n "${RC_DOT_PATTERN}" ]; then
 		dots=$(printf "%$(( COLS - 3 - ${#RC_INDENTATION} - ${#msg} - 7 ))s" '')
-		dots=${dots//${spaces}/${RC_DOT_PATTERN}}
+		while [ "${dots#${spaces}}" != "${dots}" ] ; do
+			dots="${dots#${spaces}}${RC_DOT_PATTERN}"
+		done
 		msg="${msg}${dots}"
 	else
 		msg="${msg} ..."
 	fi
 	einfon "${msg}"
-	[[ ${RC_ENDCOL} == yes ]] && echo
+	[ "${RC_ENDCOL}" = "yes" ] && echo
 
 	LAST_E_LEN=$(( 3 + ${#RC_INDENTATION} + ${#msg} ))
 	LAST_E_CMD=ebegin
@@ -398,20 +401,20 @@ _eend() {
 	local retval=${1:-0} efunc=${2:-eerror} msg
 	shift 2
 
-	if [[ ${retval} == 0 ]]; then
-		[[ ${RC_QUIET_STDOUT} == yes ]] && return 0
+	if [ "${retval}" -eq 0 ]; then
+		[ "${RC_QUIET_STDOUT}" = "yes" ] && return 0
 		msg="${BRACKET}[ ${GOOD}ok${BRACKET} ]${NORMAL}"
 	else
-		if [[ -n "$*" ]]; then
-			${efunc} "$*"
+		if [ -n "$*" ]; then
+			"${efunc}" "$*"
 		fi
 		msg="${BRACKET}[ ${BAD}!!${BRACKET} ]${NORMAL}"
 	fi
 
-	if [[ ${RC_ENDCOL} == yes ]]; then
+	if [ "${RC_ENDCOL}" = "yes" ]; then
 		echo -e "${ENDCOL}  ${msg}"
 	else
-		[[ ${LAST_E_CMD} == ebegin ]] || LAST_E_LEN=0
+		[ "${LAST_E_CMD}" = "ebegin" ] || LAST_E_LEN=0
 		printf "%$(( COLS - LAST_E_LEN - 6 ))s%b\n" '' "${msg}"
 	fi
 
@@ -450,17 +453,17 @@ ewend() {
 
 # v-e-commands honor RC_VERBOSE which defaults to no.
 # The condition is negated so the return value will be zero.
-veinfo() { [[ "${RC_VERBOSE}" != yes ]] || einfo "$@"; }
-veinfon() { [[ "${RC_VERBOSE}" != yes ]] || einfon "$@"; }
-vewarn() { [[ "${RC_VERBOSE}" != yes ]] || ewarn "$@"; }
-veerror() { [[ "${RC_VERBOSE}" != yes ]] || eerror "$@"; }
-vebegin() { [[ "${RC_VERBOSE}" != yes ]] || ebegin "$@"; }
+veinfo() { [ "${RC_VERBOSE}" != yes ] || einfo "$@"; }
+veinfon() { [ "${RC_VERBOSE}" != yes ] || einfon "$@"; }
+vewarn() { [ "${RC_VERBOSE}" != yes ] || ewarn "$@"; }
+veerror() { [ "${RC_VERBOSE}" != yes ] || eerror "$@"; }
+vebegin() { [ "${RC_VERBOSE}" != yes ] || ebegin "$@"; }
 veend() {
-	[[ "${RC_VERBOSE}" == yes ]] && { eend "$@"; return $?; }
+	[ "${RC_VERBOSE}" = "yes" ] && { eend "$@"; return $?; }
 	return ${1:-0}
 }
 veend() {
-	[[ "${RC_VERBOSE}" == yes ]] && { ewend "$@"; return $?; }
+	[ "${RC_VERBOSE}" = "yes" ] && { ewend "$@"; return $?; }
 	return ${1:-0}
 }
 
@@ -469,10 +472,10 @@ veend() {
 #    Return the Major (X of X.Y.Z) kernel version
 #
 KV_major() {
-	[[ -z $1 ]] && return 1
+	[ -z "$1" ] && return 1
 
 	local KV=$@
-	echo ${KV%%.*}
+	echo "${KV%%.*}"
 }
 
 # char *KV_minor(string)
@@ -480,11 +483,11 @@ KV_major() {
 #    Return the Minor (Y of X.Y.Z) kernel version
 #
 KV_minor() {
-	[[ -z $1 ]] && return 1
+	[ -z "$1" ] && return 1
 
-	local KV=$@
-	KV=${KV#*.}
-	echo ${KV%%.*}
+	local KV="$@"
+	KV="${KV#*.}"
+	echo "${KV%%.*}"
 }
 
 # char *KV_micro(string)
@@ -492,11 +495,11 @@ KV_minor() {
 #    Return the Micro (Z of X.Y.Z) kernel version.
 #
 KV_micro() {
-	[[ -z $1 ]] && return 1
+	[ -z "$1" ] && return 1
 
-	local KV=$@
-	KV=${KV#*.*.}
-	echo ${KV%%[^[:digit:]]*}
+	local KV="$@"
+	KV="${KV#*.*.}"
+	echo "${KV%%[^[:digit:]]*}"
 }
 
 # int KV_to_int(string)
@@ -505,16 +508,16 @@ KV_micro() {
 #    for easy compairing or versions ...
 #
 KV_to_int() {
-	[[ -z $1 ]] && return 1
+	[ -z "$1" ] && return 1
 
-	local KV_MAJOR=$(KV_major "$1")
-	local KV_MINOR=$(KV_minor "$1")
-	local KV_MICRO=$(KV_micro "$1")
+	local KV_MAJOR="$(KV_major "$1")"
+	local KV_MINOR="$(KV_minor "$1")"
+	local KV_MICRO="$(KV_micro "$1")"
 	local KV_int=$(( KV_MAJOR * 65536 + KV_MINOR * 256 + KV_MICRO ))
 
 	# We make version 2.2.0 the minimum version we will handle as
 	# a sanity check ... if its less, we fail ...
-	if [[ ${KV_int} -ge 131584 ]] ; then
+	if [ "${KV_int}" -ge 131584 ] ; then
 		echo "${KV_int}"
 		return 0
 	fi
@@ -530,9 +533,9 @@ KV_to_int() {
 #    e.g. 2.4.25, 2.6.10, 2.6.4-rc3, 2.2.40-poop, 2.0.15+foo
 #
 get_KV() {
-	local KV=$(uname -r)
+	local KV="$(uname -r)"
 
-	echo $(KV_to_int "${KV}")
+	echo "$(KV_to_int "${KV}")"
 
 	return $?
 }
@@ -647,13 +650,19 @@ NET_FS_LIST="afs cifs coda gfs ncpfs nfs nfs4 shfs smbfs"
 is_net_fs() {
 	local fstype
 	# /proc/mounts is always accurate but may not always be available
-	if [[ -e /proc/mounts ]]; then
-		fstype=$( sed -n -e '/^rootfs/!s:.* '"$1"' \([^ ]*\).*:\1:p' /proc/mounts )
+	if [ -e /proc/mounts ]; then
+		fstype="$( sed -n -e '/^rootfs/!s:.* '"$1"' \([^ ]*\).*:\1:p' /proc/mounts )"
 	else
-		fstype=$( mount | sed -n -e 's:.* on '"$1"' type \([^ ]*\).*:\1:p' )
+		fstype="$( mount | sed -n -e 's:.* on '"$1"' type \([^ ]*\).*:\1:p' )"
 	fi
-	[[ " ${NET_FS_LIST} " == *" ${fstype} "* ]]
-	return $?
+	case " ${NET_FS_LIST} " in
+		*" ${fstype} "*)
+			return 0
+			;;
+		*)
+			return 1
+			;;
+	esac
 }
 
 # bool is_uml_sys()
@@ -698,10 +707,19 @@ get_mount_fstab() {
 #   Returns the reversed order of list
 #
 reverse_list() {
-	for (( i = $# ; i > 0 ; --i )); do
-		echo -n "${!i} "
+	local ret
+	ret=''
+	while [ "$#" -gt 0 ] ; do
+		if [ -z "${ret}" ] ; then
+			ret="$1"
+		else
+			ret="$1 ${ret}"
+		fi
+		shift
 	done
+	printf '%s' "${ret}"
 }
+
 
 # bool is_older_than(reference, files/dirs to check)
 #
@@ -715,9 +733,9 @@ is_older_than() {
 	shift
 
 	for x in "$@" ; do
-		[[ ${x} -nt ${ref} ]] && return 0
+		[ "${x}" -nt "${ref}" ] && return 0
 
-		if [[ -d ${x} ]] ; then
+		if [ -d "${x}" ] ; then
 			is_older_than "${ref}" "${x}"/* && return 0
 		fi
 	done
@@ -748,44 +766,51 @@ if [ -z "${EBUILD}" ] ; then
 
 else
 	# Should we use colors ?
-	if [[ $* != *depend* ]]; then
-		# Check user pref in portage
-		RC_NOCOLOR="$(portageq envvar NOCOLOR 2>/dev/null)"
-		[ "${RC_NOCOLOR}" = "true" ] && RC_NOCOLOR="yes"
-	else
+	case "$*" in
+		*depend*)
+			# Check user pref in portage
+			RC_NOCOLOR="$(portageq envvar NOCOLOR 2>/dev/null)"
+			[ "${RC_NOCOLOR}" = "true" ] && RC_NOCOLOR="yes"
+			;;
+		*)
 		# We do not want colors during emerge depend
 		RC_NOCOLOR="yes"
 		# No output is seen during emerge depend, so this is not needed.
 		RC_ENDCOL="no"
-	fi
+		;;
+	esac
 fi
 
-if [[ -n ${EBUILD} && $* == *depend* ]]; then
+COLS=0
+
+case "$*" in
+	*depend*)
 	# We do not want stty to run during emerge depend
-	COLS=80
-else
+	[ -n "${EBUILD}" ] && COLS=80
+esac
+
+if [ "${COLS}" -eq 0 ] ; then
 	# Setup COLS and ENDCOL so eend can line up the [ ok ]
-	COLS=${COLUMNS:-0}		# bash's internal COLUMNS variable
-	(( COLS == 0 )) && COLS=$(stty size 2>/dev/null | cut -d' ' -f2)
-	(( COLS > 0 )) || (( COLS = 80 ))	# width of [ ok ] == 7
+	COLS="$(stty size 2>/dev/null | cut -d' ' -f2)"
+	[ "${COLS}" -gt 0 ] || COLS=80		# width of [ ok ] == 7
 fi
 
-if [[ ${RC_ENDCOL} == yes ]]; then
-	ENDCOL=$'\e[A\e['$(( COLS - 8 ))'G'
+if [ "${RC_ENDCOL}" = "yes" ]; then
+	ENDCOL="[A[$(( ${COLS} - 8 ))G"
 else
 	ENDCOL=''
 fi
 
 # Setup the colors so our messages all look pretty
-if [[ ${RC_NOCOLOR} == yes ]]; then
+if [ "${RC_NOCOLOR}" = "yes" ]; then
 	unset GOOD WARN BAD NORMAL HILITE BRACKET
 else
-	GOOD=$'\e[32;01m'
-	WARN=$'\e[33;01m'
-	BAD=$'\e[31;01m'
-	NORMAL=$'\e[0m'
-	HILITE=$'\e[36;01m'
-	BRACKET=$'\e[34;01m'
+	GOOD='[32;01m'
+	WARN='[33;01m'
+	BAD='[31;01m'
+	NORMAL='[0m'
+	HILITE='[36;01m'
+	BRACKET='[34;01m'
 fi
 
 # vim:ts=4
