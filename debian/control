@@ -4,7 +4,9 @@ Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
 Build-Depends: debhelper (>= 4.0.0), dietlibc-dev
 Standards-Version: 3.7.2
-XS-X-Vcs-Hg: http://hg.grml.org/grml-scripts
+Homepage: http://hg.grml.org/grml-scripts/
+XS-Vcs-hg: http://hg.grml.org/grml-scripts/
+XS-Vcs-Browser: http://hg.grml.org/grml-scripts/
 
 Package: grml-scripts
 Architecture: any
