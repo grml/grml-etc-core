@@ -1,3 +1,10 @@
+grml-etc-core (0.3.24) unstable; urgency=low
+
+  [Frank Terbeck]
+  * try to make 'lsb-functions' parsable by (d)ash
+
+ -- Michael Prokop <mika@grml.org>  Thu, 13 Sep 2007 01:20:11 +0200
+
 grml-etc-core (0.3.23) unstable; urgency=low
 
   * /etc/zsh/zshenv: switch direction of check for lesspipe vs.
