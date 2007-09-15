@@ -1,3 +1,9 @@
+grml-etc-core (0.3.25) unstable; urgency=low
+
+  * /etc/zsh/zshrc: unalias utf2iso and iso2utf only it it's set.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 15 Sep 2007 10:44:11 +0200
+
 grml-etc-core (0.3.24) unstable; urgency=low
 
   [ Frank Terbeck ]
