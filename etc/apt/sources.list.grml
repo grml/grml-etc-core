@@ -70,6 +70,9 @@
 #  deb     http://ftp.debian-unofficial.org/debian sarge main contrib non-free restricted
 #  deb-src http://ftp.debian-unofficial.org/debian sarge main contrib non-free restricted
 
+# build-dependency pakets / SourceDeps:
+#  deb http://sourcedeps.debian.net/ sid main contrib non-free
+
 # MPEG, divx...:
 #  deb     http://www.debian-multimedia.org sid main
 #  deb-src http://www.debian-multimedia.org sid main
