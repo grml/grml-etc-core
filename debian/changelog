@@ -7,6 +7,7 @@ grml-etc-core (0.3.24) unstable; urgency=low
   * /etc/zsh/zshrc: convert utf2iso and iso2utf into functions,
     Use 'command grep' (thanks to z3ttacht) and fix a small bug
     in iso2utf.
+  * Pre-Depend on zsh [Testing: issue287]
 
  -- Michael Prokop <mika@grml.org>  Sat, 15 Sep 2007 10:24:36 +0200
 
