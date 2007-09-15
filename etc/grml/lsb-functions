@@ -793,7 +793,7 @@ esac
 # width of [ ok ] == 7
 if [ "${COLS}" -eq 0 ] ; then
 	COLS="$(stty size 2>/dev/null | cut -d' ' -f2)"
-	if [ -z "${COLS}" ] || [ "${COLS}" -gt 0 ] ; then
+	if [ -z "${COLS}" ] || [ "${COLS}" -le 0 ] ; then
 		COLS=80
 	fi
 fi
