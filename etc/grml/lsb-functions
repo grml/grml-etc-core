@@ -789,10 +789,13 @@ case "$*" in
 	[ -n "${EBUILD}" ] && COLS=80
 esac
 
+# Setup COLS and ENDCOL so eend can line up the [ ok ]
+# width of [ ok ] == 7
 if [ "${COLS}" -eq 0 ] ; then
-	# Setup COLS and ENDCOL so eend can line up the [ ok ]
 	COLS="$(stty size 2>/dev/null | cut -d' ' -f2)"
-	[ "${COLS}" -gt 0 ] || COLS=80		# width of [ ok ] == 7
+	if [ -z "${COLS}" ] || [ "${COLS}" -gt 0 ] ; then
+		COLS=80
+	fi
 fi
 
 if [ "${RC_ENDCOL}" = "yes" ]; then
