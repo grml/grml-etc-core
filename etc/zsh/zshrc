@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Jul 07 10:56:20 CEST 2007 [mika]
+# Latest change: Sam Sep 15 10:24:10 CEST 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -165,7 +165,7 @@
   #f1# Checks whether or not you're running grml-small
     isgrmlsmall() {
     [[ ${${${(f)"$(</etc/grml_version)"}%% *}##*-} == 'small' ]] && return 0 ; return 1
-  }
+    }
   else
     isgrmlsmall() { return 1 }
   fi
@@ -809,16 +809,23 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
   alias term2iso="echo 'Setting terminal to iso mode' ; print -n '\e%@'"
   alias term2utf="echo 'Setting terminal to utf-8 mode'; print -n '\e%G'"
 
-  alias utf2iso='if isutfenv ; then
-   for ENV in `env | grep UTF` ; do
-       eval export "$(echo $ENV | sed 's/UTF-8/iso885915/')"
-   done
-   fi'
-  alias iso2utf='if isutfenv ; then
-   for ENV in `env | grep '\.iso'` ; do
-       eval export "$(echo $ENV | sed 's/iso.*/UTF-8/')"
-   done
-   fi'
+  unalias utf2iso # make sure it is not assigned yet
+  utf2iso() {
+    if isutfenv ; then
+       for ENV in $(env | command grep -i '.utf') ; do
+           eval export "$(echo $ENV | sed 's/UTF-8/iso885915/ ; s/utf8/iso885915/')"
+       done
+     fi
+  }
+
+  unalias iso2utf # make sure it is not assigned yet
+  iso2utf() {
+   if ! isutfenv ; then
+      for ENV in $(env | command grep -i '\.iso') ; do
+          eval export "$(echo $ENV | sed 's/iso.*/UTF-8/ ; s/ISO.*/UTF-8/')"
+      done
+   fi
+ }
 
 # set up software synthesizer via speakup
   alias swspeak='
