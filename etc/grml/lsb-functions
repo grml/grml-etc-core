@@ -1,4 +1,5 @@
-# lsb init-functions {{{
+# lsb init-functions
+# vim:ft=sh:tw=80
 # /lib/lsb/init-functions for Debian -*- shell-script -*-
 #
 # Copyright (c) 2002-03 Chris Lawrence
@@ -28,117 +29,100 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
+TPUT="${TPUT:-"/usr/bin/tput"}"
+
+have_tput() {
+    [ -x "$TPUT" ] && "$TPUT" hpa 60 >/dev/null 2>&1 \
+        && return 0 \
+        || return 1
+}
+
 log_success_msg () {
-    echo " * $@"
+    printf " * $@\n"
 }
 
 log_failure_msg () {
-    TPUT=/usr/bin/tput
-    if [ -x $TPUT ] && $TPUT hpa 60 >/dev/null 2>&1; then
-        RED=`$TPUT setaf 1`
-        #NORMAL=`$TPUT op`
-        echo " ${RED}*${NORMAL} $@"
+    if have_tput ; then
+        RED="$("$TPUT" setaf 1)"
+        #NORMAL="$("$TPUT" op)"
+        printf " ${RED}*${NORMAL} $@\n"
     else
-        echo " * $@"
+        printf " * $@\n"
     fi
 }
 
 log_warning_msg () {
-    TPUT=/usr/bin/tput
-    if [ -x $TPUT ] && $TPUT hpa 60 >/dev/null 2>&1; then
-        YELLOW=`$TPUT setaf 3`
-        #NORMAL=`$TPUT op`
-        # echo " *${NORMAL} $@"
-        echo " ${BLUE}*${NORMAL} $@"
+    if have_tput ; then
+        YELLOW="$("$TPUT" setaf 3)"
+        #NORMAL="$("$TPUT" op")"
+        # printf " *${NORMAL} $@\n"
+        printf " ${BLUE}*${NORMAL} $@\n"
     else
-        echo " * $@"
+        printf " * $@\n"
     fi
 }
 
 log_warning_msg_nn () {
-    TPUT=/usr/bin/tput
-    if [ -x $TPUT ] && $TPUT hpa 60 >/dev/null 2>&1; then
-        YELLOW=`$TPUT setaf 3`
-        echo -n " ${BLUE}*${NORMAL} $@"
+    if have_tput ; then
+        YELLOW="$("$TPUT" setaf 3)"
+        printf " ${BLUE}*${NORMAL} $@"
     else
-        echo -n " * $@"
+        printf " * $@"
     fi
 }
 
 # int log_begin_message (char *message)
 log_begin_msg () {
-        if [ -z "$1" ]; then
+        if [ "$#" -eq 0 ]; then
                 return 1
         fi
-        echo " ${GREEN}*${NORMAL} $@"
+        printf " ${GREEN}*${NORMAL} $@\n"
 }
 
 log_begin_msg_nn () {
-        if [ -z "$1" ]; then
+        if [ "$#" -eq 0 ]; then
                 return 1
         fi
-        echo -n " ${GREEN}*${NORMAL} $@"
+        printf " ${GREEN}*${NORMAL} $@"
 }
 
 
 SUBMSG="   ${GREEN}-${NORMAL} "
-  
+
 # int log_end_message (int exitstatus)
 log_end_msg () {
 
     # If no arguments were passed, return
-    [ -z "$1" ] && return 1
+    [ "$#" -eq 0 ] && return 1
 
     # Only do the fancy stuff if we have an appropriate terminal
     # and if /usr is already mounted
-    TPUT=/usr/bin/tput
-    EXPR=/usr/bin/expr
-    if [ -x $TPUT ] && [ -x $EXPR ] && $TPUT hpa 60 >/dev/null 2>&1; then
-        COLS=`$TPUT cols`
+    if have_tput ; then
+        COLS="$("$TPUT" cols)"
         if [ -n "$COLS" ]; then
-            COL=`$EXPR $COLS - 7`
+            COL=$(( "$COLS" - 7 ))
         else
             COL=73
         fi
-        UP=`$TPUT cuu1`
-        END=`$TPUT hpa $COL`
-        START=`$TPUT hpa 0`
-        #RED=`$TPUT setaf 1`
-        #NORMAL=`$TPUT op`
-        if [ $1 -eq 0 ]; then
-            echo "$UP$END${BLUE}[ ${GREEN}ok ${BLUE}]${NORMAL}"
+        UP="$("$TPUT" cuu1)"
+        END="$("$TPUT" hpa $COL)"
+        START="$("$TPUT" hpa 0)"
+        #RED="$("$TPUT" setaf 1)"
+        #NORMAL="$("$TPUT" op)"
+        if [ "$1" -eq 0 ]; then
+            printf "${UP}${END}${BLUE}[ ${GREEN}ok ${BLUE}]${NORMAL}\n"
         else
-            echo -e "${UP}${START} ${RED}*${NORMAL}${END}[${RED}fail${NORMAL}]"
+            printf "${UP}${START} ${RED}*${NORMAL}${END}[${RED}fail${NORMAL}]\n"
         fi
     else
-        if [ $1 -eq 0 ]; then
-            echo "   ...done."
+        if [ "$1" -eq 0 ]; then
+            printf "   ...done.\n"
         else
-            echo "   ...fail!"
+            printf "   ...fail!\n"
         fi
     fi
-    return $1
+    return "$1"
 }
-
-# void esyslog(char* priority, char* tag, char* message)
-#    use the system logger to log a message
-#esyslog() {
-#        local pri=
-#        local tag=
-#
-#        if [ -x /usr/bin/logger ]
-#        then
-#                pri="$1"
-#                tag="$2"
-#
-#                shift 2
-#                [[ -z "$*" ]] && return 0
-#
-#                /usr/bin/logger -p "${pri}" -t "${tag}" -- "$*"
-#        fi
-#
-#        return 0
-#}
 
 # Copyright 1999-2005 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
@@ -161,7 +145,7 @@ RC_VERBOSE="${RC_VERBOSE:-no}"
 
 # Should we use color?
 if [ -r /proc/cmdline ] ; then
-   grep -q ' nocolor' /proc/cmdline && RC_NOCOLOR='yes'
+    grep -q ' nocolor' /proc/cmdline && RC_NOCOLOR='yes'
 fi
 RC_NOCOLOR="${RC_NOCOLOR:-no}"
 # Can the terminal handle endcols?
@@ -247,7 +231,7 @@ get_libdir() {
 	elif [ -x "/usr/bin/portageq" ] ; then
 		CONF_LIBDIR="$(/usr/bin/portageq envvar CONF_LIBDIR)"
 	fi
-	echo ${CONF_LIBDIR:=lib}
+	printf '%s\n' ${CONF_LIBDIR:=lib}
 }
 
 # void esyslog(char* priority, char* tag, char* message)
@@ -320,7 +304,7 @@ einfo() {
 einfon() {
 	[ "${RC_QUIET_STDOUT}" = "yes" ] && return 0
 	[ "${RC_ENDCOL}" != "yes" ] && [ "${LAST_E_CMD}" = "ebegin" ] && echo
-	echo -ne " ${GOOD}*${NORMAL} ${RC_INDENTATION}$*"
+	printf " ${GOOD}*${NORMAL} ${RC_INDENTATION}$*"
 	LAST_E_CMD=einfon
 	return 0
 }
@@ -331,10 +315,10 @@ einfon() {
 #
 ewarn() {
 	if [ "${RC_QUIET_STDOUT}" = "yes" ]; then
-		echo " $*"
+		printf " $*\n"
 	else
 		[ "${RC_ENDCOL}" != "yes" ] && [ "${LAST_E_CMD}" = "ebegin" ] && echo
-		echo -e " ${WARN}*${NORMAL} ${RC_INDENTATION}$*"
+		printf " ${WARN}*${NORMAL} ${RC_INDENTATION}$*\n"
 	fi
 
 	# Log warnings to system log
@@ -350,10 +334,10 @@ ewarn() {
 #
 eerror() {
 	if [ "${RC_QUIET_STDOUT}" = "yes" ]; then
-		echo " $*" >/dev/stderr
+		printf " $*\n" >/dev/stderr
 	else
 		[ "${RC_ENDCOL}" != "yes" ] && [ "${LAST_E_CMD}" = "ebegin" ] && echo
-		echo -e " ${BAD}*${NORMAL} ${RC_INDENTATION}$*"
+		printf " ${BAD}*${NORMAL} ${RC_INDENTATION}$*\n"
 	fi
 
 	# Log errors to system log
@@ -412,10 +396,10 @@ _eend() {
 	fi
 
 	if [ "${RC_ENDCOL}" = "yes" ]; then
-		echo -e "${ENDCOL}  ${msg}"
+		printf "${ENDCOL}  ${msg}\n"
 	else
 		[ "${LAST_E_CMD}" = "ebegin" ] || LAST_E_LEN=0
-		printf "%$(( COLS - LAST_E_LEN - 6 ))s%b\n" '' "${msg}"
+		printf "%$(( "${COLS}" - "${LAST_E_LEN}" - 6 ))s%b\n" '' "${msg}"
 	fi
 
 	return ${retval}
@@ -453,9 +437,9 @@ ewend() {
 
 # v-e-commands honor RC_VERBOSE which defaults to no.
 # The condition is negated so the return value will be zero.
-veinfo() { [ "${RC_VERBOSE}" != yes ] || einfo "$@"; }
+veinfo()  { [ "${RC_VERBOSE}" != yes ] || einfo  "$@"; }
 veinfon() { [ "${RC_VERBOSE}" != yes ] || einfon "$@"; }
-vewarn() { [ "${RC_VERBOSE}" != yes ] || ewarn "$@"; }
+vewarn()  { [ "${RC_VERBOSE}" != yes ] || ewarn  "$@"; }
 veerror() { [ "${RC_VERBOSE}" != yes ] || eerror "$@"; }
 vebegin() { [ "${RC_VERBOSE}" != yes ] || ebegin "$@"; }
 veend() {
@@ -475,7 +459,7 @@ KV_major() {
 	[ -z "$1" ] && return 1
 
 	local KV=$@
-	echo "${KV%%.*}"
+	printf "${KV%%.*}\n"
 }
 
 # char *KV_minor(string)
@@ -487,7 +471,7 @@ KV_minor() {
 
 	local KV="$@"
 	KV="${KV#*.}"
-	echo "${KV%%.*}"
+	printf "${KV%%.*}\n"
 }
 
 # char *KV_micro(string)
@@ -499,7 +483,7 @@ KV_micro() {
 
 	local KV="$@"
 	KV="${KV#*.*.}"
-	echo "${KV%%[^[:digit:]]*}"
+	printf "${KV%%[^[:digit:]]*}\n"
 }
 
 # int KV_to_int(string)
@@ -518,7 +502,7 @@ KV_to_int() {
 	# We make version 2.2.0 the minimum version we will handle as
 	# a sanity check ... if its less, we fail ...
 	if [ "${KV_int}" -ge 131584 ] ; then
-		echo "${KV_int}"
+		printf "${KV_int}\n"
 		return 0
 	fi
 
@@ -535,7 +519,7 @@ KV_to_int() {
 get_KV() {
 	local KV="$(uname -r)"
 
-	echo "$(KV_to_int "${KV}")"
+	printf "$(KV_to_int "${KV}")\n"
 
 	return $?
 }
@@ -567,7 +551,7 @@ get_bootparam() {
 			do
 				if [ "${x}" = "$1" ]
 				then
-#					echo "YES"
+#					printf "YES\n"
 					retval=0
 				fi
 			done
@@ -618,7 +602,7 @@ dolisting() {
 		fi
 	done
 
-	echo "${mylist}"
+	printf "${mylist}\n"
 }
 
 # char *add_suffix(char * configfile)
@@ -628,9 +612,9 @@ dolisting() {
 add_suffix() {
 	if [ "${RC_USE_CONFIG_PROFILE}" = "yes" -a -e "$1.${DEFAULTLEVEL}" ]
 	then
-		echo "$1.${DEFAULTLEVEL}"
+		printf "$1.${DEFAULTLEVEL}\n"
 	else
-		echo "$1"
+		printf "$1\n"
 	fi
 
 	return 0
@@ -728,7 +712,7 @@ reverse_list() {
 #
 #   EXAMPLE: if is_older_than a.out *.o ; then ...
 is_older_than() {
-	local x=
+	local x
 	local ref="$1"
 	shift
 
@@ -743,59 +727,31 @@ is_older_than() {
 	return 1
 }
 
-if [ -z "${EBUILD}" ] ; then
-	# Setup a basic $PATH.  Just add system default to existing.
-	# This should solve both /sbin and /usr/sbin not present when
-	# doing 'su -c foo', or for something like:  PATH= rcscript start
-	PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/sbin:${PATH}"
+# Setup a basic $PATH.  Just add system default to existing.
+# This should solve both /sbin and /usr/sbin not present when
+# doing 'su -c foo', or for something like:  PATH= rcscript start
+PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/sbin:${PATH}"
 
-	if [ "$(/sbin/consoletype 2> /dev/null)" = "serial" ] ; then
-		# We do not want colors/endcols on serial terminals
-		RC_NOCOLOR="yes"
-		RC_ENDCOL="no"
-	fi
-
-	for arg in "$@" ; do
-		case "${arg}" in
-			# Lastly check if the user disabled it with --nocolor argument
-			--nocolor|-nc)
-				RC_NOCOLOR="yes"
-				;;
-		esac
-	done
-
-else
-	# Should we use colors ?
-	case "$*" in
-		*depend*)
-			# Check user pref in portage
-			RC_NOCOLOR="$(portageq envvar NOCOLOR 2>/dev/null)"
-			[ "${RC_NOCOLOR}" = "true" ] && RC_NOCOLOR="yes"
-			;;
-		*)
-		# We do not want colors during emerge depend
-		RC_NOCOLOR="yes"
-		# No output is seen during emerge depend, so this is not needed.
-		RC_ENDCOL="no"
-		;;
-	esac
+if [ "$(/sbin/consoletype 2> /dev/null)" = "serial" ] ; then
+    # We do not want colors/endcols on serial terminals
+    RC_NOCOLOR="yes"
+    RC_ENDCOL="no"
 fi
 
-COLS=0
-
-case "$*" in
-	*depend*)
-	# We do not want stty to run during emerge depend
-	[ -n "${EBUILD}" ] && COLS=80
-esac
+for arg in "$@" ; do
+    case "${arg}" in
+        # Lastly check if the user disabled it with --nocolor argument
+        --nocolor|-nc)
+            RC_NOCOLOR="yes"
+            ;;
+    esac
+done
 
 # Setup COLS and ENDCOL so eend can line up the [ ok ]
 # width of [ ok ] == 7
-if [ "${COLS}" -eq 0 ] ; then
-	COLS="$(stty size 2>/dev/null | cut -d' ' -f2)"
-	if [ -z "${COLS}" ] || [ "${COLS}" -le 0 ] ; then
-		COLS=80
-	fi
+COLS="$(stty size 2>/dev/null | cut -d' ' -f2)"
+if [ -z "${COLS}" ] || [ "${COLS}" -le 0 ] ; then
+    COLS=80
 fi
 
 if [ "${RC_ENDCOL}" = "yes" ]; then
@@ -817,4 +773,3 @@ else
 fi
 
 # vim:ts=4
-# }}}
