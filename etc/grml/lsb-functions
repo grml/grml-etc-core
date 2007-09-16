@@ -191,9 +191,9 @@ profiling() {
 #    parameters.
 #
 get_bootconfig() {
-    local copt=
-    local newbootlevel=
-    local newsoftlevel=
+    local copt
+    local newbootlevel
+    local newsoftlevel
 
     for copt in $(</proc/cmdline) ; do
         case "${copt%=*}" in
@@ -239,8 +239,8 @@ get_libdir() {
 #    use the system logger to log a message
 #
 esyslog() {
-    local pri=
-    local tag=
+    local pri
+    local tag
 
     if [ -x /usr/bin/logger ]
     then
@@ -437,11 +437,11 @@ ewend() {
 
 # v-e-commands honor RC_VERBOSE which defaults to no.
 # The condition is negated so the return value will be zero.
-veinfo()  { [ "${RC_VERBOSE}" != yes ] || einfo  "$@"; }
-veinfon() { [ "${RC_VERBOSE}" != yes ] || einfon "$@"; }
-vewarn()  { [ "${RC_VERBOSE}" != yes ] || ewarn  "$@"; }
-veerror() { [ "${RC_VERBOSE}" != yes ] || eerror "$@"; }
-vebegin() { [ "${RC_VERBOSE}" != yes ] || ebegin "$@"; }
+veinfo()  { [ "${RC_VERBOSE}" != "yes" ] || einfo  "$@"; }
+veinfon() { [ "${RC_VERBOSE}" != "yes" ] || einfon "$@"; }
+vewarn()  { [ "${RC_VERBOSE}" != "yes" ] || ewarn  "$@"; }
+veerror() { [ "${RC_VERBOSE}" != "yes" ] || eerror "$@"; }
+vebegin() { [ "${RC_VERBOSE}" != "yes" ] || ebegin "$@"; }
 veend() {
     [ "${RC_VERBOSE}" = "yes" ] && { eend "$@"; return $?; }
     return ${1:-0}
@@ -449,17 +449,6 @@ veend() {
 veend() {
     [ "${RC_VERBOSE}" = "yes" ] && { ewend "$@"; return $?; }
     return ${1:-0}
-}
-
-# char *KV_major(string)
-#
-#    Return the Major (X of X.Y.Z) kernel version
-#
-KV_major() {
-    [ -z "$1" ] && return 1
-
-    local KV=$@
-    printf "${KV%%.*}\n"
 }
 
 # char *KV_minor(string)
@@ -572,10 +561,10 @@ get_bootparam() {
 #          also, error checking is not that extensive ...
 #
 dolisting() {
-    local x=
-    local y=
-    local tmpstr=
-    local mylist=
+    local x
+    local y
+    local tmpstr
+    local mylist
     local mypath="$*"
 
     if [ "${mypath%/\*}" != "${mypath}" ]
@@ -587,7 +576,7 @@ dolisting() {
     do
         [ ! -e "${x}" ] && continue
 
-        if [ ! -d "${x}" ] && ( [ -L "${x}" -o -f "${x}" ] )
+        if [ ! -d "${x}" ] && ( [ -L "${x}" ] || [ -f "${x}" ] )
         then
             mylist="${mylist} $(ls "${x}" 2> /dev/null)"
         else
