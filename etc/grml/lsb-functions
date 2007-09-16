@@ -383,47 +383,6 @@ add_suffix() {
     return 0
 }
 
-# char *reverse_list(list)
-#
-#   Returns the reversed order of list
-#
-reverse_list() {
-    local ret
-    ret=''
-    while [ "$#" -gt 0 ] ; do
-        if [ -z "${ret}" ] ; then
-            ret="$1"
-        else
-            ret="$1 ${ret}"
-        fi
-        shift
-    done
-    printf '%s' "${ret}"
-}
-
-
-# bool is_older_than(reference, files/dirs to check)
-#
-#   return 0 if any of the files/dirs are newer than
-#   the reference file
-#
-#   EXAMPLE: if is_older_than a.out *.o ; then ...
-is_older_than() {
-    local x
-    local ref="$1"
-    shift
-
-    for x in "$@" ; do
-        [ "${x}" -nt "${ref}" ] && return 0
-
-        if [ -d "${x}" ] ; then
-            is_older_than "${ref}" "${x}"/* && return 0
-        fi
-    done
-
-    return 1
-}
-
 # Setup a basic $PATH.  Just add system default to existing.
 # This should solve both /sbin and /usr/sbin not present when
 # doing 'su -c foo', or for something like:  PATH= rcscript start
