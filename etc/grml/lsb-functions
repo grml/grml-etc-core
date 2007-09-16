@@ -167,43 +167,6 @@ RC_DEFAULT_INDENT=2
 #RC_DOT_PATTERN=' .'
 RC_DOT_PATTERN=''
 
-# void get_bootconfig()
-#
-#    Get the BOOTLEVEL and SOFTLEVEL by setting
-#    'bootlevel' and 'softlevel' via kernel
-#    parameters.
-#
-get_bootconfig() {
-    local copt
-    local newbootlevel
-    local newsoftlevel
-
-    for copt in $(</proc/cmdline) ; do
-        case "${copt%=*}" in
-            "bootlevel")
-                newbootlevel="${copt##*=}"
-                ;;
-            "softlevel")
-                newsoftlevel="${copt##*=}"
-                ;;
-        esac
-    done
-
-    if [ -n "${newbootlevel}" ] ; then
-        export BOOTLEVEL="${newbootlevel}"
-    else
-        export BOOTLEVEL="boot"
-    fi
-
-    if [ -n "${newsoftlevel}" ] ; then
-        export DEFAULTLEVEL="${newsoftlevel}"
-    else
-        export DEFAULTLEVEL="default"
-    fi
-
-    return 0
-}
-
 # void esyslog(char* priority, char* tag, char* message)
 #
 #    use the system logger to log a message
