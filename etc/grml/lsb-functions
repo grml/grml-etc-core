@@ -368,21 +368,6 @@ ewend() {
     return $retval
 }
 
-# char *add_suffix(char * configfile)
-#
-#    Returns a config file name with the softlevel suffix
-#    appended to it.  For use with multi-config services.
-add_suffix() {
-    if [ "${RC_USE_CONFIG_PROFILE}" = "yes" -a -e "$1.${DEFAULTLEVEL}" ]
-    then
-        printf "$1.${DEFAULTLEVEL}\n"
-    else
-        printf "$1\n"
-    fi
-
-    return 0
-}
-
 # Setup a basic $PATH.  Just add system default to existing.
 # This should solve both /sbin and /usr/sbin not present when
 # doing 'su -c foo', or for something like:  PATH= rcscript start
