@@ -451,18 +451,6 @@ veend() {
     return ${1:-0}
 }
 
-# char *KV_micro(string)
-#
-#    Return the Micro (Z of X.Y.Z) kernel version.
-#
-KV_micro() {
-    [ -z "$1" ] && return 1
-
-    local KV="$@"
-    KV="${KV#*.*.}"
-    printf "${KV%%[^[:digit:]]*}\n"
-}
-
 # int KV_to_int(string)
 #
 #    Convert a string type kernel version (2.4.0) to an int (132096)
