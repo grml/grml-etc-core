@@ -105,7 +105,7 @@ log_end_msg() {
             COL=73
         fi
         UP="$("$TPUT" cuu1)"
-        END="$("$TPUT" hpa $COL)"
+        END="$("$TPUT" hpa "$COL")"
         START="$("$TPUT" hpa 0)"
         #RED="$("$TPUT" setaf 1)"
         #NORMAL="$("$TPUT" op)"
@@ -128,44 +128,50 @@ log_end_msg() {
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-src/rc-scripts/sbin/functions.sh,v 1.81.2.6 2005/05/15 20:00:31 vapier Exp $
 
-RC_GOT_FUNCTIONS="yes"
-
-# Different types of dependencies
-deptypes="need use"
-# Different types of order deps
-ordtypes="before after"
-
-#
 # Internal variables
-#
 
 # Dont output to stdout?
 RC_QUIET_STDOUT="no"
-RC_VERBOSE="${RC_VERBOSE:-no}"
+
+# Default values for e-message indentation and dots
+RC_INDENTATION=''
+RC_DEFAULT_INDENT=2
+#RC_DOT_PATTERN=' .'
+RC_DOT_PATTERN=''
 
 # Should we use color?
 if [ -r /proc/cmdline ] ; then
     grep -q ' nocolor' /proc/cmdline && RC_NOCOLOR='yes'
 fi
 RC_NOCOLOR="${RC_NOCOLOR:-no}"
+
 # Can the terminal handle endcols?
 RC_ENDCOL="yes"
 
-#
-# Default values for rc system
-#
-RC_TTY_NUMBER=11
-RC_NET_STRICT_CHECKING="no"
-RC_PARALLEL_STARTUP="no"
-RC_USE_CONFIG_PROFILE="yes"
+# Setup COLS and ENDCOL so eend can line up the [ ok ]
+# width of [ ok ] == 7
+COLS="$(stty size 2>/dev/null | cut -d' ' -f2)"
+if [ -z "${COLS}" ] || [ "${COLS}" -le 0 ] ; then
+    COLS=80
+fi
 
-#
-# Default values for e-message indentation and dots
-#
-RC_INDENTATION=''
-RC_DEFAULT_INDENT=2
-#RC_DOT_PATTERN=' .'
-RC_DOT_PATTERN=''
+if [ "${RC_ENDCOL}" = "yes" ]; then
+    ENDCOL="[A[$(( "${COLS}" - 8 ))G"
+else
+    ENDCOL=''
+fi
+
+# Setup the colors so our messages all look pretty
+if [ "${RC_NOCOLOR}" = "yes" ]; then
+    unset GOOD WARN BAD NORMAL HILITE BRACKET
+else
+    GOOD='[32;01m'
+    WARN='[33;01m'
+    BAD='[31;01m'
+    NORMAL='[0m'
+    HILITE='[36;01m'
+    BRACKET='[34;01m'
+fi
 
 # void esyslog(char* priority, char* tag, char* message)
 #
@@ -175,15 +181,14 @@ esyslog() {
     local pri
     local tag
 
-    if [ -x /usr/bin/logger ]
-    then
+    if [ -x /usr/bin/logger ] ; then
         pri="$1"
         tag="$2"
 
         shift 2
-        [ -z "$*" ] && return 0
+        [ "$#" -eq 0 ] && return 0
 
-        /usr/bin/logger -p "${pri}" -t "${tag}" -- "$*"
+        /usr/bin/logger -p "${pri}" -t "${tag}" -- "$@"
     fi
 
     return 0
@@ -194,9 +199,9 @@ esyslog() {
 #    increase the indent used for e-commands.
 #
 eindent() {
-    local i=$1
-    (( i > 0 )) || (( i = RC_DEFAULT_INDENT ))
-    esetdent $(( ${#RC_INDENTATION} + i ))
+    local i="$1"
+    [ "$i" -gt 0 ] || i="${RC_DEFAULT_INDENT}"
+    esetdent $(( ${#RC_INDENTATION} + "$i" ))
 }
 
 # void eoutdent(int num)
@@ -204,9 +209,9 @@ eindent() {
 #    decrease the indent used for e-commands.
 #
 eoutdent() {
-    local i=$1
-    (( i > 0 )) || (( i = RC_DEFAULT_INDENT ))
-    esetdent $(( ${#RC_INDENTATION} - i ))
+    local i="$1"
+    [ "$i" -gt 0 ] || i="${RC_DEFAULT_INDENT}"
+    esetdent $(( ${#RC_INDENTATION} - "$i" ))
 }
 
 # void esetdent(int num)
@@ -215,9 +220,9 @@ eoutdent() {
 #    num defaults to 0
 #
 esetdent() {
-    local i=$1
-    (( i < 0 )) && (( i = 0 ))
-    RC_INDENTATION=$(printf "%${i}s" '')
+    local i="$1"
+    [ "$i" -lt 0 ] && i=0
+    RC_INDENTATION="$(printf "%${i}s" '')"
 }
 
 # void einfo(char* message)
@@ -255,7 +260,7 @@ ewarn() {
     fi
 
     # Log warnings to system log
-    esyslog "daemon.warning" "rc-scripts" "$*"
+    esyslog "daemon.warning" "rc-scripts" "$@"
 
     LAST_E_CMD=ewarn
     return 0
@@ -274,7 +279,7 @@ eerror() {
     fi
 
     # Log errors to system log
-    esyslog "daemon.err" "rc-scripts" "$*"
+    esyslog "daemon.err" "rc-scripts" "$@"
 
     LAST_E_CMD=eerror
     return 0
@@ -285,12 +290,12 @@ eerror() {
 #    show a message indicating the start of a process
 #
 ebegin() {
-    local msg="$*" dots spaces
+    local msg="$@" dots spaces
     spaces="$(printf '%'"${#RC_DOT_PATTERN}"'s' '')"
     [ "${RC_QUIET_STDOUT}" = "yes" ] && return 0
 
     if [ -n "${RC_DOT_PATTERN}" ]; then
-        dots=$(printf "%$(( COLS - 3 - ${#RC_INDENTATION} - ${#msg} - 7 ))s" '')
+        dots="$(printf "%$(( "$COLS" - 3 - ${#RC_INDENTATION} - ${#msg} - 7 ))s" '')"
         while [ "${dots#${spaces}}" != "${dots}" ] ; do
             dots="${dots#${spaces}}${RC_DOT_PATTERN}"
         done
@@ -315,15 +320,15 @@ ebegin() {
 #    script.
 #
 _eend() {
-    local retval=${1:-0} efunc=${2:-eerror} msg
+    local retval="${1:-0}" efunc="${2:-eerror}" msg
     shift 2
 
     if [ "${retval}" -eq 0 ]; then
         [ "${RC_QUIET_STDOUT}" = "yes" ] && return 0
         msg="${BRACKET}[ ${GOOD}ok${BRACKET} ]${NORMAL}"
     else
-        if [ -n "$*" ]; then
-            "${efunc}" "$*"
+        if [ "$#" -gt 0 ] ; then
+            "${efunc}" "$@"
         fi
         msg="${BRACKET}[ ${BAD}!!${BRACKET} ]${NORMAL}"
     fi
@@ -335,7 +340,7 @@ _eend() {
         printf "%$(( "${COLS}" - "${LAST_E_LEN}" - 6 ))s%b\n" '' "${msg}"
     fi
 
-    return ${retval}
+    return "${retval}"
 }
 
 # void eend(int error, char* errstr)
@@ -344,13 +349,13 @@ _eend() {
 #    if error, show errstr via eerror
 #
 eend() {
-    local retval=${1:-0}
+    local retval="${1:-0}"
     shift
 
-    _eend ${retval} eerror "$*"
+    _eend "${retval}" eerror "$@"
 
     LAST_E_CMD=eend
-    return $retval
+    return "$retval"
 }
 
 # void ewend(int error, char* errstr)
@@ -359,58 +364,13 @@ eend() {
 #    if error, show errstr via ewarn
 #
 ewend() {
-    local retval=${1:-0}
+    local retval="${1:-0}"
     shift
 
-    _eend ${retval} ewarn "$*"
+    _eend "${retval}" ewarn "$@"
 
     LAST_E_CMD=ewend
-    return $retval
+    return "$retval"
 }
-
-# Setup a basic $PATH.  Just add system default to existing.
-# This should solve both /sbin and /usr/sbin not present when
-# doing 'su -c foo', or for something like:  PATH= rcscript start
-PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/sbin:${PATH}"
-
-if [ "$(/sbin/consoletype 2> /dev/null)" = "serial" ] ; then
-    # We do not want colors/endcols on serial terminals
-    RC_NOCOLOR="yes"
-    RC_ENDCOL="no"
-fi
-
-for arg in "$@" ; do
-    case "${arg}" in
-        # Lastly check if the user disabled it with --nocolor argument
-        --nocolor|-nc)
-            RC_NOCOLOR="yes"
-            ;;
-    esac
-done
-
-# Setup COLS and ENDCOL so eend can line up the [ ok ]
-# width of [ ok ] == 7
-COLS="$(stty size 2>/dev/null | cut -d' ' -f2)"
-if [ -z "${COLS}" ] || [ "${COLS}" -le 0 ] ; then
-    COLS=80
-fi
-
-if [ "${RC_ENDCOL}" = "yes" ]; then
-    ENDCOL="[A[$(( ${COLS} - 8 ))G"
-else
-    ENDCOL=''
-fi
-
-# Setup the colors so our messages all look pretty
-if [ "${RC_NOCOLOR}" = "yes" ]; then
-    unset GOOD WARN BAD NORMAL HILITE BRACKET
-else
-    GOOD='[32;01m'
-    WARN='[33;01m'
-    BAD='[31;01m'
-    NORMAL='[0m'
-    HILITE='[36;01m'
-    BRACKET='[34;01m'
-fi
 
 # vim:ts=4
