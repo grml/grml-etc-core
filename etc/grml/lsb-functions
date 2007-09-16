@@ -405,22 +405,6 @@ ewend() {
     return $retval
 }
 
-# v-e-commands honor RC_VERBOSE which defaults to no.
-# The condition is negated so the return value will be zero.
-veinfo()  { [ "${RC_VERBOSE}" != "yes" ] || einfo  "$@"; }
-veinfon() { [ "${RC_VERBOSE}" != "yes" ] || einfon "$@"; }
-vewarn()  { [ "${RC_VERBOSE}" != "yes" ] || ewarn  "$@"; }
-veerror() { [ "${RC_VERBOSE}" != "yes" ] || eerror "$@"; }
-vebegin() { [ "${RC_VERBOSE}" != "yes" ] || ebegin "$@"; }
-veend() {
-    [ "${RC_VERBOSE}" = "yes" ] && { eend "$@"; return $?; }
-    return ${1:-0}
-}
-veend() {
-    [ "${RC_VERBOSE}" = "yes" ] && { ewend "$@"; return $?; }
-    return ${1:-0}
-}
-
 # bool get_bootparam(param)
 #
 #   return 0 if gentoo=param was passed to the kernel
