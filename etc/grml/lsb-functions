@@ -488,50 +488,6 @@ get_bootparam() {
     return ${retval}
 }
 
-# Safer way to list the contents of a directory,
-# as it do not have the "empty dir bug".
-#
-# char *dolisting(param)
-#
-#    print a list of the directory contents
-#
-#    NOTE: quote the params if they contain globs.
-#          also, error checking is not that extensive ...
-#
-dolisting() {
-    local x
-    local y
-    local tmpstr
-    local mylist
-    local mypath="$*"
-
-    if [ "${mypath%/\*}" != "${mypath}" ]
-    then
-        mypath="${mypath%/\*}"
-    fi
-
-    for x in ${mypath}
-    do
-        [ ! -e "${x}" ] && continue
-
-        if [ ! -d "${x}" ] && ( [ -L "${x}" ] || [ -f "${x}" ] )
-        then
-            mylist="${mylist} $(ls "${x}" 2> /dev/null)"
-        else
-            [ "${x%/}" != "${x}" ] && x="${x%/}"
-
-            cd "${x}"; tmpstr="$(ls)"
-
-            for y in ${tmpstr}
-            do
-                mylist="${mylist} ${x}/${y}"
-            done
-        fi
-    done
-
-    printf "${mylist}\n"
-}
-
 # char *add_suffix(char * configfile)
 #
 #    Returns a config file name with the softlevel suffix
