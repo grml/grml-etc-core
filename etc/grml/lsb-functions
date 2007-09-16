@@ -486,35 +486,6 @@ add_suffix() {
     return 0
 }
 
-# Network filesystems list for common use in rc-scripts.
-# This variable is used in is_net_fs and other places such as
-# localmount.
-NET_FS_LIST="afs cifs coda gfs ncpfs nfs nfs4 shfs smbfs"
-
-# bool is_net_fs(path)
-#
-#   return 0 if path is the mountpoint of a networked filesystem
-#
-#   EXAMPLE:  if is_net_fs / ; then ...
-#
-is_net_fs() {
-    local fstype
-    # /proc/mounts is always accurate but may not always be available
-    if [ -e /proc/mounts ]; then
-        fstype="$( sed -n -e '/^rootfs/!s:.* '"$1"' \([^ ]*\).*:\1:p' /proc/mounts )"
-    else
-        fstype="$( mount | sed -n -e 's:.* on '"$1"' type \([^ ]*\).*:\1:p' )"
-    fi
-    case " ${NET_FS_LIST} " in
-        *" ${fstype} "*)
-            return 0
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-}
-
 # bool is_uml_sys()
 #
 #   return 0 if the currently running system is User Mode Linux
