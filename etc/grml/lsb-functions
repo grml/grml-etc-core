@@ -173,7 +173,7 @@ RC_DOT_PATTERN=''
 #  important events.
 #
 splash() {
-	return 0
+    return 0
 }
 
 # void profiling(...)
@@ -181,7 +181,7 @@ splash() {
 #  Notify bootsplash/whatever about important events.
 #
 profiling() {
-	return 0
+    return 0
 }
 
 # void get_bootconfig()
@@ -191,34 +191,34 @@ profiling() {
 #    parameters.
 #
 get_bootconfig() {
-	local copt=
-	local newbootlevel=
-	local newsoftlevel=
+    local copt=
+    local newbootlevel=
+    local newsoftlevel=
 
-	for copt in $(</proc/cmdline) ; do
-		case "${copt%=*}" in
-			"bootlevel")
-				newbootlevel="${copt##*=}"
-				;;
-			"softlevel")
-				newsoftlevel="${copt##*=}"
-				;;
-		esac
-	done
+    for copt in $(</proc/cmdline) ; do
+        case "${copt%=*}" in
+            "bootlevel")
+                newbootlevel="${copt##*=}"
+                ;;
+            "softlevel")
+                newsoftlevel="${copt##*=}"
+                ;;
+        esac
+    done
 
-	if [ -n "${newbootlevel}" ] ; then
-		export BOOTLEVEL="${newbootlevel}"
-	else
-		export BOOTLEVEL="boot"
-	fi
+    if [ -n "${newbootlevel}" ] ; then
+        export BOOTLEVEL="${newbootlevel}"
+    else
+        export BOOTLEVEL="boot"
+    fi
 
-	if [ -n "${newsoftlevel}" ] ; then
-		export DEFAULTLEVEL="${newsoftlevel}"
-	else
-		export DEFAULTLEVEL="default"
-	fi
+    if [ -n "${newsoftlevel}" ] ; then
+        export DEFAULTLEVEL="${newsoftlevel}"
+    else
+        export DEFAULTLEVEL="default"
+    fi
 
-	return 0
+    return 0
 }
 
 # void get_libdir(void)
@@ -226,12 +226,12 @@ get_bootconfig() {
 #    prints the current libdir {lib,lib32,lib64}
 #
 get_libdir() {
-	if [ -n "${CONF_LIBDIR_OVERRIDE}" ] ; then
-		CONF_LIBDIR="${CONF_LIBDIR_OVERRIDE}"
-	elif [ -x "/usr/bin/portageq" ] ; then
-		CONF_LIBDIR="$(/usr/bin/portageq envvar CONF_LIBDIR)"
-	fi
-	printf '%s\n' ${CONF_LIBDIR:=lib}
+    if [ -n "${CONF_LIBDIR_OVERRIDE}" ] ; then
+        CONF_LIBDIR="${CONF_LIBDIR_OVERRIDE}"
+    elif [ -x "/usr/bin/portageq" ] ; then
+        CONF_LIBDIR="$(/usr/bin/portageq envvar CONF_LIBDIR)"
+    fi
+    printf '%s\n' ${CONF_LIBDIR:=lib}
 }
 
 # void esyslog(char* priority, char* tag, char* message)
@@ -239,21 +239,21 @@ get_libdir() {
 #    use the system logger to log a message
 #
 esyslog() {
-	local pri=
-	local tag=
+    local pri=
+    local tag=
 
-	if [ -x /usr/bin/logger ]
-	then
-		pri="$1"
-		tag="$2"
+    if [ -x /usr/bin/logger ]
+    then
+        pri="$1"
+        tag="$2"
 
-		shift 2
-		[ -z "$*" ] && return 0
+        shift 2
+        [ -z "$*" ] && return 0
 
-		/usr/bin/logger -p "${pri}" -t "${tag}" -- "$*"
-	fi
+        /usr/bin/logger -p "${pri}" -t "${tag}" -- "$*"
+    fi
 
-	return 0
+    return 0
 }
 
 # void eindent(int num)
@@ -261,9 +261,9 @@ esyslog() {
 #    increase the indent used for e-commands.
 #
 eindent() {
-	local i=$1
-	(( i > 0 )) || (( i = RC_DEFAULT_INDENT ))
-	esetdent $(( ${#RC_INDENTATION} + i ))
+    local i=$1
+    (( i > 0 )) || (( i = RC_DEFAULT_INDENT ))
+    esetdent $(( ${#RC_INDENTATION} + i ))
 }
 
 # void eoutdent(int num)
@@ -271,9 +271,9 @@ eindent() {
 #    decrease the indent used for e-commands.
 #
 eoutdent() {
-	local i=$1
-	(( i > 0 )) || (( i = RC_DEFAULT_INDENT ))
-	esetdent $(( ${#RC_INDENTATION} - i ))
+    local i=$1
+    (( i > 0 )) || (( i = RC_DEFAULT_INDENT ))
+    esetdent $(( ${#RC_INDENTATION} - i ))
 }
 
 # void esetdent(int num)
@@ -282,9 +282,9 @@ eoutdent() {
 #    num defaults to 0
 #
 esetdent() {
-	local i=$1
-	(( i < 0 )) && (( i = 0 ))
-	RC_INDENTATION=$(printf "%${i}s" '')
+    local i=$1
+    (( i < 0 )) && (( i = 0 ))
+    RC_INDENTATION=$(printf "%${i}s" '')
 }
 
 # void einfo(char* message)
@@ -292,9 +292,9 @@ esetdent() {
 #    show an informative message (with a newline)
 #
 einfo() {
-	einfon "$*\n"
-	LAST_E_CMD=einfo
-	return 0
+    einfon "$*\n"
+    LAST_E_CMD=einfo
+    return 0
 }
 
 # void einfon(char* message)
@@ -302,11 +302,11 @@ einfo() {
 #    show an informative message (without a newline)
 #
 einfon() {
-	[ "${RC_QUIET_STDOUT}" = "yes" ] && return 0
-	[ "${RC_ENDCOL}" != "yes" ] && [ "${LAST_E_CMD}" = "ebegin" ] && echo
-	printf " ${GOOD}*${NORMAL} ${RC_INDENTATION}$*"
-	LAST_E_CMD=einfon
-	return 0
+    [ "${RC_QUIET_STDOUT}" = "yes" ] && return 0
+    [ "${RC_ENDCOL}" != "yes" ] && [ "${LAST_E_CMD}" = "ebegin" ] && echo
+    printf " ${GOOD}*${NORMAL} ${RC_INDENTATION}$*"
+    LAST_E_CMD=einfon
+    return 0
 }
 
 # void ewarn(char* message)
@@ -314,18 +314,18 @@ einfon() {
 #    show a warning message + log it
 #
 ewarn() {
-	if [ "${RC_QUIET_STDOUT}" = "yes" ]; then
-		printf " $*\n"
-	else
-		[ "${RC_ENDCOL}" != "yes" ] && [ "${LAST_E_CMD}" = "ebegin" ] && echo
-		printf " ${WARN}*${NORMAL} ${RC_INDENTATION}$*\n"
-	fi
+    if [ "${RC_QUIET_STDOUT}" = "yes" ]; then
+        printf " $*\n"
+    else
+        [ "${RC_ENDCOL}" != "yes" ] && [ "${LAST_E_CMD}" = "ebegin" ] && echo
+        printf " ${WARN}*${NORMAL} ${RC_INDENTATION}$*\n"
+    fi
 
-	# Log warnings to system log
-	esyslog "daemon.warning" "rc-scripts" "$*"
+    # Log warnings to system log
+    esyslog "daemon.warning" "rc-scripts" "$*"
 
-	LAST_E_CMD=ewarn
-	return 0
+    LAST_E_CMD=ewarn
+    return 0
 }
 
 # void eerror(char* message)
@@ -333,18 +333,18 @@ ewarn() {
 #    show an error message + log it
 #
 eerror() {
-	if [ "${RC_QUIET_STDOUT}" = "yes" ]; then
-		printf " $*\n" >/dev/stderr
-	else
-		[ "${RC_ENDCOL}" != "yes" ] && [ "${LAST_E_CMD}" = "ebegin" ] && echo
-		printf " ${BAD}*${NORMAL} ${RC_INDENTATION}$*\n"
-	fi
+    if [ "${RC_QUIET_STDOUT}" = "yes" ]; then
+        printf " $*\n" >/dev/stderr
+    else
+        [ "${RC_ENDCOL}" != "yes" ] && [ "${LAST_E_CMD}" = "ebegin" ] && echo
+        printf " ${BAD}*${NORMAL} ${RC_INDENTATION}$*\n"
+    fi
 
-	# Log errors to system log
-	esyslog "daemon.err" "rc-scripts" "$*"
+    # Log errors to system log
+    esyslog "daemon.err" "rc-scripts" "$*"
 
-	LAST_E_CMD=eerror
-	return 0
+    LAST_E_CMD=eerror
+    return 0
 }
 
 # void ebegin(char* message)
@@ -352,25 +352,25 @@ eerror() {
 #    show a message indicating the start of a process
 #
 ebegin() {
-	local msg="$*" dots spaces
-	spaces="$(printf '%'"${#RC_DOT_PATTERN}"'s' '')"
-	[ "${RC_QUIET_STDOUT}" = "yes" ] && return 0
+    local msg="$*" dots spaces
+    spaces="$(printf '%'"${#RC_DOT_PATTERN}"'s' '')"
+    [ "${RC_QUIET_STDOUT}" = "yes" ] && return 0
 
-	if [ -n "${RC_DOT_PATTERN}" ]; then
-		dots=$(printf "%$(( COLS - 3 - ${#RC_INDENTATION} - ${#msg} - 7 ))s" '')
-		while [ "${dots#${spaces}}" != "${dots}" ] ; do
-			dots="${dots#${spaces}}${RC_DOT_PATTERN}"
-		done
-		msg="${msg}${dots}"
-	else
-		msg="${msg} ..."
-	fi
-	einfon "${msg}"
-	[ "${RC_ENDCOL}" = "yes" ] && echo
+    if [ -n "${RC_DOT_PATTERN}" ]; then
+        dots=$(printf "%$(( COLS - 3 - ${#RC_INDENTATION} - ${#msg} - 7 ))s" '')
+        while [ "${dots#${spaces}}" != "${dots}" ] ; do
+            dots="${dots#${spaces}}${RC_DOT_PATTERN}"
+        done
+        msg="${msg}${dots}"
+    else
+        msg="${msg} ..."
+    fi
+    einfon "${msg}"
+    [ "${RC_ENDCOL}" = "yes" ] && echo
 
-	LAST_E_LEN=$(( 3 + ${#RC_INDENTATION} + ${#msg} ))
-	LAST_E_CMD=ebegin
-	return 0
+    LAST_E_LEN=$(( 3 + ${#RC_INDENTATION} + ${#msg} ))
+    LAST_E_CMD=ebegin
+    return 0
 }
 
 # void _eend(int error, char *efunc, char* errstr)
@@ -382,27 +382,27 @@ ebegin() {
 #    script.
 #
 _eend() {
-	local retval=${1:-0} efunc=${2:-eerror} msg
-	shift 2
+    local retval=${1:-0} efunc=${2:-eerror} msg
+    shift 2
 
-	if [ "${retval}" -eq 0 ]; then
-		[ "${RC_QUIET_STDOUT}" = "yes" ] && return 0
-		msg="${BRACKET}[ ${GOOD}ok${BRACKET} ]${NORMAL}"
-	else
-		if [ -n "$*" ]; then
-			"${efunc}" "$*"
-		fi
-		msg="${BRACKET}[ ${BAD}!!${BRACKET} ]${NORMAL}"
-	fi
+    if [ "${retval}" -eq 0 ]; then
+        [ "${RC_QUIET_STDOUT}" = "yes" ] && return 0
+        msg="${BRACKET}[ ${GOOD}ok${BRACKET} ]${NORMAL}"
+    else
+        if [ -n "$*" ]; then
+            "${efunc}" "$*"
+        fi
+        msg="${BRACKET}[ ${BAD}!!${BRACKET} ]${NORMAL}"
+    fi
 
-	if [ "${RC_ENDCOL}" = "yes" ]; then
-		printf "${ENDCOL}  ${msg}\n"
-	else
-		[ "${LAST_E_CMD}" = "ebegin" ] || LAST_E_LEN=0
-		printf "%$(( "${COLS}" - "${LAST_E_LEN}" - 6 ))s%b\n" '' "${msg}"
-	fi
+    if [ "${RC_ENDCOL}" = "yes" ]; then
+        printf "${ENDCOL}  ${msg}\n"
+    else
+        [ "${LAST_E_CMD}" = "ebegin" ] || LAST_E_LEN=0
+        printf "%$(( "${COLS}" - "${LAST_E_LEN}" - 6 ))s%b\n" '' "${msg}"
+    fi
 
-	return ${retval}
+    return ${retval}
 }
 
 # void eend(int error, char* errstr)
@@ -411,13 +411,13 @@ _eend() {
 #    if error, show errstr via eerror
 #
 eend() {
-	local retval=${1:-0}
-	shift
+    local retval=${1:-0}
+    shift
 
-	_eend ${retval} eerror "$*"
+    _eend ${retval} eerror "$*"
 
-	LAST_E_CMD=eend
-	return $retval
+    LAST_E_CMD=eend
+    return $retval
 }
 
 # void ewend(int error, char* errstr)
@@ -426,13 +426,13 @@ eend() {
 #    if error, show errstr via ewarn
 #
 ewend() {
-	local retval=${1:-0}
-	shift
+    local retval=${1:-0}
+    shift
 
-	_eend ${retval} ewarn "$*"
+    _eend ${retval} ewarn "$*"
 
-	LAST_E_CMD=ewend
-	return $retval
+    LAST_E_CMD=ewend
+    return $retval
 }
 
 # v-e-commands honor RC_VERBOSE which defaults to no.
@@ -443,12 +443,12 @@ vewarn()  { [ "${RC_VERBOSE}" != yes ] || ewarn  "$@"; }
 veerror() { [ "${RC_VERBOSE}" != yes ] || eerror "$@"; }
 vebegin() { [ "${RC_VERBOSE}" != yes ] || ebegin "$@"; }
 veend() {
-	[ "${RC_VERBOSE}" = "yes" ] && { eend "$@"; return $?; }
-	return ${1:-0}
+    [ "${RC_VERBOSE}" = "yes" ] && { eend "$@"; return $?; }
+    return ${1:-0}
 }
 veend() {
-	[ "${RC_VERBOSE}" = "yes" ] && { ewend "$@"; return $?; }
-	return ${1:-0}
+    [ "${RC_VERBOSE}" = "yes" ] && { ewend "$@"; return $?; }
+    return ${1:-0}
 }
 
 # char *KV_major(string)
@@ -456,10 +456,10 @@ veend() {
 #    Return the Major (X of X.Y.Z) kernel version
 #
 KV_major() {
-	[ -z "$1" ] && return 1
+    [ -z "$1" ] && return 1
 
-	local KV=$@
-	printf "${KV%%.*}\n"
+    local KV=$@
+    printf "${KV%%.*}\n"
 }
 
 # char *KV_minor(string)
@@ -467,11 +467,11 @@ KV_major() {
 #    Return the Minor (Y of X.Y.Z) kernel version
 #
 KV_minor() {
-	[ -z "$1" ] && return 1
+    [ -z "$1" ] && return 1
 
-	local KV="$@"
-	KV="${KV#*.}"
-	printf "${KV%%.*}\n"
+    local KV="$@"
+    KV="${KV#*.}"
+    printf "${KV%%.*}\n"
 }
 
 # char *KV_micro(string)
@@ -479,11 +479,11 @@ KV_minor() {
 #    Return the Micro (Z of X.Y.Z) kernel version.
 #
 KV_micro() {
-	[ -z "$1" ] && return 1
+    [ -z "$1" ] && return 1
 
-	local KV="$@"
-	KV="${KV#*.*.}"
-	printf "${KV%%[^[:digit:]]*}\n"
+    local KV="$@"
+    KV="${KV#*.*.}"
+    printf "${KV%%[^[:digit:]]*}\n"
 }
 
 # int KV_to_int(string)
@@ -492,21 +492,21 @@ KV_micro() {
 #    for easy compairing or versions ...
 #
 KV_to_int() {
-	[ -z "$1" ] && return 1
+    [ -z "$1" ] && return 1
 
-	local KV_MAJOR="$(KV_major "$1")"
-	local KV_MINOR="$(KV_minor "$1")"
-	local KV_MICRO="$(KV_micro "$1")"
-	local KV_int=$(( KV_MAJOR * 65536 + KV_MINOR * 256 + KV_MICRO ))
+    local KV_MAJOR="$(KV_major "$1")"
+    local KV_MINOR="$(KV_minor "$1")"
+    local KV_MICRO="$(KV_micro "$1")"
+    local KV_int=$(( KV_MAJOR * 65536 + KV_MINOR * 256 + KV_MICRO ))
 
-	# We make version 2.2.0 the minimum version we will handle as
-	# a sanity check ... if its less, we fail ...
-	if [ "${KV_int}" -ge 131584 ] ; then
-		printf "${KV_int}\n"
-		return 0
-	fi
+    # We make version 2.2.0 the minimum version we will handle as
+    # a sanity check ... if its less, we fail ...
+    if [ "${KV_int}" -ge 131584 ] ; then
+        printf "${KV_int}\n"
+        return 0
+    fi
 
-	return 1
+    return 1
 }
 
 # int get_KV()
@@ -517,11 +517,11 @@ KV_to_int() {
 #    e.g. 2.4.25, 2.6.10, 2.6.4-rc3, 2.2.40-poop, 2.0.15+foo
 #
 get_KV() {
-	local KV="$(uname -r)"
+    local KV="$(uname -r)"
 
-	printf "$(KV_to_int "${KV}")\n"
+    printf "$(KV_to_int "${KV}")\n"
 
-	return $?
+    return $?
 }
 
 # bool get_bootparam(param)
@@ -531,34 +531,34 @@ get_KV() {
 #   EXAMPLE:  if get_bootparam "nodevfs" ; then ....
 #
 get_bootparam() {
-	local x copt params retval=1
+    local x copt params retval=1
 
-	[ ! -r "/proc/cmdline" ] && return 1
+    [ ! -r "/proc/cmdline" ] && return 1
 
-	for copt in $(< /proc/cmdline)
-	do
-		if [ "${copt%=*}" = "gentoo" ]
-		then
-			params="$(gawk -v PARAMS="${copt##*=}" '
-				BEGIN {
-					split(PARAMS, nodes, ",")
-					for (x in nodes)
-						print nodes[x]
-				}')"
+    for copt in $(< /proc/cmdline)
+    do
+        if [ "${copt%=*}" = "gentoo" ]
+        then
+            params="$(gawk -v PARAMS="${copt##*=}" '
+                BEGIN {
+                    split(PARAMS, nodes, ",")
+                    for (x in nodes)
+                        print nodes[x]
+                }')"
 
-			# Parse gentoo option
-			for x in ${params}
-			do
-				if [ "${x}" = "$1" ]
-				then
-#					printf "YES\n"
-					retval=0
-				fi
-			done
-		fi
-	done
+            # Parse gentoo option
+            for x in ${params}
+            do
+                if [ "${x}" = "$1" ]
+                then
+#                    printf "YES\n"
+                    retval=0
+                fi
+            done
+        fi
+    done
 
-	return ${retval}
+    return ${retval}
 }
 
 # Safer way to list the contents of a directory,
@@ -572,37 +572,37 @@ get_bootparam() {
 #          also, error checking is not that extensive ...
 #
 dolisting() {
-	local x=
-	local y=
-	local tmpstr=
-	local mylist=
-	local mypath="$*"
+    local x=
+    local y=
+    local tmpstr=
+    local mylist=
+    local mypath="$*"
 
-	if [ "${mypath%/\*}" != "${mypath}" ]
-	then
-		mypath="${mypath%/\*}"
-	fi
+    if [ "${mypath%/\*}" != "${mypath}" ]
+    then
+        mypath="${mypath%/\*}"
+    fi
 
-	for x in ${mypath}
-	do
-		[ ! -e "${x}" ] && continue
+    for x in ${mypath}
+    do
+        [ ! -e "${x}" ] && continue
 
-		if [ ! -d "${x}" ] && ( [ -L "${x}" -o -f "${x}" ] )
-		then
-			mylist="${mylist} $(ls "${x}" 2> /dev/null)"
-		else
-			[ "${x%/}" != "${x}" ] && x="${x%/}"
+        if [ ! -d "${x}" ] && ( [ -L "${x}" -o -f "${x}" ] )
+        then
+            mylist="${mylist} $(ls "${x}" 2> /dev/null)"
+        else
+            [ "${x%/}" != "${x}" ] && x="${x%/}"
 
-			cd "${x}"; tmpstr="$(ls)"
+            cd "${x}"; tmpstr="$(ls)"
 
-			for y in ${tmpstr}
-			do
-				mylist="${mylist} ${x}/${y}"
-			done
-		fi
-	done
+            for y in ${tmpstr}
+            do
+                mylist="${mylist} ${x}/${y}"
+            done
+        fi
+    done
 
-	printf "${mylist}\n"
+    printf "${mylist}\n"
 }
 
 # char *add_suffix(char * configfile)
@@ -610,14 +610,14 @@ dolisting() {
 #    Returns a config file name with the softlevel suffix
 #    appended to it.  For use with multi-config services.
 add_suffix() {
-	if [ "${RC_USE_CONFIG_PROFILE}" = "yes" -a -e "$1.${DEFAULTLEVEL}" ]
-	then
-		printf "$1.${DEFAULTLEVEL}\n"
-	else
-		printf "$1\n"
-	fi
+    if [ "${RC_USE_CONFIG_PROFILE}" = "yes" -a -e "$1.${DEFAULTLEVEL}" ]
+    then
+        printf "$1.${DEFAULTLEVEL}\n"
+    else
+        printf "$1\n"
+    fi
 
-	return 0
+    return 0
 }
 
 # Network filesystems list for common use in rc-scripts.
@@ -632,21 +632,21 @@ NET_FS_LIST="afs cifs coda gfs ncpfs nfs nfs4 shfs smbfs"
 #   EXAMPLE:  if is_net_fs / ; then ...
 #
 is_net_fs() {
-	local fstype
-	# /proc/mounts is always accurate but may not always be available
-	if [ -e /proc/mounts ]; then
-		fstype="$( sed -n -e '/^rootfs/!s:.* '"$1"' \([^ ]*\).*:\1:p' /proc/mounts )"
-	else
-		fstype="$( mount | sed -n -e 's:.* on '"$1"' type \([^ ]*\).*:\1:p' )"
-	fi
-	case " ${NET_FS_LIST} " in
-		*" ${fstype} "*)
-			return 0
-			;;
-		*)
-			return 1
-			;;
-	esac
+    local fstype
+    # /proc/mounts is always accurate but may not always be available
+    if [ -e /proc/mounts ]; then
+        fstype="$( sed -n -e '/^rootfs/!s:.* '"$1"' \([^ ]*\).*:\1:p' /proc/mounts )"
+    else
+        fstype="$( mount | sed -n -e 's:.* on '"$1"' type \([^ ]*\).*:\1:p' )"
+    fi
+    case " ${NET_FS_LIST} " in
+        *" ${fstype} "*)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
 }
 
 # bool is_uml_sys()
@@ -656,8 +656,8 @@ is_net_fs() {
 #   EXAMPLE:  if is_uml_sys ; then ...
 #
 is_uml_sys() {
-	grep -qs 'UML' /proc/cpuinfo
-	return $?
+    grep -qs 'UML' /proc/cpuinfo
+    return $?
 }
 
 # bool is_vserver_sys()
@@ -667,8 +667,8 @@ is_uml_sys() {
 #   EXAMPLE:  if is_vserver_sys ; then ...
 #
 is_vserver_sys() {
-	grep -qs '^s_context:[[:space:]]*[1-9]' /proc/self/status
-	return $?
+    grep -qs '^s_context:[[:space:]]*[1-9]' /proc/self/status
+    return $?
 }
 
 # bool get_mount_fstab(path)
@@ -680,10 +680,10 @@ is_vserver_sys() {
 #            mount -n ${cmd}
 #
 get_mount_fstab() {
-	awk '$1 ~ "^#" { next }
-	     $2 == "'$*'" { if (found++ == 0) { print "-t "$3,"-o "$4,$1,$2 } }
-	     END { if (found > 1) { print "More than one entry for '$*' found in /etc/fstab!" > "/dev/stderr" } }
-	' /etc/fstab
+    awk '$1 ~ "^#" { next }
+         $2 == "'$*'" { if (found++ == 0) { print "-t "$3,"-o "$4,$1,$2 } }
+         END { if (found > 1) { print "More than one entry for '$*' found in /etc/fstab!" > "/dev/stderr" } }
+    ' /etc/fstab
 }
 
 # char *reverse_list(list)
@@ -691,17 +691,17 @@ get_mount_fstab() {
 #   Returns the reversed order of list
 #
 reverse_list() {
-	local ret
-	ret=''
-	while [ "$#" -gt 0 ] ; do
-		if [ -z "${ret}" ] ; then
-			ret="$1"
-		else
-			ret="$1 ${ret}"
-		fi
-		shift
-	done
-	printf '%s' "${ret}"
+    local ret
+    ret=''
+    while [ "$#" -gt 0 ] ; do
+        if [ -z "${ret}" ] ; then
+            ret="$1"
+        else
+            ret="$1 ${ret}"
+        fi
+        shift
+    done
+    printf '%s' "${ret}"
 }
 
 
@@ -712,19 +712,19 @@ reverse_list() {
 #
 #   EXAMPLE: if is_older_than a.out *.o ; then ...
 is_older_than() {
-	local x
-	local ref="$1"
-	shift
+    local x
+    local ref="$1"
+    shift
 
-	for x in "$@" ; do
-		[ "${x}" -nt "${ref}" ] && return 0
+    for x in "$@" ; do
+        [ "${x}" -nt "${ref}" ] && return 0
 
-		if [ -d "${x}" ] ; then
-			is_older_than "${ref}" "${x}"/* && return 0
-		fi
-	done
+        if [ -d "${x}" ] ; then
+            is_older_than "${ref}" "${x}"/* && return 0
+        fi
+    done
 
-	return 1
+    return 1
 }
 
 # Setup a basic $PATH.  Just add system default to existing.
@@ -755,21 +755,21 @@ if [ -z "${COLS}" ] || [ "${COLS}" -le 0 ] ; then
 fi
 
 if [ "${RC_ENDCOL}" = "yes" ]; then
-	ENDCOL="[A[$(( ${COLS} - 8 ))G"
+    ENDCOL="[A[$(( ${COLS} - 8 ))G"
 else
-	ENDCOL=''
+    ENDCOL=''
 fi
 
 # Setup the colors so our messages all look pretty
 if [ "${RC_NOCOLOR}" = "yes" ]; then
-	unset GOOD WARN BAD NORMAL HILITE BRACKET
+    unset GOOD WARN BAD NORMAL HILITE BRACKET
 else
-	GOOD='[32;01m'
-	WARN='[33;01m'
-	BAD='[31;01m'
-	NORMAL='[0m'
-	HILITE='[36;01m'
-	BRACKET='[34;01m'
+    GOOD='[32;01m'
+    WARN='[33;01m'
+    BAD='[31;01m'
+    NORMAL='[0m'
+    HILITE='[36;01m'
+    BRACKET='[34;01m'
 fi
 
 # vim:ts=4
