@@ -451,21 +451,6 @@ veend() {
     return ${1:-0}
 }
 
-# int get_KV()
-#
-#    Return the kernel version (major, minor and micro concated) as an integer.
-#    Assumes X and Y of X.Y.Z are numbers.  Also assumes that some leading
-#    portion of Z is a number.
-#    e.g. 2.4.25, 2.6.10, 2.6.4-rc3, 2.2.40-poop, 2.0.15+foo
-#
-get_KV() {
-    local KV="$(uname -r)"
-
-    printf "$(KV_to_int "${KV}")\n"
-
-    return $?
-}
-
 # bool get_bootparam(param)
 #
 #   return 0 if gentoo=param was passed to the kernel
