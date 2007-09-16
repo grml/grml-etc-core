@@ -31,7 +31,7 @@
 
 TPUT="${TPUT:-"/usr/bin/tput"}"
 
-have_tput() {
+_have_tput() {
     [ -x "$TPUT" ] && "$TPUT" hpa 60 >/dev/null 2>&1 \
         && return 0 \
         || return 1
@@ -42,7 +42,7 @@ log_success_msg () {
 }
 
 log_failure_msg () {
-    if have_tput ; then
+    if _have_tput ; then
         RED="$("$TPUT" setaf 1)"
         #NORMAL="$("$TPUT" op)"
         printf " ${RED}*${NORMAL} $@\n"
@@ -52,7 +52,7 @@ log_failure_msg () {
 }
 
 log_warning_msg () {
-    if have_tput ; then
+    if _have_tput ; then
         YELLOW="$("$TPUT" setaf 3)"
         #NORMAL="$("$TPUT" op")"
         # printf " *${NORMAL} $@\n"
@@ -63,7 +63,7 @@ log_warning_msg () {
 }
 
 log_warning_msg_nn () {
-    if have_tput ; then
+    if _have_tput ; then
         YELLOW="$("$TPUT" setaf 3)"
         printf " ${BLUE}*${NORMAL} $@"
     else
@@ -97,7 +97,7 @@ log_end_msg () {
 
     # Only do the fancy stuff if we have an appropriate terminal
     # and if /usr is already mounted
-    if have_tput ; then
+    if _have_tput ; then
         COLS="$("$TPUT" cols)"
         if [ -n "$COLS" ]; then
             COL=$(( "$COLS" - 7 ))
