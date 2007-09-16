@@ -167,23 +167,6 @@ RC_DEFAULT_INDENT=2
 #RC_DOT_PATTERN=' .'
 RC_DOT_PATTERN=''
 
-# void splash(...)
-#
-#  Notify bootsplash/splashutils/gensplash/whatever about
-#  important events.
-#
-splash() {
-    return 0
-}
-
-# void profiling(...)
-#
-#  Notify bootsplash/whatever about important events.
-#
-profiling() {
-    return 0
-}
-
 # void get_bootconfig()
 #
 #    Get the BOOTLEVEL and SOFTLEVEL by setting
