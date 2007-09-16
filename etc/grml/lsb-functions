@@ -486,17 +486,6 @@ add_suffix() {
     return 0
 }
 
-# bool is_uml_sys()
-#
-#   return 0 if the currently running system is User Mode Linux
-#
-#   EXAMPLE:  if is_uml_sys ; then ...
-#
-is_uml_sys() {
-    grep -qs 'UML' /proc/cpuinfo
-    return $?
-}
-
 # bool is_vserver_sys()
 #
 #   return 0 if the currently running system is a Linux VServer
