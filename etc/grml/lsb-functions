@@ -451,18 +451,6 @@ veend() {
     return ${1:-0}
 }
 
-# char *KV_minor(string)
-#
-#    Return the Minor (Y of X.Y.Z) kernel version
-#
-KV_minor() {
-    [ -z "$1" ] && return 1
-
-    local KV="$@"
-    KV="${KV#*.}"
-    printf "${KV%%.*}\n"
-}
-
 # char *KV_micro(string)
 #
 #    Return the Micro (Z of X.Y.Z) kernel version.
