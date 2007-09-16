@@ -486,17 +486,6 @@ add_suffix() {
     return 0
 }
 
-# bool is_vserver_sys()
-#
-#   return 0 if the currently running system is a Linux VServer
-#
-#   EXAMPLE:  if is_vserver_sys ; then ...
-#
-is_vserver_sys() {
-    grep -qs '^s_context:[[:space:]]*[1-9]' /proc/self/status
-    return $?
-}
-
 # bool get_mount_fstab(path)
 #
 #   return the parameters to pass to the mount command generated from fstab
