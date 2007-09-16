@@ -37,11 +37,11 @@ _have_tput() {
         || return 1
 }
 
-log_success_msg () {
+log_success_msg() {
     printf " * $@\n"
 }
 
-log_failure_msg () {
+log_failure_msg() {
     if _have_tput ; then
         RED="$("$TPUT" setaf 1)"
         #NORMAL="$("$TPUT" op)"
@@ -51,7 +51,7 @@ log_failure_msg () {
     fi
 }
 
-log_warning_msg () {
+log_warning_msg() {
     if _have_tput ; then
         YELLOW="$("$TPUT" setaf 3)"
         #NORMAL="$("$TPUT" op")"
@@ -62,7 +62,7 @@ log_warning_msg () {
     fi
 }
 
-log_warning_msg_nn () {
+log_warning_msg_nn() {
     if _have_tput ; then
         YELLOW="$("$TPUT" setaf 3)"
         printf " ${BLUE}*${NORMAL} $@"
@@ -72,14 +72,14 @@ log_warning_msg_nn () {
 }
 
 # int log_begin_message (char *message)
-log_begin_msg () {
+log_begin_msg() {
         if [ "$#" -eq 0 ]; then
                 return 1
         fi
         printf " ${GREEN}*${NORMAL} $@\n"
 }
 
-log_begin_msg_nn () {
+log_begin_msg_nn() {
         if [ "$#" -eq 0 ]; then
                 return 1
         fi
@@ -90,7 +90,7 @@ log_begin_msg_nn () {
 SUBMSG="   ${GREEN}-${NORMAL} "
 
 # int log_end_message (int exitstatus)
-log_end_msg () {
+log_end_msg() {
 
     # If no arguments were passed, return
     [ "$#" -eq 0 ] && return 1
