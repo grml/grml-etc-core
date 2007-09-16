@@ -383,21 +383,6 @@ add_suffix() {
     return 0
 }
 
-# bool get_mount_fstab(path)
-#
-#   return the parameters to pass to the mount command generated from fstab
-#
-#   EXAMPLE: cmd=$( get_mount_fstab /proc )
-#            cmd=${cmd:--t proc none /proc}
-#            mount -n ${cmd}
-#
-get_mount_fstab() {
-    awk '$1 ~ "^#" { next }
-         $2 == "'$*'" { if (found++ == 0) { print "-t "$3,"-o "$4,$1,$2 } }
-         END { if (found > 1) { print "More than one entry for '$*' found in /etc/fstab!" > "/dev/stderr" } }
-    ' /etc/fstab
-}
-
 # char *reverse_list(list)
 #
 #   Returns the reversed order of list
