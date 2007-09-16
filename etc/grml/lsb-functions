@@ -368,43 +368,6 @@ ewend() {
     return $retval
 }
 
-# bool get_bootparam(param)
-#
-#   return 0 if gentoo=param was passed to the kernel
-#
-#   EXAMPLE:  if get_bootparam "nodevfs" ; then ....
-#
-get_bootparam() {
-    local x copt params retval=1
-
-    [ ! -r "/proc/cmdline" ] && return 1
-
-    for copt in $(< /proc/cmdline)
-    do
-        if [ "${copt%=*}" = "gentoo" ]
-        then
-            params="$(gawk -v PARAMS="${copt##*=}" '
-                BEGIN {
-                    split(PARAMS, nodes, ",")
-                    for (x in nodes)
-                        print nodes[x]
-                }')"
-
-            # Parse gentoo option
-            for x in ${params}
-            do
-                if [ "${x}" = "$1" ]
-                then
-#                    printf "YES\n"
-                    retval=0
-                fi
-            done
-        fi
-    done
-
-    return ${retval}
-}
-
 # char *add_suffix(char * configfile)
 #
 #    Returns a config file name with the softlevel suffix
