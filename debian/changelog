@@ -6,8 +6,10 @@ grml-etc-core (0.3.27) unstable; urgency=low
 
   [ Michael Prokop ]
   * Update /etc/apt/sources.list.grml.
+  * /etc/grml/lsb-functions: support disabling
+    colors through $NOCOLORS
 
- -- Michael Prokop <mika@grml.org>  Sun, 16 Sep 2007 20:23:22 +0200
+ -- Michael Prokop <mika@grml.org>  Mon, 17 Sep 2007 17:16:26 +0200
 
 grml-etc-core (0.3.26) unstable; urgency=low
 

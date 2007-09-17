@@ -143,6 +143,7 @@ RC_DOT_PATTERN=''
 if [ -r /proc/cmdline ] ; then
     grep -q ' nocolor' /proc/cmdline && RC_NOCOLOR='yes'
 fi
+[ -n "$NOCOLORS" ] && RC_NOCOLOR='yes'
 RC_NOCOLOR="${RC_NOCOLOR:-no}"
 
 # Can the terminal handle endcols?
