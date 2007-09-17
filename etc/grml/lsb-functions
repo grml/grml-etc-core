@@ -100,7 +100,7 @@ log_end_msg() {
     if _have_tput ; then
         COLS="$("$TPUT" cols)"
         if [ -n "$COLS" ]; then
-            COL=$(( "$COLS" - 7 ))
+            COL=$(( $COLS - 7 ))
         else
             COL=73
         fi
@@ -157,7 +157,7 @@ if [ -z "${COLS}" ] || [ "${COLS}" -le 0 ] ; then
 fi
 
 if [ "${RC_ENDCOL}" = "yes" ]; then
-    ENDCOL="[A[$(( "${COLS}" - 8 ))G"
+    ENDCOL="[A[$(( ${COLS} - 8 ))G"
 else
     ENDCOL=''
 fi
@@ -202,7 +202,7 @@ esyslog() {
 eindent() {
     local i="$1"
     [ "$i" -gt 0 ] || i="${RC_DEFAULT_INDENT}"
-    esetdent $(( ${#RC_INDENTATION} + "$i" ))
+    esetdent $(( ${#RC_INDENTATION} + $i ))
 }
 
 # void eoutdent(int num)
@@ -212,7 +212,7 @@ eindent() {
 eoutdent() {
     local i="$1"
     [ "$i" -gt 0 ] || i="${RC_DEFAULT_INDENT}"
-    esetdent $(( ${#RC_INDENTATION} - "$i" ))
+    esetdent $(( ${#RC_INDENTATION} - $i ))
 }
 
 # void esetdent(int num)
@@ -296,7 +296,7 @@ ebegin() {
     [ "${RC_QUIET_STDOUT}" = "yes" ] && return 0
 
     if [ -n "${RC_DOT_PATTERN}" ]; then
-        dots="$(printf "%$(( "$COLS" - 3 - ${#RC_INDENTATION} - ${#msg} - 7 ))s" '')"
+        dots="$(printf "%$(( $COLS - 3 - ${#RC_INDENTATION} - ${#msg} - 7 ))s" '')"
         while [ "${dots#${spaces}}" != "${dots}" ] ; do
             dots="${dots#${spaces}}${RC_DOT_PATTERN}"
         done
@@ -338,7 +338,7 @@ _eend() {
         printf "${ENDCOL}  ${msg}\n"
     else
         [ "${LAST_E_CMD}" = "ebegin" ] || LAST_E_LEN=0
-        printf "%$(( "${COLS}" - "${LAST_E_LEN}" - 6 ))s%b\n" '' "${msg}"
+        printf "%$(( ${COLS} - "${LAST_E_LEN}" - 6 ))s%b\n" '' "${msg}"
     fi
 
     return "${retval}"
