@@ -1,3 +1,9 @@
+grml-etc-core (0.3.29) unstable; urgency=low
+
+  * /etc/grml/lsb-functions: replace tab with spaces (thanks, ft)
+
+ -- Michael Prokop <mika@grml.org>  Mon, 17 Sep 2007 18:33:30 +0200
+
 grml-etc-core (0.3.28) unstable; urgency=low
 
   [ Frank Terbeck ]
