@@ -157,7 +157,7 @@ if [ -z "${COLS}" ] || [ "${COLS}" -le 0 ] ; then
 fi
 
 if [ "${RC_ENDCOL}" = "yes" ]; then
-	ENDCOL="[A[$(( ${COLS} - 8 ))G"
+    ENDCOL="[A[$(( ${COLS} - 8 ))G"
 else
     ENDCOL=''
 fi
