@@ -1,3 +1,10 @@
+grml-etc-core (0.3.29) unstable; urgency=low
+
+  [ Frank Terbeck ]
+  * /etc/grml/lsb-functions: another bugfix
+
+ -- Michael Prokop <mika@grml.org>  Mon, 17 Sep 2007 18:33:30 +0200
+
 grml-etc-core (0.3.28) unstable; urgency=low
 
   [ Frank Terbeck ]
