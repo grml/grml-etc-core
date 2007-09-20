@@ -1,3 +1,12 @@
+grml-scripts (1.0.16) unstable; urgency=low
+
+  * Change "console-tools | xbase-clients" into dependency on
+    console-tools and put xbase-clients to Suggests instead.
+  * Drop "runit", which very probably nobody uses at all but which
+    conflicts with package runit (thanks for hint, gebi).
+
+ -- Michael Prokop <mika@grml.org>  Thu, 20 Sep 2007 17:19:13 +0200
+
 grml-scripts (1.0.15) unstable; urgency=low
 
   * grml-setkeyboard: add one further LANG=C dialog run and
