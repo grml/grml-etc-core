@@ -1,3 +1,10 @@
+grml-scripts (1.0.18) unstable; urgency=low
+
+  * qma: pipe output through 'col -b' to fix issues with UTF-8.
+    Thanks for the solution, wuehlmaus!
+
+ -- Michael Prokop <mika@grml.org>  Thu, 20 Sep 2007 21:57:21 +0200
+
 grml-scripts (1.0.17) unstable; urgency=low
 
   * Drop console-tools from depends and move it to grml-autoconfig

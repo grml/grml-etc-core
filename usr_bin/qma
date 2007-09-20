@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>, Matthias Kopfermann <maddi@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Dez 16 17:24:05 CET 2006 [maddi]
+# Latest change: Don Sep 20 21:56:52 CEST 2007 [mika]
 ################################################################################
 
 . /etc/grml/lsb-functions
@@ -56,7 +56,7 @@ QUICKMAN="${MANDIR}/${MANPAGE}${SECTIONFILE}.txt.lzo"
 if ! [ -f "$QUICKMAN" ] ; then
    einfo "Writing manpage to $QUICKMAN"
    if man $SECTION $MANPAGE 1>/dev/null ; then
-      man $SECTION $MANPAGE | lzop -U >$QUICKMAN ; eend $?
+      man $SECTION $MANPAGE | col -b | lzop -U >$QUICKMAN ; eend $?
       einfo "Compressing manpage with lzop"
       eend $?
    else
