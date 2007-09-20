@@ -10,7 +10,7 @@ XS-Vcs-Browser: http://hg.grml.org/grml-scripts/
 
 Package: grml-scripts
 Architecture: any
-Depends: less, dialog, perl, zsh, dash, w3m | links | links2, screen, console-tools, grml-network, grml-etc-core, libterm-readkey-perl
+Depends: less, dialog, perl, zsh, dash, w3m | links | links2, screen, grml-network, grml-etc-core, libterm-readkey-perl
 Suggests: xbase-clients, ruby, python, grml-x, ipcalc, hwinfo, antiword, grml-etc, grml-rebuildfstab, grml-scanpartitions, grml-files, grml-hwinfo, grml-saveconfig, pptp-linux, flite, wmii, mutt | mutt-ng, slrn, grml-docs, grml-autoconfig (>= 0.6.9), lzop, dirvish, sudo, idesk, xlockmore
 Conflicts: scanmodem, grml-etc-core (<< 0.1-30)
 Description: some small scripts which should make life easier

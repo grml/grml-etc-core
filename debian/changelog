@@ -1,3 +1,10 @@
+grml-scripts (1.0.17) unstable; urgency=low
+
+  * Drop console-tools from depends and move it to grml-autoconfig
+    instead.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 20 Sep 2007 17:25:16 +0200
+
 grml-scripts (1.0.16) unstable; urgency=low
 
   * Change "console-tools | xbase-clients" into dependency on
