@@ -1,3 +1,10 @@
+grml-etc-core (0.3.31) unstable; urgency=low
+
+  * /etc/skel/.zshrc: use same pattern in function wikien as in wikide.
+    (Thanks, wuehlmaus)
+
+ -- Michael Prokop <mika@grml.org>  Sun, 23 Sep 2007 16:47:35 +0200
+
 grml-etc-core (0.3.30) unstable; urgency=low
 
   [ Frank Terbeck ]

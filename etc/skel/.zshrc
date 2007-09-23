@@ -270,7 +270,7 @@
   #f4# Search German   Wikipedia
   wikide () { ${=BROWSER} http://de.wikipedia.org/wiki/"${(C)*}" }
   #f4# Search English  Wikipedia
-  wikien()  { ${=BROWSER} http://en.wikipedia.org/wiki/"$*" }
+  wikien()  { ${=BROWSER} http://en.wikipedia.org/wiki/"${(C)*}" }
   #f4# Search official debs
   wodeb ()  { ${=BROWSER} "http://packages.debian.org/cgi-bin/search_contents.pl?word=$1&version=${2:-unstable}" }
   #m# f4 gex() Exact search via Google
