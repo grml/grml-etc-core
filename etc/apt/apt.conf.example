@@ -1,0 +1,30 @@
+// APT::Default-Release "grml";
+// APT::Default-Release "unstable";
+// Apt::Get::Purge;
+
+// APT::Cache-Limit 10000000;
+// APT::Cache-Limit 20000000;
+
+// Disable pdiffs;
+// Acquire::PDiffs "false";
+
+// set time out:
+// Acquire
+// {
+// http
+// {
+// Timeout "3";
+//  };
+// ftp
+// {
+// Timeout "3";
+//  };
+// }
+
+// DPkg::Pre-Invoke {"mount -o remount,exec /tmp";};
+// DPkg::Post-Invoke {"mount -o remount,noexec /tmp";};
+
+// DPkg {
+//   Pre-Invoke  {"cd /etc ; ./apt/hg-snapshot-script pre";};
+//  Post-Invoke {"cd /etc ; ./apt/hg-snapshot-script post";};
+// }

@@ -1,0 +1,39 @@
+#!/bin/sh
+# Filename:      hg-snapshot-script
+# Purpose:       automatically track changed files using mercurial
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2 or any later version.
+# Latest change: Mit Sep 26 22:46:32 CEST 2007 [mika]
+################################################################################
+
+set -e
+
+caller=$(ps axww | mawk '/aptitude|apt-get/ {for (i=5; i<=NF ; i++) printf ("%s ",$i); printf ("\n") }' | head -1)
+
+hg addremove 1>/dev/null
+STATUS="$(hg st)"
+
+if [ -z "$STATUS" ] ; then
+   echo "hg-snapshot-script: nothing to be done"
+else
+   case "$1" in
+        pre)
+           echo "hg-snapshot-script: found changed files:"
+           hg st
+           hg ci -m "snapshot from $LOGNAME before: $caller"
+          ;;
+        post)
+           echo "hg-snapshot-script: found changed files:"
+           hg st
+           hg ci -m "snapshot from $LOGNAME after: $caller"
+          ;;
+	*)
+           echo "hg-snapshot-script: found changed files:"
+           hg st
+           hg ci -m "snapshot from $LOGNAME on $(date '+%Y-%m-%d - %H:%M:%S')"
+	  ;;
+   esac
+fi
+
+## END OF FILE #################################################################
