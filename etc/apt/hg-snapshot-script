@@ -4,7 +4,36 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2 or any later version.
-# Latest change: Mit Sep 26 22:46:32 CEST 2007 [mika]
+# Latest change: Mit Sep 26 22:51:31 CEST 2007 [mika]
+################################################################################
+# Basic instructions:
+# -------------------
+# cd /etc
+# hg init
+# chmod og-rwx .hg
+#
+# cat > .hgignore << EOF
+# syntax: regexp
+# (^)*.dpkg-new
+# (^)*.dpkg-old
+# (^)blkid.tab(|.old)
+# (^)mtab
+# (^)adjtime
+# # add other files if necessary, depends on your setup...
+# EOF
+#
+# cat >> /etc/apt/apt.conf << EOF
+# DPkg {
+#   Pre-Invoke  {"cd /etc ; ./apt/hg-snapshot-script pre";};
+#   Post-Invoke {"cd /etc ; ./apt/hg-snapshot-script post";};
+# }
+# EOF
+#
+# hg add
+# hg ci -m "initial checkin"
+#
+# See http://michael-prokop.at/blog/2007/03/14/maintain-etc-with-mercurial-on-debian/
+# for more details....
 ################################################################################
 
 set -e
