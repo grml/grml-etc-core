@@ -1,3 +1,11 @@
+# Filename:      /etc/grml/screen_multisession
+# Purpose:       configuration file for use in multisession mode of GNU screen
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2 or any later version.
+# Latest change: Sam Sep 29 00:08:48 CEST 2007 [mika]
+################################################################################
+
 # who is allowed to connect via multiuser-mode?
 addacl root,grml
 
@@ -10,3 +18,5 @@ escape ^Bb
 
 # no nag-screen, please
 startup_message off
+
+## END OF FILE #################################################################

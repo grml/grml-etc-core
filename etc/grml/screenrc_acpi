@@ -1,19 +1,19 @@
-# Filename:      screenrc
-# Purpose:       config file for GNU screen
+# Filename:      /etc/grml/screenrc_acpi
+# Purpose:       configuration file for GNU screen providing ACPI output
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Sep 28 23:35:39 CEST 2007 [mika]
+# Latest change: Sam Sep 29 00:10:54 CEST 2007 [mika]
 ################################################################################
 
   backtick 1 60 60 /usr/bin/cpu-screen
-  backtick 2 60 60 /usr/bin/yacpi -p -t
-  caption always "%{+b kr}$USER@%{kw}%H | %{ky}(load: %l |%{kr} cpu: %1` | %{kG}acpi: %2`)  %-21=%{kw}%D %d.%m.%Y %0c"
-  hardstatus alwayslastline "%{rw}%n%f %t %{wk} | %?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{wk}%?%+Lw%?"
+  backtick 2 60 60 /usr/bin/yacpi -b -p -t
+  caption always "%{+b rk}$USER@%{wk}%H | %{yk}(load: %l |%{rk} cpu: %1` | %{Gk}acpi: %2`)  %-21=%{wk}%D %d.%m.%Y %0c"
+  hardstatus alwayslastline "%{wr}%n%f %t %{kw} | %?%-Lw%?%{wb}%n*%f %t%?(%u)%?%{kw}%?%+Lw%? %{wk}"
 
 # switch order of caption and hardstatus:
-#  caption always "%{rw}%n%f %t %{wk} | %?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{wk}%?%+Lw%?"
-#  hardstatus alwayslastline "%{+b kr}$USER@%{kw}%H | %{ky}(load: %l |%{kr} cpu: %1` | %{kG}acpi: %2`)  %-21=%{kw}%D %d.%m.%Y %0c"
+#  hardstatus alwayslastline "%{+b rk}$USER@%{wk}%H | %{yk}(load: %l |%{rk} cpu: %1` | %{Gk}acpi: %2`)  %-21=%{wk}%D %d.%m.%Y %0c"
+#  caption always "%{wr}%n%f %t %{kw} | %?%-Lw%?%{wb}%n*%f %t%?(%u)%?%{kw}%?%+Lw%? %{wk}"
 
 # detach on hangup
   autodetach            on              # default: on

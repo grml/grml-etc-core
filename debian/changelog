@@ -3,11 +3,14 @@ grml-etc-core (0.3.31) unstable; urgency=low
   * /etc/skel/.zshrc: use same pattern in function wikien as in wikide.
     (Thanks, wuehlmaus)
   * Added /etc/apt/apt.conf.example + /etc/apt/hg-snapshot-script
-  * /etc/grml/screenrc*: switch caption and hardstatus for better
-    use with splitted windows; thanks to Alexander 'z3ttacht' Steinböck
-    for the patch! [Closes: issue300]
-  * /etc/grml/screenrc_acpi: fix usage of yacpi, thanks to
-    Alexander 'z3ttacht' Steinböck for the patch! [Closes: issue301]
+  * Added /etc/grml/screenrc_generic which should work on any OS without
+    any grml/Debian specific programs/scripts.
+  * /etc/grml/screenrc*:
+    - provide example for switching caption and hardstatus for better
+      use with splitted windows; thanks to Alexander 'z3ttacht' Steinböck
+      for the patch! [Closes: issue300]
+    - improve usage of yacpi, thanks to Alexander 'z3ttacht' Steinböck for
+      the initial patch! [Closes: issue301]
 
  -- Michael Prokop <mika@grml.org>  Wed, 26 Sep 2007 22:48:07 +0200
 

@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2 or any later version.
-# Latest change: Mit Sep 26 22:51:31 CEST 2007 [mika]
+# Latest change: Sam Sep 29 00:14:00 CEST 2007 [mika]
 ################################################################################
 # Basic instructions:
 # -------------------
@@ -19,6 +19,7 @@
 # (^)blkid.tab(|.old)
 # (^)mtab
 # (^)adjtime
+# \..*.swp
 # # add other files if necessary, depends on your setup...
 # EOF
 #
