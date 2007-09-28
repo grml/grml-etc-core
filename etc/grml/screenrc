@@ -8,10 +8,10 @@
 
   backtick 1 0 60   /usr/bin/cpu-screen
   backtick 2 0 60   /usr/bin/ip-screen
-  caption always "%{+b rk}$USER@%{wk}%H | %{yk}(load: %l |%{rk} cpu: %1` | %{Gk}net: %2`)  %-21=%{wk}%D %d.%m.%Y %0c"
-  hardstatus alwayslastline "%{wr}%n%f %t %{kw} | %?%-Lw%?%{wb}%n*%f %t%?(%u)%?%{kw}%?%+Lw%? %{wk}"
+  hardstatus alwayslastline "%{+b kr}$USER@%{kw}%H | %{ky}(load: %l |%{kr} cpu: %1` | %{kG}net: %2`)  %-21=%{kw}%D %d.%m.%Y %0c"
+  caption always "%{rw}%n%f %t %{wk} | %?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{wk}%?%+Lw%?"
+# hardstatus alwayslastline "%{bw}%1`%= "
 
-#  hardstatus alwayslastline "%{bw}%1`%= "
 # detach on hangup
   autodetach            on              # default: on
   crlf                  off             # default: off
