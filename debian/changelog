@@ -3,6 +3,8 @@ grml-etc-core (0.3.31) unstable; urgency=low
   * /etc/skel/.zshrc: use same pattern in function wikien as in wikide.
     (Thanks, wuehlmaus)
   * Added /etc/apt/apt.conf.example + /etc/apt/hg-snapshot-script
+  * /etc/grml/screenrc_acpi: fix usage of yacpi, thanks to
+    Alexander 'z3ttacht' Steinböck for the patch!
 
  -- Michael Prokop <mika@grml.org>  Wed, 26 Sep 2007 22:48:07 +0200
 

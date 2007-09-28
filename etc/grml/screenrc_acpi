@@ -3,11 +3,11 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Okt 26 11:20:22 CEST 2006 [mika]
+# Latest change: Fre Sep 28 23:13:13 CEST 2007 [mika]
 ################################################################################
 
   backtick 1 60 60 /usr/bin/cpu-screen
-  backtick 2 60 60 /usr/bin/yacpi -t
+  backtick 2 60 60 /usr/bin/yacpi -p -t
   caption always "%{+b rk}$USER@%{wk}%H | %{yk}(load: %l |%{rk} cpu: %1` | %{Gk}acpi: %2`)  %-21=%{wk}%D %d.%m.%Y %0c"
   hardstatus alwayslastline "%{wr}%n%f %t %{kw} | %?%-Lw%?%{wb}%n*%f %t%?(%u)%?%{kw}%?%+Lw%? %{wk}"
 
