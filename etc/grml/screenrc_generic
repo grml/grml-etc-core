@@ -3,16 +3,14 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Sep 28 23:35:32 CEST 2007 [mika]
+# Latest change: Fre Sep 28 23:35:53 CEST 2007 [mika]
 ################################################################################
 
-  backtick 1 0 60   /usr/bin/cpu-screen
-  backtick 2 0 60   /usr/bin/ip-screen
-  caption always "%{+b kr}$USER@%{kw}%H | %{ky}(load: %l |%{kr} cpu: %1` | %{kG}net: %2`)  %-21=%{kw}%D %d.%m.%Y %0c"
+  caption always "%{+b kr}$USER@%{kw}%H | %{ky}(load: %l |%{kr})  %-21=%{kw}%D %d.%m.%Y %0c"
   hardstatus alwayslastline "%{rw}%n%f %t %{wk} | %?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{wk}%?%+Lw%?"
 
 # switch order of caption and hardstatus:
-#  hardstatus alwayslastline "%{+b kr}$USER@%{kw}%H | %{ky}(load: %l |%{kr} cpu: %1` | %{kG}net: %2`)  %-21=%{kw}%D %d.%m.%Y %0c"
+#  hardstatus alwayslastline "%{+b kr}$USER@%{kw}%H | %{ky}(load: %l |%{kr})  %-21=%{kw}%D %d.%m.%Y %0c"
 #  caption always "%{rw}%n%f %t %{wk} | %?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{wk}%?%+Lw%?"
 
 # detach on hangup
