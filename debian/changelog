@@ -1,3 +1,9 @@
+grml-scripts (1.0.19) unstable; urgency=low
+
+  * grml2ram: adjust for usage with new live-initramfs layout
+
+ -- Michael Prokop <mika@grml.org>  Sun, 30 Sep 2007 16:04:31 +0200
+
 grml-scripts (1.0.18) unstable; urgency=low
 
   * qma: pipe output through 'col -b' to fix issues with UTF-8.

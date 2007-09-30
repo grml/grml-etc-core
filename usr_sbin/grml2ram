@@ -1,10 +1,10 @@
 #!/bin/sh
 # Filename:      grml2ram
 # Purpose:       copy compressed GRML image to RAM
-# Authors:       grml-team (grml.org), (c) Michael Schierl <schierlm-public@gmx.de>, (c) Michael Prokop <mika@grml.org>
+# Authors:       (c) Michael Schierl <schierlm-public@gmx.de>, (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Die Dez 12 19:55:05 CET 2006 [mika]
+# Latest change: Son Sep 30 16:04:17 CEST 2007 [mika]
 ################################################################################
 
 set -e
@@ -20,12 +20,18 @@ if ! isgrmlcd ; then
    exit 1
 fi
 
-if ! [ -r /cdrom/GRML/GRML ] ; then
-   eerror "Can not access /cdrom/GRML/GRML. Looks like you did run grml2ram already?" ; eend 1
-   exit 1
+IMAGE=$(ls /live/image/live/*.squashfs 2>/dev/null | head -1)
+if ! [ -r "$IMAGE" ] ; then
+   if [ -r /cdrom/GRML/GRML ] ; then
+      IMAGE='/cdrom/GRML/GRML'
+   else
+      eerror "Can not access grml squashfs file."
+      eerror "Looks like you did run grml2ram already?" ; eend 1
+      exit 1
+   fi
 fi
 
-GRMLSIZE=$(du /cdrom/GRML/GRML | awk '{print $1}')
+GRMLSIZE="$(du $IMAGE | awk '{print $1}')"
 RAM=$(/usr/bin/gawk '/MemFree/{print $2}' /proc/meminfo)
 
 case "$*" in -f|--force)
@@ -39,8 +45,8 @@ case "$*" in -f|--force)
    ;;
 esac
 
-einfo "Copying /cdrom/GRML/GRML to RAM, this might take a while."
-rsync -a --progress /cdrom/GRML/GRML /tmp/GRML
+einfo "Copying $IMAGE to RAM, this might take a while."
+rsync -a --progress $IMAGE /tmp/GRML
 LANGUAGE=C LANG=C LC_ALL=C perl << EOF
 open LOOP, '</dev/loop0' or die $!;
 open DEST, '</tmp/GRML' or die $!;
@@ -49,8 +55,9 @@ close LOOP;
 close DEST;
 EOF
 
-einfo "Unmounting /cdrom."
-umount /cdrom ; eend $?
+einfo "Unmounting cdrom"
+[ -d /live/image ] && umount /live/image || umount /cdrom
+eend $?
 einfo "Now you can eject your grml-cd (e.g. run 'eject /dev/cdrom')." ; eend 0
 
 ## END OF FILE #################################################################
