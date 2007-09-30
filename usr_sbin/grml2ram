@@ -55,9 +55,16 @@ close LOOP;
 close DEST;
 EOF
 
+# identify cd-rom:
+GRMLDEV=$(awk '{if ($2 ~ /^\/live\/image$/ ) print $1}' /etc/mtab)
+if [ -z "$GRMLDEV" ]; then
+   GRMLDEV=$(awk '{if ($2 ~ /^\/cdrom$/ ) print $1}' /etc/mtab)
+fi     
+[ -n "$GRMLDEV" ] || GRMLDEV='/dev/cdrom'
+
 einfo "Unmounting cdrom"
 [ -d /live/image ] && umount /live/image || umount /cdrom
 eend $?
-einfo "Now you can eject your grml-cd (e.g. run 'eject /dev/cdrom')." ; eend 0
+einfo "Now you can eject your grml-cd (e.g. run 'eject $GRMLDEV')." ; eend 0
 
 ## END OF FILE #################################################################
