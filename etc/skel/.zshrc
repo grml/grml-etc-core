@@ -272,7 +272,8 @@
   #f4# Search English  Wikipedia
   wikien()  { ${=BROWSER} http://en.wikipedia.org/wiki/"${(C)*}" }
   #f4# Search official debs
-  wodeb ()  { ${=BROWSER} "http://packages.debian.org/cgi-bin/search_contents.pl?word=$1&version=${2:-unstable}" }
+  wodeb ()  { ${=BROWSER} "http://packages.debian.org/search?keywords=$1&searchon=contents&suite=${2:=unstable}&section=all" }
+
   #m# f4 gex() Exact search via Google
   which google &>/dev/null && gex () { google "\"[ $1]\" $*" } # exact search at google
 

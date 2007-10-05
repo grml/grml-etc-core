@@ -2,8 +2,8 @@ grml-etc-core (0.3.31) unstable; urgency=low
 
   [ Michael Prokop ]
   * /etc/skel/.zshrc:
-    - use same pattern in function wikien as in wikide.
-      (Thanks, wuehlmaus)
+    - use same pattern in function wikien as in wikide. (thanks wuehlmaus)
+    - wodeb(): update URL (thanks for the pointer, wuehlmaus)
     - getskype(): make it compatible with final skype 1.4 version
   * Added /etc/apt/apt.conf.example + /etc/apt/hg-snapshot-script
   * Added /etc/grml/screenrc_generic which should work on any OS without
