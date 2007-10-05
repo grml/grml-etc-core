@@ -1,8 +1,10 @@
 grml-etc-core (0.3.31) unstable; urgency=low
 
   [ Michael Prokop ]
-  * /etc/skel/.zshrc: use same pattern in function wikien as in wikide.
-    (Thanks, wuehlmaus)
+  * /etc/skel/.zshrc:
+    - use same pattern in function wikien as in wikide.
+      (Thanks, wuehlmaus)
+    - getskype(): make it compatible with final skype 1.4 version
   * Added /etc/apt/apt.conf.example + /etc/apt/hg-snapshot-script
   * Added /etc/grml/screenrc_generic which should work on any OS without
     any grml/Debian specific programs/scripts.
@@ -16,7 +18,8 @@ grml-etc-core (0.3.31) unstable; urgency=low
   [ Michael Gebetsroither ]
   * /etc/zsh/zshrc: added bk() to backup a file with iso time tagged.
 
- -- Michael Gebetsroither <gebi@grml.org>  Fri, 05 Oct 2007 02:47:14 +0200
+
+ -- Michael Prokop <mika@grml.org>  Fri,  5 Oct 2007 18:45:48 +0200
 
 grml-etc-core (0.3.30) unstable; urgency=low
 

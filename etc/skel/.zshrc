@@ -818,7 +818,7 @@
     echo "Downloading debian package of skype."
     echo "Notice: If you want to use a more recent skype version run 'getskypebeta'."
     wget http://www.skype.com/go/getskype-linux-deb
-    $SUDO dpkg -i skype_debian-*.deb && echo "skype installed."
+    $SUDO dpkg -i skype*.deb && echo "skype installed."
   }
 
 #f5# Install beta-version of skype
