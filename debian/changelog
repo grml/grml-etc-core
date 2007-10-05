@@ -1,5 +1,6 @@
 grml-etc-core (0.3.31) unstable; urgency=low
 
+  [ Michael Prokop ]
   * /etc/skel/.zshrc: use same pattern in function wikien as in wikide.
     (Thanks, wuehlmaus)
   * Added /etc/apt/apt.conf.example + /etc/apt/hg-snapshot-script
@@ -12,7 +13,10 @@ grml-etc-core (0.3.31) unstable; urgency=low
     - improve usage of yacpi, thanks to Alexander 'z3ttacht' Steinböck for
       the initial patch! [Closes: issue301]
 
- -- Michael Prokop <mika@grml.org>  Wed, 26 Sep 2007 22:48:07 +0200
+  [ Michael Gebetsroither ]
+  * /etc/zsh/zshrc: added bk() to backup a file with iso time tagged.
+
+ -- Michael Gebetsroither <gebi@grml.org>  Fri, 05 Oct 2007 02:47:14 +0200
 
 grml-etc-core (0.3.30) unstable; urgency=low
 
