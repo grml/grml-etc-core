@@ -1,10 +1,10 @@
 #!/bin/zsh
 # Filename:      prepare_ramdisk.sh
-# Purpose:       setup a ramdisk
+# Purpose:       set up a ramdisk of a selected directory
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Mai 27 15:12:55 CEST 2006 [mika]
+# Latest change: Sam Okt 06 13:23:35 CEST 2007 [mika]
 ################################################################################
 
 if [ $UID != 0 ]; then
@@ -23,8 +23,6 @@ if ! [ -n "$1" -a -n "$2" ] ; then
   exit 1
 fi
 
-[ -d /UNIONFS ] && UNIONFS="/UNIONFS" # running from live-CD?
-
 DIRECTORY="$1"
 FILENAME=$(echo $DIRECTORY | sed 's#/#_#g')
 CACHE_FILE="/ramdisk_cache/$FILENAME"
@@ -38,7 +36,7 @@ prepare_start () {
   fi
 
   if ! mount | grep -q "${DIRECTORY}.*loop" ; then
-   if [ -d $DIRECTORY ] ; then
+   if [ -d "$DIRECTORY" ] ; then
     if ! mount | grep -q "loop.*${DIRECTORY}" ; then
       mv $DIRECTORY/ $DIRECTORY.tmpfile && \
       mkdir $DIRECTORY
@@ -70,11 +68,10 @@ prepare_stop () {
     cp -a $DIRECTORY/.* $DIRECTORY.tmpfile/  &>/dev/null
     if umount $DIRECTORY ; then
       rmdir $DIRECTORY
-#      LOOPDEVICE=$(losetup -a | grep $CACHE_FILE | awk -F: '{print $1}')
-#      losetup -d $LOOPDEVICE && echo "done" || echo "failed"
       mv $DIRECTORY.tmpfile/ $DIRECTORY
+      echo done
     else
-      echo "Error when unmounting $DIRECTORY."
+      echo "error [while unmounting ${DIRECTORY}]"
     fi
   else
     echo "Error: $DIRECTORY not mounted."

@@ -1,10 +1,10 @@
 #!/bin/zsh
 # Filename:      prepare_tmpfs.sh
-# Purpose:       setup a tmpfs
+# Purpose:       set up a tmpfs of a selected directory
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Mai 27 15:13:03 CEST 2006 [mika]
+# Latest change: Sam Okt 06 13:23:59 CEST 2007 [mika]
 ################################################################################
 
 if [ $UID != 0 ]; then
@@ -23,12 +23,10 @@ if ! [ -n "$1" -a -n "$2" ] ; then
   exit 1
 fi
 
-[ -d /UNIONFS ] && UNIONFS="/UNIONFS" # running from live-CD?
-
 DIRECTORY="$1"
 
 prepare_start () {
-  if ! mount | grep -q "tmpfs on ${UNIONFS}${DIRECTORY}" ; then
+  if ! mount | grep -q "tmpfs on ${DIRECTORY}" ; then
    if [ -d $DIRECTORY ] ; then
     if ! [ -d $DIRECTORY.tmpfile ] ; then
      echo -n "Setting up tmpfs ${DIRECTORY}: "
@@ -58,7 +56,7 @@ prepare_start () {
 prepare_stop () {
   if mount | grep -q $DIRECTORY ; then
     echo -n "Unmounting tmpfs ${DIRECTORY}: "
-    umount ${UNIONFS}${DIRECTORY} && \
+    umount ${DIRECTORY} && \
     rmdir $DIRECTORY && \
     mv $DIRECTORY.tmpfile $DIRECTORY && echo done || echo failed
   else
