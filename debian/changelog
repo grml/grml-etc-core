@@ -1,3 +1,10 @@
+grml-etc-core (0.3.32) unstable; urgency=low
+
+  * Add /etc/apt/listbugs: display known bugs of currently running
+    system. This script is used inside grml-live.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 14 Oct 2007 00:22:38 +0200
+
 grml-etc-core (0.3.31) unstable; urgency=low
 
   [ Michael Prokop ]
