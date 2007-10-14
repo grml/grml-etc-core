@@ -1,3 +1,10 @@
+grml-etc-core (0.3.34) unstable; urgency=low
+
+  * /etc/apt/grml/listbugs: support non-apt-show-versions variant
+    as well.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 14 Oct 2007 11:49:59 +0200
+
 grml-etc-core (0.3.33) unstable; urgency=low
 
   * Rename /etc/apt/listbugs into /etc/apt/grml/listbugs so it

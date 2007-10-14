@@ -1,10 +1,10 @@
 #!/bin/sh
 # Filename:      /etc/apt/listbugs
-# Purpose:       display bugs of current running system (e.g. used inside grml-live)
+# Purpose:       display bugs of currently running system (used inside grml-live)
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2 or any later version.
-# Latest change: Son Okt 14 00:21:54 CEST 2007 [mika]
+# Latest change: Son Okt 14 11:49:36 CEST 2007 [mika]
 ################################################################################
 
 [ -n "$SEVERITY" ] || SEVERITY="critical,grave,serious"
@@ -19,9 +19,18 @@ if ! [ -x /usr/bin/apt-show-source ] ; then
    exit 1
 fi
 
-apt-listbugs -s $SEVERITY list \
-    $(apt-show-source | grep -v -e 'not installed' -e '--------------' -e \
-    'Version' | awk '{print $4;}' | grep -v '^[() ]*$'| sort | uniq)
+if ! [ -x /usr/bin/dpkg-query ] ; then
+   echo "Error: /usr/bin/dpkg-query not available. Exiting."
+   exit 1
+fi
+
+if apt-show-source 1>/dev/null 2>&1 ; then
+   apt-listbugs -q -n -s $SEVERITY list \
+      $(apt-show-source | grep -v -e 'not installed' -e '--------------' -e \
+      'Version' | awk '{print $4;}' | grep -v '^[() ]*$'| sort | uniq)
+else
+   apt-listbugs -q -n -s $SEVERITY list $(dpkg-query -W --showformat='${Package}\n')
+fi
 
 # $ROOTCMD apt-listbugs -s $SEVERITY list \
 #          $(dpkg --get-selections| grep '       install' | awk '{print $1})
