@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Sep 15 10:24:10 CEST 2007 [mika]
+# Latest change: Don Okt 18 10:22:10 CEST 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -623,12 +623,74 @@ fi
   fi
 # }}}
 
+# display version control information on right side of prompt if $VCS is set {{{
+# based on Mike Hommey's http://web.glandium.org/blog/?p=170
+  __vcs_dir() {
+    local vcs base_dir sub_dir ref
+    sub_dir() {
+      local sub_dir
+      sub_dir=$(readlink -f "${PWD}")
+      sub_dir=${sub_dir#$1}
+      echo ${sub_dir#/}
+    }
+
+    git_dir() {
+      base_dir=$(git-rev-parse --show-cdup 2>/dev/null) || return 1
+      base_dir=$(readlink -f "$base_dir/..")
+      sub_dir=$(git-rev-parse --show-prefix)
+      sub_dir=${sub_dir%/}
+      ref=$(git-symbolic-ref -q HEAD || git-name-rev --name-only HEAD 2>/dev/null)
+      ref=${ref#refs/heads/}
+      vcs="git"
+    }
+
+    svn_dir() {
+      [ -d ".svn" ] || return 1
+      base_dir="."
+      while [ -d "$base_dir/../.svn" ]; do base_dir="$base_dir/.."; done
+      base_dir=$(readlink -f "$base_dir")
+      sub_dir=$(sub_dir "${base_dir}")
+      ref=$(svn info "$base_dir" | awk '/^URL/ { sub(".*/","",$0); r=$0 } /^Revision/ { sub("[^0-9]*","",$0); print r":"$0 }')
+      vcs="svn"
+    }
+
+    svk_dir() {
+      [ -f ~/.svk/config ] || return 1
+      base_dir=$(awk '/: *$/ { sub(/^ */,"",$0); sub(/: *$/,"",$0); if (match("'${PWD}'", $0"(/|$)")) { print $0; d=1; } } /depotpath/ && d == 1 { sub(".*/","",$0); r=$0 } /revision/ && d == 1 { print r ":" $2; exit 1 }' ~/.svk/config) && return 1
+      ref=${base_dir##*
+  }
+      base_dir=${base_dir%%
+  *}
+      sub_dir=$(sub_dir "${base_dir}")
+      vcs="svk"
+    }
+
+    hg_dir() {
+      base_dir="."
+      while [ ! -d "$base_dir/.hg" ]; do base_dir="$base_dir/.."; [ $(readlink -f "${base_dir}") = "/" ] && return 1; done
+      base_dir=$(readlink -f "$base_dir")
+      sub_dir=$(sub_dir "${base_dir}")
+      ref=$(< "${base_dir}/.hg/branch")
+      vcs="hg"
+    }
+
+    hg_dir  ||
+    git_dir ||
+    svn_dir ||
+    svk_dir # ||
+  #  base_dir="$PWD"
+  #  echo "${vcs:+($vcs)}${base_dir/$HOME/~}${vcs:+[$ref]${sub_dir}}"
+    echo "${vcs:+($vcs)}${base_dir}${vcs:+[$ref]${sub_dir}}"
+  }
+# }}}
+
 # {{{ set prompt
   if autoload promptinit && promptinit 2>/dev/null ; then
      promptinit # people should be able to use their favourite prompt
   else
      print 'Notice: no promptinit available :('
   fi
+
 
 # precmd() => a function which is executed just before each prompt
 # use 'NOPRECMD=1' to disable the precmd + preexec commands
@@ -643,13 +705,15 @@ fi
       # allow manual overwriting of RPROMPT
       if [[ -n $RPROMPT ]] ; then
          [[ $TERM == screen* ]] && echo -n $'\ekzsh\e\\'
-         return 0
+         # return 0
       fi
       # just use DONTSETRPROMPT=1 to be able to overwrite RPROMPT
       if [[ -z $DONTSETRPROMPT ]] ; then
          if [[ -n $BATTERY ]] ; then
             RPROMPT="%(?..:()% ${PERCENT}${SCREENTITLE}"
             # RPROMPT="${PERCENT}${SCREENTITLE}"
+         elif [[ -n $VCS ]] ; then
+            RPROMPT="%(?..:()% $(__vcs_dir)${SCREENTITLE}"
          else
             RPROMPT="%(?..:()% ${SCREENTITLE}"
             # RPROMPT="${SCREENTITLE}"
@@ -809,7 +873,8 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
   alias term2iso="echo 'Setting terminal to iso mode' ; print -n '\e%@'"
   alias term2utf="echo 'Setting terminal to utf-8 mode'; print -n '\e%G'"
 
-  type utf2iso &>/dev/null && unalias utf2iso # make sure it is not assigned yet
+  # make sure it is not assigned yet
+  [[ $(whence -w utf2iso &>/dev/null) == 'utf2iso: alias' ]] && unalias utf2iso
   utf2iso() {
     if isutfenv ; then
        for ENV in $(env | command grep -i '.utf') ; do
@@ -818,7 +883,8 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
      fi
   }
 
-  type iso2utf &>/dev/null && unalias iso2utf # make sure it is not assigned yet
+  # make sure it is not assigned yet
+  [[ $(whence -w iso2utf &>/dev/null) == 'iso2utf: alias' ]] && unalias iso2utf
   iso2utf() {
    if ! isutfenv ; then
       for ENV in $(env | command grep -i '\.iso') ; do

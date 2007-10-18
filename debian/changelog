@@ -1,3 +1,11 @@
+grml-etc-core (0.3.35) unstable; urgency=low
+
+  * /etc/zsh/zshrc: support displaying version control information inside
+    prompt (display on $RPROMPT). Just run 'VCS=1' to enable the feature.
+    [Closes: issue305]
+
+ -- Michael Prokop <mika@grml.org>  Thu, 18 Oct 2007 10:22:36 +0200
+
 grml-etc-core (0.3.34) unstable; urgency=low
 
   * /etc/apt/grml/listbugs: support non-apt-show-versions variant
