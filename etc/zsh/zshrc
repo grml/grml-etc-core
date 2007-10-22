@@ -451,12 +451,20 @@ fi
          done
 
 # autoload zsh modules when they are referenced
-  is4 && for opt mod in a  stat    \
-                        a  zpty    \
-                        ap zprof   \
-                        ap mapfile ; do
-             zmodload -${opt} zsh/${mod} ${mod}
-         done ; unset opt mod
+  if is4 ; then
+    tmpargs=(
+      a   stat
+      a   zpty
+      ap  zprof
+      ap  mapfile
+    )
+
+    while (( ${#tmpargs} > 0 )) ; do
+      zmodload -${tmpargs[1]} zsh/${tmpargs[2]} ${tmpargs[2]}
+      shift 2 tmpargs
+    done
+    unset tmpargs
+  fi
 
   is4 && autoload -U insert-files && \
   zle -N insert-files && \
