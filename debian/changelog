@@ -1,8 +1,13 @@
 grml-etc-core (0.3.36) unstable; urgency=low
 
+  [Frank Terbeck]
+  * /etc/zsh/zshrc: not using 'for name0 name1 in a b c d ; ...'
+    anymore to work around problems with older zsh versions.
+
+  [Michael Prokop]
   * /etc/zsh/zshrc: enable transient_rprompt only for zsh >= 4.1.
 
- -- Michael Prokop <mika@grml.org>  Mon, 22 Oct 2007 10:18:26 +0200
+ -- Michael Prokop <mika@grml.org>  Mon, 22 Oct 2007 16:48:40 +0200
 
 grml-etc-core (0.3.35) unstable; urgency=low
 
