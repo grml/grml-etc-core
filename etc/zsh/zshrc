@@ -136,6 +136,7 @@
 # check for versions (compatibility reasons)
   if autoload is-at-least && is-at-least 2>/dev/null ; then
      is4() { is-at-least 4 }
+     is41() { is-at-least 4.1 }
      is42() { is-at-least 4.2 }
   else
     is4(){
@@ -698,7 +699,7 @@ fi
   # precmd () { setopt promptsubst; [[ -o interactive ]] && jobs -l;
 
   # make sure to use right prompt only when not running a command
-  is4 && setopt transient_rprompt
+  is41 && setopt transient_rprompt
 
   is4 && [[ -z $NOPRECMD ]] && precmd () {
       [[ -n $NOPRECMD ]] && return 0

@@ -1,3 +1,9 @@
+grml-etc-core (0.3.36) unstable; urgency=low
+
+  * /etc/zsh/zshrc: enable transient_rprompt only for zsh >= 4.1.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 22 Oct 2007 10:18:26 +0200
+
 grml-etc-core (0.3.35) unstable; urgency=low
 
   * /etc/zsh/zshrc: support displaying version control information inside
