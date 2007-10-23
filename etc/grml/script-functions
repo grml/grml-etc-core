@@ -350,7 +350,7 @@ ewarn() {
 #
 eerror() {
   if [ "${RC_QUIET_STDOUT}" = "yes" ]; then
-    printf " $*\n" >/dev/stderr
+    printf " $*\n" >&2
   else
     [ "${RC_ENDCOL}" != "yes" ] && [ "${LAST_E_CMD}" = "ebegin" ] && echo
     printf " ${BAD}*${NORMAL} ${RC_INDENTATION}$*\n"
