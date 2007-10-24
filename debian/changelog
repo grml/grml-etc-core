@@ -1,6 +1,7 @@
 grml-etc-core (0.3.38) unstable; urgency=low
 
-  * Provide e* functions in /etc/grml/lsb-functions again.
+  * Provide e* functions in /etc/grml/lsb-functions again
+    and restore some RC_* variables.
     Otherwise we break just too many scripts.
 
  -- Michael Prokop <mika@grml.org>  Wed, 24 Oct 2007 09:36:33 +0200
