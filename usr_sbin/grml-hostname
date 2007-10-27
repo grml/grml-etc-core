@@ -4,7 +4,7 @@
 # Authors:       (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Die Feb 13 12:16:57 CET 2007 [mika]
+# Latest change: Sam Okt 27 23:43:06 CEST 2007 [mika]
 ################################################################################
 
 source /etc/grml/script-functions
@@ -39,6 +39,7 @@ fi
 case $retval in
   0)
      echo "$HOSTNAME" > /etc/hostname
+     echo "$HOSTNAME" > /etc/mailname
      sed -i "s/^127.0.0.1[ \t]*$OLDHOSTNAME[ \t]*localhost/127.0.0.1       $HOSTNAME localhost/" /etc/hosts
      sed -i "s/^::1[ \t]*ip6-localhost ip6-loopback[ \t]*$OLDHOSTNAME/::1     ip6-localhost ip6-loopback $HOSTNAME/" /etc/hosts
      POSTFIX=''

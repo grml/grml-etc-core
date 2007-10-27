@@ -1,3 +1,9 @@
+grml-scripts (1.0.20) unstable; urgency=low
+
+  * grml-hostname: adjust /etc/mailname as well
+
+ -- Michael Prokop <mika@grml.org>  Sat, 27 Oct 2007 23:43:17 +0200
+
 grml-scripts (1.0.19) unstable; urgency=low
 
   * grml2ram: adjust for usage with new live-initramfs layout.
