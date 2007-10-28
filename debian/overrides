@@ -1,6 +1,7 @@
 grml-scripts: executable-not-elf-or-script ./usr/bin/exifinfo
 grml-scripts: executable-not-elf-or-script ./usr/bin/tinyp2p.py
 grml-scripts: executable-not-elf-or-script ./usr/bin/wwwis
+grml-scripts: manpage-has-bad-whatis-entry usr/share/man/man1/arename.1.gz
 grml-scripts: script-with-language-extension usr/bin/arename.pl
 grml-scripts: script-with-language-extension usr/bin/bincompare.pl
 grml-scripts: script-with-language-extension usr/bin/cpufreq-detect.sh
@@ -25,6 +26,8 @@ grml-scripts: shell-script-fails-syntax-check ./usr/bin/grml-lock
 grml-scripts: shell-script-fails-syntax-check ./usr/sbin/grml-nessus
 grml-scripts: shell-script-fails-syntax-check ./usr/sbin/grml-swapon
 grml-scripts: shell-script-fails-syntax-check ./usr/sbin/grml-tpm
+grml-scripts source: maintainer-script-lacks-debhelper-token debian/postinst
+grml-scripts source: maintainer-script-lacks-debhelper-token debian/preinst
 grml-scripts: statically-linked-binary ./usr/bin/cpu-screen
 grml-scripts: statically-linked-binary ./usr/bin/ip-screen
 grml-scripts: statically-linked-binary ./usr/bin/vmware-detect
