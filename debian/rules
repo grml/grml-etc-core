@@ -53,7 +53,7 @@ binary-arch: build install
 	dh_testroot
 	dh_installchangelogs
 	dh_installdocs
-	dh_installman manpages/arename.pl.1 manpages/grml-scripts.1 manpages/reread_partition_table.8 manpages/random-hostname.1 \
+	dh_installman manpages/arename.1 manpages/grml-scripts.1 manpages/reread_partition_table.8 manpages/random-hostname.1 \
 	manpages/grml-setkeyboard.8 manpages/grml-setlang.8 manpages/getsf.1 manpages/grml-iptstate.8 manpages/qma.1 manpages/grml-swapon.8 \
 	manpages/grml2ram.8 manpages/gsuggest.1 manpages/dirvish-setup.8 manpages/grml-setservices.8 manpages/grml-quickconfig.8 \
 	manpages/iso-term.1 manpages/alignmargins.8 manpages/get_3ware.1
