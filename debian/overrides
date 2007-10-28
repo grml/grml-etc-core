@@ -26,8 +26,6 @@ grml-scripts: shell-script-fails-syntax-check ./usr/bin/grml-lock
 grml-scripts: shell-script-fails-syntax-check ./usr/sbin/grml-nessus
 grml-scripts: shell-script-fails-syntax-check ./usr/sbin/grml-swapon
 grml-scripts: shell-script-fails-syntax-check ./usr/sbin/grml-tpm
-grml-scripts source: maintainer-script-lacks-debhelper-token debian/postinst
-grml-scripts source: maintainer-script-lacks-debhelper-token debian/preinst
 grml-scripts: statically-linked-binary ./usr/bin/cpu-screen
 grml-scripts: statically-linked-binary ./usr/bin/ip-screen
 grml-scripts: statically-linked-binary ./usr/bin/vmware-detect
