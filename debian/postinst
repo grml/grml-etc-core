@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Okt 28 17:18:56 CET 2007 [mika]
+# Latest change: Son Okt 28 17:37:25 CET 2007 [mika]
 ################################################################################
 
 set -e
@@ -23,6 +23,6 @@ case "$1" in
      exit 0
 esac
 
-#DEBHELPER#
+exit 0
 
 ## END OF FILE #################################################################
