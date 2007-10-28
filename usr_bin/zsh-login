@@ -4,13 +4,12 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Jun 23 23:53:09 CEST 2007 [mika]
+# Latest change: Son Okt 28 15:44:09 CET 2007 [mika]
 ################################################################################
 
 . /etc/grml/sh-lib
 
 [ -r /etc/grml_version ] && GRMLVERSION=$(cat /etc/grml_version) || GRMLVERSION='(no version information available)'
-[ -r /etc/hostname ] && HOSTNAME=$(cat /etc/hostname) || HOSTNAME='grml'
 
 # allow customized release information
 [ -r /etc/release_info ] && cat /etc/release_info
@@ -53,7 +52,7 @@ if grep nowelcome /proc/cmdline 2>/dev/null ; then
 else
    echo "
 
-Welcome to $HOSTNAME ${GRMLVERSION}!
+Welcome to ${GRMLVERSION}!
 
 New to grml? Want to read some documentation?
 Start via running 'grml-info'.
