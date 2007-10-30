@@ -122,7 +122,6 @@ binary-arch: build install
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/prepare_ramdisk.sh.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/prepare_tmpfs.sh.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/PrintAnalyzer.1.gz \
-		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/runit.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/say.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/search.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/sepdate.pl.1.gz \

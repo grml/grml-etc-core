@@ -1,3 +1,9 @@
+grml-scripts (1.0.24) unstable; urgency=low
+
+  * Drop runit manpage. Thanks for the hint, gebi.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 30 Oct 2007 10:38:15 +0100
+
 grml-scripts (1.0.23) unstable; urgency=low
 
   * Drop the DEBHELPER from maintainer scripts.
