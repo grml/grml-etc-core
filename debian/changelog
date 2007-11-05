@@ -1,3 +1,10 @@
+grml-etc-core (0.3.39) unstable; urgency=low
+
+  * Move vim vs. vi from /etc/skel/.zshrc.grmlsmall to /etc/zsh/zshrc
+    to make sure it's also fixed for user root.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 05 Nov 2007 12:20:44 +0100
+
 grml-etc-core (0.3.38) unstable; urgency=low
 
   * Provide e* functions in /etc/grml/lsb-functions again

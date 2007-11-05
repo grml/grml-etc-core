@@ -4,11 +4,9 @@
 # Authors:       Frank Terbeck <ft@bewatermyfriend.de>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mit Nov 15 21:31:18 CET 2006 [ft]
+# Latest change: Mon Nov 05 12:20:27 CET 2007 [mika]
 ################################################################################
 
-# vim is not in grmlsmall
-  [[ $EDITOR == vim ]] && EDITOR='vi'
   unset abk[V]
   unalias    'V'      &> /dev/null
   unfunction vman     &> /dev/null

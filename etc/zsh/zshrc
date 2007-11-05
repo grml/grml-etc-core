@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Okt 18 10:22:10 CEST 2007 [mika]
+# Latest change: Mon Nov 05 12:20:29 CET 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -231,7 +231,11 @@
 
 # {{{ set some variables
   #v#
-  export EDITOR=${EDITOR:-vim}
+  if type -p vim &>/dev/null ; then
+     export EDITOR=${EDITOR:-vim}
+  else
+     export EDITOR=${EDITOR:-vi}
+  fi
   #v#
   export MAIL=${MAIL:-/var/mail/$USER}
   # if we don't set $SHELL then aterm, rxvt,.. will use /bin/sh or /bin/bash :-/
