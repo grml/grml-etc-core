@@ -10,7 +10,6 @@
 # menu with quick config options
 
 use Term::ReadKey;
-use Time::HiRes;
 
 # enable alternate charset support (needed for screen)
 print "\e(B\e)0";
@@ -100,10 +99,7 @@ while(1) {
 EOF
   print "Press a key: ".$M;
   ReadMode 4; # Turn off controls keys
-  while (not defined ($x = ReadKey(-1))) {
-      # No key yet
-      Time::HiRes::sleep(0.5); 
-  }
+  while (not defined ($x = ReadKey(0))) {}
   ReadMode 0; # Reset tty mode before exiting
 
   print $N.$/.$/;
@@ -126,10 +122,7 @@ EOF
 EOF
       print "Press a key: ".$M;
       ReadMode 4; # Turn off controls keys
-      while (not defined ($x = ReadKey(-1))) {
-    # No key yet
-        Time::HiRes::sleep(0.5); 
-      }
+      while (not defined ($x = ReadKey(0))) {}
       ReadMode 0; # Reset tty mode before exiting
 
       print $N.$/.$/;
