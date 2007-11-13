@@ -86,12 +86,6 @@ sub getKey
 
 # main loop
 while(1) {
-
-# disable input buffering, see
-# man perlfunc | less '+/   getc'
-# for details
-    system "stty", '-icanon', 'eol', "\001";
-
 # main loop
     $command="";
     while($command eq "") {
