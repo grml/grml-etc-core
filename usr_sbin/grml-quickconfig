@@ -99,6 +99,8 @@ while(1) {
 EOF
   print "Press a key: ".$M;
   ReadMode 4; # Turn off controls keys
+  $flags = fcntl(STDIN, F_GETFL, 0) or die "Can't get flags for STDIN: $!\n";
+  $flags = fcntl(STDIN, F_SETFL, $flags & ~O_NONBLOCK) or die "Can't set flags for STDIN: $!\n";
   while (not defined ($x = ReadKey(0))) {}
   ReadMode 0; # Reset tty mode before exiting
 
@@ -122,6 +124,8 @@ EOF
 EOF
       print "Press a key: ".$M;
       ReadMode 4; # Turn off controls keys
+      $flags = fcntl(STDIN, F_GETFL, 0) or die "Can't get flags for STDIN: $!\n";
+      $flags = fcntl(STDIN, F_SETFL, $flags & ~O_NONBLOCK) or die "Can't set flags for STDIN: $!\n";
       while (not defined ($x = ReadKey(0))) {}
       ReadMode 0; # Reset tty mode before exiting
 
