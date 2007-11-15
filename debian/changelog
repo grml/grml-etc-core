@@ -1,3 +1,13 @@
+grml-scripts (1.0.25) unstable; urgency=low
+
+  [ Michael Gebetsroither ]
+  * Add script grml-init-multitail.
+
+  [ Michael Prokop ]
+  * Add manpage for grml-init-multitail.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 15 Nov 2007 23:39:09 +0100
+
 grml-scripts (1.0.24) unstable; urgency=low
 
   * Drop runit manpage. Thanks for the hint, gebi.
