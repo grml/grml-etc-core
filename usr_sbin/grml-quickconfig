@@ -10,7 +10,7 @@
 # menu with quick config options
 
 use Term::ReadKey;
-use Time::HiRes;
+use Fcntl qw(F_GETFL F_SETFL O_NONBLOCK);
 
 # enable alternate charset support (needed for screen)
 print "\e(B\e)0";
@@ -69,14 +69,23 @@ $HLINE=$B."x".$N;      # A single horizontal line drawing character
     n => 'wm-ng',
 );
 
+sub getKey
+{
+  print "Press a key: ".$M;
+  ReadMode 4; # Turn off controls keys
+
+  # HACK: this is necessary because startx/Xorg sets the console where it outputs
+  #       to non-blocking mode
+  $flags = fcntl(STDIN, F_GETFL, 0) or die "Can't get flags for STDIN: $!\n";
+  $flags = fcntl(STDIN, F_SETFL, $flags & ~O_NONBLOCK) or die "Can't set flags for STDIN: $!\n";
+
+  while (not defined ($x = ReadKey(0))) {}
+  ReadMode 0; # Reset tty mode before exiting
+  return $x;
+}
+
 # main loop
 while(1) {
-
-# disable input buffering, see
-# man perlfunc | less '+/   getc'
-# for details
-    system "stty", '-icanon', 'eol', "\001";
-
 # main loop
     $command="";
     while($command eq "") {
@@ -98,13 +107,7 @@ while(1) {
    ${B}mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj${N}
 
 EOF
-  print "Press a key: ".$M;
-  ReadMode 4; # Turn off controls keys
-  while (not defined ($x = ReadKey(-1))) {
-      # No key yet
-      Time::HiRes::sleep(0.5); 
-  }
-  ReadMode 0; # Reset tty mode before exiting
+  $x = getKey();
 
   print $N.$/.$/;
   if (defined($menu_commands{$x})) {
@@ -124,13 +127,7 @@ EOF
    ${B}mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj${N}
 
 EOF
-      print "Press a key: ".$M;
-      ReadMode 4; # Turn off controls keys
-      while (not defined ($x = ReadKey(-1))) {
-    # No key yet
-        Time::HiRes::sleep(0.5); 
-      }
-      ReadMode 0; # Reset tty mode before exiting
+      $x = getKey();
 
       print $N.$/.$/;
       if (defined($windowmanagers{$x})) {
