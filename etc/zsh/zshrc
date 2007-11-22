@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mon Nov 05 12:20:29 CET 2007 [mika]
+# Latest change: Don Nov 22 11:13:15 CET 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -237,17 +237,24 @@
      export EDITOR=${EDITOR:-vi}
   fi
   #v#
+
   export MAIL=${MAIL:-/var/mail/$USER}
+
   # if we don't set $SHELL then aterm, rxvt,.. will use /bin/sh or /bin/bash :-/
   export SHELL='/bin/zsh'
+
+  # color setup for ls:
   [ -x $(which dircolors) ] && eval `dircolors -b`
 
-# Search path for the cd command
-#  cdpath=(.. ~)
+  # set width of man pages to 80 for more convenient reading
+  # (( ${+MANWIDTH} )) || export MANWIDTH=80
 
-# completion functions go to /etc/zsh/completion.d
-# function files may be put into /etc/zsh/functions.d, from where they
-# will be automatically autoloaded.
+  # Search path for the cd command
+  #  cdpath=(.. ~)
+
+  # completion functions go to /etc/zsh/completion.d
+  # function files may be put into /etc/zsh/functions.d, from where they
+  # will be automatically autoloaded.
   if [ -n "$BROKEN_COMPLETION_DIR" ] ; then
      print 'Warning: not setting completion directories because broken files have been found.'>&2
   else
@@ -260,7 +267,7 @@
      fi
   fi
 
-# automatically remove duplicates from these arrays
+  # automatically remove duplicates from these arrays
   typeset -U path cdpath fpath manpath
 # }}}
 

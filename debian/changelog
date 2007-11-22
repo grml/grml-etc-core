@@ -1,3 +1,12 @@
+grml-etc-core (0.3.40) unstable; urgency=low
+
+  * /etc/zsh/zshrc: add MANWIDTH, deactivated by default though;
+    thanks Alexander Steinböck! [Closes: issue343]
+  * /etc/grml/screenrc: fix colorschema of 'switch order of caption and
+    hardstatus'
+
+ -- Michael Prokop <mika@grml.org>  Thu, 22 Nov 2007 11:13:45 +0100
+
 grml-etc-core (0.3.39) unstable; urgency=low
 
   * Move vim vs. vi from /etc/skel/.zshrc.grmlsmall to /etc/zsh/zshrc
