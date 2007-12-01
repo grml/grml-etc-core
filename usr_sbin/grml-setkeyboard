@@ -58,7 +58,6 @@ If you want to change keyboard settings temporarly please use grml-lang instead.
 
 Configuration will be written to /etc/sysconfig/keyboard" 0 0 0 \
  at  austrian off \
- de  german   off \
  be  belgian off \
  bg  bulgarian off \
  cf  "french canadian" off \
@@ -66,15 +65,16 @@ Configuration will be written to /etc/sysconfig/keyboard" 0 0 0 \
  cn  chinese off \
  cs  czech off \
  cz  czech off \
- dk  dansk off \
  da  da off \
+ de  german   off \
+ dk  dansk off \
  en  "english [us] (default)" on \
  es  spanish off \
  fi  finnish off \
  fr  french off \
  he  hebrew off \
- il  hebrew off \
  ie  irish off \
+ il  hebrew off \
  it  italian off \
  ja  japanese off \
  nl  dutch off \
