@@ -213,6 +213,9 @@
   alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
   alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 
+# Use 'g' instead of 'git':
+  type g &>/dev/null || alias g='git'
+
 # use colors when browsing man pages, but only if not using LESS_TERMCAP_* from /etc/zsh/zshenv:
   if [ -z "$LESS_TERMCAP_md" ] ; then
      [ -d ~/.terminfo/ ] && alias man='TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man'
