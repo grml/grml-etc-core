@@ -48,10 +48,10 @@
   if [ -z "$BROWSER" ] ; then
      if [ -n "$DISPLAY" ] ; then
         #v# If X11 is running
-        [ -x $(which firefox) ] && export BROWSER=firefox
+        [ -x $(type firefox) ] && export BROWSER=firefox
      else
         #v# If no X11 is running
-        [ -x $(which w3m) ] && export BROWSER=w3m
+        [ -x $(type w3m) ] && export BROWSER=w3m
      fi
   fi
   #v#
@@ -197,7 +197,7 @@
   #a2# Execute \kbd{mkdir -o}
   alias md='mkdir -p'
 
-  [ -x $(which ipython) ] && alias ips='ipython -p sh'
+  [ -x $(type ipython) ] && alias ips='ipython -p sh'
 
 # console stuff
   #a2# Execute \kbd{mplayer -vo fbdev}
@@ -229,15 +229,15 @@
 
 # work around non utf8 capable software in utf environment via $LANG and luit
   if type isutfenv &>/dev/null && type luit &>/dev/null; then
-     if [ -x $(which mrxvt) ] ; then
+     if [ -x $(type mrxvt) ] ; then
         isutfenv && [ -n "$LANG" ] && alias mrxvt="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit mrxvt"
      fi
 
-     if [ -x $(which aterm) ] ; then
+     if [ -x $(type aterm) ] ; then
         isutfenv && [ -n "$LANG" ] && alias aterm="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit aterm"
      fi
 
-     if [ -x $(which centericq) ] ; then
+     if [ -x $(type centericq) ] ; then
         isutfenv && [ -n "$LANG" ] && alias centericq="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit centericq"
      fi
   fi
@@ -908,7 +908,7 @@
 
 # highlight important stuff in diff output, usage example: hg diff | hidiff
   #m# a2 hidiff \kbd{histring} oneliner for diffs
-  [ -x $(which histring) ] && \
+  [ -x $(type histring) ] && \
   alias hidiff="histring -fE '^Comparing files .*|^diff .*' | histring -c yellow -fE '^\-.*' | histring -c green -fE '^\+.*'"
 
 # rename pictures based on information found in exif headers
@@ -977,7 +977,7 @@
 
 # hl() highlighted less
 # http://ft.bewatermyfriend.org/comp/data/zsh/zfunct.html
-  if [ -x $(which highlight) ] ; then
+  if [ -x $(type highlight) ] ; then
     function hl() {
       local theme lang
       theme=${HL_THEME:-""}
@@ -1190,7 +1190,7 @@
 
 # Work around ion/xterm resize bug.
 #if [ "$SHLVL" = 1 ]; then
-#       if [ -x $(which resize) ]; then
+#       if [ -x $(type resize) ]; then
 #               eval `resize </dev/null`
 #       fi
 #fi

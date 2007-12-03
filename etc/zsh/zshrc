@@ -244,7 +244,7 @@
   export SHELL='/bin/zsh'
 
   # color setup for ls:
-  [ -x $(which dircolors) ] && eval `dircolors -b`
+  [ -x $(type dircolors) ] && eval `dircolors -b`
 
   # set width of man pages to 80 for more convenient reading
   # (( ${+MANWIDTH} )) || export MANWIDTH=80
@@ -633,7 +633,7 @@ fi
 
 # {{{ display battery status on right side of prompt via running 'BATTERY=1 zsh'
   if [ -n "$BATTERY" ] ; then
-     if [ -x $(which acpi) ] ; then
+     if [ -x $(type acpi) ] ; then
         PERCENT="${(C)${(s| |)$(acpi 2>/dev/null)}[4]}"
         [ -z "$PERCENT" ] && PERCENT='acpi not present'
         if [ "${PERCENT%%%}" -lt 20 ] ; then
@@ -940,7 +940,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
   alias top10='print -l ? ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
 
 # truecrypt; use e.g. via 'truec /dev/ice /mnt/ice' or 'truec -i'
-  if [ -x $(which truecrypt) ] ; then
+  if [ -x $(type truecrypt) ] ; then
      if isutfenv ; then
         alias truec='truecrypt --mount-options "rw,sync,dirsync,users,uid=1000,gid=users,umask=077,utf8" '
      else
@@ -1052,14 +1052,14 @@ Enjoy your grml system with the zsh!$reset_color"
   fi
 
 # sort installed Debian-packages by size
-  if [ -x $(which grep-status) ] ; then
+  if [ -x $(type grep-status) ] ; then
      #a3# List installed Debian-packages sorted by size
      alias debs-by-size='grep-status -FStatus -sInstalled-Size,Package -n "install ok installed" | paste -sd "  \n" | sort -rn'
   fi
 
 # if cdrecord is a symlink (to wodim) or isn't present at all warn:
-  if [ -L /usr/bin/cdrecord -o ! -x $(which cdrecord) ] ; then
-     if [ -x $(which wodim) ] ; then
+  if [ -L /usr/bin/cdrecord -o ! -x $(type cdrecord) ] ; then
+     if [ -x $(type wodim) ] ; then
         alias cdrecord="echo 'cdrecord is not provided under its original name by Debian anymore.
 See #377109 in the BTS of Debian for more details.
 
@@ -1068,7 +1068,7 @@ Please use the wodim binary instead' ; return 1"
   fi
 
 # get_tw_cli has been renamed into get_3ware
-  if [ -x $(which get_3ware) ] ; then
+  if [ -x $(type get_3ware) ] ; then
      get_tw_cli() {
        echo 'Warning: get_tw_cli has been renamed into get_3ware. Invoking get_3ware for you.'>&2
        get_3ware
@@ -1076,7 +1076,7 @@ Please use the wodim binary instead' ; return 1"
   fi
 
 # I hate lacking backward compatibility, so provide an alternative therefore
-  if ! [ -x $(which apache2-ssl-certificate) ] ; then
+  if ! [ -x $(type apache2-ssl-certificate) ] ; then
      apache2-ssl-certificate(){
 
      print 'Debian does not ship apache2-ssl-certificate anymore (see #398520). :('
@@ -1266,19 +1266,19 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
     fi
   }
 
-  if [ -x $(which 915resolution) ] ; then
+  if [ -x $(type 915resolution) ] ; then
      alias 855resolution='echo -e "Please use 915resolution as resolution modify tool for Intel graphic chipset."; return -1'
   fi
 
   #a1# Output version of running grml
   alias grml-version='cat /etc/grml_version'
 
-  if [ -x $(which rebuildfstab) ] ; then
+  if [ -x $(type rebuildfstab) ] ; then
      #a1# Rebuild /etc/fstab
      alias grml-rebuildfstab='rebuildfstab -v -r -config'
   fi
 
-  if [ -x $(which grml-debootstrap) ] ; then
+  if [ -x $(type grml-debootstrap) ] ; then
      alias debian2hd='print "Installing debian to harddisk is possible via using grml-debootstrap." ; return 1'
   fi
 }
@@ -1352,7 +1352,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
      # manzsh()  { man zshall | $MYLESS -p $1 ; }
   fi
 
-  if [ -x $(which most) ] ; then
+  if [ -x $(type most) ] ; then
   #f1# View Debian's changelog of a given package
     dchange() {
       if [ -r /usr/share/doc/${1}/changelog.Debian.gz ] ; then
