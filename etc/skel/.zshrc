@@ -10,13 +10,13 @@
 # see /etc/zsh/zshrc for some general settings
 # If you don't have write permissions to /etc/zsh/zshrc on your own
 # copy the file to your $HOME as /.zshrc.global and we source it:
-  if [ -r ~/.zshrc.global ] ; then
+  if [[ -r ~/.zshrc.global ]] ; then
      . ~/.zshrc.global
   fi
 # }}}
 
 # check whether global file has been read {{{
-  if [ -z "$ZSHRC_GLOBAL_HAS_BEEN_READ" ] ; then
+  if [[ -z "$ZSHRC_GLOBAL_HAS_BEEN_READ" ]] ; then
      print 'Warning: global zsh config has not been read'>&2
   fi
 # }}}
@@ -45,13 +45,13 @@
   export COLORTERM="yes"
 
 # set default browser
-  if [ -z "$BROWSER" ] ; then
-     if [ -n "$DISPLAY" ] ; then
+  if [[ -z "$BROWSER" ]] ; then
+     if [[ -n "$DISPLAY" ]] ; then
         #v# If X11 is running
-        [ -x $(type firefox) ] && export BROWSER=firefox
+        [[ -x $(type firefox) ]] && export BROWSER=firefox
      else
         #v# If no X11 is running
-        [ -x $(type w3m) ] && export BROWSER=w3m
+        [[ -x $(type w3m) ]] && export BROWSER=w3m
      fi
   fi
   #v#
@@ -59,12 +59,12 @@
 
 # export qtdir
   #m# v QTDIR \kbd{/usr/share/qt[34]}\quad [for non-root only]
-  [ -d /usr/share/qt3 ] && export QTDIR=/usr/share/qt3
-  [ -d /usr/share/qt4 ] && export QTDIR=/usr/share/qt4
+  [[ -d /usr/share/qt3 ]] && export QTDIR=/usr/share/qt3
+  [[ -d /usr/share/qt4 ]] && export QTDIR=/usr/share/qt4
 
 # support running 'jikes *.java && jamvm HelloWorld' OOTB:
   #v# [for non-root only]
-  [ -f /usr/share/classpath/glibj.zip ] && export JIKESPATH=/usr/share/classpath/glibj.zip
+  [[ -f /usr/share/classpath/glibj.zip ]] && export JIKESPATH=/usr/share/classpath/glibj.zip
 # }}}
 
 ## set options {{{
@@ -120,7 +120,7 @@
   alias huge='echo -en "\033]50;-misc-fixed-medium-r-normal-*-*-210-*-*-c-*-iso8859-15\007"'
   alias smartfont='echo -en "\033]50;-artwiz-smoothansi-*-*-*-*-*-*-*-*-*-*-*-*\007"'
   alias semifont='echo -en "\033]50;-misc-fixed-medium-r-semicondensed-*-*-120-*-*-*-*-iso8859-15\007"'
-#  if [ "$TERM" = "xterm" ] && [ "$LINES" -ge 50 ] && [ "$COLUMNS" -ge 100 ] && [ -z "$SSH_CONNECTION" ]; then
+#  if [[ "$TERM" = "xterm" ]] && [[ "$LINES" -ge 50 ]] && [[ "$COLUMNS" -ge 100 ]] && [[ -z "$SSH_CONNECTION" ]] ; then
 #          large
 #  fi
 
@@ -197,7 +197,7 @@
   #a2# Execute \kbd{mkdir -o}
   alias md='mkdir -p'
 
-  [ -x $(type ipython) ] && alias ips='ipython -p sh'
+  [[ -x $(type ipython) ]] && alias ips='ipython -p sh'
 
 # console stuff
   #a2# Execute \kbd{mplayer -vo fbdev}
@@ -217,8 +217,8 @@
   type g &>/dev/null || alias g='git'
 
 # use colors when browsing man pages, but only if not using LESS_TERMCAP_* from /etc/zsh/zshenv:
-  if [ -z "$LESS_TERMCAP_md" ] ; then
-     [ -d ~/.terminfo/ ] && alias man='TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man'
+  if [[ -z "$LESS_TERMCAP_md" ]] ; then
+     [[ -d ~/.terminfo/ ]] && alias man='TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man'
   fi
 
 # check whether Debian's package management (dpkg) is running
@@ -229,16 +229,16 @@
 
 # work around non utf8 capable software in utf environment via $LANG and luit
   if type isutfenv &>/dev/null && type luit &>/dev/null; then
-     if [ -x $(type mrxvt) ] ; then
-        isutfenv && [ -n "$LANG" ] && alias mrxvt="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit mrxvt"
+     if [[ -x $(type mrxvt) ]] ; then
+        isutfenv && [[ -n "$LANG" ]] && alias mrxvt="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit mrxvt"
      fi
 
-     if [ -x $(type aterm) ] ; then
-        isutfenv && [ -n "$LANG" ] && alias aterm="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit aterm"
+     if [[ -x $(type aterm) ] ; then
+        isutfenv && [[ -n "$LANG" ]] && alias aterm="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit aterm"
      fi
 
-     if [ -x $(type centericq) ] ; then
-        isutfenv && [ -n "$LANG" ] && alias centericq="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit centericq"
+     if [[ -x $(type centericq) ]] ; then
+        isutfenv && [[ -n "$LANG" ]] && alias centericq="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit centericq"
      fi
   fi
 # }}}
@@ -324,7 +324,7 @@
 
   # download video from youtube
   ytdl() {
-    if ! [ -n "$2" ] ; then
+    if ! [[ -n "$2" ]] ; then
        print "Usage: ydtl http://youtube.com/watch?v=.... outputfile.flv">&2
        return 1
     else
@@ -386,7 +386,7 @@
   alias GREP='grep -i --color=auto'
 
 # one blank line between each line
-  if [ -r ~/.terminfo/m/mostlike ] ; then
+  if [[ -r ~/.terminfo/m/mostlike ]] ; then
 #     alias man2='MANPAGER="sed -e G |less" TERMINFO=~/.terminfo TERM=mostlike /usr/bin/man'
      #f5# Watch manpages in a stretched style
      man2() { PAGER='dash -c "sed G | /usr/bin/less"' TERM=mostlike /usr/bin/man "$@" ; }
@@ -419,7 +419,7 @@
 # usage example: 'lcheck strcpy'
 #f5# Find out which libs define a symbol
   lcheck() {
-     if [ -n "$1" ] ; then
+     if [[ -n "$1" ]] ; then
         nm -go /usr/lib/lib*.a 2>/dev/null | grep ":[[:xdigit:]]\{8\} . .*$1"
       else
         echo "Usage: lcheck <function>" >&2
@@ -430,7 +430,7 @@
   purge() {
         FILES=(*~(N) .*~(N) \#*\#(N) *.o(N) a.out(N) *.core(N) *.cmo(N) *.cmi(N) .*.swp(N))
         NBFILES=${#FILES}
-        if [[ $NBFILES > 0 ]]; then
+        if [[ $NBFILES > 0 ]] ; then
                 print $FILES
                 local ans
                 echo -n "Remove these files? [y/n] "
@@ -545,7 +545,7 @@
 # Usage: smartcompress <file> (<type>)
 #f5# Smart archive creator
   smartcompress() {
-        if [ $2 ]; then
+        if [[ $2 ]] ; then
                 case $2 in
                         tgz | tar.gz)   tar -zcvf$1.$2 $1 ;;
                         tbz2 | tar.bz2) tar -jcvf$1.$2 $1 ;;
@@ -582,13 +582,13 @@
 
 #f5# Follow symlinks
   folsym() {
-    if [[ -e $1 || -h $1 ]]; then
+    if [[ -e $1 || -h $1 ]] ; then
         file=$1
     else
         file=`which $1`
     fi
-    if [[ -e $file || -L $file ]]; then
-        if [[ -L $file ]]; then
+    if [[ -e $file || -L $file ]] ; then
+        if [[ -L $file ]] ; then
             echo `ls -ld $file | perl -ane 'print $F[7]'` '->'
             folsym `perl -le '$file = $ARGV[0];
                               $dest = readlink $file;
@@ -654,9 +654,9 @@
 # stolen and modified from Sven's zshrc.forall
   #f5# Report diskusage of a directory
   dirspace() {
-    if [ -n "$1" ] ; then
+    if [[ -n "$1" ]] ; then
        for dir in $* ; do
-          if [ -d "$dir" ] ; then
+          if [[ -d "$dir" ]] ; then
              ( cd $dir; echo "-<$dir>"; du -shx .; echo);
           else
              echo "warning: $dir does not exist" >&2
@@ -664,7 +664,7 @@
        done
     else
         for dir in $path; do
-          if [ -d "$dir" ] ; then
+          if [[ -d "$dir" ]] ; then
              ( cd $dir; echo "-<$dir>"; du -shx .; echo);
           else
              echo "warning: $dir does not exist" >&2
@@ -709,7 +709,7 @@
         echo " * Would you like to burn the cd now? (yes/no)"
         read input
         if
-                [ "$input" = "yes" ]; then
+                [[ "$input" = "yes" ]] ; then
                 echo " ! Burning Audio CD"
                 audioburn
                 echo " * done."
@@ -725,7 +725,7 @@
         cdrdao write --device $DEVICE --driver generic-mmc audiocd.toc
         echo " * Should I remove the temporary files? (yes/no)"
         read input
-        if [ "$input" = "yes" ]; then
+        if [[ "$input" = "yes" ]] ; then
                 echo " ! Removing Temporary Files."
                 cd ~
                 rm -rf ~/ripps
@@ -802,7 +802,7 @@
   getxlite() {
     setopt local_options
     setopt errreturn
-    [ -d ~/tmp ] || mkdir ~/tmp
+    [[ -d ~/tmp ]] || mkdir ~/tmp
     cd ~/tmp
     echo "Downloading http://www.counterpath.com/download/X-Lite_Install.tar.gz and storing it in ~/tmp:"
     if wget http://www.counterpath.com/download/X-Lite_Install.tar.gz ; then
@@ -810,7 +810,7 @@
     else
        echo "Error while downloading." ; return 1
     fi
-    if [ -x xten-xlite/xtensoftphone ] ; then
+    if [[ -x xten-xlite/xtensoftphone ]] ; then
        echo "Execute xten-xlite/xtensoftphone to start xlite."
     fi
    }
@@ -849,21 +849,21 @@
   getair() {
     setopt local_options
     setopt errreturn
-    [ -w . ] || { echo 'Error: you do not have write permissions in this directory. Exiting.' ; return 1 }
+    [[ -w . ]] || { echo 'Error: you do not have write permissions in this directory. Exiting.' ; return 1 }
     local VER='1.2.8'
     wget http://puzzle.dl.sourceforge.net/sourceforge/air-imager/air-$VER.tar.gz
     tar zxf air-$VER.tar.gz
     cd air-$VER
     INTERACTIVE=no $SUDO ./install-air-1.2.8
-    [ -x /usr/local/bin/air ] && [ -n "$DISPLAY" ] && $SUDO air
+    [[ -x /usr/local/bin/air ]] && [[ -n "$DISPLAY" ]] && $SUDO air
   }
 
 #f5# Get specific git commitdiff
   git-get-diff() {
-    if [ -z $GITTREE ] ; then
+    if [[ -z $GITTREE ]] ; then
       GITTREE='linux/kernel/git/torvalds/linux-2.6.git'
     fi
-    if ! [ -z $1 ] ; then
+    if ! [[ -z $1 ]] ; then
      ${=BROWSER} "http://kernel.org/git/?p=$GITTREE;a=commitdiff;h=$1"
     else
       echo "Usage: git-get-diff <commit>"
@@ -872,10 +872,10 @@
 
 #f5# Get specific git commit
   git-get-commit() {
-    if [ -z $GITTREE ] ; then
+    if [[ -z $GITTREE ]] ; then
       GITTREE='linux/kernel/git/torvalds/linux-2.6.git'
     fi
-    if ! [ -z $1 ] ; then
+    if ! [[ -z $1 ]] ; then
      ${=BROWSER} "http://kernel.org/git/?p=$GITTREE;a=commit;h=$1"
     else
       echo "Usage: git-get-commit <commit>"
@@ -884,10 +884,10 @@
 
 #f5# Get specific git diff
   git-get-plaindiff() {
-    if [ -z $GITTREE ] ; then
+    if [[ -z $GITTREE ]] ; then
       GITTREE='linux/kernel/git/torvalds/linux-2.6.git'
     fi
-    if ! [ -z $1 ] ; then
+    if ! [[ -z $1 ]] ; then
       wget "http://kernel.org/git/?p=$GITTREE;a=commitdiff_plain;h=$1" -O $1.diff
     else
       echo 'Usage: git-get-plaindiff '
@@ -908,13 +908,13 @@
 
 # highlight important stuff in diff output, usage example: hg diff | hidiff
   #m# a2 hidiff \kbd{histring} oneliner for diffs
-  [ -x $(type histring) ] && \
+  [[ -x $(type histring) ]] && \
   alias hidiff="histring -fE '^Comparing files .*|^diff .*' | histring -c yellow -fE '^\-.*' | histring -c green -fE '^\+.*'"
 
 # rename pictures based on information found in exif headers
   #f5# Rename pictures based on information found in exif headers
   exirename() {
-    if [ $# -lt 1 ] ; then
+    if [[ $# -lt 1 ]] ; then
        echo 'Usage: jpgrename $FILES' >& 2
        return 1
     else
@@ -941,7 +941,7 @@
 # get_ic() - queries imap servers for capabilities; real simple. no imaps
   ic_get() {
     local port
-    if [[ ! -z $1 ]]; then
+    if [[ ! -z $1 ]] ; then
       port=${2:-143}
       print "querying imap server on $1:${port}...\n";
       print "a1 capability\na2 logout\n" | nc $1 ${port}
@@ -977,7 +977,7 @@
 
 # hl() highlighted less
 # http://ft.bewatermyfriend.org/comp/data/zsh/zfunct.html
-  if [ -x $(type highlight) ] ; then
+  if [[ -x $(type highlight) ]] ; then
     function hl() {
       local theme lang
       theme=${HL_THEME:-""}
@@ -1049,8 +1049,8 @@
 
 # change fluxbox keys from 'Alt-#' to 'Alt-F#' and vice versa
   fluxkey-change() {
-    [ -n "$FLUXKEYS" ] || local FLUXKEYS="$HOME/.fluxbox/keys"
-    if ! [ -r "$FLUXKEYS" ] ; then
+    [[ -n "$FLUXKEYS" ]] || local FLUXKEYS="$HOME/.fluxbox/keys"
+    if ! [[ -r "$FLUXKEYS" ]] ; then
        echo "Sorry, \$FLUXKEYS file $FLUXKEYS could not be read - nothing to be done."
        return 1
     else
@@ -1070,7 +1070,7 @@
 # retrieve weather information on the console
 # Usage example: 'weather LOWG'
   weather () {
-   [ -n "$1" ] || {
+   [[ -n "$1" ]] || {
            print 'Usage: weather <station_id>' >&2
            return 1
    }
@@ -1079,7 +1079,7 @@
    local FILE="$HOME/.weather/$PLACE"
    local LOG="$HOME/.weather/log"
 
-   [ -d $HOME/.weather ] || {
+   [[ -d $HOME/.weather ]] || {
            print -n "Creating $HOME/.weather: "
            mkdir $HOME/.weather
            print 'done'
@@ -1090,7 +1090,7 @@
    wget -T 10 --no-verbose --output-file=$LOG --output-document=$FILE --timestamping http://weather.noaa.gov/pub/data/observations/metar/decoded/$PLACE.TXT
 
    if [[ $? = 0 ]] ; then
-           if [ -n "$VERBOSE" ] ; then
+           if [[ -n "$VERBOSE" ]] ; then
                    cat $FILE
            else
                    DATE=$(grep 'UTC' $FILE | sed 's#.* /##')
@@ -1129,7 +1129,7 @@
   #   hgstat 1234 => display diffstat between revision 1234 and tip
     #f5# Diffstat for specific version of a mercurial repos
     hgstat() {
-      [ -n "$1" ] && hg diff -r $1 -r tip | diffstat || hg export tip | diffstat
+      [[ -n "$1" ]] && hg diff -r $1 -r tip | diffstat || hg export tip | diffstat
     }
 
   # get current mercurial tip via hg itself
@@ -1137,7 +1137,7 @@
     gethgclone() {
       setopt local_options
       setopt errreturn
-      if [ -f mercurial-tree/.hg ] ; then
+      if [[ -f mercurial-tree/.hg ]] ; then
         cd mercurial-tree
         echo "Running hg pull for retreiving latest version..."
         hg pull
@@ -1166,7 +1166,7 @@
     gethgsnap() {
       setopt local_options
       setopt errreturn
-      if [ -f mercurial-snapshot.tar.gz ] ; then
+      if [[ -f mercurial-snapshot.tar.gz ]] ; then
          echo "mercurial-snapshot.tar.gz exists already, skipping download."
       else
         echo "Downloading mercurial snapshot"
@@ -1189,8 +1189,8 @@
 # some useful commands often hard to remember - let's grep for them {{{
 
 # Work around ion/xterm resize bug.
-#if [ "$SHLVL" = 1 ]; then
-#       if [ -x $(type resize) ]; then
+#if [[ "$SHLVL" = 1 ]]; then
+#       if [[ -x $(type resize) ]]; then
 #               eval `resize </dev/null`
 #       fi
 #fi
@@ -1245,7 +1245,7 @@
 # this allows us to stay in sync with /etc/skel/.zshrc
 # through 'ln -s /etc/skel/.zshrc ~/.zshrc' and put own
 # modifications in ~/.zshrc.local
-  if [ -r ~/.zshrc.local ] ; then
+  if [[ -r ~/.zshrc.local ]] ; then
      . ~/.zshrc.local
   fi
 # }}}

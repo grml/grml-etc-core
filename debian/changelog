@@ -1,10 +1,11 @@
 grml-etc-core (0.3.41) unstable; urgency=low
 
-  * /etc/zsh/zshrc:
+  * /etc/zsh/zshrc and /etc/skel/.zshrc:
     - replace $(which ...) with $(type ...)
-  * /etc/skel/.zshrc:
-    - replace $(which ...) with $(type ...)
-    - add alias 'g' for git.
+    - add alias 'g' for git
+    - standarized the use of brackets - double instead of single ones -
+      for test situations like if-clauses. Thanks for the patch,
+      Alexander Steinböck! [Testing: issue354]
 
  -- Michael Prokop <mika@grml.org>  Sun, 02 Dec 2007 19:54:45 +0100
 

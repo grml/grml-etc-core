@@ -23,18 +23,18 @@
 
 # language settings (read in /etc/environment before /etc/default/locale as
 # the latter one is the default on Debian nowadays)
-  [ -r /etc/environment    ] && source /etc/environment
+  [[ -r /etc/environment ]] && source /etc/environment
 
 # set environment variables (important for autologin on tty)
-  [ -z "$HOSTNAME" ]      && export HOSTNAME=$(hostname)
+  [[ -z "$HOSTNAME" ]]      && export HOSTNAME=$(hostname)
   # make sure /usr/bin/id is available
-  if [ -x /usr/bin/id ] ; then
-     [ -z "$USER" ]          && export USER=$(/usr/bin/id -un)
+  if [[ -x /usr/bin/id ]] ; then
+     [[ -z "$USER" ]]          && export USER=$(/usr/bin/id -un)
      [[ $LOGNAME == LOGIN ]] && LOGNAME=$(/usr/bin/id -un)
   fi
 
 # workaround for live-cd mode as $HOME is not set via rungetty
-  if [ -f /etc/grml_cd ] ; then
+  if [[ -f /etc/grml_cd ]] ; then
     if (( EUID == 0 )); then
        export HOME=/root
     else
@@ -44,8 +44,8 @@
 
 # set $PATH
 # gentoo users have to source /etc/profile.env
-  if [ -r /etc/gentoo-release ] ; then
-     [ -r /etc/profile.env ] && source /etc/profile.env
+  if [[ -r /etc/gentoo-release ]] ; then
+     [[ -r /etc/profile.env ]] && source /etc/profile.env
        if (( EUID != 0 )); then
           PATH="$HOME/bin:/bin:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/usr/NX/bin:$PATH"
        else
@@ -53,8 +53,8 @@
        fi
   else
     # support extra software in special directory outside of squashfs environment in live-cd mode
-    if [ -f /etc/grml_cd ] ; then
-       [ -d /cdrom/addons/ ] && ADDONS=':/cdrom/addons/'
+    if [[ -f /etc/grml_cd ]] ; then
+       [[ -d /cdrom/addons/ ]] && ADDONS=':/cdrom/addons/'
     fi
     if (( EUID != 0 )); then
       PATH="$HOME/bin:/bin:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/usr/NX/bin$ADDONS"
@@ -73,9 +73,9 @@
 
 # less (:=pager) options:
 #  export LESS=C
-  if [ -x /usr/bin/lesspipe.sh ] ; then
+  if [[ -x /usr/bin/lesspipe.sh ]] ; then
      export LESSOPEN="|lesspipe.sh %s"
-  elif [ -x /usr/bin/lesspipe ] ; then
+  elif [[ -x /usr/bin/lesspipe ]] ; then
      export LESSOPEN="|lesspipe %s"
   fi
   export READNULLCMD=${PAGER:-/usr/bin/pager}

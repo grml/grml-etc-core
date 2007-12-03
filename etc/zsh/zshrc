@@ -93,17 +93,17 @@
 # }}}
 
 # locale setup {{{
-  if [ -n "$LANG" ]  ; then
+  if [[ -n "$LANG" ]]  ; then
      export LANG
   else
-     [ -r /etc/default/locale ] && source /etc/default/locale
+     [[ -r /etc/default/locale ]] && source /etc/default/locale
   fi
-  [ -n "$LANG" ]          && export LANG || export LANG="en_US.iso885915"
-  [ -n "$LC_ALL" ]        && export LC_ALL
-  [ -n "$LC_MESSAGES" ]   && export LC_MESSAGES
+  [[ -n "$LANG" ]]          && export LANG || export LANG="en_US.iso885915"
+  [[ -n "$LC_ALL" ]]        && export LC_ALL
+  [[ -n "$LC_MESSAGES" ]]   && export LC_MESSAGES
 
-  [ -r /etc/sysconfig/keyboard ] && source /etc/sysconfig/keyboard
-  [ -r /etc/timezone ] && TZ=$(cat /etc/timezone)
+  [[ -r /etc/sysconfig/keyboard ]] && source /etc/sysconfig/keyboard
+  [[ -r /etc/timezone ]] && TZ=$(cat /etc/timezone)
 # }}}
 
 # check for potentially old files in 'completion.d' {{{
@@ -152,13 +152,13 @@
 # grml specific stuff
 #f1# Checks whether or not you're running grml
   isgrml(){
-    [ -f /etc/grml_version ] && return 0
+    [[ -f /etc/grml_version ]] && return 0
     return 1
   }
 
 #f1# Checks whether or not you're running a grml cd
   isgrmlcd(){
-    [ -f /etc/grml_cd ] && return 0
+    [[ -f /etc/grml_cd ]] && return 0
     return 1
   }
 
@@ -222,7 +222,7 @@
 # important for rungetty -> autologin
 # Thanks go to Bart Schaefer!
   isgrml && checkhome() {
-  if [[ -z "$ALREADY_DID_CD_HOME" ]]; then
+  if [[ -z "$ALREADY_DID_CD_HOME" ]] ; then
      export ALREADY_DID_CD_HOME=$HOME
      cd
   fi
@@ -244,7 +244,7 @@
   export SHELL='/bin/zsh'
 
   # color setup for ls:
-  [ -x $(type dircolors) ] && eval `dircolors -b`
+  [[ -x $(type dircolors) ]] && eval `dircolors -b`
 
   # set width of man pages to 80 for more convenient reading
   # (( ${+MANWIDTH} )) || export MANWIDTH=80
@@ -255,7 +255,7 @@
   # completion functions go to /etc/zsh/completion.d
   # function files may be put into /etc/zsh/functions.d, from where they
   # will be automatically autoloaded.
-  if [ -n "$BROKEN_COMPLETION_DIR" ] ; then
+  if [[ -n "$BROKEN_COMPLETION_DIR" ]] ; then
      print 'Warning: not setting completion directories because broken files have been found.'>&2
   else
      [[ -d /etc/zsh/completion.d ]] && fpath+=( /etc/zsh/completion.d )
@@ -272,7 +272,7 @@
 # }}}
 
 # {{{ keybindings
- if [[ "$TERM" != emacs ]]; then
+ if [[ "$TERM" != emacs ]] ; then
   [[ -z "$terminfo[kdch1]" ]] || bindkey -M emacs "$terminfo[kdch1]" delete-char
   [[ -z "$terminfo[khome]" ]] || bindkey -M emacs "$terminfo[khome]" beginning-of-line
   [[ -z "$terminfo[kend]"  ]] || bindkey -M emacs "$terminfo[kend]"  end-of-line
@@ -302,7 +302,7 @@ fi
 # use vi style:
 # bindkey -v
 
-#if [[ "$TERM" == screen ]]; then
+#if [[ "$TERM" == screen ]] ; then
   bindkey '\e[1~' beginning-of-line       # home
   bindkey '\e[4~' end-of-line             # end
   bindkey '\e[A'  up-line-or-search       # cursor up
@@ -325,7 +325,7 @@ fi
 
 # just type 'cd ...' to get 'cd ../..'
 #  rationalise-dot() {
-#  if [[ $LBUFFER = *.. ]]; then
+#  if [[ $LBUFFER = *.. ]] ; then
 #    LBUFFER+=/..
 #  else
 #    LBUFFER+=.
@@ -621,7 +621,7 @@ fi
 
 # dirstack handling {{{
   DIRSTACKSIZE=20
-  if [[ -f ~/.zdirs ]] && [[ ${#dirstack[*]} -eq 0 ]]; then
+  if [[ -f ~/.zdirs ]] && [[ ${#dirstack[*]} -eq 0 ]] ; then
      dirstack=( ${(f)"$(< ~/.zdirs)"} )
      # "cd -" won't work after login by just setting $OLDPWD, so
      [[ -d $dirstack[0] ]] && cd $dirstack[0] && cd $OLDPWD
@@ -632,11 +632,11 @@ fi
 # }}}
 
 # {{{ display battery status on right side of prompt via running 'BATTERY=1 zsh'
-  if [ -n "$BATTERY" ] ; then
-     if [ -x $(type acpi) ] ; then
+  if [[ -n "$BATTERY" ]] ; then
+     if [[ -x $(type acpi) ]] ; then
         PERCENT="${(C)${(s| |)$(acpi 2>/dev/null)}[4]}"
-        [ -z "$PERCENT" ] && PERCENT='acpi not present'
-        if [ "${PERCENT%%%}" -lt 20 ] ; then
+        [[ -z "$PERCENT" ]] && PERCENT='acpi not present'
+        if [[ "${PERCENT%%%}" -lt 20 ]] ; then
            PERCENT="warning: ${PERCENT}%"
         fi
      fi
@@ -665,9 +665,9 @@ fi
     }
 
     svn_dir() {
-      [ -d ".svn" ] || return 1
+      [[ -d ".svn" ]] || return 1
       base_dir="."
-      while [ -d "$base_dir/../.svn" ]; do base_dir="$base_dir/.."; done
+      while [[ -d "$base_dir/../.svn" ]]; do base_dir="$base_dir/.."; done
       base_dir=$(readlink -f "$base_dir")
       sub_dir=$(sub_dir "${base_dir}")
       ref=$(svn info "$base_dir" | awk '/^URL/ { sub(".*/","",$0); r=$0 } /^Revision/ { sub("[^0-9]*","",$0); print r":"$0 }')
@@ -675,7 +675,7 @@ fi
     }
 
     svk_dir() {
-      [ -f ~/.svk/config ] || return 1
+      [[ -f ~/.svk/config ]] || return 1
       base_dir=$(awk '/: *$/ { sub(/^ */,"",$0); sub(/: *$/,"",$0); if (match("'${PWD}'", $0"(/|$)")) { print $0; d=1; } } /depotpath/ && d == 1 { sub(".*/","",$0); r=$0 } /revision/ && d == 1 { print r ":" $2; exit 1 }' ~/.svk/config) && return 1
       ref=${base_dir##*
   }
@@ -687,7 +687,7 @@ fi
 
     hg_dir() {
       base_dir="."
-      while [ ! -d "$base_dir/.hg" ]; do base_dir="$base_dir/.."; [ $(readlink -f "${base_dir}") = "/" ] && return 1; done
+      while [[ ! -d "$base_dir/.hg" ]]; do base_dir="$base_dir/.."; [[ $(readlink -f "${base_dir}") = "/" ]] && return 1; done
       base_dir=$(readlink -f "$base_dir")
       sub_dir=$(sub_dir "${base_dir}")
       ref=$(< "${base_dir}/.hg/branch")
@@ -759,13 +759,13 @@ fi
       fi
   # get the name of the program currently running and hostname of local machine
   # set screen window title if running in a screen
-      if [[ "$TERM" == screen* ]]; then
+      if [[ "$TERM" == screen* ]] ; then
          # local CMD=${1[(wr)^(*=*|sudo|ssh|-*)]}       # don't use hostname
          local CMD="${1[(wr)^(*=*|sudo|ssh|-*)]}$NAME" # use hostname
          echo -ne "\ek$CMD\e\\"
       fi
   # set the screen title to "zsh" when sitting at the command prompt:
-      if [[ "$TERM" == screen* ]]; then
+      if [[ "$TERM" == screen* ]] ; then
          SCREENTITLE=$'%{\ekzsh\e\\%}'
       else
          SCREENTITLE=''
@@ -800,7 +800,7 @@ fi
   PS4='+%N:%i:%_> ' # the execution trace prompt (setopt xtrace). default: '+%N:%i>'
 
   # set variable debian_chroot if running in a chroot with /etc/debian_chroot
-  if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+  if [[ -z "$debian_chroot" ]] && [[ -r /etc/debian_chroot ]] ; then
     debian_chroot=$(cat /etc/debian_chroot)
   fi
 
@@ -810,7 +810,7 @@ fi
   else
     # only if $GRMLPROMPT is set (e.g. via 'GRMLPROMPT=1 zsh') use the extended prompt
     # set variable identifying the chroot you work in (used in the prompt below)
-    if [[ -n $GRMLPROMPT ]]; then
+    if [[ -n $GRMLPROMPT ]] ; then
       PROMPT="${RED}${EXITCODE}${CYAN}[%j running job(s)] ${GREEN}{history#%!} ${RED}%(3L.+.) ${BLUE}%* %D
 ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
     else
@@ -823,7 +823,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
   fi
 
   # if we are inside a grml-chroot set a specific prompt theme
-  if [ -n "$GRML_CHROOT" ] ; then
+  if [[ -n "$GRML_CHROOT" ]] ; then
      PROMPT="%{$fg[red]%}(CHROOT) %{$fg_bold[red]%}%n%{$fg_no_bold[white]%}@%m %40<...<%B%~%b%<< %\# "
   fi
 # }}}
@@ -843,16 +843,16 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
 # }}}
 
 # {{{ some aliases
-  if [ $UID = 0 ] ; then
-     [ -r /etc/grml/screenrc ] && alias screen='/usr/bin/screen -c /etc/grml/screenrc'
-  elif [ -r $HOME/.screenrc ] ; then
+  if [[ $UID = 0 ]] ; then
+     [[ -r /etc/grml/screenrc ]] && alias screen='/usr/bin/screen -c /etc/grml/screenrc'
+  elif [[ -r $HOME/.screenrc ]] ; then
      alias screen="/usr/bin/screen -c $HOME/.screenrc"
   else
-     [ -r /etc/grml/screenrc_grml ] && alias screen='/usr/bin/screen -c /etc/grml/screenrc_grml'
+     [[ -r /etc/grml/screenrc_grml ]] && alias screen='/usr/bin/screen -c /etc/grml/screenrc_grml'
   fi
 
   # do we have GNU ls with color-support?
-  if ls --help 2>/dev/null |grep -- --color= >/dev/null && [ "$TERM" != dumb ] ; then
+  if ls --help 2>/dev/null |grep -- --color= >/dev/null && [[ "$TERM" != dumb ]] ; then
      #a1# execute \kbd{@a@}:\quad ls with colors
      alias ls='ls -b -CF --color=auto'
      #a1# execute \kbd{@a@}:\quad list all files, with colors
@@ -875,7 +875,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
   alias ...='cd ../../'
 
   # generate alias named "$KERNELVERSION-reboot" so you can use boot with kexec:
-  if [ -x /sbin/kexec -a -r /proc/cmdline ] ; then
+  if [[ -x /sbin/kexec -a -r /proc/cmdline ]] ; then
      alias "$(uname -r)-reboot"="kexec -l --initrd=/boot/initrd.img-"$(uname -r)" --command-line=\"$(cat /proc/cmdline)\" /boot/vmlinuz-"$(uname -r)""
   fi
 
@@ -916,7 +916,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
 # set up software synthesizer via speakup
   alias swspeak='
     aumix -w 90 -v 90 -p 90 -m 90
-    if ! [ -r /dev/softsynth ] ; then
+    if ! [[ -r /dev/softsynth ]] ; then
        flite -o play -t "Sorry, software synthesizer not available. Did you boot with swspeak bootoption?"
        return 1
     else
@@ -940,7 +940,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
   alias top10='print -l ? ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
 
 # truecrypt; use e.g. via 'truec /dev/ice /mnt/ice' or 'truec -i'
-  if [ -x $(type truecrypt) ] ; then
+  if [[ -x $(type truecrypt) ]] ; then
      if isutfenv ; then
         alias truec='truecrypt --mount-options "rw,sync,dirsync,users,uid=1000,gid=users,umask=077,utf8" '
      else
@@ -999,7 +999,7 @@ Enjoy your grml system with the zsh!$reset_color"
 }
 
 # debian stuff
-  if [ -r /etc/debian_version ] ; then
+  if [[ -r /etc/debian_version ]] ; then
     #a3# Execute \kbd{apt-cache search}
     alias acs='apt-cache search'
     #a3# Execute \kbd{apt-cache show}
@@ -1026,7 +1026,7 @@ Enjoy your grml system with the zsh!$reset_color"
     # debian upgrade
     #f3# Execute \kbd{apt-get update \&\& }\\&\quad \kbd{apt-get dist-upgrade}
     upgrade () {
-      if [ -z "$1" ] ; then
+      if [[ -z "$1" ]] ; then
           $SUDO apt-get update
           $SUDO apt-get -u upgrade
       else
@@ -1052,14 +1052,14 @@ Enjoy your grml system with the zsh!$reset_color"
   fi
 
 # sort installed Debian-packages by size
-  if [ -x $(type grep-status) ] ; then
+  if [[ -x $(type grep-status) ]] ; then
      #a3# List installed Debian-packages sorted by size
      alias debs-by-size='grep-status -FStatus -sInstalled-Size,Package -n "install ok installed" | paste -sd "  \n" | sort -rn'
   fi
 
 # if cdrecord is a symlink (to wodim) or isn't present at all warn:
-  if [ -L /usr/bin/cdrecord -o ! -x $(type cdrecord) ] ; then
-     if [ -x $(type wodim) ] ; then
+  if [[ -L /usr/bin/cdrecord -o ! -x $(type cdrecord) ]] ; then
+     if [[ -x $(type wodim) ]] ; then
         alias cdrecord="echo 'cdrecord is not provided under its original name by Debian anymore.
 See #377109 in the BTS of Debian for more details.
 
@@ -1068,7 +1068,7 @@ Please use the wodim binary instead' ; return 1"
   fi
 
 # get_tw_cli has been renamed into get_3ware
-  if [ -x $(type get_3ware) ] ; then
+  if [[ -x $(type get_3ware) ]] ; then
      get_tw_cli() {
        echo 'Warning: get_tw_cli has been renamed into get_3ware. Invoking get_3ware for you.'>&2
        get_3ware
@@ -1076,7 +1076,7 @@ Please use the wodim binary instead' ; return 1"
   fi
 
 # I hate lacking backward compatibility, so provide an alternative therefore
-  if ! [ -x $(type apache2-ssl-certificate) ] ; then
+  if ! [[ -x $(type apache2-ssl-certificate) ]] ; then
      apache2-ssl-certificate(){
 
      print 'Debian does not ship apache2-ssl-certificate anymore (see #398520). :('
@@ -1161,11 +1161,11 @@ grmlcomp() {
 #    zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete _ignored _correct _approximate _files
     setopt correct  # try to correct the spelling if possible
     zstyle -e ':completion:*' completer '
-        if [[ $_last_try != "$HISTNO$BUFFER$CURSOR" ]]; then
+        if [[ $_last_try != "$HISTNO$BUFFER$CURSOR" ]] ; then
           _last_try="$HISTNO$BUFFER$CURSOR"
           reply=(_complete _match _ignored _prefix _files)
         else
-          if [[ $words[1] = (rm|mv) ]]; then
+          if [[ $words[1] = (rm|mv) ]] ; then
             reply=(_complete _files)
           else
             reply=(_oldlist _expand _force_rehash _complete _ignored _correct _approximate _files)
@@ -1190,13 +1190,13 @@ grmlcomp() {
   zstyle ':completion:*:urls' local 'www' '/var/www/' 'public_html'
 
 # caching
-  [ -d $ZSHDIR/cache ] && zstyle ':completion:*' use-cache yes && \
+  [[ -d $ZSHDIR/cache ]] && zstyle ':completion:*' use-cache yes && \
                           zstyle ':completion::complete:*' cache-path $ZSHDIR/cache/
 
 # host completion /* add brackets as vim can't parse zsh's complex cmdlines 8-) {{{ */
   if is42 ; then
-    [ -r ~/.ssh/known_hosts ] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
-    [ -r /etc/hosts ] && : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(</etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}} || _etc_hosts=()
+    [[ -r ~/.ssh/known_hosts ]] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
+    [[ -r /etc/hosts ]] && : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(</etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}} || _etc_hosts=()
   else
     _ssh_hosts=()
     _etc_hosts=()
@@ -1245,8 +1245,8 @@ grmlcomp() {
 grmlstuff() {
 # people should use 'grml-x'!
   startx() {
-    if [ -e /etc/X11/xorg.conf ] ; then
-       [ -x /usr/bin/startx ] && /usr/bin/startx "$@" || /usr/X11R6/bin/startx "$@"
+    if [[ -e /etc/X11/xorg.conf ]] ; then
+       [[ -x /usr/bin/startx ]] && /usr/bin/startx "$@" || /usr/X11R6/bin/startx "$@"
     else
       echo "Please use the script \"grml-x\" for starting the X Window System
 because there does not exist /etc/X11/xorg.conf yet.
@@ -1256,8 +1256,8 @@ If you want to use startx anyway please call \"/usr/bin/startx\"."
   }
 
   xinit() {
-    if [ -e /etc/X11/xorg.conf ] ; then
-       [ -x /usr/bin/xinit ] && /usr/bin/xinit || /usr/X11R6/bin/xinit
+    if [[ -e /etc/X11/xorg.conf ]] ; then
+       [[ -x /usr/bin/xinit ]] && /usr/bin/xinit || /usr/X11R6/bin/xinit
     else
       echo "Please use the script \"grml-x\" for starting the X Window System.
 because there does not exist /etc/X11/xorg.conf yet.
@@ -1266,19 +1266,19 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
     fi
   }
 
-  if [ -x $(type 915resolution) ] ; then
+  if [[ -x $(type 915resolution) ]] ; then
      alias 855resolution='echo -e "Please use 915resolution as resolution modify tool for Intel graphic chipset."; return -1'
   fi
 
   #a1# Output version of running grml
   alias grml-version='cat /etc/grml_version'
 
-  if [ -x $(type rebuildfstab) ] ; then
+  if [[ -x $(type rebuildfstab) ]] ; then
      #a1# Rebuild /etc/fstab
      alias grml-rebuildfstab='rebuildfstab -v -r -config'
   fi
 
-  if [ -x $(type grml-debootstrap) ] ; then
+  if [[ -x $(type grml-debootstrap) ]] ; then
      alias debian2hd='print "Installing debian to harddisk is possible via using grml-debootstrap." ; return 1'
   fi
 }
@@ -1291,7 +1291,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 # }}}
 
 # {{{ keephack
-  [ -r /etc/zsh/keephack ] && is4 && source /etc/zsh/keephack
+  [[ -r /etc/zsh/keephack ]] && is4 && source /etc/zsh/keephack
 # }}}
 
 # {{{ wonderful idea of using "e" glob qualifier by Peter Stephenson
@@ -1302,7 +1302,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 # You can also specify the reference file inline; note quotes:
 # $ ls -l *(e:'nt ~/.zshenv':)
   is4 && nt() {
-    if [[ -n $1 ]]; then
+    if [[ -n $1 ]] ; then
       local NTREF=${~1}
     fi
     [[ $REPLY -nt $NTREF ]]
@@ -1316,8 +1316,8 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
   #f1# Reload zsh setup
   reload () {
-   if [[ "$#*" -eq 0 ]]; then
-      [ -r ~/.zshrc ] && . ~/.zshrc
+   if [[ "$#*" -eq 0 ]] ; then
+      [[ -r ~/.zshrc ]] && . ~/.zshrc
    else
       local fn
       for fn in "$@"; do
@@ -1330,10 +1330,10 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 
   #f1# List symlinks in detail (more detailed version of 'readlink -f' and 'whence -s')
   sll() {
-    [ -z "$1" ] && printf 'Usage: %s <file(s)>\n' "$0" && return 1
+    [[ -z "$1" ]] && printf 'Usage: %s <file(s)>\n' "$0" && return 1
     for i in "$@" ; do
       file=$i
-      while [ -h "$file" ] ; do
+      while [[ -h "$file" ]] ; do
         ls -l $file
         file=$(readlink "$file")
       done
@@ -1352,12 +1352,12 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
      # manzsh()  { man zshall | $MYLESS -p $1 ; }
   fi
 
-  if [ -x $(type most) ] ; then
+  if [[ -x $(type most) ]] ; then
   #f1# View Debian's changelog of a given package
     dchange() {
-      if [ -r /usr/share/doc/${1}/changelog.Debian.gz ] ; then
+      if [[ -r /usr/share/doc/${1}/changelog.Debian.gz ]] ; then
          most /usr/share/doc/${1}/changelog.Debian.gz
-      elif [ -r /usr/share/doc/${1}/changelog.gz ] ; then
+      elif [[ -r /usr/share/doc/${1}/changelog.gz ]] ; then
          most /usr/share/doc/${1}/changelog.gz
       else
          if type -p aptitude &>/dev/null ; then
@@ -1378,10 +1378,10 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 
   #f1# View Debian's NEWS of a given package
     dnews() {
-      if [ -r /usr/share/doc/${1}/NEWS.Debian.gz ] ; then
+      if [[ -r /usr/share/doc/${1}/NEWS.Debian.gz ]] ; then
          most /usr/share/doc/${1}/NEWS.Debian.gz
       else
-         if [ -r /usr/share/doc/${1}/NEWS.gz ] ; then
+         if [[ -r /usr/share/doc/${1}/NEWS.gz ]] ; then
             most /usr/share/doc/${1}/NEWS.gz
          else
             echo "No NEWS file for package $1 found, sorry."
@@ -1394,7 +1394,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 
   #f1# View upstream's changelog of a given package
     uchange() {
-      if [ -r /usr/share/doc/${1}/changelog.gz ] ; then
+      if [[ -r /usr/share/doc/${1}/changelog.gz ]] ; then
          most /usr/share/doc/${1}/changelog.gz
       else
          echo "No changelog for package $1 found, sorry."
@@ -1412,13 +1412,13 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 
 #f1# Edit an alias via zle
   edalias() {
-    [ -z "$1" ] && { echo "Usage: edalias <alias_to_edit>" ; return 1 } || vared aliases'[$1]' ;
+    [[ -z "$1" ]] && { echo "Usage: edalias <alias_to_edit>" ; return 1 } || vared aliases'[$1]' ;
   }
   compdef _aliases edalias
 
 #f1# Edit a function via zle
   edfunc() {
-    [ -z "$1" ] && { echo "Usage: edfun <function_to_edit>" ; return 1 } || zed -f "$1" ;
+    [[ -z "$1" ]] && { echo "Usage: edfun <function_to_edit>" ; return 1 } || zed -f "$1" ;
   }
   compdef _functions edfunc
 
@@ -1428,7 +1428,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 #m# f6 Stop() \kbd{/etc/init.d/\em{process}}\quad\kbd{stop}
 #m# f6 Reload() \kbd{/etc/init.d/\em{process}}\quad\kbd{reload}
 #m# f6 Force-Reload() \kbd{/etc/init.d/\em{process}}\quad\kbd{force-reload}
- if [ -d /etc/init.d ] ; then
+ if [[ -d /etc/init.d ]] ; then
   for i in Start Restart Stop Force-Reload Reload ; do
     eval "$i() { $SUDO /etc/init.d/\$1 ${i:l} \$2 ; }"
   done
@@ -1479,7 +1479,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 
   # grep for running process, like: 'any vim'
   any() {
-  if [ -z "$1" ] ; then
+  if [[ -z "$1" ]] ; then
      echo "any - grep for process(es) by keyword" >&2
      echo "Usage: any <keyword>" >&2 ; return 1
   else
@@ -1493,7 +1493,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 
   # After resuming from suspend, system is paging heavily, leading to very bad interactivity.
   # taken from $LINUX-KERNELSOURCE/Documentation/power/swsusp.txt
-  [ -r /proc/1/maps ] && deswap() {
+  [[ -r /proc/1/maps ]] && deswap() {
      print 'Reading /proc/[0-9]*/maps and sending output to /dev/null, this might take a while.'
      cat $(sed -ne 's:.* /:/:p' /proc/[0-9]*/maps | sort -u | grep -v '^/dev/')  > /dev/null
      print 'Finished, running "swapoff -a; swapon -a" may also be useful.'
@@ -1501,13 +1501,13 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 
   # print hex value of a number
   hex() {
-    [ -n "$1" ] && printf "%x\n" $1 || { print 'Usage: hex <number-to-convert>' ; return 1 }
+    [[ -n "$1" ]] && printf "%x\n" $1 || { print 'Usage: hex <number-to-convert>' ; return 1 }
   }
 
   # calculate (or eval at all ;-)) with perl => p[erl-]eval
   # hint: also take a look at zcalc -> 'autoload zcalc' -> 'man zshmodules | less -p MATHFUNC'
   peval() {
-    [ -n "$1" ] && CALC="$*" || print "Usage: calc [expression]"
+    [[ -n "$1" ]] && CALC="$*" || print "Usage: calc [expression]"
     perl -e "print eval($CALC),\"\n\";"
   }
   functions peval &>/dev/null && alias calc=peval
@@ -1515,7 +1515,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   # brltty seems to have problems with utf8 environment and/or font Uni3-Terminus16 under
   # certain circumstances, so work around it, no matter which environment we have
   brltty() {
-    if [ -z "$DISPLAY" ] ; then
+    if [[ -z "$DISPLAY" ]] ; then
        consolechars -f /usr/share/consolefonts/default8x16.psf.gz
        command brltty "$@"
     else
@@ -1526,12 +1526,12 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
   # just press 'asdf' keys to toggle between dvorak and us keyboard layout
   aoeu() {
      echo -n 'Switching to us keyboard layout: '
-     [ -z "$DISPLAY" ] && $SUDO loadkeys us &>/dev/null || setxkbmap us &>/dev/null
+     [[ -z "$DISPLAY" ]] && $SUDO loadkeys us &>/dev/null || setxkbmap us &>/dev/null
      echo 'Done'
   }
   asdf() {
      echo -n 'Switching to dvorak keyboard layout: '
-     [ -z "$DISPLAY" ] && $SUDO loadkeys dvorak &>/dev/null || setxkbmap dvorak &>/dev/null
+     [[ -z "$DISPLAY" ]] && $SUDO loadkeys dvorak &>/dev/null || setxkbmap dvorak &>/dev/null
      echo 'Done'
   }
   # just press 'asdf' key to toggle from neon layout to us keyboard layout
@@ -1548,9 +1548,9 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
           print 'ipv6 tunnel already set up, nothing to be done.'
           print 'execute: "ifconfig sit1 down ; ifconfig sit0 down" to remove ipv6-tunnel.' ; return 1
        else
-          [ -n "$PUBLIC_IP" ] || local PUBLIC_IP=$(ifconfig $(route -n | awk '/^0\.0\.0\.0/{print $8; exit}') | \
+          [[ -n "$PUBLIC_IP" ]] || local PUBLIC_IP=$(ifconfig $(route -n | awk '/^0\.0\.0\.0/{print $8; exit}') | \
                                              awk '/inet addr:/ {print $2}' | tr -d 'addr:')
-          [ -n "$PUBLIC_IP" ] || { print 'No $PUBLIC_IP set and could not determine default one.' ; return 1 }
+          [[ -n "$PUBLIC_IP" ]] || { print 'No $PUBLIC_IP set and could not determine default one.' ; return 1 }
           local IPV6ADDR=$(printf "2002:%02x%02x:%02x%02x:1::1" $(print ${PUBLIC_IP//./ }))
           print -n "Setting up ipv6 tunnel $IPV6ADDR via ${PUBLIC_IP}: "
           ifconfig sit0 tunnel ::192.88.99.1 up
@@ -1606,7 +1606,7 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 # log out? set timeout in seconds {{{
 # TMOUT=1800
 # do not log out in some specific terminals:
-#  if [[ "${TERM}" == ([Exa]term*|rxvt|dtterm|screen*) ]]; then
+#  if [[ "${TERM}" == ([Exa]term*|rxvt|dtterm|screen*) ]] ; then
 #    unset TMOUT
 #  fi
 # }}}
@@ -1616,14 +1616,14 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
 # }}}
 
 # source another config file if present {{{
-  if [ -r /etc/zsh/zshrc.local ]; then
+  if [[ -r /etc/zsh/zshrc.local ]] ; then
    source /etc/zsh/zshrc.local
   fi
 # }}}
 
 # "persistent history" {{{
 # just write important commands you always need to ~/.important_commands
-  if [ -r ~/.important_commands ] ; then
+  if [[ -r ~/.important_commands ]] ; then
      fc -R ~/.important_commands
   fi
 # }}}
