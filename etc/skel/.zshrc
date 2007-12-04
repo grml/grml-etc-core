@@ -120,7 +120,7 @@
   alias huge='echo -en "\033]50;-misc-fixed-medium-r-normal-*-*-210-*-*-c-*-iso8859-15\007"'
   alias smartfont='echo -en "\033]50;-artwiz-smoothansi-*-*-*-*-*-*-*-*-*-*-*-*\007"'
   alias semifont='echo -en "\033]50;-misc-fixed-medium-r-semicondensed-*-*-120-*-*-*-*-iso8859-15\007"'
-#  if [[ "$TERM" = "xterm" ]] && [[ "$LINES" -ge 50 ]] && [[ "$COLUMNS" -ge 100 ]] && [[ -z "$SSH_CONNECTION" ]] ; then
+#  if [[ "$TERM" == "xterm" ]] && [[ "$LINES" -ge 50 ]] && [[ "$COLUMNS" -ge 100 ]] && [[ -z "$SSH_CONNECTION" ]] ; then
 #          large
 #  fi
 
@@ -233,7 +233,7 @@
         isutfenv && [[ -n "$LANG" ]] && alias mrxvt="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit mrxvt"
      fi
 
-     if [[ -x $(type aterm) ] ; then
+     if [[ -x $(type aterm) ]] ; then
         isutfenv && [[ -n "$LANG" ]] && alias aterm="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit aterm"
      fi
 
@@ -435,8 +435,7 @@
                 local ans
                 echo -n "Remove these files? [y/n] "
                 read -q ans
-                if [[ $ans == "y" ]]
-                then
+                if [[ $ans == "y" ]] ; then
                         rm ${FILES}
                         echo ">> $PWD purged, $NBFILES files removed"
                 else
@@ -486,8 +485,7 @@
 
 #f5# List all occurrences of programm in current PATH
   plap() {
-        if [[ $# = 0 ]]
-        then
+        if [[ $# = 0 ]] ; then
                 echo "Usage:    $0 program"
                 echo "Example:  $0 zsh"
                 echo "Lists all occurrences of program in the current PATH."
@@ -520,8 +518,7 @@
 # Usage: simple-extract <file>
 #f5# Smart archive extractor
   simple-extract () {
-        if [[ -f $1 ]]
-        then
+        if [[ -f $1 ]] ; then
                 case $1 in
                         *.tar.bz2)  bzip2 -v -d $1      ;;
                         *.tar.gz)   tar -xvzf $1        ;;
@@ -545,7 +542,7 @@
 # Usage: smartcompress <file> (<type>)
 #f5# Smart archive creator
   smartcompress() {
-        if [[ $2 ]] ; then
+        if [[ -n $2 ]] ; then
                 case $2 in
                         tgz | tar.gz)   tar -zcvf$1.$2 $1 ;;
                         tbz2 | tar.bz2) tar -jcvf$1.$2 $1 ;;
@@ -565,8 +562,7 @@
 # Usage: show-archive <archive>
 #f5# List an archive's content
   show-archive() {
-        if [[ -f $1 ]]
-        then
+        if [[ -f $1 ]] ; then
                 case $1 in
                         *.tar.gz)      gunzip -c $1 | tar -tf - -- ;;
                         *.tar)         tar -tf $1 ;;
@@ -1089,7 +1085,7 @@
    print
    wget -T 10 --no-verbose --output-file=$LOG --output-document=$FILE --timestamping http://weather.noaa.gov/pub/data/observations/metar/decoded/$PLACE.TXT
 
-   if [[ $? = 0 ]] ; then
+   if [[ $? -eq 0 ]] ; then
            if [[ -n "$VERBOSE" ]] ; then
                    cat $FILE
            else
@@ -1189,7 +1185,7 @@
 # some useful commands often hard to remember - let's grep for them {{{
 
 # Work around ion/xterm resize bug.
-#if [[ "$SHLVL" = 1 ]]; then
+#if [[ "$SHLVL" -eq 1 ]]; then
 #       if [[ -x $(type resize) ]]; then
 #               eval `resize </dev/null`
 #       fi

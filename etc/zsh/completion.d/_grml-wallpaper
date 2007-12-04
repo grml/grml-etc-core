@@ -1,5 +1,7 @@
 #compdef grml-wallpaper
 
+local -a dirs
+
 dirs=(. /usr/share/grml/)
 _description files expl 'set desktop wallpaper on grml system'
 _files "$expl[@]" -W dirs -g '*.{jpg,png}(-.)'

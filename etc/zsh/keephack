@@ -13,7 +13,7 @@
     setopt localoptions nomarkdirs nonomatch nocshnullglob nullglob
     kept=()         # Erase old value in case of error on next line
     kept=($~*)
-    if [[ ! -t 0 ]]; then
+    if [[ ! -t 0 ]] ; then
         local line
         while read line; do
             kept+=( $line )         # += is a zsh 4.2+ feature
@@ -37,14 +37,15 @@
     (( $#kept )) || return 1
     local action
     zstyle -s :completion:$curcontext insert-kept action
-    if [[ -n $action ]]
-    then compstate[insert]=$action
-    elif [[ $WIDGET = *expand* ]]
-    then compstate[insert]=all
+    if [[ -n $action ]] ; then
+      compstate[insert]=$action
+    elif [[ $WIDGET == *expand* ]] ; then
+      compstate[insert]=all
     fi
-    if [[ $WIDGET = *expand* ]]
-    then compadd -U ${(M)kept:#${~words[CURRENT]}}
-    else compadd -a kept
+    if [[ $WIDGET == *expand* ]] ; then
+      compadd -U ${(M)kept:#${~words[CURRENT]}}
+    else
+      compadd -a kept
     fi
   }
 
@@ -62,8 +63,7 @@
     function compadd() {
         local -A args
         zparseopts -E -A args J:
-        if [[ $args[-J] == all-expansions ]]
-        then
+        if [[ $args[-J] == all-expansions ]] ; then
             builtin compadd -A kept "$@"
             kept=( ${(Q)${(z)kept}} )
         fi

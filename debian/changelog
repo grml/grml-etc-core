@@ -1,11 +1,15 @@
 grml-etc-core (0.3.41) unstable; urgency=low
 
-  * /etc/zsh/zshrc and /etc/skel/.zshrc:
-    - replace $(which ...) with $(type ...)
-    - add alias 'g' for git
-    - standarized the use of brackets - double instead of single ones -
-      for test situations like if-clauses. Thanks for the patch,
-      Alexander Steinböck! [Testing: issue354]
+  [ Alexander Steinböck]
+  * zsh: standarized the use of brackets - double instead of
+    single ones - for test situations like if-clauses.
+    [Testing: issue354]
+
+  [ Michael Prokop ]
+  * zsh: add alias 'g' for git
+
+  [ Frank Terbeck ]
+  * zsh: several small cleanups by ft [thanks!]
 
  -- Michael Prokop <mika@grml.org>  Sun, 02 Dec 2007 19:54:45 +0100
 

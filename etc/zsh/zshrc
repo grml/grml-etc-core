@@ -93,7 +93,7 @@
 # }}}
 
 # locale setup {{{
-  if [[ -n "$LANG" ]]  ; then
+  if [[ -n "$LANG" ]] ; then
      export LANG
   else
      [[ -r /etc/default/locale ]] && source /etc/default/locale
@@ -325,7 +325,7 @@ fi
 
 # just type 'cd ...' to get 'cd ../..'
 #  rationalise-dot() {
-#  if [[ $LBUFFER = *.. ]] ; then
+#  if [[ $LBUFFER == *.. ]] ; then
 #    LBUFFER+=/..
 #  else
 #    LBUFFER+=.
@@ -843,7 +843,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
 # }}}
 
 # {{{ some aliases
-  if [[ $UID = 0 ]] ; then
+  if [[ $UID -eq 0 ]] ; then
      [[ -r /etc/grml/screenrc ]] && alias screen='/usr/bin/screen -c /etc/grml/screenrc'
   elif [[ -r $HOME/.screenrc ]] ; then
      alias screen="/usr/bin/screen -c $HOME/.screenrc"
@@ -852,7 +852,7 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
   fi
 
   # do we have GNU ls with color-support?
-  if ls --help 2>/dev/null |grep -- --color= >/dev/null && [[ "$TERM" != dumb ]] ; then
+  if ls --help 2>/dev/null | grep -- --color= >/dev/null && [[ "$TERM" != dumb ]] ; then
      #a1# execute \kbd{@a@}:\quad ls with colors
      alias ls='ls -b -CF --color=auto'
      #a1# execute \kbd{@a@}:\quad list all files, with colors
@@ -1165,7 +1165,7 @@ grmlcomp() {
           _last_try="$HISTNO$BUFFER$CURSOR"
           reply=(_complete _match _ignored _prefix _files)
         else
-          if [[ $words[1] = (rm|mv) ]] ; then
+          if [[ $words[1] == (rm|mv) ]] ; then
             reply=(_complete _files)
           else
             reply=(_oldlist _expand _force_rehash _complete _ignored _correct _approximate _files)
