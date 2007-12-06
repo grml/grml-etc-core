@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mit Jul 25 15:02:01 CEST 2007 [mika]
+# Latest change: Don Dez 06 23:21:08 CET 2007 [mika]
 ################################################################################
 # This file is sourced on all invocations of the shell.
 # It is the 1st file zsh reads; it's read for every shell,
@@ -102,3 +102,4 @@ export DISTCC_HOSTS="+zeroconf"
 export WRITE_ON_UDEV=yes
 
 ## END OF FILE #################################################################
+# vim:filetype=zsh foldmethod=marker autoindent expandtab shiftwidth=4

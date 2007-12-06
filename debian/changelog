@@ -7,6 +7,7 @@ grml-etc-core (0.3.41) unstable; urgency=low
 
   [ Michael Prokop ]
   * zsh: add alias 'g' for git
+  * zsh: set modelines for vim according to new indenting policy
 
   [ Frank Terbeck ]
   * zsh: several small cleanups by ft [thanks!]

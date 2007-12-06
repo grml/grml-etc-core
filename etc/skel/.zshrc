@@ -1243,7 +1243,11 @@ gethgsnap() {
 # this allows us to stay in sync with /etc/skel/.zshrc
 # through 'ln -s /etc/skel/.zshrc ~/.zshrc' and put own
 # modifications in ~/.zshrc.local
-xsource "${HOME}/.zshrc.local"
+if type xsource &>/dev/null ; then
+    xsource "${HOME}/.zshrc.local"
+else
+    xsource "${HOME}/.zshrc.local"
+fi
 
 # ...and remove utility functions again.
 xunfunction
@@ -1253,4 +1257,4 @@ xunfunction
 ### doc strings for external functions from files
 #m# f5 grml-wallpaper() Sets a wallpaper (try completion for possible values)
 ## END OF FILE #################################################################
-# vim:foldmethod=marker
+# vim:foldmethod=marker autoindent expandtab shiftwidth=4
