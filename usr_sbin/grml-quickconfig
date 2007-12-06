@@ -4,7 +4,7 @@
 # Authors:       Michael Schierl <schierlm-public@gmx.de>, Alexander Wirt <formorer@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Dez 01 11:05:35 CET 2007 [mika]
+# Latest change: Fre Dez 07 00:21:18 CET 2007 [mika]
 ################################################################################
 
 # menu with quick config options
@@ -121,8 +121,8 @@ EOF
    $HLINE Select a window manager (unsorted list):                $HLINE
    $HLINE Press any other key to return to the main menu.         $HLINE
    ${B}tqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu${N}
-   $HLINE ${W}d${N}wm ${W}e${N}vilwm ${W}f${N}luxbox f${W}v${N}wm fvwm${W}2${N} fvwm-${W}c${N}rystal ${W}d${N}wm          ${N}$HLINE
-   $HLINE ${W}o${N}penbox pe${W}k${N}wm ${W}p${N}wm3 ${W}t${N}wm ${W}r${N}atpoison  w${W}9${N}wm ${W}w${N}indowlab        ${N}$HLINE
+   $HLINE ${W}d${N}wm ${W}e${N}vilwm ${W}f${N}luxbox f${W}v${N}wm fvwm${W}2${N} fvwm-${W}c${N}rystal ${W}             ${N}$HLINE
+   $HLINE ${W}o${N}penbox pe${W}k${N}wm ${W}p${N}wm3 ${W}r${N}atpoison ${W}t${N}wm w${W}9${N}wm ${W}w${N}indowlab         ${N}$HLINE
    $HLINE wm${W}i${N}i wm-${W}n${N}g                                              ${N}$HLINE
    ${B}mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj${N}
 

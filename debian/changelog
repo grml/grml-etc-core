@@ -1,3 +1,11 @@
+grml-scripts (1.0.28) unstable; urgency=low
+
+  * grml-quickconfig: sorting the order of the window manager
+    list and removing the duplicated dwm. Thanks for reporting,
+    Martin Brassel! [Closes: issue356]
+
+ -- Michael Prokop <mika@grml.org>  Fri, 07 Dec 2007 00:21:36 +0100
+
 grml-scripts (1.0.27) unstable; urgency=low
 
   * grml-quickconfig: it is wm-ng and not wmi-ng of course.
