@@ -1,17 +1,22 @@
 grml-etc-core (0.3.41) unstable; urgency=low
 
+  The big zsh update release.
+
   [ Alexander Steinböck]
-  * zsh: standarized the use of brackets - double instead of
+  * standarized the use of brackets - double instead of
     single ones - for test situations like if-clauses [thanks!]
     [Testing: issue354]
 
   [ Michael Prokop ]
-  * zsh: add alias 'g' for git
-  * zsh: set modelines for vim according to new indenting policy
+  * add alias 'g' for git
+  * set modelines for vim according to new indenting policy
 
   [ Frank Terbeck ]
-  * zsh: several small cleanups by ft [thanks!]
-  * zsh: patch bomb for unified indenting [thanks!]
+  * several small cleanups by ft
+  * patch bomb for unified indenting
+  * introducing check_com() to check for the existence of commands
+  * introducing more utility functions: xcat and xsource
+    moving salias to utility functions
 
  -- Michael Prokop <mika@grml.org>  Sun, 02 Dec 2007 19:54:45 +0100
 
