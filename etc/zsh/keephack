@@ -9,57 +9,60 @@
 # save output in a variable for later use
 # Written by Bart Schaefer, for more details see:
 # http://www.zsh.org/cgi-bin/mla/wilma_hiliter/users/2004/msg00894.html ff.
-  function keep {
+function keep {
     setopt localoptions nomarkdirs nonomatch nocshnullglob nullglob
     kept=()         # Erase old value in case of error on next line
     kept=($~*)
+
     if [[ ! -t 0 ]] ; then
         local line
         while read line; do
             kept+=( $line )         # += is a zsh 4.2+ feature
         done
     fi
-    print -Rc - ${^kept%/}(T)
-  }
-  # use it via:
-  # locate -i backup | grep -i thursday | keep
-  # echo $kept
-  #
-  # or:
-  #
-  # patch < mypatch.diff
-  # keep **/*.(orig|rej)
-  # vim ${${kept:#*.orig}:r}
-  # rm $kept
-  alias keep='noglob keep'
 
-  _insert_kept() {
+    print -Rc - ${^kept%/}(T)
+}
+# use it via:
+# locate -i backup | grep -i thursday | keep
+# echo $kept
+#
+# or:
+#
+# patch < mypatch.diff
+# keep **/*.(orig|rej)
+# vim ${${kept:#*.orig}:r}
+# rm $kept
+alias keep='noglob keep'
+
+_insert_kept() {
     (( $#kept )) || return 1
     local action
     zstyle -s :completion:$curcontext insert-kept action
+
     if [[ -n $action ]] ; then
-      compstate[insert]=$action
+        compstate[insert]=$action
     elif [[ $WIDGET == *expand* ]] ; then
-      compstate[insert]=all
+        compstate[insert]=all
     fi
     if [[ $WIDGET == *expand* ]] ; then
-      compadd -U ${(M)kept:#${~words[CURRENT]}}
+        compadd -U ${(M)kept:#${~words[CURRENT]}}
     else
-      compadd -a kept
+        compadd -a kept
     fi
-  }
+}
 
-  # now bind it to keys and enable completition
-  zle -C insert-kept-result complete-word _generic
-  zle -C expand-kept-result complete-word _generic
-  zstyle ':completion:*-kept-result:*' completer _insert_kept
-  zstyle ':completion:insert-kept-result:*' menu yes select
+# now bind it to keys and enable completition
+zle -C insert-kept-result complete-word _generic
+zle -C expand-kept-result complete-word _generic
+zstyle ':completion:*-kept-result:*' completer _insert_kept
+zstyle ':completion:insert-kept-result:*' menu yes select
 
-  bindkey '^Xk' insert-kept-result
-  bindkey '^XK' expand-kept-result    # shift-K to get expansion
+bindkey '^Xk' insert-kept-result
+bindkey '^XK' expand-kept-result    # shift-K to get expansion
 
-  # And the "_expand_word_and_keep" replacement for _expand_word:
-  _expand_word_and_keep() {
+# And the "_expand_word_and_keep" replacement for _expand_word:
+_expand_word_and_keep() {
     function compadd() {
         local -A args
         zparseopts -E -A args J:
@@ -70,19 +73,21 @@
         builtin compadd "$@"
     }
     # for older versions of zsh:
-     local result
-     _main_complete _expand
-     result=$?
-     unfunction compadd
-     return result
+    local result
+    _main_complete _expand
+    result=$?
+    unfunction compadd
+    return result
     # versions >=4.2.1 understand this:
     # { _main_complete _expand } always { unfunction compadd }
-  }
+}
 
-  # This line must come after "compinit" in startup:
-  zle -C _expand_word complete-word _expand_word_and_keep
-  # No bindkey needed, it's already ^Xe from _expand_word
-  zstyle ':completion:*' insert-kept menu
-  zmodload -i zsh/complist
+# This line must come after "compinit" in startup:
+zle -C _expand_word complete-word _expand_word_and_keep
 
+# No bindkey needed, it's already ^Xe from _expand_word
+zstyle ':completion:*' insert-kept menu
+zmodload -i zsh/complist
+
+# vim:filetype=zsh
 ## END OF FILE #################################################################

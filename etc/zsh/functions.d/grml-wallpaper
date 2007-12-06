@@ -1,5 +1,6 @@
+# vim:filetype=zsh
 if [[ -f /usr/share/grml/"$1" ]] ; then
-   Esetroot -scale /usr/share/grml/"$1"
+    Esetroot -scale /usr/share/grml/"$1"
 else
-   Esetroot -scale "$@"
+    Esetroot -scale "$@"
 fi

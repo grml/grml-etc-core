@@ -2,7 +2,7 @@ grml-etc-core (0.3.41) unstable; urgency=low
 
   [ Alexander Steinböck]
   * zsh: standarized the use of brackets - double instead of
-    single ones - for test situations like if-clauses.
+    single ones - for test situations like if-clauses [thanks!]
     [Testing: issue354]
 
   [ Michael Prokop ]
@@ -10,6 +10,7 @@ grml-etc-core (0.3.41) unstable; urgency=low
 
   [ Frank Terbeck ]
   * zsh: several small cleanups by ft [thanks!]
+  * zsh: patch bomb for unified indenting [thanks!]
 
  -- Michael Prokop <mika@grml.org>  Sun, 02 Dec 2007 19:54:45 +0100
 

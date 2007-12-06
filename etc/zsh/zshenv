@@ -23,76 +23,82 @@
 
 # language settings (read in /etc/environment before /etc/default/locale as
 # the latter one is the default on Debian nowadays)
-  [[ -r /etc/environment ]] && source /etc/environment
+# no xsource() here because it's only created in zshrc! (which is good)
+[[ -r /etc/environment ]] && source /etc/environment
 
 # set environment variables (important for autologin on tty)
-  [[ -z "$HOSTNAME" ]]      && export HOSTNAME=$(hostname)
-  # make sure /usr/bin/id is available
-  if [[ -x /usr/bin/id ]] ; then
-     [[ -z "$USER" ]]          && export USER=$(/usr/bin/id -un)
-     [[ $LOGNAME == LOGIN ]] && LOGNAME=$(/usr/bin/id -un)
-  fi
+export HOSTNAME=${HOSTNAME:-$(hostname)}
+
+# make sure /usr/bin/id is available
+if [[ -x /usr/bin/id ]] ; then
+    [[ -z "$USER" ]]          && export USER=$(/usr/bin/id -un)
+    [[ $LOGNAME == LOGIN ]] && LOGNAME=$(/usr/bin/id -un)
+fi
 
 # workaround for live-cd mode as $HOME is not set via rungetty
-  if [[ -f /etc/grml_cd ]] ; then
+if [[ -f /etc/grml_cd ]] ; then
     if (( EUID == 0 )); then
-       export HOME=/root
+        export HOME=/root
     else
-       export HOME=/home/$USER
+        export HOME=/home/$USER
     fi
-  fi
+fi
 
 # set $PATH
 # gentoo users have to source /etc/profile.env
-  if [[ -r /etc/gentoo-release ]] ; then
-     [[ -r /etc/profile.env ]] && source /etc/profile.env
-       if (( EUID != 0 )); then
-          PATH="$HOME/bin:/bin:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/usr/NX/bin:$PATH"
-       else
-          PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/local/sbin:/usr/local/bin:/usr/NX/bin:$PATH"
-       fi
-  else
-    # support extra software in special directory outside of squashfs environment in live-cd mode
-    if [[ -f /etc/grml_cd ]] ; then
-       [[ -d /cdrom/addons/ ]] && ADDONS=':/cdrom/addons/'
-    fi
-    if (( EUID != 0 )); then
-      PATH="$HOME/bin:/bin:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/usr/NX/bin$ADDONS"
-    else
-      PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/local/sbin:/usr/local/bin:/usr/NX/bin$ADDONS"
-    fi
-  fi
+if [[ -r /etc/gentoo-release ]] ; then
 
-  # Solaris 
-  # case $(uname 2>/dev/null) in
-  #   SunOS)
-  #      PATH="/usr/bin:/usr/sbin:/usr/ccs/bin:/usr/sfw/bin:/opt/sfw/bin:/opt/bin:/usr/local/bin:/usr/openwin/bin:/usr/dt/bin:/usr/ucb:/usr/proc/bin:~/bin"
-  #      # LD_LIBRARY_PATH="/opt/csw/lib:/opt/sfw/lib:/usr/lib:/usr/local/lib:/usr/ccs/lib:/usr/openwin/lib:/usr/ucb/lib"
-  #      # MANPATH="$MANPATH:/opt/csw/man:/usr/man:/usr/share/man:/usr/local/man:/opt/sfw/man"
-  #esac
+    [[ -r /etc/profile.env ]] && source /etc/profile.env
+
+    if (( EUID != 0 )); then
+        PATH="$HOME/bin:/bin:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/usr/NX/bin:$PATH"
+    else
+        PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/local/sbin:/usr/local/bin:/usr/NX/bin:$PATH"
+    fi
+else
+# support extra software in special directory outside of squashfs environment in live-cd mode
+    if [[ -f /etc/grml_cd ]] ; then
+        [[ -d /cdrom/addons/ ]] && ADDONS=':/cdrom/addons/'
+    fi
+
+    if (( EUID != 0 )); then
+        PATH="$HOME/bin:/bin:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/usr/NX/bin$ADDONS"
+    else
+        PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/local/sbin:/usr/local/bin:/usr/NX/bin$ADDONS"
+    fi
+fi
+
+# Solaris 
+# case $(uname 2>/dev/null) in
+#   SunOS)
+#      PATH="/usr/bin:/usr/sbin:/usr/ccs/bin:/usr/sfw/bin:/opt/sfw/bin:/opt/bin:/usr/local/bin:/usr/openwin/bin:/usr/dt/bin:/usr/ucb:/usr/proc/bin:~/bin"
+#      # LD_LIBRARY_PATH="/opt/csw/lib:/opt/sfw/lib:/usr/lib:/usr/local/lib:/usr/ccs/lib:/usr/openwin/lib:/usr/ucb/lib"
+#      # MANPATH="$MANPATH:/opt/csw/man:/usr/man:/usr/share/man:/usr/local/man:/opt/sfw/man"
+#esac
 
 # less (:=pager) options:
 #  export LESS=C
-  if [[ -x /usr/bin/lesspipe.sh ]] ; then
-     export LESSOPEN="|lesspipe.sh %s"
-  elif [[ -x /usr/bin/lesspipe ]] ; then
-     export LESSOPEN="|lesspipe %s"
-  fi
-  export READNULLCMD=${PAGER:-/usr/bin/pager}
+if [[ -x /usr/bin/lesspipe.sh ]] ; then
+    export LESSOPEN="|lesspipe.sh %s"
+elif [[ -x /usr/bin/lesspipe ]] ; then
+    export LESSOPEN="|lesspipe %s"
+fi
+export READNULLCMD=${PAGER:-/usr/bin/pager}
 
 # support termcap colors when using PAGER=less:
-  export LESS_TERMCAP_mb=$'\E[01;31m'
-  export LESS_TERMCAP_md=$'\E[01;31m'
-  export LESS_TERMCAP_me=$'\E[0m'
-  export LESS_TERMCAP_se=$'\E[0m'
-  export LESS_TERMCAP_so=$'\E[01;44;33m'
-  export LESS_TERMCAP_ue=$'\E[0m'
-  export LESS_TERMCAP_us=$'\E[01;32m'
+# TODO: move these to zshrc, they are only relevant in interactive shells
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
 
 # allow zeroconf for distcc
-  export DISTCC_HOSTS="+zeroconf"
+export DISTCC_HOSTS="+zeroconf"
 
 # MAKEDEV should be usable on udev as well by default:
-  export WRITE_ON_UDEV=yes
+export WRITE_ON_UDEV=yes
 
 ## END OF FILE #################################################################
