@@ -3,14 +3,18 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mit Aug 08 21:22:03 CEST 2007 [mika]
+# Latest change: Don Dez 06 23:27:51 CET 2007 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
 # see /etc/zsh/zshrc for some general settings
 # If you don't have write permissions to /etc/zsh/zshrc on your own
 # copy the file to your $HOME as /.zshrc.global and we source it:
-xsource "${HOME}/.zshrc.global"
+if type xsource &>/dev/null ; then
+   xsource "${HOME}/.zshrc.global"
+else
+   . "${HOME}/.zshrc.global"
+fi
 # }}}
 
 # check whether global file has been read {{{
@@ -1246,7 +1250,7 @@ gethgsnap() {
 if type xsource &>/dev/null ; then
     xsource "${HOME}/.zshrc.local"
 else
-    xsource "${HOME}/.zshrc.local"
+    . "${HOME}/.zshrc.local"
 fi
 
 # ...and remove utility functions again.
