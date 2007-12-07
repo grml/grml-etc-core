@@ -7,19 +7,23 @@
 ################################################################################
 
 # source ~/.zshrc.global {{{
+
 # see /etc/zsh/zshrc for some general settings
 # If you don't have write permissions to /etc/zsh/zshrc on your own
 # copy the file to your $HOME as /.zshrc.global and we source it:
-if type xsource &>/dev/null ; then
-   xsource "${HOME}/.zshrc.global"
-else
-   . "${HOME}/.zshrc.global"
-fi
+
+# Note, that xsource() is defined in the global file, so here,
+# we will have to do the sourcing manually for once:
+
+     [[ -z "$ZSHRC_GLOBAL_HAS_BEEN_READ" ]]  \
+     && [[ -r "${HOME}/.zshrc.global" ]]     \
+         && source "${HOME}/.zshrc.global"
 # }}}
 
 # check whether global file has been read {{{
 if [[ -z "$ZSHRC_GLOBAL_HAS_BEEN_READ" ]] ; then
-    print 'Warning: global zsh config has not been read'>&2
+    print 'Warning: global zsh config has not been read.' >&2
+    print '         prepare for possible errors!'         >&2
 fi
 # }}}
 
@@ -1247,11 +1251,7 @@ gethgsnap() {
 # this allows us to stay in sync with /etc/skel/.zshrc
 # through 'ln -s /etc/skel/.zshrc ~/.zshrc' and put own
 # modifications in ~/.zshrc.local
-if type xsource &>/dev/null ; then
-    xsource "${HOME}/.zshrc.local"
-else
-    . "${HOME}/.zshrc.local"
-fi
+xsource "${HOME}/.zshrc.local"
 
 # ...and remove utility functions again.
 xunfunction
