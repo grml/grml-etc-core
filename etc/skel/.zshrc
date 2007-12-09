@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Dez 06 23:27:51 CET 2007 [mika]
+# Latest change: Son Dez 09 22:58:07 CET 2007 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -15,9 +15,9 @@
 # Note, that xsource() is defined in the global file, so here,
 # we will have to do the sourcing manually for once:
 
-     [[ -z "$ZSHRC_GLOBAL_HAS_BEEN_READ" ]]  \
-     && [[ -r "${HOME}/.zshrc.global" ]]     \
-         && source "${HOME}/.zshrc.global"
+[[ -z "$ZSHRC_GLOBAL_HAS_BEEN_READ" ]]  \
+&& [[ -r "${HOME}/.zshrc.global" ]]     \
+&& source "${HOME}/.zshrc.global"
 # }}}
 
 # check whether global file has been read {{{
@@ -257,7 +257,24 @@ fi
 #f4# Search for newspostings from authors
 agoogle() { ${=BROWSER} "http://groups.google.com/groups?as_uauthors=$*" ; }
 #f4# Search Debian Bug Tracking System by BugID in mbox format
-debbug()  { ${=BROWSER} "http://bugs.debian.org/$*" }
+debbug()  { 
+    setopt localoptions extendedglob
+    if [[ $# -eq 1 ]]; then
+        case "$1" in
+            ([0-9]##)
+            ${=BROWSER} "http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=$1"
+            ;;
+            (*@*)
+            ${=BROWSER} "http://bugs.debian.org/cgi-bin/pkgreport.cgi?submitter=$1"
+            ;;
+            (*)
+            ${=BROWSER} "http://bugs.debian.org/$*"
+            ;;
+        esac
+    else
+        print "$0 needs one argument"
+    fi
+}
 #f4# Search Debian Bug Tracking System
 debbugm() { bts show --mbox $1 } # provide bugnummer as "$1"
 #f4# Search DMOZ

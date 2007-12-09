@@ -10,6 +10,7 @@ grml-etc-core (0.3.41) unstable; urgency=low
   [ Michael Prokop ]
   * add alias 'g' for git
   * set modelines for vim according to new indenting policy
+  * extend debbug() based on http://xana.scru.org/quanks/b-func.html
 
   [ Frank Terbeck ]
   * several small cleanups by ft
