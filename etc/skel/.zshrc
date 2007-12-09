@@ -273,6 +273,7 @@ debbug()  {
         esac
     else
         print "$0 needs one argument"
+        return 1
     fi
 }
 #f4# Search Debian Bug Tracking System
