@@ -18,6 +18,7 @@ grml-etc-core (0.3.41) unstable; urgency=low
   * introducing check_com() to check for the existence of commands
   * introducing more utility functions: xcat and xsource
     moving salias to utility functions
+  * Disable command-completion descriptions
 
  -- Michael Prokop <mika@grml.org>  Sun, 02 Dec 2007 19:54:45 +0100
 
