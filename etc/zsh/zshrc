@@ -1213,6 +1213,7 @@ limit -s
 # called later (via is4 && grmlcomp)
 # notice: use 'zstyle' for getting current settings
 #         press ^Xh (control-x h) for getting tags in context; ^X? (control-x ?) to run complete_debug with trace output
+# TODO: make grmlcomp() readable. :-)
 grmlcomp() {
 ## completion system
 ## no initial indention in grmlcomp(), the lines are long enough already.
@@ -1243,6 +1244,12 @@ zstyle ':completion:*:options'         description 'yes'                   # des
 zstyle ':completion:*:processes'       command 'ps -au$USER'               # on processes completion complete all user processes
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters        # offer indexes before parameters in subscripts
 zstyle ':completion:*'                 verbose true                        # provide verbose completion information
+
+# recent (as of Dec 2007) zsh versions are able to provide descriptions
+# for commands (read: 1st word in the line) that it will list for the user
+# to choose from. The following disables that, because it's not exactly fast.
+zstyle ':completion:*:-command-:*:'    verbose false
+
 zstyle ':completion:*:warnings'        format $'%{\e[0;31m%}No matches for:%{\e[0m%} %d' # set format for warnings
 zstyle ':completion:*:*:zcompile:*'    ignored-patterns '(*~|*.zwc)'       # define files to ignore for zcompile
 zstyle ':completion:correct:'          prompt 'correct to: %e'             #
