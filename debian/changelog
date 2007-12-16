@@ -1,3 +1,11 @@
+grml-etc-core (0.3.43) unstable; urgency=low
+
+  * /etc/zsh/zshrc: change logic of $HOSTNAME in preexec(): show
+    $HOSTNAME only when running the command on *another* box (being
+    a system != localhost).
+
+ -- Michael Prokop <mika@grml.org>  Sun, 16 Dec 2007 20:33:52 +0100
+
 grml-etc-core (0.3.42) unstable; urgency=low
 
   [ Frank Terbeck ]

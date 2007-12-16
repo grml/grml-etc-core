@@ -850,9 +850,8 @@ is4 && [[ -z $NOPRECMD ]] && \
 preexec () {
     [[ -n $NOPRECMD ]] && return 0
 # set hostname if not running on host with name 'grml'
-    local HOSTNAME=$(hostname)
-    if [[ "$HOSTNAME" != grml ]] ; then
-        NAME="@$HOSTNAME"
+    if [[ "$HOSTNAME" != $(hostname) ]] ; then
+       NAME="@$HOSTNAME"
     fi
 # get the name of the program currently running and hostname of local machine
 # set screen window title if running in a screen
