@@ -116,10 +116,10 @@ check_com() {
         return 1
     fi
 
-    if   [[ -n ${commands[$1]}  ]] \
-      || [[ -n ${functions[$1]} ]] \
-      || [[ -n ${aliases[$1]}   ]] \
-      || [[ -n ${reswords[$1]}  ]] ; then
+    if   [[ -n ${commands[$1]}    ]] \
+      || [[ -n ${functions[$1]}   ]] \
+      || [[ -n ${aliases[$1]}     ]] \
+      || [[ -n ${reswords[(r)$1]} ]] ; then
 
         return 0
     fi
