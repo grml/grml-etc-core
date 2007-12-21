@@ -1,3 +1,10 @@
+grml-etc-core (0.3.44) unstable; urgency=low
+
+  [ Frank Terbeck ]
+  * zshrc: $reswords is an array *not* a hash
+
+ -- Michael Prokop <mika@grml.org>  Fri, 21 Dec 2007 20:54:26 +0100
+
 grml-etc-core (0.3.43) unstable; urgency=low
 
   * /etc/zsh/zshrc: change logic of $HOSTNAME in preexec(): show
