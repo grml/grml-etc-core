@@ -1,3 +1,11 @@
+grml-etc-core (0.3.45) unstable; urgency=low
+
+  [ Alexander Steinböck ]
+  * /etc/zsh/zshrc: added bindkeys for navigating by vi keys (hjkl)
+    in menu selection [Closes: issue350]
+
+ -- Michael Prokop <mika@grml.org>  Sat, 22 Dec 2007 00:11:31 +0100
+
 grml-etc-core (0.3.44) unstable; urgency=low
 
   [ Frank Terbeck ]
