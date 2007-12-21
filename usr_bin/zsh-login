@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Okt 28 15:44:09 CET 2007 [mika]
+# Latest change: Fre Dez 21 22:12:06 CET 2007 [mika]
 ################################################################################
 
 . /etc/grml/sh-lib
@@ -45,9 +45,30 @@ case "$CMDLINE" in
       fi
 esac
 
+# display version information depending on the version:
+if grep -q -- '-rc[0-9]' /etc/grml_version 2>/dev/null ; then
+   echo
+   echo
+   echo 'NOTICE: This is a release candidate of grml!'
+   echo 'Please notice that this is not yet a stable release.'
+   echo 'See http://wiki.grml.org/doku.php?id=release_candidate for known issues.'
+   echo 'Please report any bugs you notice: bugs@grml.org'
+   echo
+fi
+
+if grep -q 'grml-live-autobuild' /etc/grml_version 2>/dev/null ; then
+   echo
+   echo
+   echo 'NOTICE: This is a daily snapshot version of grml!'
+   echo 'Please notice that this is not yet a stable release.'
+   echo 'See http://daily.grml.org/ for more details.'
+   echo 'Please report any bugs you notice: daily@grml.org'
+   echo
+fi
+
 # just print out one single line if bootoption nowelcome is present,
 # otherwise print usual welcome screen
-if grep nowelcome /proc/cmdline 2>/dev/null ; then
+if grep -q nowelcome /proc/cmdline 2>/dev/null ; then
    echo
 else
    echo "
