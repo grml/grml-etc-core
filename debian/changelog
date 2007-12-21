@@ -1,4 +1,4 @@
-grml-scripts (1.0.30) unstable; urgency=low
+grml-scripts (1.1.0) unstable; urgency=low
 
   * grml-quickconfig: fix keybindings for pekwm vs. pwm3 and drop jwm.
     Thanks for reporting, Alex Liebert!
