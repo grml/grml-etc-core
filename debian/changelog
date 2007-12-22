@@ -1,10 +1,10 @@
 grml-etc-core (0.3.45) unstable; urgency=low
 
   [ Alexander Steinböck ]
-  * /etc/zsh/zshrc: added bindkeys for navigating by vi keys (hjkl)
-   as well as 'accept-and-infer-next history' (ctrl-o) to complete
-   within directories and stay in menu completion.
-   [Closes: issue350]
+  * /etc/zsh/zshrc: added bindkeys for navigating by vi keys (hjkl) 
+    (disable by default though) as well as 'accept-and-infer-next history'
+    (ctrl-o) to complete within directories and stay in menu completion.
+    [Closes: issue350]
 
  -- Michael Prokop <mika@grml.org>  Sat, 22 Dec 2007 00:11:31 +0100
 

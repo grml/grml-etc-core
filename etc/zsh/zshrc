@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Dez 06 23:21:21 CET 2007 [mika]
+# Latest change: Sam Dez 22 19:17:27 CET 2007 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -412,17 +412,6 @@ bindkey '^Xi' insert-unicode-char
 #  bindkey . rationalise-dot
 
 #  bindkey '\eq' push-line-or-edit
-
-# use the vi navigation keys (hjkl) besides cursor keys in menu completion
-  bindkey -M menuselect 'h' vi-backward-char                # left
-  bindkey -M menuselect 'k' vi-up-line-or-history           # up
-  bindkey -M menuselect 'l' vi-forward-char                 # right
-  bindkey -M menuselect 'j' vi-down-line-or-history         # bottom
-
-# accept a completion and try to complete again by using menu
-# completion; very useful with completing directories
-# by using 'undo' one's got a simple file browser
-  bindkey -M menuselect '^o' accept-and-infer-next-history
 # }}}
 
 # power completion - abbreviation expansion {{{
@@ -581,8 +570,21 @@ if is4 && autoload -U edit-command-line && zle -N edit-command-line ; then
     bindkey '\ee' edit-command-line
 fi
 
-#k# menu selection: pick item but stay in the menu
-is4 && bindkey -M menuselect '\e^M' accept-and-menu-complete
+if is4 && [[ -n ${(k)modules[zsh/complist]} ]] ; then
+    #k# menu selection: pick item but stay in the menu
+    bindkey -M menuselect '\e^M' accept-and-menu-complete
+
+    # use the vi navigation keys (hjkl) besides cursor keys in menu completion
+    #bindkey -M menuselect 'h' vi-backward-char        # left
+    #bindkey -M menuselect 'k' vi-up-line-or-history   # up
+    #bindkey -M menuselect 'l' vi-forward-char         # right
+    #bindkey -M menuselect 'j' vi-down-line-or-history # bottom
+
+    # accept a completion and try to complete again by using menu
+    # completion; very useful with completing directories
+    # by using 'undo' one's got a simple file browser
+    bindkey -M menuselect '^o' accept-and-infer-next-history
+fi
 
 # press "ctrl-e d" to insert the actual date in the form yyyy-mm-dd
 _bkdate() { BUFFER="$BUFFER$(date '+%F')"; CURSOR=$#BUFFER; }
