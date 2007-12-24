@@ -1,5 +1,11 @@
 grml-etc-core (0.3.45) unstable; urgency=low
 
+  [ Michael Prokop ]
+  * Drop the 'Make p in Visual mode replace the selected text...' from
+    vimrc. More details available at
+    http://lists.alioth.debian.org/pipermail/pkg-vim-maintainers/2005-November/001577.html
+    - thanks for the hint, James Vega!
+
   [ Alexander Steinböck ]
   * /etc/zsh/zshrc: added bindkeys for navigating by vi keys (hjkl) 
     (disable by default though) as well as 'accept-and-infer-next history'

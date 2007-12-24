@@ -3,7 +3,7 @@
 " Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 " Bug-Reports:   see http://grml.org/bugs/
 " License:       This file is licensed under the GPL v2.
-" Latest change: Fre Mär 09 15:33:45 CET 2007 [mika]
+" Latest change: Mon Dez 24 21:07:04 CET 2007 [mika]
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " All system-wide defaults are set in $VIMRUNTIME/debian.vim (usually just
@@ -45,9 +45,6 @@
 " Suffixes that get lower priority when doing tab completion for filenames.
 " These are files we are not likely to want to edit or read.
   set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
-
-" Make p in Visual mode replace the selected text with the "" register.
-  vnoremap p <Esc>:let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
 
 " Vim5 and later versions support syntax highlighting.
 " Just load the main syntax file when Vim was compiled with "+syntax".
