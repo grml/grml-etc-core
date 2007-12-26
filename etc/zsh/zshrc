@@ -1476,18 +1476,6 @@ grmlcomp() {
     # zstyle ':completion:*' completer _complete _correct _approximate
     # zstyle ':completion:*' expand prefix suffix
 
-    # automatic rehash? Credits go to Frank Terbeck
-    #   TODO: keep this at all? And if so, move it, it has nothing to do with completion
-    # my_accept() {
-    #   local buf
-    #   [[ -z ${BUFFER} ]] && zle accept-line && return
-    #   buf=( ${(z)BUFFER}  )
-    #   [[ -z ${commands[${buf[1]}]} ]] && rehash
-    #   zle accept-line
-    # }
-    # zle -N my_accept
-    # bindkey "^M" my_accept
-
     # command for process lists, the local web server details and host completion
     zstyle ':completion:*:urls' local 'www' '/var/www/' 'public_html'
 
