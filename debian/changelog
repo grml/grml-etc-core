@@ -1,3 +1,13 @@
+grml-etc-core (0.3.46) unstable; urgency=low
+
+  [ Frank Terbeck ]
+  * zshrc: Adding a generic accept-line wrapper =>
+    http://www.bewatermyfriend.org/posts/2007/12-26.11-50-38-tooltime.html
+  * zshrc: make grmlcomp() readable (':nmap b v$hdO<ESC>pj$' - vim is so useful)
+  * zshrc: convert swspeak from alias to function
+
+ -- Michael Prokop <mika@grml.org>  Wed, 26 Dec 2007 18:26:51 +0100
+
 grml-etc-core (0.3.45) unstable; urgency=low
 
   [ Michael Prokop ]
