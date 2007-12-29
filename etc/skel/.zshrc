@@ -604,39 +604,6 @@ show-archive() {
     fi
 }
 
-# TODO: isn't ssl() like this, but clean?
-#       I'd like to remove this, it's a gross hack, IMHO -ft
-#f5# Follow symlinks
-folsym() {
-    if [[ -e $1 || -h $1 ]] ; then
-        file=$1
-    else
-        file=`which $1`
-    fi
-    if [[ -e $file || -L $file ]] ; then
-        if [[ -L $file ]] ; then
-            echo `ls -ld $file | perl -ane 'print $F[7]'` '->'
-            folsym `perl -le '$file = $ARGV[0];
-                              $dest = readlink $file;
-                              if ($dest !~ m{^/}) {
-                                  $file =~ s{(/?)[^/]*$}{$1$dest};
-                              } else {
-                                  $file = $dest;
-                              }
-                              $file =~ s{/{2,}}{/}g;
-                              while ($file =~ s{[^/]+/\.\./}{}) {
-                                  ;
-                              }
-                              $file =~ s{^(/\.\.)+}{};
-                              print $file' $file`
-        else
-            ls -d $file
-        fi
-    else
-        echo $file
-    fi
-}
-
 # It's shameless stolen from <http://www.vim.org/tips/tip.php?tip_id=167>
 #f5# Use \kbd{vim} as your manpage reader
 vman() { man $* | col -b | view -c 'set ft=man nomod nolist' - }

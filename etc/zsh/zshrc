@@ -422,6 +422,10 @@ bindkey '^Xi' insert-unicode-char
 #
 # For a broader description, see:
 # <http://bewatermyfriend.org/posts/2007/12-26.11-50-38-tooltime.html>
+#
+# The code is imported from the file 'zsh/functions/accept-line' from
+# <http://ft.bewatermyfriend.org/comp/zsh/zsh-dotfiles.tar.bz2>, which
+# distributed under the same terms as zsh itself.
 
 # A newly added command will may not be found or will cause false
 # correction attempts, if you got auto-correction set. By setting the
