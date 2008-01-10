@@ -1064,6 +1064,7 @@ fluxkey-change() {
 weather() {
     [[ -n "$1" ]] || {
         print 'Usage: weather <station_id>' >&2
+        print 'List of stations: http://en.wikipedia.org/wiki/List_of_airports_by_ICAO_code'>&2
         return 1
     }
 
