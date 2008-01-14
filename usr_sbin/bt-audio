@@ -4,13 +4,20 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Aug 06 20:30:34 CEST 2006 [mika]
+# Latest change: Mon Jän 14 20:36:21 CET 2008 [mika]
 ################################################################################
 
 . /etc/grml/lsb-functions
 . /etc/grml/script-functions
 
 check4root || exit 1
+
+if ! modprobe -l | grep snd-bt-sco ; then
+   eerror "Sorry, could not find kernel module snd-bt-sco. Exiting." ; eend 1
+   ewarn "The kernel version you are using either does not support the snd-bt-sco module..."
+   ewarn "... yet or you should take a look at Debian package bluez-audio."
+   exit 1
+fi
 
 HCID_CONF='/etc/bluetooth/bt_headset.conf'
 [ -n "$PIN" ] || PIN='0000'

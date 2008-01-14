@@ -1,3 +1,10 @@
+grml-scripts (1.1.2) unstable; urgency=low
+
+  * bt-audio: check for presence of snd-bt-sco and provide an
+    informational error message if it isn't present.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 14 Jan 2008 20:36:33 +0100
+
 grml-scripts (1.1.1) unstable; urgency=low
 
   * zsh-login: display version information depending on the present
