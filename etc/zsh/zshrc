@@ -1005,7 +1005,7 @@ is4 && [[ -z $NOPRECMD ]] && \
 preexec () {
     [[ -n $NOPRECMD ]] && return 0
 # set hostname if not running on host with name 'grml'
-    if [[ "$HOSTNAME" != $(hostname) ]] ; then
+    if [[ -n "$HOSTNAME" ]] && [[ "$HOSTNAME" != $(hostname) ]] ; then
        NAME="@$HOSTNAME"
     fi
 # get the name of the program currently running and hostname of local machine
