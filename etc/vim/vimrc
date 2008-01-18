@@ -95,6 +95,15 @@
   set pastetoggle=<f11>               " don't change text when copy/pasting
   set dictionary=/usr/share/dict/word " used with CTRL-X CTRL-K
 
+""" set the screen hardstatus to vim(filename.ext)
+  if (&term =~ '^screen')
+    set t_ts=k
+    set t_fs=\
+    set title
+    autocmd BufEnter * let &titlestring = "vim(" . expand("%:t") . ")"
+    let &titleold = fnamemodify(&shell, ":t")
+  endif
+
 " Source a global configuration file if available
 " Deprecated by Debian but still supported by grml
   if filereadable("/etc/vim/vimrc.local")
