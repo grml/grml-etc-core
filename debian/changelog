@@ -6,13 +6,14 @@ grml-etc-core (0.3.46) unstable; urgency=low
   * zshrc: make grmlcomp() readable (':nmap b v$hdO<ESC>pj$' - vim is so useful)
   * zshrc: convert swspeak from alias to function
   * zshrc: removing folsym() - use sll() from now on.
+  * vimrc: display the file, that is being edited into screen's hardstatus
 
   [ Michael Prokop ]
   * zshrc: mention http://en.wikipedia.org/wiki/List_of_airports_by_ICAO_code
     in weather() [thanks, gebi]
   * zshrc: set $NAME in screen title only if $HOSTNAME is set
 
- -- Michael Prokop <mika@grml.org>  Fri, 11 Jan 2008 00:56:22 +0100
+ -- Frank Terbeck <ft@grml.org>  Fri, 18 Jan 2008 21:46:14 +0100
 
 grml-etc-core (0.3.45) unstable; urgency=low
 
