@@ -1,3 +1,10 @@
+grml-scripts (1.1.3) unstable; urgency=low
+
+  * grml-mutt: deactivate force_name, and save_name by default,
+    activate quit=ask-yes by default. Thanks, Michael Hammer.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 19 Jan 2008 16:59:03 +0100
+
 grml-scripts (1.1.2) unstable; urgency=low
 
   * bt-audio: check for presence of snd-bt-sco and provide an

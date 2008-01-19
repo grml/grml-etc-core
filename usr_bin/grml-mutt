@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mit Jul 25 18:37:29 CEST 2007 [mika]
+# Latest change: Don Jän 17 16:36:52 CET 2008 [mika]
 ################################################################################
 
 PATH=${PATH:-'/bin/:/sbin/:/usr/local/bin:/usr/bin:/usr/sbin'}
@@ -48,7 +48,7 @@ $IMAPDATA
     set editor=vim           # use Vim as the editor (Vi IMproved www.vim.org)
     set folder=~/Mail        # directory with all mail folders
   unset followup_to          # do not generate a Followup-To header
-    set force_name           # set: save outbound mail by username
+#    set force_name           # set: save outbound mail by username
     set hidden_host          # do not use a hostname in the address - PROBLEMATIC!
     set history=100          # number of input lines for prompts to remember
     set include              # set: include mail as quoted text in replies
@@ -61,6 +61,7 @@ $IMAPDATA
     set postponed=+postponed # where save postponed messages?
 #   set print_command="mp|lpr" # pipe message to "mp" for formattting - then on to "lpr"
   unset prompt_after         # set: gives you a prompt when pager exits
+    set quit=ask-yes         # ask before exiting
     set quote_regexp="^>"    # some people just use '>' - *sigh*
     set read_inc=10          # '10': show count number for every tenth mail
     set record=+outbox       # outbox / where to save outgoing mails
@@ -68,7 +69,7 @@ $IMAPDATA
     set reply_to=ask-yes     # "reply":          set:  Use address in Reply-To?
     set reverse_alias        # show the name of sender as set with my alias for him
     set reverse_name         # reply as the user to whom the mail was sent to
-    set save_name            # set: save outbound mail to =username if it exists
+#    set save_name            # set: save outbound mail to =username if it exists
 #    set sendmail="/usr/bin/msmtp" # which sendmail program should be used?
 #   set shell=zsh            # use the zsh for shell commands
     set sort=threads         # sorting method - I definitely like "threads" best
