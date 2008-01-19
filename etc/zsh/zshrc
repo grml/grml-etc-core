@@ -307,14 +307,14 @@ isgrml && checkhome() {
 # }}}
 
 # {{{ set some variables
-#v#
 if check_com -c vim ; then
+#v#
     export EDITOR=${EDITOR:-vim}
 else
     export EDITOR=${EDITOR:-vi}
 fi
-#v#
 
+#v#
 export MAIL=${MAIL:-/var/mail/$USER}
 
 # if we don't set $SHELL then aterm, rxvt,.. will use /bin/sh or /bin/bash :-/
