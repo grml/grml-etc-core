@@ -62,6 +62,7 @@ binary-arch: build install
 	manpages/iso-term.1 manpages/alignmargins.8 manpages/get_3ware.1 \
 	manpages/grml-init-multitail.1
 #	cp --no-dereference man/*.1.gz debian/grml-scripts/usr/share/man/man1/
+	dh_link /usr/bin/soundtest /usr/bin/grml-soundtest
 	dh_link /usr/sbin/blacklist /usr/sbin/unblacklist \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/align.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/apt-check-sigs.1.gz \
@@ -102,6 +103,7 @@ binary-arch: build install
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-muttng.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-nessus.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-postfix.1.gz \
+		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-soundtest.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-screen.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-lang.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/grml-resolution.1.gz \

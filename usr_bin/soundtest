@@ -4,15 +4,30 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sun Jan 15 22:46:13 CET 2006 [mika]
+# Latest change: Sam Jän 19 17:08:34 CET 2008 [mika]
 ################################################################################
 
 PN=`basename "$0"`
-[ -z "$PLAYER" ] && PLAYER="ogg123"
+
+if [ -z "$PLAYER" ] ; then
+   [ -x /usr/bin/mplayer ] && PLAYER="mplayer"
+   [ -x /usr/bin/ogg123 ]  && PLAYER="ogg123"
+fi
+
+if ! [ $(which $PLAYER) ] ; then
+   echo "Sorry, neither mplayer nor ogg123 available and \$PLAYER is not set.">&2
+   exit 1
+fi
+
 if [ -z "$1" ] ; then
-  FILE="/usr/share/grml/effect.ogg"
+   FILE="/usr/share/grml/effect.ogg"
 else
-  FILE="$*"
+   FILE="$*"
+fi
+
+if ! [ -r "$FILE" ] ; then
+   echo "Sorry, /usr/share/grml/effect.ogg of package grml-files not available.">&2
+   exit 1
 fi
 
 echo "$PN - trying to play $FILE with $PLAYER
@@ -21,11 +36,11 @@ You do not hear anything? Make sure volume is not turned off.
 Adjust mixer settings via aumix or alsamixer.
 
 Tip: $PN supports some options.
-Just provide the files you want to play as arguments,
+Just provide the file(s) you want to play as argument(s),
 adjust player which should be used for playing the files
 via environment variable PLAYER. Usage example:
 
-  PLAYER=mp3blaster $PN /usr/share/grml/effect.ogg /another/file/to/play.mp3
+  PLAYER=mplayer $PN /usr/share/grml/effect.ogg /another/file/to/play.mp3
 "
 
 $PLAYER $FILE && echo "It looks like sound works for you. :-)" || echo "problems with sound? :-("

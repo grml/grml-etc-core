@@ -2,6 +2,9 @@ grml-scripts (1.1.3) unstable; urgency=low
 
   * grml-mutt: deactivate force_name, and save_name by default,
     activate quit=ask-yes by default. Thanks, Michael Hammer.
+  * soundtest: improve checks for player and install a symlink
+    /usr/bin/grml-soundtest pointing to /usr/bin/soundtest.
+    Thanks, Darshaka Pathirana. [Closes: issue360]
 
  -- Michael Prokop <mika@grml.org>  Sat, 19 Jan 2008 16:59:03 +0100
 
