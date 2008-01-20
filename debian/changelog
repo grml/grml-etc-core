@@ -1,3 +1,9 @@
+grml-etc-core (0.3.47) unstable; urgency=low
+
+  * zshrc: prevent chdir() from putting dupes into ~/.zdirs
+
+ -- Frank Terbeck <ft@grml.org>  Sun, 20 Jan 2008 01:30:00 +0100
+
 grml-etc-core (0.3.46) unstable; urgency=low
 
   [ Frank Terbeck ]
