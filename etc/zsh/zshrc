@@ -871,7 +871,7 @@ if [[ -f ~/.zdirs ]] && [[ ${#dirstack[*]} -eq 0 ]] ; then
 fi
 
 chpwd() {
-    builtin print ${(u)dirstack} >! ~/.zdirs
+    builtin print -l ${(u)dirstack} >! ~/.zdirs
 }
 
 # }}}
