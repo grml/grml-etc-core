@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Dez 21 22:12:06 CET 2007 [mika]
+# Latest change: Mit Jän 23 11:27:27 CET 2008 [mika]
 ################################################################################
 
 . /etc/grml/sh-lib
@@ -15,6 +15,20 @@
 [ -r /etc/release_info ] && cat /etc/release_info
 
 PATH=$HOME/bin:/bin:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/home/grml/bin
+
+# Activate unicode console if running within utf8 environment
+# Dirty hack to fix unicode issue on amd64...
+# unicode_start during bootprocess just does not work reliable :(
+NUM_CONSOLES=12
+if [ -r /etc/default/locale ] ; then
+   if grep -q "LANG=.*UTF" /etc/default/locale ; then
+       for vc in `seq 1 ${NUM_CONSOLES}` ; do
+           echo -n -e '\033%G' > /dev/tty${vc}
+       done
+       kbd_mode -u
+       dumpkeys | loadkeys --unicode > /dev/null
+   fi
+fi
 
 CMDLINE=$(cat /proc/cmdline)
 case "$CMDLINE" in
