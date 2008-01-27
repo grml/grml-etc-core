@@ -315,6 +315,9 @@ else
 fi
 
 #v#
+(( ${+PAGER} )) || export PAGER="less"
+
+#v#
 export MAIL=${MAIL:-/var/mail/$USER}
 
 # if we don't set $SHELL then aterm, rxvt,.. will use /bin/sh or /bin/bash :-/
@@ -1650,13 +1653,13 @@ else
     # manzsh()  { man zshall | $MYLESS -p $1 ; }
 fi
 
-if check_com -c most ; then
+if check_com -c $PAGER ; then
     #f1# View Debian's changelog of a given package
     dchange() {
         if [[ -r /usr/share/doc/${1}/changelog.Debian.gz ]] ; then
-            most /usr/share/doc/${1}/changelog.Debian.gz
+            $PAGER /usr/share/doc/${1}/changelog.Debian.gz
         elif [[ -r /usr/share/doc/${1}/changelog.gz ]] ; then
-            most /usr/share/doc/${1}/changelog.gz
+            $PAGER /usr/share/doc/${1}/changelog.gz
         else
             if check_com -c aptitude ; then
                 echo "No changelog for package $1 found, using aptitude to retrieve it."
@@ -1677,10 +1680,10 @@ if check_com -c most ; then
     #f1# View Debian's NEWS of a given package
     dnews() {
         if [[ -r /usr/share/doc/${1}/NEWS.Debian.gz ]] ; then
-            most /usr/share/doc/${1}/NEWS.Debian.gz
+            $PAGER /usr/share/doc/${1}/NEWS.Debian.gz
         else
             if [[ -r /usr/share/doc/${1}/NEWS.gz ]] ; then
-                most /usr/share/doc/${1}/NEWS.gz
+                $PAGER /usr/share/doc/${1}/NEWS.gz
             else
                 echo "No NEWS file for package $1 found, sorry."
                 return 1
@@ -1693,7 +1696,7 @@ if check_com -c most ; then
     #f1# View upstream's changelog of a given package
     uchange() {
         if [[ -r /usr/share/doc/${1}/changelog.gz ]] ; then
-            most /usr/share/doc/${1}/changelog.gz
+            $PAGER /usr/share/doc/${1}/changelog.gz
         else
             echo "No changelog for package $1 found, sorry."
             return 1

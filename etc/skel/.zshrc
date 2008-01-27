@@ -60,8 +60,6 @@ if [[ -z "$BROWSER" ]] ; then
         check_com -c w3m && export BROWSER=w3m
     fi
 fi
-#v#
-(( ${+PAGER} )) || export PAGER="less"
 
 #m# v QTDIR \kbd{/usr/share/qt[34]}\quad [for non-root only]
 [[ -d /usr/share/qt3 ]] && export QTDIR=/usr/share/qt3
