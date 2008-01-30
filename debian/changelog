@@ -1,3 +1,10 @@
+grml-etc-core (0.3.48) unstable; urgency=low
+
+  [ Alexander Steinböck ]
+  * use $PAGER in dchange(), uchange() and dnews() [Closes: issue386]
+
+ -- Frank Terbeck <ft@grml.org>  Wed, 30 Jan 2008 21:17:57 +0100
+
 grml-etc-core (0.3.47) unstable; urgency=low
 
   * zshrc: prevent chdir() from putting dupes into ~/.zdirs
