@@ -1,13 +1,16 @@
 grml-etc-core (0.3.48) unstable; urgency=low
 
   [ Alexander Steinböck ]
-  * use $PAGER in dchange(), uchange() and dnews() [Closes: issue386]
-  * adding whatwhen() for history queries [Closes: issue380]
+  * zshrc: use $PAGER in dchange(), uchange() and dnews() [Closes: issue386]
+  * zshrc: adding whatwhen() for history queries [Closes: issue380]
 
   [ Frank Terbeck ]
   * zshrc: add a check for ZSH_VERSION >= 3.1.7 [Closes: issue389]
 
- -- Frank Terbeck <ft@grml.org>  Fri, 01 Feb 2008 02:11:31 +0100
+  [ Michael Prokop ]
+  * zshrc: enable 'setopt longlistjobs' by default
+
+ -- Michael Prokop <mika@grml.org>  Fri, 01 Feb 2008 02:52:14 +0100
 
 grml-etc-core (0.3.47) unstable; urgency=low
 

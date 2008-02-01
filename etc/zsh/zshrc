@@ -871,6 +871,7 @@ setopt extended_glob        # in order to use #, ~ and ^ for filename generation
                             # grep word *~(*.gz|*.bz|*.bz2|*.zip|*.Z) ->
                             # -> searches for word not in compressed files
                             # don't forget to quote '^', '~' and '#'!
+setopt longlistjobs         # display PID when suspending processes as well
 setopt notify               # report the status of backgrounds jobs immediately
 setopt hash_list_all        # Whenever a command completion is attempted, make sure \
                             # the entire command path is hashed first.
