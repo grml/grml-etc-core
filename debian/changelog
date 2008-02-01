@@ -4,7 +4,10 @@ grml-etc-core (0.3.48) unstable; urgency=low
   * use $PAGER in dchange(), uchange() and dnews() [Closes: issue386]
   * adding whatwhen() for history queries [Closes: issue380]
 
- -- Frank Terbeck <ft@grml.org>  Thu, 31 Jan 2008 10:46:20 +0100
+  [ Frank Terbeck ]
+  * zshrc: add a check for ZSH_VERSION >= 3.1.7 [Closes: issue389]
+
+ -- Frank Terbeck <ft@grml.org>  Fri, 01 Feb 2008 02:11:31 +0100
 
 grml-etc-core (0.3.47) unstable; urgency=low
 

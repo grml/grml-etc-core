@@ -331,6 +331,33 @@ isgrml && checkhome() {
         cd
     fi
 }
+
+# check for zsh v3.1.7+
+
+if ! [[ ${ZSH_VERSION} == 3.1.<7->*      \
+     || ${ZSH_VERSION} == 3.<2->.<->*    \
+     || ${ZSH_VERSION} == <4->.<->*   ]] ; then
+
+    printf '-!-\n'
+    printf '-!- In this configuration we try to make use of features, that only\n'
+    printf '-!- require version 3.1.7 of the shell; That way this setup can be\n'
+    printf '-!- used with a wide range of zsh versions, while using fairly\n'
+    printf '-!- advanced features in all supported versions.\n'
+    printf '-!-\n'
+    printf '-!- However, you are running zsh version %s.\n' "$ZSH_VERSION"
+    printf '-!-\n'
+    printf '-!- While this *may* work, it might as well fail.\n'
+    printf '-!- Please consider updating to at least version 3.1.7 of zsh.\n'
+    printf '-!-\n'
+    printf '-!- DO NOT EXPECT THIS TO WORK FLAWLESSLY!\n'
+    printf '-!- If it does today, you'\''ve been lucky.\n'
+    printf '-!-\n'
+    printf '-!- Ye been warned!\n'
+    printf '-!-\n'
+
+    function zstyle() { : }
+fi
+
 # }}}
 
 # {{{ set some variables

@@ -24,6 +24,9 @@
 if [[ -z "$ZSHRC_GLOBAL_HAS_BEEN_READ" ]] ; then
     print 'Warning: global zsh config has not been read.' >&2
     print '         prepare for possible errors!'         >&2
+    print '' >&2
+    print 'See our refcard for info on how to get the complete configuration:' >&2
+    print '    <http://grml.org/zsh/grml-zsh-refcard.pdf>' >&2
 fi
 # }}}
 
