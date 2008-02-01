@@ -247,20 +247,25 @@ unset xof
 
 # {{{ check for version/system
 # check for versions (compatibility reasons)
-if autoload is-at-least && is-at-least 2>/dev/null ; then
-    is4()  { is-at-least 4 }
-    is41() { is-at-least 4.1 }
-    is42() { is-at-least 4.2 }
-else
-    is4(){
-        [[ $ZSH_VERSION == 4.* ]] && return 0
-        return 1
-    }
-    is42(){
-        [[ $ZSH_VERSION == 4.<2->* ]] && return 0
-        return 1
-    }
-fi
+is4(){
+    [[ $ZSH_VERSION == <4->* ]] && return 0
+    return 1
+}
+
+is41(){
+    [[ $ZSH_VERSION == 4.<1->* || $ZSH_VERSION == <5->* ]] && return 0
+    return 1
+}
+
+is42(){
+    [[ $ZSH_VERSION == 4.<2->* || $ZSH_VERSION == <5->* ]] && return 0
+    return 1
+}
+
+is43(){
+    [[ $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
+    return 1
+}
 
 #f1# Checks whether or not you're running grml
 isgrml(){
