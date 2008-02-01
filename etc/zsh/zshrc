@@ -194,7 +194,7 @@ xcat() {
 # setup files. This should be called at the end of .zshrc.
 xunfunction() {
     local -a funcs
-    funcs=(check_com salias xcat xsource xunfunction)
+    funcs=(check_com salias xcat xsource xunfunction zrcautoload)
 
     for func in $funcs ; do
         [[ -n ${functions[$func]} ]] \
@@ -202,6 +202,28 @@ xunfunction() {
     done
     return 0
 }
+
+# autoload wrapper - use this one instead of autoload directly
+function zrcautoload() {
+    setopt local_options extended_glob
+    local fdir ffile
+    local -i ffound
+
+    ffile=${1}
+    (( found = 0 ))
+    for fdir in ${fpath} ; do
+        [[ -e ${fdir}/${ffile} ]] && (( ffound = 1 ))
+    done
+
+    (( ffound == 0 )) && return 1
+    if [[ $ZSH_VERSION == 3.1.<6-> || $ZSH_VERSION == <4->* ]] ; then
+        autoload -U ${ffile} || return 1
+    else
+        autoload ${ffile} || return 1
+    fi
+    return 0
+}
+
 #}}}
 
 # locale setup {{{
@@ -347,7 +369,7 @@ else
     if [[ -d /etc/zsh/functions.d ]] ; then
         fpath+=( /etc/zsh/functions.d )
         for func in /etc/zsh/functions.d/[^_]*[^~] ; do
-            autoload -U ${func:t}
+            zrcautoload -U ${func:t}
         done
     fi
 fi
@@ -403,7 +425,7 @@ bindkey '\e[8~' end-of-line             # end
 # insert unicode character
 # usage example: 'ctrl-x i' 00A7 'ctrl-x i' will give you an §
 # See for example http://unicode.org/charts/ for unicode characters code
-autoload insert-unicode-char
+zrcautoload insert-unicode-char
 zle -N insert-unicode-char
 #k# Insert Unicode character
 bindkey '^Xi' insert-unicode-char
@@ -657,8 +679,8 @@ bindkey ",." globalias
 # }}}
 
 # {{{ autoloading
-autoload -U zmv    # who needs mmv or rename?
-autoload history-search-end
+zrcautoload zmv    # who needs mmv or rename?
+zrcautoload history-search-end
 
 # we don't want to quote/espace URLs on our own...
 # if autoload -U url-quote-magic ; then
@@ -671,10 +693,10 @@ alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magi
 
 #m# k ESC-h Call \kbd{run-help} for the 1st word on the command line
 alias run-help >&/dev/null && unalias run-help
-autoload run-help # use via 'esc-h'
+zrcautoload run-help # use via 'esc-h'
 
 # completion system
-if autoload -U compinit && compinit 2>/dev/null ; then
+if zrcautoload compinit && compinit 2>/dev/null ; then
     compinit 2>/dev/null || print 'Notice: no compinit available :('
 else
     print 'Notice: no compinit available :('
@@ -682,7 +704,7 @@ else
     function compdef { }
 fi
 
-is4 && autoload -U zed # use ZLE editor to edit a file or function
+is4 && zrcautoload zed # use ZLE editor to edit a file or function
 
 is4 && \
 for mod in complist deltochar mathfunc ; do
@@ -705,7 +727,7 @@ if is4 ; then
     unset tmpargs
 fi
 
-if is4 && autoload -U insert-files && zle -N insert-files ; then
+if is4 && zrcautoload insert-files && zle -N insert-files ; then
     #k# Insert files
     bindkey "^Xf" insert-files # C-x-f
 fi
@@ -715,7 +737,7 @@ bindkey ' '   magic-space    # also do history expansion on space
 bindkey '\ei' menu-complete  # menu completion via esc-i
 
 # press esc-e for editing command line in $EDITOR or $VISUAL
-if is4 && autoload -U edit-command-line && zle -N edit-command-line ; then
+if is4 && zrcautoload edit-command-line && zle -N edit-command-line ; then
     #k# Edit the current line in \kbd{\$EDITOR}
     bindkey '\ee' edit-command-line
 fi
@@ -751,7 +773,7 @@ zle -N insert-last-typed-word;
 bindkey "\em" insert-last-typed-word
 
 # set command prediction from history, see 'man 1 zshcontrib'
-#  is4 && autoload -U predict-on && \
+#  is4 && zrcautoload predict-on && \
 #  zle -N predict-on         && \
 #  zle -N predict-off        && \
 #  bindkey "^X^Z" predict-on && \
@@ -963,7 +985,7 @@ __vcs_dir() {
 # }}}
 
 # {{{ set prompt
-if autoload promptinit && promptinit 2>/dev/null ; then
+if zrcautoload promptinit && promptinit 2>/dev/null ; then
     promptinit # people should be able to use their favourite prompt
 else
     print 'Notice: no promptinit available :('
@@ -1038,7 +1060,7 @@ preexec () {
 }
 
 # set colors
-if autoload colors && colors 2>/dev/null ; then
+if zrcautoload colors && colors 2>/dev/null ; then
     BLUE="%{${fg[blue]}%}"
     RED="%{${fg_bold[red]}%}"
     GREEN="%{${fg[green]}%}"

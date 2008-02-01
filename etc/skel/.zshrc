@@ -35,6 +35,7 @@ fi
 
 # completion system {{{
 # just make sure it is loaded in this file too
+# TODO: is this *really* needed? compsys should be run in the global zshrc already.
 check_com compinit || { autoload -U compinit && compinit }
 # }}}
 
