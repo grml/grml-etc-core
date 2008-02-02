@@ -369,7 +369,7 @@ else
 fi
 
 #v#
-(( ${+PAGER} )) || export PAGER="less"
+export PAGER=${PAGER:-less}
 
 #v#
 export MAIL=${MAIL:-/var/mail/$USER}
@@ -381,7 +381,7 @@ export SHELL='/bin/zsh'
 check_com -c dircolors && eval $(dircolors -b)
 
 # set width of man pages to 80 for more convenient reading
-# (( ${+MANWIDTH} )) || export MANWIDTH=80
+# export MANWIDTH=${MANWIDTH:-80}
 
 # Search path for the cd command
 #  cdpath=(.. ~)
