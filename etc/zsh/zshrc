@@ -289,6 +289,11 @@ is43(){
     return 1
 }
 
+# Use is-at-least, if you need to check more precisely.
+# Note that this test will *always* fail, if the is-at-least
+# function could not be marked for autoloading.
+zrcautoload is-at-least || is-at-least() { return 1 }
+
 #f1# Checks whether or not you're running grml
 isgrml(){
     [[ -f /etc/grml_version ]] && return 0
@@ -369,7 +374,7 @@ else
 fi
 
 #v#
-(( ${+PAGER} )) || export PAGER="less"
+export PAGER=${PAGER:-less}
 
 #v#
 export MAIL=${MAIL:-/var/mail/$USER}
@@ -381,7 +386,7 @@ export SHELL='/bin/zsh'
 check_com -c dircolors && eval $(dircolors -b)
 
 # set width of man pages to 80 for more convenient reading
-# (( ${+MANWIDTH} )) || export MANWIDTH=80
+# export MANWIDTH=${MANWIDTH:-80}
 
 # Search path for the cd command
 #  cdpath=(.. ~)
