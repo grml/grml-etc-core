@@ -9,8 +9,11 @@ grml-etc-core (0.3.48) unstable; urgency=low
 
   [ Michael Prokop ]
   * zshrc: enable 'setopt longlistjobs' by default
+  * zshrc: re-enable use of 'sudo su' instead of 'sudo -s' for alias su,
+    otherwise it breaks "su - $USER". Thanks for bringing this up,
+    Martin Yazdzik!
 
- -- Michael Prokop <mika@grml.org>  Fri, 01 Feb 2008 02:52:14 +0100
+ -- Michael Prokop <mika@grml.org>  Mon, 11 Feb 2008 17:58:42 +0100
 
 grml-etc-core (0.3.47) unstable; urgency=low
 

@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Dez 22 19:17:27 CET 2007 [mika]
+# Latest change: Mon Feb 11 18:00:55 CET 2008 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -1357,7 +1357,11 @@ if [[ -r /etc/debian_version ]] ; then
         fi
     }
 
-    isgrmlcd && alias su="sudo -s"          # get a root shell
+    # get a root shell as normal user in live-cd mode:
+    if isgrmlcd && [[ $UID -ne 0 ]] ; then
+       alias su="sudo su"
+     fi
+
     #a1# Take a look at the syslog: \kbd{\$PAGER /var/log/syslog}
     alias llog="$PAGER /var/log/syslog"     # take a look at the syslog
     #a1# Take a look at the syslog: \kbd{tail -f /var/log/syslog}
