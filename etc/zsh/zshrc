@@ -194,7 +194,7 @@ xcat() {
 # setup files. This should be called at the end of .zshrc.
 xunfunction() {
     local -a funcs
-    funcs=(check_com salias xcat xsource xunfunction zrcautoload)
+    funcs=(salias xcat xsource xunfunction zrcautoload)
 
     for func in $funcs ; do
         [[ -n ${functions[$func]} ]] \
