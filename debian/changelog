@@ -1,3 +1,10 @@
+grml-etc-core (0.3.49) unstable; urgency=low
+
+  [ Frank Terbeck ]
+  * zshrc: Keeping check_com() defined after zshrcs are sourced
+
+ -- Michael Prokop <mika@grml.org>  Wed, 13 Feb 2008 19:20:54 +0100
+
 grml-etc-core (0.3.48) unstable; urgency=low
 
   [ Alexander Steinböck ]
