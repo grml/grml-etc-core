@@ -1,3 +1,9 @@
+grml-scripts (1.1.5) unstable; urgency=low
+
+  * grml-quickconfig: integrate awesome (thanks for hint, wuehlmaus)
+
+ -- Michael Prokop <mika@grml.org>  Mon, 18 Feb 2008 13:31:54 +0100
+
 grml-scripts (1.1.4) unstable; urgency=low
 
   * zsh-login: integrate utf8 workaround [Testing: issue377]

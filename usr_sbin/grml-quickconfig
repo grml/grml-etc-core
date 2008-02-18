@@ -51,6 +51,7 @@ $HLINE=$B."x".$N;      # A single horizontal line drawing character
 
 # window managers
 %windowmanagers = (
+    a => 'awesome',
     d => 'dwm',
     e => 'evilwm',
     f => 'fluxbox',
@@ -120,7 +121,7 @@ EOF
    $HLINE Select a window manager (unsorted list):                $HLINE
    $HLINE Press any other key to return to the main menu.         $HLINE
    ${B}tqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu${N}
-   $HLINE ${W}d${N}wm ${W}e${N}vilwm ${W}f${N}luxbox f${W}v${N}wm fvwm${W}2${N} fvwm-${W}c${N}rystal ${W}             ${N}$HLINE
+   $HLINE ${W}a${N}wesome ${W}d${N}wm ${W}e${N}vilwm ${W}f${N}luxbox f${W}v${N}wm fvwm${W}2${N} fvwm-${W}c${N}rystal ${W}     ${N}$HLINE
    $HLINE ${W}o${N}penbox pe${W}k${N}wm ${W}p${N}wm3 ${W}r${N}atpoison ${W}t${N}wm w${W}9${N}wm ${W}w${N}indowlab         ${N}$HLINE
    $HLINE wm${W}i${N}i wm-${W}n${N}g                                              ${N}$HLINE
    ${B}mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj${N}
