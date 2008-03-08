@@ -1,3 +1,10 @@
+grml-etc-core (0.3.50) unstable; urgency=low
+
+  * zshrc: update function git-get-plaindiff() so it works around
+    the "generating..." bug
+
+ -- Michael Prokop <mika@grml.org>  Sat, 08 Mar 2008 14:13:50 +0100
+
 grml-etc-core (0.3.49) unstable; urgency=low
 
   [ Frank Terbeck ]

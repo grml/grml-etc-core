@@ -877,16 +877,21 @@ git-get-commit() {
 }
 
 #f5# Get specific git diff
-git-get-plaindiff() {
+git-get-plaindiff () {
     if [[ -z $GITTREE ]] ; then
-        GITTREE='linux/kernel/git/torvalds/linux-2.6.git'
+       GITTREE='linux/kernel/git/torvalds/linux-2.6.git'
     fi
-    if ! [[ -z $1 ]] ; then
-        wget "http://kernel.org/git/?p=$GITTREE;a=commitdiff_plain;h=$1" -O $1.diff
+    if [[ -z $1 ]] ; then
+       echo 'Usage: git-get-plaindiff '
     else
-        echo 'Usage: git-get-plaindiff '
+       echo -n "Downloading $1.diff ... "
+       # avoid "generating ..." stuff from kernel.org server:
+       wget --quiet "http://kernel.org/git/?p=$GITTREE;a=commitdiff_plain;h=$1" -O /dev/null
+       wget --quiet "http://kernel.org/git/?p=$GITTREE;a=commitdiff_plain;h=$1" -O $1.diff \
+            && echo done || echo failed
     fi
 }
+
 
 # http://strcat.de/blog/index.php?/archives/335-Software-sauber-deinstallieren...html
 #f5# Log 'make install' output
