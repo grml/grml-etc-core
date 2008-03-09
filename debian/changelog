@@ -1,3 +1,10 @@
+grml-scripts (1.1.7) unstable; urgency=low
+
+  * grml-info: improve tests for available browser.
+    [Testing: issue428]
+
+ -- Michael Prokop <mika@grml.org>  Sun, 09 Mar 2008 13:57:46 +0100
+
 grml-scripts (1.1.6) unstable; urgency=low
 
   * grml-quickconfig: get rid of pwm3.
