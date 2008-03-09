@@ -1,3 +1,9 @@
+grml-scripts (1.1.8) unstable; urgency=low
+
+  * zsh-login: fix noquick bootoption
+
+ -- Michael Prokop <mika@grml.org>  Sun, 09 Mar 2008 15:11:59 +0100
+
 grml-scripts (1.1.7) unstable; urgency=low
 
   * grml-info: improve tests for available browser.

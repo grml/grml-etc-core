@@ -4,7 +4,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mit Jän 23 11:27:27 CET 2008 [mika]
+# Latest change: Son Mär 09 15:11:56 CET 2008 [mika]
 ################################################################################
 
 . /etc/grml/sh-lib
@@ -47,8 +47,8 @@ case "$CMDLINE" in
       fi
       ;;
 
-   # do nothing if booting with noquick:
-   noquick)
+   # do nothing if booting with bootoption noquick:
+   *noquick*)
       ;;
    *) # by default run grml-quickconfig, but only if running as root
       if [ $(id -u) = "0" ] ; then
