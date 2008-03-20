@@ -446,7 +446,9 @@ bindkey '\e[1~' beginning-of-line       # home
 bindkey '\e[4~' end-of-line             # end
 bindkey '\e[A'  up-line-or-search       # cursor up
 bindkey '\e[B'  down-line-or-search     # <ESC>-
-bindkey '^x'    history-beginning-search-backward # alternative ways of searching the shell history
+
+bindkey '^xp'   history-beginning-search-backward
+bindkey '^xP'   history-beginning-search-forward
 # bindkey -s '^L' "|less\n"             # ctrl-L pipes to less
 # bindkey -s '^B' " &\n"                # ctrl-B runs it in the background
 # if terminal type is set to 'rxvt':

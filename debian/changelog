@@ -1,9 +1,14 @@
 grml-etc-core (0.3.50) unstable; urgency=low
 
+  [ Michael Prokop ]
   * zshrc: update function git-get-plaindiff() so it works around
     the "generating..." bug
 
- -- Michael Prokop <mika@grml.org>  Sat, 08 Mar 2008 14:13:50 +0100
+  [ Frank Terbeck ]
+  * zshrc: add new bindings: '^xP' and '^xp' for
+    history-beginning-search-{forward,backward}
+
+ -- Frank Terbeck <ft@grml.org>  Thu, 20 Mar 2008 20:33:49 +0100
 
 grml-etc-core (0.3.49) unstable; urgency=low
 
