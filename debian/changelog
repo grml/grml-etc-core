@@ -3,6 +3,7 @@ grml-etc-core (0.3.50) unstable; urgency=low
   [ Michael Prokop ]
   * zshrc: update function git-get-plaindiff() so it works around
     the "generating..." bug
+  * zshenv: extend and update $ADDONS handling
 
   [ Frank Terbeck ]
   * zshrc: add new bindings: '^xP' and '^xp' for

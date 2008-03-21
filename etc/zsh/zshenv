@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Dez 06 23:21:08 CET 2007 [mika]
+# Latest change: Sat Mar 22 00:37:25 CET 2008 [mika]
 ################################################################################
 # This file is sourced on all invocations of the shell.
 # It is the 1st file zsh reads; it's read for every shell,
@@ -58,7 +58,9 @@ if [[ -r /etc/gentoo-release ]] ; then
 else
 # support extra software in special directory outside of squashfs environment in live-cd mode
     if [[ -f /etc/grml_cd ]] ; then
-        [[ -d /cdrom/addons/ ]] && ADDONS=':/cdrom/addons/'
+       [[ -r /cdrom/addons ]]      && ADDONS=':/cdrom/addons'
+       [[ -r /live/image/addons ]] && ADDONS=':/live/image/addons'
+       [[ -r /etc/grml/my_path ]]  && ADDONS=":$(cat /etc/grml/my_path)"
     fi
 
     if (( EUID != 0 )); then
