@@ -1,3 +1,10 @@
+grml-scripts (1.1.9) unstable; urgency=low
+
+  * grml-quickconfig: integrate jwm [thanks for bringing up,
+    Dietmar Kirchmayr]
+
+ -- Michael Prokop <mika@grml.org>  Tue, 25 Mar 2008 20:37:30 +0100
+
 grml-scripts (1.1.8) unstable; urgency=low
 
   * zsh-login: fix noquick bootoption
