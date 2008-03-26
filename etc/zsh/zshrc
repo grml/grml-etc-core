@@ -928,15 +928,21 @@ isgrmlcd && SAVEHIST=1000 || SAVEHIST=10000 # useful for setopt append_history
 
 # dirstack handling {{{
 
+# TODO: the is42 tests are in place, because (u) requires at least 4.2.0
+#       of zsh. We also disable loading potentielly old .zdir files when
+#       starting a pre-4.2.0 zsh.
+#       Implementing a workaround-(u) for older shells is the obvious
+#       solution here, if we want this for all supported shells.
+
 DIRSTACKSIZE=20
-if [[ -f ~/.zdirs ]] && [[ ${#dirstack[*]} -eq 0 ]] ; then
+if is42 && [[ -f ~/.zdirs ]] && [[ ${#dirstack[*]} -eq 0 ]] ; then
     dirstack=( ${(f)"$(< ~/.zdirs)"} )
     # "cd -" won't work after login by just setting $OLDPWD, so
     [[ -d $dirstack[0] ]] && cd $dirstack[0] && cd $OLDPWD
 fi
 
 chpwd() {
-    builtin print -l ${(u)dirstack} >! ~/.zdirs
+    is42 && builtin print -l ${(u)dirstack} >! ~/.zdirs
 }
 
 # }}}
