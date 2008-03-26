@@ -258,6 +258,29 @@ salias() {
     return 0
 }
 
+# a "print -l ${(u)foo}"-workaround for pre-4.2.0 shells
+# usage: uprint foo
+#   Where foo is the *name* of the parameter you want printed.
+#   Note that foo is no typo; $foo would be wrong here!
+if ! is42 ; then
+    uprint () {
+        local -a u
+        local w
+        local parameter=${1}
+
+        if [[ -z ${parameter} ]] ; then
+            printf 'usage: uprint <parameter>\n'
+            return 1
+        fi
+
+        for w in ${(P)parameter} ; do
+            [[ -z ${(M)u:#${w}} ]] && u=( ${u} ${w} )
+        done
+
+        builtin print -l ${u}
+    }
+fi
+
 # Check if we can read given files and source those we can.
 xsource() {
     if (( ${#argv} < 1 )) ; then
@@ -931,21 +954,21 @@ isgrmlcd && SAVEHIST=1000 || SAVEHIST=10000 # useful for setopt append_history
 
 # dirstack handling {{{
 
-# TODO: the is42 tests are in place, because (u) requires at least 4.2.0
-#       of zsh. We also disable loading potentielly old .zdir files when
-#       starting a pre-4.2.0 zsh.
-#       Implementing a workaround-(u) for older shells is the obvious
-#       solution here, if we want this for all supported shells.
+DIRSTACKSIZE=${DIRSTACKSIZE:-20}
+DIRSTACKFILE=${DIRSTACKFILE:-${HOME}/.zdirs}
 
-DIRSTACKSIZE=20
-if is42 && [[ -f ~/.zdirs ]] && [[ ${#dirstack[*]} -eq 0 ]] ; then
-    dirstack=( ${(f)"$(< ~/.zdirs)"} )
+if [[ -f ${DIRSTACKFILE} ]] && [[ ${#dirstack[*]} -eq 0 ]] ; then
+    dirstack=( ${(f)"$(< $DIRSTACKFILE)"} )
     # "cd -" won't work after login by just setting $OLDPWD, so
     [[ -d $dirstack[0] ]] && cd $dirstack[0] && cd $OLDPWD
 fi
 
 chpwd() {
-    is42 && builtin print -l ${(u)dirstack} >! ~/.zdirs
+    if is42 ; then
+        builtin print -l ${(u)dirstack} >! ${DIRSTACKFILE}
+    else
+        uprint dirstack >! ${DIRSTACKFILE}
+    fi
 }
 
 # }}}

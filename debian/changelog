@@ -1,3 +1,9 @@
+grml-etc-core (0.3.51) unstable; urgency=low
+
+  * zshrc: Add persistent dirstack support for shells older than 4.2.0
+
+ -- Frank Terbeck <ft@grml.org>  Wed, 26 Mar 2008 13:57:12 +0100
+
 grml-etc-core (0.3.50) unstable; urgency=low
 
   [ Michael Prokop ]
