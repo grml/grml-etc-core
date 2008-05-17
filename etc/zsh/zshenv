@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Mai 17 22:52:27 CEST 2008 [mika]
+# Latest change: Sam Mai 17 22:59:29 CEST 2008 [mika]
 ################################################################################
 # This file is sourced on all invocations of the shell.
 # It is the 1st file zsh reads; it's read for every shell,
@@ -20,11 +20,6 @@
 #
 # Global Order: zshenv, zprofile, zshrc, zlogin
 ################################################################################
-
-# support ${HOME}/.zshenv:
-if [[ -z "$ALREADY_SOURCED_ZSHENV" ]] ; then
-   export ALREADY_SOURCED_ZSHENV=1
-fi
 
 # language settings (read in /etc/environment before /etc/default/locale as
 # the latter one is the default on Debian nowadays)
