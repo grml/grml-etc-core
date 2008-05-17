@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mon Feb 11 18:00:55 CET 2008 [mika]
+# Latest change: Sam Mai 17 22:52:34 CEST 2008 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -352,7 +352,7 @@ zrcautoload is-at-least || is-at-least() { return 1 }
 
 # locale setup {{{
 if [[ -z "$LANG" ]] ; then
-    xsource "/etc/default/locale"
+   xsource "/etc/default/locale"
 fi
 
 export LANG=${LANG:-en_US.iso885915}
@@ -2019,6 +2019,7 @@ for color in BLUE RED GREEN CYAN WHITE ; unset $color
 
 # source another config file if present {{{
 xsource "/etc/zsh/zshrc.local"
+xsource "${HOME}/.zshenv"
 # }}}
 
 # "persistent history" {{{
