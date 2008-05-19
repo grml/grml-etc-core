@@ -4,7 +4,10 @@ grml-etc-core (0.3.51) unstable; urgency=low
   * zshrc: Add persistent dirstack support for shells older than 4.2.0
 
   [ Michael Prokop ]
-  * zshrc: Add support for ${HOME}/.zshenv.
+  * zshrc:
+    - Add support for ${HOME}/.zshenv.
+    - Add new function ansi-colors() [via harnir]
+    - Support .deb in show-archive() [via harnir]
   * zshenv: set $PATH on Solaris/SunOS.
 
  -- Michael Prokop <mika@grml.org>  Sat, 17 May 2008 22:53:04 +0200
