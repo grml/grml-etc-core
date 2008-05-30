@@ -502,6 +502,24 @@ bindkey '^Xi' insert-unicode-char
 #  bindkey . rationalise-dot
 
 #  bindkey '\eq' push-line-or-edit
+
+## toggle the ,. abbreviation feature on/off
+# NOABBREVIATION: default abbreviation-state
+#                 0 - enabled (default)
+#                 1 - disabled
+NOABBREVIATION=${NOABBREVIATION:-0}
+
+grml_toggle_abbrev() {
+    if (( ${NOABBREVIATION} > 0 )) ; then
+        NOABBREVIATION=0
+    else
+        NOABBREVIATION=1
+    fi
+}
+
+zle -N grml_toggle_abbrev
+bindkey '^xA' grml_toggle_abbrev
+
 # }}}
 
 # a generic accept-line wrapper {{{
@@ -729,6 +747,12 @@ abk=(
 
 globalias() {
     local MATCH
+
+    if (( NOABBREVIATION > 0 )) ; then
+        LBUFFER="${LBUFFER},."
+        return 0
+    fi
+
     matched_chars='[.-|_a-zA-Z0-9]#'
     LBUFFER=${LBUFFER%%(#m)[.-|_a-zA-Z0-9]#}
     LBUFFER+=${abk[$MATCH]:-$MATCH}

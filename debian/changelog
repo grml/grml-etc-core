@@ -2,6 +2,7 @@ grml-etc-core (0.3.51) unstable; urgency=low
 
   [ Frank Terbeck ]
   * zshrc: Add persistent dirstack support for shells older than 4.2.0
+  * zshrc: Make ',.' abbreviation optional [Closes: issue445]
 
   [ Michael Prokop ]
   * zshrc:
@@ -10,7 +11,7 @@ grml-etc-core (0.3.51) unstable; urgency=low
     - Support .deb in show-archive() [via harnir]
   * zshenv: set $PATH on Solaris/SunOS.
 
- -- Michael Prokop <mika@grml.org>  Sat, 17 May 2008 22:53:04 +0200
+ -- Frank Terbeck <ft@grml.org>  Fri, 30 May 2008 14:56:45 +0200
 
 grml-etc-core (0.3.50) unstable; urgency=low
 
