@@ -9,9 +9,11 @@ grml-etc-core (0.3.51) unstable; urgency=low
     - Add support for ${HOME}/.zshenv.
     - Add new function ansi-colors() [via harnir]
     - Support .deb in show-archive() [via harnir]
+    - Fix wrong placed comments for debbug vs. debbugm.
+      Thanks to Dennis Schreiber for pointing out.
   * zshenv: set $PATH on Solaris/SunOS.
 
- -- Frank Terbeck <ft@grml.org>  Fri, 30 May 2008 14:56:45 +0200
+ -- Michael Prokop <mika@grml.org>  Thu, 17 Jul 2008 21:29:56 +0200
 
 grml-etc-core (0.3.50) unstable; urgency=low
 

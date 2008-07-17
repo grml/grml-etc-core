@@ -258,7 +258,7 @@ fi
 # searching
 #f4# Search for newspostings from authors
 agoogle() { ${=BROWSER} "http://groups.google.com/groups?as_uauthors=$*" ; }
-#f4# Search Debian Bug Tracking System by BugID in mbox format
+#f4# Search Debian Bug Tracking System
 debbug()  { 
     setopt localoptions extendedglob
     if [[ $# -eq 1 ]]; then
@@ -278,7 +278,7 @@ debbug()  {
         return 1
     fi
 }
-#f4# Search Debian Bug Tracking System
+#f4# Search Debian Bug Tracking System by BugID in mbox format
 debbugm() { bts show --mbox $1 } # provide bugnummer as "$1"
 #f4# Search DMOZ
 dmoz()    { ${=BROWSER} http://search.dmoz.org/cgi-bin/search\?search=${1// /_} }
