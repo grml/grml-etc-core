@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sat Mar 22 00:37:25 CET 2008 [mika]
+# Latest change: Sam Mai 17 22:59:29 CEST 2008 [mika]
 ################################################################################
 # This file is sourced on all invocations of the shell.
 # It is the 1st file zsh reads; it's read for every shell,
@@ -70,13 +70,13 @@ else
     fi
 fi
 
-# Solaris 
-# case $(uname 2>/dev/null) in
-#   SunOS)
-#      PATH="/usr/bin:/usr/sbin:/usr/ccs/bin:/usr/sfw/bin:/opt/sfw/bin:/opt/bin:/usr/local/bin:/usr/openwin/bin:/usr/dt/bin:/usr/ucb:/usr/proc/bin:~/bin"
-#      # LD_LIBRARY_PATH="/opt/csw/lib:/opt/sfw/lib:/usr/lib:/usr/local/lib:/usr/ccs/lib:/usr/openwin/lib:/usr/ucb/lib"
-#      # MANPATH="$MANPATH:/opt/csw/man:/usr/man:/usr/share/man:/usr/local/man:/opt/sfw/man"
-#esac
+# Solaris
+case $(uname 2>/dev/null) in
+  SunOS)
+     PATH="/usr/bin:/usr/sbin:/usr/ccs/bin:/opt/SUNWspro/bin:/usr/ucb:/usr/sfw/bin:/usr/gnu/bin:/usr/openwin/bin:/opt/csw/bin:/opt/swf/bin:/sbin:/usr/sbin:~/bin"
+     # LD_LIBRARY_PATH="/opt/csw/lib:/opt/sfw/lib:/usr/lib:/usr/local/lib:/usr/ccs/lib:/usr/openwin/lib:/usr/ucb/lib"
+     # MANPATH="$MANPATH:/opt/csw/man:/usr/man:/usr/share/man:/usr/local/man:/opt/sfw/man"
+esac
 
 # less (:=pager) options:
 #  export LESS=C

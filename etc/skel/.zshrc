@@ -258,7 +258,7 @@ fi
 # searching
 #f4# Search for newspostings from authors
 agoogle() { ${=BROWSER} "http://groups.google.com/groups?as_uauthors=$*" ; }
-#f4# Search Debian Bug Tracking System by BugID in mbox format
+#f4# Search Debian Bug Tracking System
 debbug()  { 
     setopt localoptions extendedglob
     if [[ $# -eq 1 ]]; then
@@ -278,7 +278,7 @@ debbug()  {
         return 1
     fi
 }
-#f4# Search Debian Bug Tracking System
+#f4# Search Debian Bug Tracking System by BugID in mbox format
 debbugm() { bts show --mbox $1 } # provide bugnummer as "$1"
 #f4# Search DMOZ
 dmoz()    { ${=BROWSER} http://search.dmoz.org/cgi-bin/search\?search=${1// /_} }
@@ -599,6 +599,7 @@ show-archive() {
             *.tgz)         tar -ztf $1 ;;
             *.zip)         unzip -l $1 ;;
             *.bz2)         bzless $1 ;;
+            *.deb)         dpkg-deb --fsys-tarfile $1 | tar -tf - -- ;;
             *)             echo "'$1' Error. Please go away" ;;
         esac
     else
@@ -620,6 +621,22 @@ readme() {
     else
         print 'No README files.'
     fi
+}
+
+# function ansi-colors()
+#f5# Display ANSI colors
+ansi-colors() {
+    typeset esc="\033[" line1 line2
+    echo " _ _ _40 _ _ _41_ _ _ _42 _ _ 43_ _ _ 44_ _ _45 _ _ _ 46_ _ _ 47_ _ _ 49_ _"
+    for fore in 30 31 32 33 34 35 36 37; do
+        line1="$fore "
+        line2="   "
+        for back in 40 41 42 43 44 45 46 47 49; do
+            line1="${line1}${esc}${back};${fore}m Normal ${esc}0m"
+            line2="${line2}${esc}${back};${fore};1m Bold   ${esc}0m"
+        done
+        echo -e "$line1\n$line2"
+    done
 }
 
 # suidfind() { ls -latg $path | grep '^...s' }
