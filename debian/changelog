@@ -25,6 +25,9 @@ grml-etc-core (0.3.51) unstable; urgency=low
     - New function linenr() to print a specific line of file, thanks
       to Wuehlmaus.
     - Update gizmo() function.
+    - Add completion for aliases, deactivated by default because it
+      might be confusing for several users for now. Idea by Julius,
+      thanks for forwarding - wuehlmaus. :)
   * zshenv: set $PATH on Solaris/SunOS.
 
  -- Michael Prokop <mika@grml.org>  Wed, 06 Aug 2008 23:36:58 +0200
