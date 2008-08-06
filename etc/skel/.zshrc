@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Wed Aug 06 14:17:12 CEST 2008 [mika]
+# Latest change: Mit Aug 06 23:31:19 CEST 2008 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -46,7 +46,7 @@ check_com compinit || { autoload -U compinit && compinit }
 check_com isgrmlsmall || function isgrmlsmall () { return 1 }
 # }}}
 
-## variables {{{
+# variables {{{
 
 # do you want grmlsmall-specific adjustments?
 GRMLSMALL_SPECIFIC=1
@@ -74,7 +74,7 @@ fi
 [[ -f /usr/share/classpath/glibj.zip ]] && export JIKESPATH=/usr/share/classpath/glibj.zip
 # }}}
 
-## set options {{{
+# set options {{{
 
 # Allow comments even in interactive shells i. e.
 # $ uname # This command prints system informations
@@ -114,7 +114,7 @@ fi
 #  alias -g V='| vim -'
 # }}}
 
-## aliases {{{
+# aliases {{{
 
 # Xterm resizing-fu.
 # Based on http://svn.kitenet.net/trunk/home-full/.zshrc?rev=11710&view=log (by Joey Hess)
@@ -253,7 +253,7 @@ if check_com isutfenv && check_com luit ; then
 fi
 # }}}
 
-## useful functions {{{
+# useful functions {{{
 
 # searching
 #f4# Search for newspostings from authors
@@ -278,7 +278,7 @@ debbug()  {
         return 1
     fi
 }
-#f4# Search Debian Bug Tracking System by BugID in mbox format
+#f4# Search Debian Bug Tracking System in mbox format
 debbugm() { bts show --mbox $1 } # provide bugnummer as "$1"
 #f4# Search DMOZ
 dmoz()    { ${=BROWSER} http://search.dmoz.org/cgi-bin/search\?search=${1// /_} }
@@ -862,11 +862,11 @@ getskypebeta() {
 getgizmo() {
     setopt local_options
     setopt errreturn
-    echo "gconf2-common and libgconf2-4 have to be available. Installing therefor."
+    echo "libgtk2.0-0, gconf2, libstdc++6, libasound2 and zlib1g have to be available. Installing."
     $SUDO apt-get update
-    $SUDO apt-get install gconf2-common libgconf2-4
-    wget $(lynx --dump http://www.gizmoproject.com/download-linux.html | awk '/\.deb/ {print $2" "}' | tr -d '\n')
-    $SUDO dpkg -i libsipphoneapi*.deb bonjour_*.deb gizmo-*.deb && echo "gizmo installed."
+    $SUDO apt-get install libgtk2.0-0 gconf2 libstdc++6 libasound2 zlib1g
+    wget "$(lynx --dump http://gizmo5.com/pc/download/linux/ | awk '/libstdc\+\+6.*\.deb/ {print $2}')"
+    $SUDO dpkg -i gizmo-project*.deb && echo "gizmo installed."
 }
 
 #f5# Get and run AIR (Automated Image and Restore)
@@ -1074,6 +1074,30 @@ zurl() {
           "${tiny}${url}" \
         | grep -Eio 'value="(http://tinyurl.com/.*)"' \
         | sed 's/value=//;s/"//g'
+}
+
+#f2# Print a specific line of file(s).
+linenr () {
+# {{{
+    if [ $# -lt 2 ] ; then
+       print "Usage: linenr <number>[,<number>] <file>" ; return 1
+    elif [ $# -eq 2 ] ; then
+         local number=$1
+         local file=$2
+         command ed -s $file <<< "${number}n"
+    else
+         local number=$1
+         shift
+         for file in "$@" ; do
+             if [ ! -d $file ] ; then
+                echo "${file}:"
+                command ed -s $file <<< "${number}n" 2> /dev/null
+             else
+                continue
+             fi
+         done | less
+    fi
+# }}}
 }
 
 #f2# Find history events by search pattern and list them by date.
