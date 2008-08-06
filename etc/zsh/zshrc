@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sun Aug 03 20:23:34 CEST 2008 [mika]
+# Latest change: Mit Aug 06 23:39:53 CEST 2008 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -303,6 +303,19 @@ xcat() {
     fi
 
     [[ -r ${1} ]] && cat ${1}
+    return 0
+}
+
+# Remove these functions again, they are of use only in these
+# setup files. This should be called at the end of .zshrc.
+xunfunction() {
+    local -a funcs
+    funcs=(salias xcat xsource xunfunction zrcautoload)
+
+    for func in $funcs ; do
+        [[ -n ${functions[$func]} ]] \
+            && unfunction $func
+    done
     return 0
 }
 

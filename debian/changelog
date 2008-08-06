@@ -5,7 +5,7 @@ grml-etc-core (0.3.51) unstable; urgency=low
   [ Frank Terbeck ]
   * zshrc: Add persistent dirstack support for shells older than 4.2.0
   * zshrc: Make ',.' abbreviation optional [Closes: issue445]
-  * zshrc: remove xunfunction() altogether; it prevented things like
+  * zshrc: do not use xunfunction() anymore; it prevented things like
            'source ~/.zshrc' from working.
 
   [ Michael Gebetsroither ]
