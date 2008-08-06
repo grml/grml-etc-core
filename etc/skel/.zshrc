@@ -1310,9 +1310,6 @@ gethgsnap() {
 # modifications in ~/.zshrc.local
 xsource "${HOME}/.zshrc.local"
 
-# ...and remove utility functions again.
-xunfunction
-
 # }}}
 
 ### doc strings for external functions from files
