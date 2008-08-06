@@ -3,7 +3,7 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest Change: Sat Jan 26 11:55:04 CET 2008
+# Latest change: Wed Aug 06 14:17:12 CEST 2008 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -259,7 +259,7 @@ fi
 #f4# Search for newspostings from authors
 agoogle() { ${=BROWSER} "http://groups.google.com/groups?as_uauthors=$*" ; }
 #f4# Search Debian Bug Tracking System
-debbug()  { 
+debbug()  {
     setopt localoptions extendedglob
     if [[ $# -eq 1 ]]; then
         case "$1" in
@@ -360,6 +360,19 @@ ytdl() {
     fi
 }
 
+# Function Usage: uopen $URL/$file
+#f5# Download a file and display it locally
+uopen() {
+    if ! [[ -n "$1" ]] ; then
+        print "Usage: uopen \$URL/\$file">&2
+        return 1
+    else
+        FILE=$1
+        MIME=$(curl --head $FILE | grep Content-Type | cut -d ' ' -f 2 | cut -d\; -f 1)
+        MIME=${MIME%$'\r'}
+        curl $FILE | see ${MIME}:-
+    fi
+}
 
 # Function Usage: doc packagename
 #f5# \kbd{cd} to /usr/share/doc/\textit{package}
