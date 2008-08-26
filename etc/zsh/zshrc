@@ -1073,6 +1073,312 @@ __vcs_dir() {
   #  echo "${vcs:+($vcs)}${base_dir/$HOME/~}${vcs:+[$ref]${sub_dir}}"
     echo "${vcs:+($vcs)}${base_dir}${vcs:+[$ref]${sub_dir}}"
 }
+
+# gather version control information for inclusion in a prompt
+
+# vcs_info() documentation: {{{
+#
+# The vcs_info () feature can be configured via zstyle:
+#   First, the context in which we are working:
+#       :vcs_info:<vcs-string>
+#   ...where <vcs-string> is one of: git, hg, bzr, svn or svk
+#
+#   You can of course use ':vcs_info:*' to match all VCSs at once.
+#
+# There is one special context named 'init', that is in effect as long
+# as there was no decision what vcs backend to use.
+#
+# There are currently two styles, that are looked up:
+#   promptformat        - Used in most circumstances.
+#   promptactionformat  - Used if a there is a special action going on;
+#                         (like an interactive rebase or a merge conflict)
+#   enable              - check in the 'init' context. If set to false,
+#                         vcs_info() will do nothing.
+#
+# The default values for these in all contexts are:
+#   promptformat        " (%s)-[%b|%a]-"
+#   promptactionformat  " (%s)-[%b]-"
+#   enable              true
+#
+# In these formats, the following replacements are done:
+#   %s  - The vcs in use (git, hg, svn etc.)
+#   %b  - Information about the current branch.
+#   %a  - An identifier, that describes the action.
+#         Only makes sense in promptactionformat.
+#   %R  - base directory of the repository.
+#   %r  - repository name
+#         If %R is '/foo/bar/repoXY', %r is 'repoXY'.
+#
+# Not all vcs backends may support all replacements
+#
+# If you want colors, make sure you enclose the color codes in %{...%}, because
+# the string provided by vcs_info() is commonly used for prompts.
+#
+#   Example: PROMPT='%(?..[%?]-)%3~%$(vcs_info)#'
+#
+# This *requires* 'setopt prompt_subst'.
+# }}}
+VCS_INFO_default_action_format=' (%s)-[%b|%a]-'
+VCS_INFO_default_format=' (%s)-[%b]-'
+VCS_INFO_realpath () { #{{{
+    # replacing 'readlink -f', which is really not portable.
+    (( ${+functions[chpwd]} )) && unfunction chpwd
+    setopt chaselinks
+    cd $1 2>/dev/null && pwd
+}
+# }}}
+VCS_INFO_git_getaction () { #{{{
+    local gitaction='' gitdir=${1}
+    local tmp
+
+    for tmp in "${gitdir}/rebase-apply" \
+               "${gitdir}/rebase"       \
+               "${gitdir}/../.dotest" ; do
+        if [[ -d ${tmp} ]] ; then
+            if   [[ -f "${tmp}/rebasing" ]] ; then
+                gitaction="rebase"
+            elif [[ -f "${tmp}/applying" ]] ; then
+                gitaction="am"
+            else
+                gitaction="am/rebase"
+            fi
+            print '%s' ${gitaction}
+            return 0
+        fi
+    done
+
+    for tmp in "${gitdir}/rebase-merge/interactive" \
+               "${gitdir}/.dotest-merge/interactive" ; do
+        if [[ -f "${tmp}" ]] ; then
+            printf '%s' "rebase-i"
+            return 0
+        fi
+    done
+
+    for tmp in "${gitdir}/rebase-merge" \
+               "${gitdir}/.dotest-merge" ; do
+        if [[ -d "${tmp}" ]] ; then
+            printf '%s' "rebase-m"
+            return 0
+        fi
+    done
+
+    if [[ -f "${gitdir}/MERGE_HEAD" ]] ; then
+        printf '%s' "merge"
+    else
+        if [[ -f "${gitdir}/BISECT_LOG" ]] ; then
+            printf '%s' "bisect"
+        fi
+    fi
+
+    return 1
+}
+# }}}
+VCS_INFO_git_getbranch () { #{{{
+    local gitbranch gitdir=${1}
+    local gitsymref='git symbolic-ref HEAD'
+
+    if    [[ -d "${gitdir}/rebase-apply" ]] \
+       || [[ -d "${gitdir}/rebase" ]]       \
+       || [[ -d "${gitdir}/../.dotest" ]]   \
+       || [[ -f "${gitdir}/MERGE_HEAD" ]] ; then
+        gitbranch="$(${(z)gitsymref} 2> /dev/null)"
+
+    elif   [[ -f "${gitdir}/rebase-merge/interactive" ]] \
+        || [[ -d "${gitdir}/rebase-merge" ]] ; then
+        gitbranch="$(< ${gitdir}/rebase-merge/head-name)"
+
+    elif   [[ -f "${gitdir}/.dotest-merge/interactive" ]] \
+        || [[ -d "${gitdir}/.dotest-merge" ]] ; then
+        gitbranch="$(< ${gitdir}/.dotest-merge/head-name)"
+
+    else
+        gitbranch="$(${(z)gitsymref} 2> /dev/null)"
+
+        if [[ $? -ne 0 ]] ; then
+            gitbranch="$(git describe --exact-match HEAD 2>/dev/null)"
+
+            if [[ $? -ne 0 ]] ; then
+                gitbranch="${${"$(< $gitdir/HEAD)"}[1,7]}..."
+            fi
+        fi
+    fi
+
+    printf '%s' "${gitbranch##refs/heads/}"
+}
+# }}}
+VCS_INFO_git_get_data () { # {{{
+    setopt localoptions extendedglob
+    local gitdir gitbase gitbranch gitaction msg
+
+    gitdir="$(git rev-parse --git-dir 2> /dev/null)"
+
+    if [[ $? -eq 0 ]] ; then
+        gitbranch="$(VCS_INFO_git_getbranch ${gitdir})"
+    fi
+
+    if [[ -z ${gitdir} ]] || [[ -z ${gitbranch} ]] ; then
+        return
+    fi
+
+    gitaction="$(VCS_INFO_git_getaction ${gitdir})"
+    msg=$(VCS_INFO_format ${gitaction})
+
+    gitbase=${PWD%/${$(git rev-parse --show-prefix)%/##}}
+
+    zformat -f msg "${msg}" "a:${gitaction}" "b:${gitbranch}" "s:${vcs}" "r:${gitbase:t}" "R:${gitbase}"
+    printf '%s' ${msg}
+}
+# }}}
+VCS_INFO_hg_get_data () { # {{{
+    local msg hgbranch hgbase
+
+    hgbase=${1}
+    hgbranch=$(< ${hgbase}/.hg/branch)
+    msg=$(VCS_INFO_format)
+    zformat -f msg "${msg}" "a:" "b:${hgbranch}" "s:${vcs}" "r:${hgbase:t}" "R:${hgbase}"
+    printf '%s' ${msg}
+}
+# }}}
+VCS_INFO_svk_get_data () { # {{{
+    local msg svkbranch svkbase
+
+    svkbase=${1}
+    svkbranch=${svkbase##*
+  }
+    svkbase=${svkbase%%
+  *}
+
+    msg=$(VCS_INFO_format)
+    zformat -f msg "${msg}" "a:" "b:${svkbranch}" "s:${vcs}" "r:${svkbase:t}" "R:${svkbase}"
+    printf '%s' ${msg}
+}
+# }}}
+VCS_INFO_svn_get_data () { # {{{
+    local msg svnbranch svnbase
+
+    svnbase="."
+    while [[ -d "${svnbase}/../.svn" ]]; do
+        svnbase="${svnbase}/.."
+    done
+    svnbase=$(VCS_INFO_realpath ${svnbase})
+    svnbranch=$(svn info "$base_dir" | awk '/^URL/ { sub(".*/","",$0); r=$0 } /^Revision/ { sub("[^0-9]*","",$0); print r":"$0 }')
+
+    msg=$(VCS_INFO_format)
+    zformat -f msg "${msg}" "a:" "b:${svnbranch}" "s:${vcs}" "r:${svnbase:t}" "R:${svnbase}"
+    printf '%s' ${msg}
+}
+# }}}
+VCS_INFO_bzr_get_data () { # {{{
+    local msg bzrbranch bzrbase bzrrevno i j
+
+    bzrbase=$(bzr info | sed -rne 's, *branch root: ,,p')
+    case ${bzrbase} in
+        .) bzrbase=${PWD} ;;
+    esac
+
+    bzr version-info | while read i j; do
+        case "${i}" in
+            revno:)
+                bzrrevno=${j} ;;
+            branch-nick:)
+                bzrbranch=${j} ;;
+        esac
+    done
+
+    msg=$(VCS_INFO_format)
+    zformat -f msg "${msg}" "a:" "b:${bzrbranch}:${bzrrevno}" "s:${vcs}" "r:${bzrbase:t}" "R:${bzrbase}"
+    printf '%s' ${msg}
+}
+# }}}
+# VCS_INFO_*_detect () {{{
+
+VCS_INFO_bzr_detect() {
+    check_com -c bzr || return 1
+    [[ -d ".bzr" ]] && return 0
+    return 1
+}
+
+VCS_INFO_git_detect() {
+    check_com -c git && git rev-parse --is-inside-work-tree &> /dev/null && return 0
+    return 1
+}
+
+VCS_INFO_hg_detect() {
+    local basedir="."
+
+    check_com -c hg || return 1
+    while [[ ! -d ${basedir}/.hg ]]; do
+        basedir=${basedir}/..
+        [[ $(VCS_INFO_realpath ${basedir}) = "/" ]] && return 1
+    done
+
+    printf '%s' $(VCS_INFO_realpath ${basedir})
+    return 0
+}
+
+VCS_INFO_svk_detect() {
+    local output
+
+    check_com -c svk || return 1
+    [[ -f ~/.svk/config ]] || return 1
+
+    output=$(awk '/: *$/ { sub(/^ */,"",$0); sub(/: *$/,"",$0); if (match("'${PWD}'", $0"(/|$)")) { print $0; d=1; } } /depotpath/ && d == 1 { sub(".*/","",$0); r=$0 } /revision/ && d == 1 { print r ":" $2; exit 1 }' ~/.svk/config) && return 1
+
+    printf '%s' ${output}
+    return 0
+}
+
+VCS_INFO_svn_detect() {
+    check_com -c svn || return 1
+    [[ -d ".svn" ]] && return 0
+    return 1
+}
+
+# }}}
+VCS_INFO_format () { # {{{
+    local msg
+
+    if [[ -n ${1} ]] ; then
+        zstyle -s ":vcs_info:${vcs}" promptactionformat msg
+        [[ -z ${msg} ]] && msg=${VCS_INFO_default_action_format}
+    else
+        zstyle -s ":vcs_info:${vcs}" promptformat msg
+        [[ -z ${msg} ]] && msg=${VCS_INFO_default_format}
+    fi
+    printf '%s' ${msg}
+}
+# }}}
+vcs_info () { # {{{
+    local string output
+    local -i found
+    local -a VCSs
+    local -x vcs
+
+    vcs="init"
+    zstyle -T ":vcs_info:${vcs}" "enable" || return 0
+
+    VCSs=(git hg bzr svn svk)
+
+    (( found = 0 ))
+    for vcs in ${VCSs} ; do
+        output=$(VCS_INFO_${vcs}_detect) && (( found = 1 )) && break
+    done
+
+    (( found == 0 )) && return 0
+
+    string=$(VCS_INFO_${vcs}_get_data ${output}) || return 1
+    printf '%s' ${string}
+    return 0
+}
+# }}}
+
+# change vcs_info formats for the grml prompt
+zstyle ':vcs_info:*' promptactionformat \
+"%{${fg[magenta]}%}(%{${reset_color}%}%s%{${fg[magenta]}%})%{${fg[yellow]}%}-%{${fg[magenta]}%}[%{${fg[green]}%}%b%{${fg[yellow]}%}|%{${fg[red]}%}%a%{${fg[magenta]}%}]%{${reset_color}%} "
+zstyle ':vcs_info:*' promptformat \
+"%{${fg[magenta]}%}(%{${reset_color}%}%s%{${fg[magenta]}%})%{${fg[yellow]}%}-%{${fg[magenta]}%}[%{${fg[green]}%}%b%{${fg[magenta]}%}]%{${reset_color}%} "
+
 # }}}
 
 # {{{ set prompt
