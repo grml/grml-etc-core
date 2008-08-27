@@ -1101,7 +1101,7 @@ VCS_INFO_git_getaction () { #{{{
             else
                 gitaction="am/rebase"
             fi
-            print '%s' ${gitaction}
+            printf '%s' ${gitaction}
             return 0
         fi
     done
@@ -1142,6 +1142,7 @@ VCS_INFO_git_getbranch () { #{{{
        || [[ -d "${gitdir}/../.dotest" ]]   \
        || [[ -f "${gitdir}/MERGE_HEAD" ]] ; then
         gitbranch="$(${(z)gitsymref} 2> /dev/null)"
+        [[ -z ${gitbranch} ]] && gitbranch="$(< ${gitdir}/rebase-apply/head-name)"
 
     elif   [[ -f "${gitdir}/rebase-merge/interactive" ]] \
         || [[ -d "${gitdir}/rebase-merge" ]] ; then
