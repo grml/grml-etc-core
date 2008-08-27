@@ -1077,8 +1077,19 @@ fi
 #
 # This *requires* 'setopt prompt_subst'.
 # }}}
-VCS_INFO_default_action_format=' (%s)-[%b|%a]-'
-VCS_INFO_default_format=' (%s)-[%b]-'
+VCS_INFO_format () { # {{{
+    local msg
+
+    if [[ -n ${1} ]] ; then
+        zstyle -s ":vcs_info:${vcs}" promptactionformat msg
+        [[ -z ${msg} ]] && msg=' (%s)-[%b|%a]-'
+    else
+        zstyle -s ":vcs_info:${vcs}" promptformat msg
+        [[ -z ${msg} ]] && msg=' (%s)-[%b]-'
+    fi
+    printf '%s' ${msg}
+}
+# }}}
 VCS_INFO_realpath () { #{{{
     # replacing 'readlink -f', which is really not portable.
     (( ${+functions[chpwd]} )) && unfunction chpwd
@@ -1193,7 +1204,7 @@ VCS_INFO_git_get_data () { # {{{
 VCS_INFO_hg_get_data () { # {{{
     local msg hgbranch hgbase
 
-    hgbase=${1}
+    hgbase=${vcs_comm[basedir]}
     hgbranch=$(< ${hgbase}/.hg/branch)
     msg=$(VCS_INFO_format)
     zformat -f msg "${msg}" "a:" "b:${hgbranch}" "s:${vcs}" "r:${hgbase:t}" "R:${hgbase}"
@@ -1203,7 +1214,7 @@ VCS_INFO_hg_get_data () { # {{{
 VCS_INFO_svk_get_data () { # {{{
     local msg svkbranch svkbase
 
-    svkbase=${1}
+    svkbase=${vcs_comm[basedir]}
     svkbranch=${svkbase##*
   }
     svkbase=${svkbase%%
@@ -1254,21 +1265,21 @@ VCS_INFO_bzr_get_data () { # {{{
 # VCS_INFO_*_detect () {{{
 
 VCS_INFO_detect_by_dir() {
-    local tool=${1} dirname=${2}
+    local dirname=${1}
     local basedir="."
 
-    check_com -c ${tool} || return 1
     while [[ ! -d ${basedir}/${dirname} ]]; do
         basedir=${basedir}/..
         [[ $(VCS_INFO_realpath ${basedir}) = "/" ]] && return 1
     done
 
-    printf '%s' $(VCS_INFO_realpath ${basedir})
+    vcs_comm[basedir]=${basedir}
     return 0
 }
 
 VCS_INFO_bzr_detect() {
-    VCS_INFO_detect_by_dir 'bzr' '.bzr'
+    check_com -c bzr || return 1
+    VCS_INFO_detect_by_dir '.bzr'
     return $?
 }
 
@@ -1278,19 +1289,20 @@ VCS_INFO_git_detect() {
 }
 
 VCS_INFO_hg_detect() {
-    VCS_INFO_detect_by_dir 'hg' '.hg'
+    check_com -c hg || return 1
+    VCS_INFO_detect_by_dir '.hg'
     return $?
 }
 
 VCS_INFO_svk_detect() {
-    local output
+    local basedir
 
     check_com -c svk || return 1
     [[ -f ~/.svk/config ]] || return 1
 
-    output=$(awk '/: *$/ { sub(/^ */,"",$0); sub(/: *$/,"",$0); if (match("'${PWD}'", $0"(/|$)")) { print $0; d=1; } } /depotpath/ && d == 1 { sub(".*/","",$0); r=$0 } /revision/ && d == 1 { print r ":" $2; exit 1 }' ~/.svk/config) && return 1
+    basedir=$(awk '/: *$/ { sub(/^ */,"",$0); sub(/: *$/,"",$0); if (match("'${PWD}'", $0"(/|$)")) { print $0; d=1; } } /depotpath/ && d == 1 { sub(".*/","",$0); r=$0 } /revision/ && d == 1 { print r ":" $2; exit 1 }' ~/.svk/config) && return 1
 
-    printf '%s' ${output}
+    vcs_comm[basedir]=${basedir}
     return 0
 }
 
@@ -1301,24 +1313,12 @@ VCS_INFO_svn_detect() {
 }
 
 # }}}
-VCS_INFO_format () { # {{{
-    local msg
-
-    if [[ -n ${1} ]] ; then
-        zstyle -s ":vcs_info:${vcs}" promptactionformat msg
-        [[ -z ${msg} ]] && msg=${VCS_INFO_default_action_format}
-    else
-        zstyle -s ":vcs_info:${vcs}" promptformat msg
-        [[ -z ${msg} ]] && msg=${VCS_INFO_default_format}
-    fi
-    printf '%s' ${msg}
-}
-# }}}
 vcs_info () { # {{{
-    local string output
+    local string
     local -i found
     local -a VCSs
     local -x vcs
+    local -Ax vcs_comm
 
     vcs="init"
     zstyle -T ":vcs_info:${vcs}" "enable" || return 0
@@ -1327,12 +1327,13 @@ vcs_info () { # {{{
 
     (( found = 0 ))
     for vcs in ${VCSs} ; do
-        output=$(VCS_INFO_${vcs}_detect) && (( found = 1 )) && break
+        vcs_comm=()
+        VCS_INFO_${vcs}_detect && (( found = 1 )) && break
     done
 
     (( found == 0 )) && return 0
 
-    string=$(VCS_INFO_${vcs}_get_data ${output}) || return 1
+    string=$(VCS_INFO_${vcs}_get_data) || return 1
     printf '%s' ${string}
     return 0
 }
