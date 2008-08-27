@@ -1077,6 +1077,11 @@ fi
 #
 # This *requires* 'setopt prompt_subst'.
 # }}}
+VCS_INFO_adjust () { #{{{
+    [[ -n ${vcs_comm[overwrite_name]} ]] && vcs=${vcs_comm[overwrite_name]}
+    return 0
+}
+# }}}
 VCS_INFO_format () { # {{{
     local msg
 
@@ -1182,16 +1187,14 @@ VCS_INFO_git_get_data () { # {{{
     setopt localoptions extendedglob
     local gitdir gitbase gitbranch gitaction msg
 
-    gitdir="$(git rev-parse --git-dir 2> /dev/null)"
-
-    if [[ $? -eq 0 ]] ; then
-        gitbranch="$(VCS_INFO_git_getbranch ${gitdir})"
-    fi
+    gitdir=${vcs_comm[gitdir]}
+    gitbranch="$(VCS_INFO_git_getbranch ${gitdir})"
 
     if [[ -z ${gitdir} ]] || [[ -z ${gitbranch} ]] ; then
         return
     fi
 
+    VCS_INFO_adjust
     gitaction="$(VCS_INFO_git_getaction ${gitdir})"
     msg=$(VCS_INFO_format ${gitaction})
 
@@ -1284,7 +1287,11 @@ VCS_INFO_bzr_detect() {
 }
 
 VCS_INFO_git_detect() {
-    check_com -c git && git rev-parse --is-inside-work-tree &> /dev/null && return 0
+    if check_com -c git && git rev-parse --is-inside-work-tree &> /dev/null ; then
+        vcs_comm[gitdir]="$(git rev-parse --git-dir 2> /dev/null)" || return 1
+        [[ -d ${vcs_comm[gitdir]}/svn ]] && vcs_comm[overwrite_name]='git-svn'
+        return 0
+    fi
     return 1
 }
 
