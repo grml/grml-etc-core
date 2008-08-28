@@ -1026,8 +1026,8 @@ else
     GREEN=$'%{\e[1;32m%}'
     CYAN=$'%{\e[1;36m%}'
     WHITE=$'%{\e[1;37m%}'
-    MAGENTA='%{\e[1;35m%}'
-    YELLOW='%{\e[1;33m%}'
+    MAGENTA=$'%{\e[1;35m%}'
+    YELLOW=$'%{\e[1;33m%}'
     NO_COLOUR=$'%{\e[0m%}'
 fi
 
@@ -2334,7 +2334,7 @@ bk() {
 # }}}
 
 # {{{ make sure our environment is clean regarding colors
-for color in BLUE RED GREEN CYAN WHITE ; unset $color
+for color in BLUE RED GREEN CYAN YELLOW MAGENTA WHITE ; unset $color
 # }}}
 
 # source another config file if present {{{
