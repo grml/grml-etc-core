@@ -9,8 +9,9 @@ grml-etc-core (0.3.53) unstable; urgency=low
   * zshrc: Give the user the opportunity to switch the vcs_info prompt
     off for certain version control systems.
   * zshrc: Adding support for darcs repositories to vcs_info()
+  * zshrc: Adding support for monotone repositories to vcs_info()
 
- -- Frank Terbeck <ft@grml.org>  Fri, 29 Aug 2008 22:19:38 +0200
+ -- Frank Terbeck <ft@grml.org>  Fri, 29 Aug 2008 23:19:13 +0200
 
 grml-etc-core (0.3.52) unstable; urgency=low
 

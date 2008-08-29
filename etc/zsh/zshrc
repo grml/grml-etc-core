@@ -1041,7 +1041,7 @@ fi
 #   First, the context in which we are working:
 #       :vcs_info:<vcs-string>
 #   ...where <vcs-string> is one of:
-#       - git, git-svn, hg, darcs, bzr, svn or svk
+#       - git, git-svn, hg, darcs, bzr, mtn, svn or svk
 #
 #   You can of course use ':vcs_info:*' to match all VCSs at once.
 #
@@ -1242,6 +1242,16 @@ VCS_INFO_hg_get_data () { # {{{
     printf '%s' ${msg}
 }
 # }}}
+VCS_INFO_mtn_get_data () { # {{{
+    local msg mtnbranch mtnbase
+
+    mtnbase=${vcs_comm[basedir]}
+    mtnbranch=$(mtn status | awk '/Current branch:/{ sub("Current branch: ", ""); print }')
+    msg=$(VCS_INFO_format)
+    zformat -f msg "${msg}" "a:" "b:${mtnbranch}" "s:${vcs}" "r:${mtnbase:t}" "R:${mtnbase}"
+    printf '%s' ${msg}
+}
+# }}}
 VCS_INFO_svk_get_data () { # {{{
     local msg svkbranch svkbase
 
@@ -1347,6 +1357,13 @@ VCS_INFO_hg_detect() {
     return $?
 }
 
+VCS_INFO_mtn_detect() {
+    check_com -c mtn || return 1
+    vcs_comm[detect_need_file]=revision
+    VCS_INFO_detect_by_dir '_MTN'
+    return $?
+}
+
 VCS_INFO_svk_detect() {
     local basedir
 
@@ -1377,7 +1394,7 @@ vcs_info () { # {{{
     zstyle -T ":vcs_info:${vcs}" "enable" || return 0
     zstyle -a ":vcs_info:${vcs}" "disable" disabled
 
-    VCSs=(git hg bzr darcs svn svk)
+    VCSs=(git hg bzr darcs mtn svn svk)
 
     (( found = 0 ))
     for vcs in ${VCSs} ; do
