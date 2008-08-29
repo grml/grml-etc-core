@@ -1,3 +1,9 @@
+grml-etc-core (0.3.54) unstable; urgency=low
+
+  * zshrc: Adding support for cvs repositories to vcs_info()
+
+ -- Frank Terbeck <ft@grml.org>  Sat, 30 Aug 2008 01:12:01 +0200
+
 grml-etc-core (0.3.53) unstable; urgency=low
 
   [ Frank Terbeck ]
