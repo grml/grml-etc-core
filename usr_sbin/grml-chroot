@@ -9,6 +9,7 @@
 PROG_NAME_=$(basename $0)
 DEST_=""
 MOUNTED_=""     # all mounted destinations
+COMMAND_=""     # command to start in chroot
 
 
 function die
@@ -20,9 +21,9 @@ function die
 function printUsage
 {
     cat <<EOT
-Usage: "$PROG_NAME_" <chroot target>
+Usage: "$PROG_NAME_" NEWROOT [COMMAND....]
 
-$PROG_NAME__ is a chroot wrapper with proc/sys/pts/dev fs handling
+$PROG_NAME__ is a chroot wrapper with proc/sys/pts/dev filesystem handling
 
 EOT
 }
@@ -78,6 +79,7 @@ if (( $# < 1 )); then
 fi
 
 DEST_="$1"
+COMMAND_="${2}"
 
 if [ ! -d "$DEST_" ]; then
     die "Target chroot does not exist: $DEST_"
@@ -87,5 +89,6 @@ fi
 mountit "proc"  "proc"
 mountit "sysfs" "sys"
 mountit "/dev"   "dev"   "--bind"
-chroot "$DEST_" /bin/bash
+chroot "$DEST_" $COMMAND_
 umount_all
+
