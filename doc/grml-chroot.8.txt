@@ -10,7 +10,7 @@ grml-chroot - Wrapper arround chroot with proc/sys/pts/dev fs handling
 
 SYNOPSIS
 --------
-*grml-chroot* <chroot target>
+*grml-chroot* <'CHROOT TARGET'>
 
 
 DESCRIPTION
@@ -30,8 +30,8 @@ Show summary of options.
 EXAMPLES
 --------
 
-*grml-chroot /mnt/hda1*::
-    Mounts proc/sys/pts/dev into /mnt/hda1/{proc/sys/dev} and gives you a shell.
+*grml-chroot* '/mnt/hda1'::
+    Mounts proc/sys/pts/dev into /mnt/hda1/{proc/sys/dev} and gives you a chrooted shell.
 
 
 SEE ALSO
@@ -41,6 +41,4 @@ chroot(8)
 
 AUTHOR
 ------
-grml-chroot was written by Michael Gebetsroither <michael.geb@gmx.at>.
-
-This manual page was written by Michael Gebetsroither <gebi@grml.org>.
+grml-chroot and this manpages were written by Michael Gebetsroither <gebi@grml.org>.
