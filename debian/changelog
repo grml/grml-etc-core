@@ -1,3 +1,9 @@
+grml-scripts (1.1.10) UNRELEASED; urgency=low
+
+  * added grml-chroot 
+
+ -- Michael Gebetsroither <gebi@grml.org>  Fri, 29 Aug 2008 11:59:41 +0200
+
 grml-scripts (1.1.9) unstable; urgency=low
 
   * grml-quickconfig: integrate jwm [thanks for bringing up,
