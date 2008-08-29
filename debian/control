@@ -2,6 +2,7 @@ Source: grml-scripts
 Section: utils
 Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
+Uploaders: Michael Gebetsroither <gebi@grml.org>
 Build-Depends: debhelper (>= 4.0.0), dietlibc-dev
 Standards-Version: 3.7.2
 Homepage: http://hg.grml.org/grml-scripts/
