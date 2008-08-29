@@ -1,0 +1,46 @@
+GRML-CHROOT(8)
+==============
+Michael Gebetsroither <gebi@grml.org>
+
+
+NAME
+----
+grml-chroot - Wrapper arround chroot with proc/sys/pts/dev fs handling
+
+
+SYNOPSIS
+--------
+*grml-chroot* <chroot target>
+
+
+DESCRIPTION
+-----------
+*grml-kerneltest* is a wrapper
+arround plain chroot with integrated proc/sys/pts/dev filesystem handling.
+grml-chroot mounts the filesystems mentiont above and makes the chroot into the given chroot target.
+After exiting the shell the mounts are cleand up properly.
+
+
+OPTIONS
+-------
+*-h, help*::
+Show summary of options.
+
+
+EXAMPLES
+--------
+
+*grml-chroot /mnt/hda1*::
+    Mounts proc/sys/pts/dev into /mnt/hda1/{proc/sys/dev} and gives you a shell.
+
+
+SEE ALSO
+--------
+chroot(8)
+
+
+AUTHOR
+------
+grml-chroot was written by Michael Gebetsroither <michael.geb@gmx.at>.
+
+This manual page was written by Michael Gebetsroither <gebi@grml.org>.
