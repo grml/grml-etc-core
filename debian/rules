@@ -10,7 +10,7 @@ build: build-stamp
 
 build-stamp:
 	dh_testdir
-	cd $(CURDIR)/compile/ && make
+	( cd $(CURDIR)/compile/ && make )
 	touch build-stamp
 
 clean:
@@ -20,7 +20,8 @@ clean:
 
 	# Add here commands to clean up after the build process.
 	rm -rf $(CURDIR)/debian/grml-scripts/
-	cd compile ; make clean
+	( cd compile ; make clean )
+	( cd doc && make clean )
 
 	dh_clean
 
@@ -45,7 +46,7 @@ install: build
 
 # Build architecture-independent files here.
 binary-indep: build install
-# We have nothing to do by default.
+	( cd $(CURDIR)/doc && make doc_man )
 
 # Build architecture-dependent files here.
 binary-arch: build install
@@ -53,6 +54,7 @@ binary-arch: build install
 	dh_testroot
 	dh_installchangelogs
 	dh_installdocs
+	dh_installman $(wildcard doc/*.gz)
 	dh_installman manpages/arename.1 manpages/grml-scripts.1 \
 	manpages/reread_partition_table.8 manpages/random-hostname.1 \
 	manpages/grml-setkeyboard.8 manpages/grml-setlang.8 manpages/getsf.1 \
