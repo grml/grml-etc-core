@@ -1284,12 +1284,10 @@ VCS_INFO_svn_get_data () { # {{{
 VCS_INFO_bzr_get_data () { # {{{
     local msg bzrbranch bzrbase bzrrevno i j
 
-    bzrbase=$(bzr info | sed -rne 's, *branch root: ,,p')
-    case ${bzrbase} in
-        .) bzrbase=${PWD} ;;
-    esac
+    bzrbase=$(bzr info 2>/dev/null | sed -rne 's, *branch root: ,,p')
+    bzrbase=$(VCS_INFO_realpath ${bzrbase})
 
-    bzr version-info | while read i j; do
+    bzr version-info 2> /dev/null | while read i j; do
         case "${i}" in
             revno:)
                 bzrrevno=${j} ;;
@@ -1330,6 +1328,7 @@ VCS_INFO_detect_by_dir() {
 
 VCS_INFO_bzr_detect() {
     check_com -c bzr || return 1
+    vcs_comm[detect_need_file]=branch/format
     VCS_INFO_detect_by_dir '.bzr'
     return $?
 }
