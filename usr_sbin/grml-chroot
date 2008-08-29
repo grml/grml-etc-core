@@ -1,0 +1,91 @@
+#!/bin/bash
+# Filename:      grml-chroot
+# Purpose:       Program to chroot into another system
+# Authors:       grml-team (grml.org), (c) Michael Gebetsroither <gebi@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+PROG_NAME_=$(basename $0)
+DEST_=""
+MOUNTED_=""     # all mounted destinations
+
+
+function die
+{
+    echo "Error: $@" >&2
+    exit 1
+}
+
+function printUsage
+{
+    cat <<EOT
+Usage: "$PROG_NAME_" <chroot target>
+
+$PROG_NAME__ is a chroot wrapper with proc/sys/pts/dev fs handling
+
+EOT
+}
+
+function storeMounts
+{
+    local to_append_="$1"
+    if [[ $MOUNTED_ == "" ]]; then
+        MOUNTED_="$to_append_"
+    else
+        MOUNTED_="$MOUNTED_ $to_append_"
+    fi
+}
+
+function mountit
+{
+    local type_="$1" # type _or_ src
+    local dest_="$2"
+    local options_="$3"
+
+    local all_options_=""
+
+    if [[ $options_ == "--bind" ]]; then
+        all_options_="--bind $type_"
+    else
+        all_options_="-t $type_ none"
+    fi
+    mount $all_options_ "${DEST_}/$dest_" && storeMounts "$dest_"
+}
+
+function umount_all
+{
+    for i in $MOUNTED_; do
+        umount "${DEST_}/$i"
+    done
+}
+
+
+###
+### __MAIN
+###
+
+while getopts "h" opt; do
+    case "$opt" in
+        h) printUsage; exit 0 ;;
+        ?) printUsage; exit 64 ;;
+    esac
+done
+shift $(($OPTIND - 1))
+
+if (( $# < 1 )); then
+    die "Wrong number of arguments."
+fi
+
+DEST_="$1"
+
+if [ ! -d "$DEST_" ]; then
+    die "Target chroot does not exist: $DEST_"
+fi
+
+
+mountit "proc"  "proc"
+mountit "sysfs" "sys"
+mountit "/dev"   "dev"   "--bind"
+chroot "$DEST_" /bin/bash
+umount_all
