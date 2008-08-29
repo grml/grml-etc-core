@@ -1053,6 +1053,9 @@ fi
 #                         (like an interactive rebase or a merge conflict)
 #   enable              - check in the 'init' context. If set to false,
 #                         vcs_info() will do nothing.
+#   disable             - provide a list of systems, you don't want
+#                         the prompt to check for repositories (checked
+#                         in the 'init' context, too).
 #
 # The default values for these in all contexts are:
 #   promptformat        " (%s)-[%b|%a]-"
@@ -1070,8 +1073,19 @@ fi
 #
 # Not all vcs backends may support all replacements
 #
+# Examples:
+#   Don't use vcs_info at all (even though it's in your prompt):
+#   % zstyle ':vcs_info:*' enable false
+#
+#   Don't provide prompt info for bzr and svk:
+#   % zstyle ':vcs_info:*' disable bzr svk
+#
+#   Provide a prompt specifically for git:
+#   % zstyle ':vcs_info:git' promptformat       ' GIT, BABY! [%b]'
+#   % zstyle ':vcs_info:git' promptactionformat ' GIT ACTION! [%b|%a]'
+#
 # If you want colors, make sure you enclose the color codes in %{...%}, because
-# the string provided by vcs_info() is commonly used for prompts.
+# the string provided by vcs_info() is used for prompts.
 #
 #   Example: PROMPT='%(?..[%?]-)%3~%$(vcs_info)#'
 #
@@ -1338,17 +1352,19 @@ VCS_INFO_svn_detect() {
 vcs_info () { # {{{
     local string
     local -i found
-    local -a VCSs
+    local -a VCSs disabled
     local -x vcs
     local -Ax vcs_comm
 
     vcs="init"
     zstyle -T ":vcs_info:${vcs}" "enable" || return 0
+    zstyle -a ":vcs_info:${vcs}" "disable" disabled
 
     VCSs=(git hg bzr svn svk)
 
     (( found = 0 ))
     for vcs in ${VCSs} ; do
+        [[ -n ${(M)disabled:#${vcs}} ]] && continue
         vcs_comm=()
         VCS_INFO_${vcs}_detect && (( found = 1 )) && break
     done
