@@ -1,5 +1,6 @@
 grml-etc-core (0.3.53) unstable; urgency=low
 
+  [ Frank Terbeck ]
   * zshrc: Handle a state of git in vcs_info(), when a normal
     rebase conflicts
   * zshrc: Make vcs_info() detect $GIT_DIR/svn and set the name of the
@@ -11,7 +12,7 @@ grml-etc-core (0.3.53) unstable; urgency=low
   * zshrc: Adding support for darcs repositories to vcs_info()
   * zshrc: Adding support for monotone repositories to vcs_info()
 
- -- Frank Terbeck <ft@grml.org>  Fri, 29 Aug 2008 23:19:13 +0200
+ -- Michael Prokop <mika@grml.org>  Sat, 30 Aug 2008 00:52:14 +0200
 
 grml-etc-core (0.3.52) unstable; urgency=low
 
