@@ -3,7 +3,7 @@ Section: utils
 Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
 Uploaders: Michael Gebetsroither <gebi@grml.org>
-Build-Depends: debhelper (>= 4.0.0), dietlibc-dev
+Build-Depends: debhelper (>= 4.0.0), dietlibc-dev, xsltproc, docbook-xsl, asciidoc
 Standards-Version: 3.7.2
 Homepage: http://hg.grml.org/grml-scripts/
 XS-Vcs-hg: http://hg.grml.org/grml-scripts/
