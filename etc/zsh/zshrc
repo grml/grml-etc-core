@@ -1097,6 +1097,10 @@ VCS_INFO_format () { # {{{
 # }}}
 VCS_INFO_realpath () { #{{{
     # replacing 'readlink -f', which is really not portable.
+
+    # If there *is* a chpwd() function unfunction it here.
+    # The *real* zsh does not loose its chpwd(), because we run
+    # in a different context (process substitution in $PROMPT).
     (( ${+functions[chpwd]} )) && unfunction chpwd
     setopt chaselinks
     cd $1 2>/dev/null && pwd
@@ -1269,14 +1273,24 @@ VCS_INFO_bzr_get_data () { # {{{
 
 VCS_INFO_detect_by_dir() {
     local dirname=${1}
-    local basedir="."
+    local basedir="." realbasedir
 
-    while [[ ! -d ${basedir}/${dirname} ]]; do
+    realbasedir=$(VCS_INFO_realpath ${basedir})
+    while [[ ${realbasedir} != '/' ]]; do
+        if [[ -n ${vcs_comm[detect_need_file]} ]] ; then
+            [[ -d ${basedir}/${dirname} ]] && \
+            [[ -f ${basedir}/${dirname}/${vcs_comm[detect_need_file]} ]] && \
+                break
+        else
+            [[ -d ${basedir}/${dirname} ]] && break
+        fi
+
         basedir=${basedir}/..
-        [[ $(VCS_INFO_realpath ${basedir}) = "/" ]] && return 1
+        realbasedir=$(VCS_INFO_realpath ${basedir})
     done
 
-    vcs_comm[basedir]=${basedir}
+    [[ ${realbasedir} == "/" ]] && return 1
+    vcs_comm[basedir]=${realbasedir}
     return 0
 }
 
@@ -1297,6 +1311,7 @@ VCS_INFO_git_detect() {
 
 VCS_INFO_hg_detect() {
     check_com -c hg || return 1
+    vcs_comm[detect_need_file]=branch
     VCS_INFO_detect_by_dir '.hg'
     return $?
 }
