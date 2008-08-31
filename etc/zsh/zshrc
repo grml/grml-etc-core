@@ -1052,6 +1052,10 @@ fi
 #   promptformat        - Used in most circumstances.
 #   promptactionformat  - Used if a there is a special action going on;
 #                         (like an interactive rebase or a merge conflict)
+#   branchformat        - Some backends replace %b in the prompt*format
+#                         styles above, not only by a branch name but also
+#                         by a revision number. This style let's you
+#                         modify how that string should look like.
 #   enable              - Check in the 'init' context. If set to false,
 #                         vcs_info() will do nothing.
 #   disable             - Provide a list of systems, you don't want
@@ -1069,9 +1073,12 @@ fi
 # The default values for these in all contexts are:
 #   promptformat        " (%s)-[%b|%a]-"
 #   promptactionformat  " (%s)-[%b]-"
+#   branchformat        "%b:%r" (for bzr and svn)
 #   enable              true
+#   disable             (empty list)
+#   use-simple          false
 #
-# In these formats, the following replacements are done:
+# In the prompt*formats, the following replacements are done:
 #   %s  - The vcs in use (git, hg, svn etc.)
 #   %b  - Information about the current branch.
 #   %a  - An identifier, that describes the action.
@@ -1079,6 +1086,10 @@ fi
 #   %R  - base directory of the repository.
 #   %r  - repository name
 #         If %R is '/foo/bar/repoXY', %r is 'repoXY'.
+#
+# In branchformat these replacements are done:
+#   %b  - the branch name
+#   %r  - the current revision number
 #
 # Not all vcs backends may support all replacements
 #
@@ -1097,8 +1108,11 @@ fi
 #   the-right-thing[tm] - thanks):
 #   % zstyle ':vcs_info:bzr' use-simple true
 #
-# If you want colors, make sure you enclose the color codes in %{...%}, because
-# the string provided by vcs_info() is used for prompts.
+#   Display the revision number in yellow for bzr and svn:
+#   % zstyle ':vcs_info:(svn|bzr)' branchformat '%b%{'${fg[yellow]}'%}:%r'
+#
+# If you want colors, make sure you enclose the color codes in %{...%},
+# because the string provided by vcs_info() is used for prompts.
 #
 #   Example: PROMPT='%(?..[%?]-)%3~%$(vcs_info)#'
 #
@@ -1279,14 +1293,19 @@ VCS_INFO_svk_get_data () { # {{{
 }
 # }}}
 VCS_INFO_svn_get_data () { # {{{
-    local msg svnbranch svnbase
+    setopt localoptions noksharrays
+    local msg svnbase svnbranch
+    local -a svninfo
 
     svnbase="."
     while [[ -d "${svnbase}/../.svn" ]]; do
         svnbase="${svnbase}/.."
     done
     svnbase=$(VCS_INFO_realpath ${svnbase})
-    svnbranch=$(svn info "$base_dir" | awk '/^URL/ { sub(".*/","",$0); r=$0 } /^Revision/ { sub("[^0-9]*","",$0); print r":"$0 }')
+    svninfo=($(svn info "${svnbase}" | awk '/^URL/ { sub(".*/","",$0); r=$0 } /^Revision/ { sub("[^0-9]*","",$0); print r"\n"$0 }'))
+
+    zstyle -s ":vcs_info:${vcs}" branchformat svnbranch || svnbranch="%b:%r"
+    zformat -f svnbranch "${svnbranch}" "b:${svninfo[1]}" "r:${svninfo[2]}"
 
     msg=$(VCS_INFO_format)
     zformat -f msg "${msg}" "a:" "b:${svnbranch}" "s:${vcs}" "r:${svnbase:t}" "R:${svnbase}"
@@ -1294,7 +1313,7 @@ VCS_INFO_svn_get_data () { # {{{
 }
 # }}}
 VCS_INFO_bzr_get_data () { # {{{
-    local msg bzrbranch bzrbase bzrrevno i j
+    local msg bzrbranch bzrbase bzrrevno bzrbr i j
 
     if zstyle -t ":vcs_info:${vcs}" "use-simple" ; then
         bzrbase=${vcs_comm[basedir]}
@@ -1317,8 +1336,11 @@ VCS_INFO_bzr_get_data () { # {{{
         done
     fi
 
+    zstyle -s ":vcs_info:${vcs}" branchformat bzrbr || bzrbr="%b:%r"
+    zformat -f bzrbr "${bzrbr}" "b:${bzrbranch}" "r:${bzrrevno}"
+
     msg=$(VCS_INFO_format)
-    zformat -f msg "${msg}" "a:" "b:${bzrbranch}:${bzrrevno}" "s:${vcs}" "r:${bzrbase:t}" "R:${bzrbase}"
+    zformat -f msg "${msg}" "a:" "b:${bzrbr}" "s:${vcs}" "r:${bzrbase:t}" "R:${bzrbase}"
     printf '%s' ${msg}
 }
 # }}}
@@ -1463,6 +1485,7 @@ else
     # these are the same, just with a lot of colours:
     zstyle ':vcs_info:*' promptactionformat "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOUR} "
     zstyle ':vcs_info:*' promptformat       "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${MAGENTA}]${NO_COLOUR}%} "
+    zstyle ':vcs_info:(svn|bzr)' branchformat "%b${YELLOW]}:%r"
 fi
 
 # }}}
