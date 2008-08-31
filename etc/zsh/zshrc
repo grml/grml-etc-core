@@ -1052,11 +1052,19 @@ fi
 #   promptformat        - Used in most circumstances.
 #   promptactionformat  - Used if a there is a special action going on;
 #                         (like an interactive rebase or a merge conflict)
-#   enable              - check in the 'init' context. If set to false,
+#   enable              - Check in the 'init' context. If set to false,
 #                         vcs_info() will do nothing.
-#   disable             - provide a list of systems, you don't want
+#   disable             - Provide a list of systems, you don't want
 #                         the prompt to check for repositories (checked
 #                         in the 'init' context, too).
+#   use-simple          - If there are two different ways of gathering
+#                         information, you can select the simpler one
+#                         by setting this style to true; the default
+#                         is to use the not-that-simple code, which is
+#                         potentially a lot slower but might be more
+#                         accurate in all possible cases.
+#
+# The use-simple style is currently only available for the bzr backend.
 #
 # The default values for these in all contexts are:
 #   promptformat        " (%s)-[%b|%a]-"
@@ -1084,6 +1092,10 @@ fi
 #   Provide a prompt specifically for git:
 #   % zstyle ':vcs_info:git' promptformat       ' GIT, BABY! [%b]'
 #   % zstyle ':vcs_info:git' promptactionformat ' GIT ACTION! [%b|%a]'
+#
+#   Use the quicker bzr backend (if you do, please report if it does
+#   the-right-thing[tm] - thanks):
+#   % zstyle ':vcs_info:bzr' use-simple true
 #
 # If you want colors, make sure you enclose the color codes in %{...%}, because
 # the string provided by vcs_info() is used for prompts.
@@ -1284,17 +1296,26 @@ VCS_INFO_svn_get_data () { # {{{
 VCS_INFO_bzr_get_data () { # {{{
     local msg bzrbranch bzrbase bzrrevno i j
 
-    bzrbase=$(bzr info 2>/dev/null | sed -rne 's, *branch root: ,,p')
-    bzrbase=$(VCS_INFO_realpath ${bzrbase})
+    if zstyle -t ":vcs_info:${vcs}" "use-simple" ; then
+        bzrbase=${vcs_comm[basedir]}
+        bzrbranch=${bzrbase:t}
+        if [[ -f ${bzrbase}/.bzr/branch/last-revision ]] ; then
+            bzrrevno=$(< ${bzrbase}/.bzr/branch/last-revision)
+            bzrrevno=${bzrrevno%% *}
+        fi
+    else
+        bzrbase=$(bzr info 2>/dev/null | sed -rne 's, *branch root: ,,p')
+        bzrbase=$(VCS_INFO_realpath ${bzrbase})
 
-    bzr version-info 2> /dev/null | while read i j; do
-        case "${i}" in
-            revno:)
-                bzrrevno=${j} ;;
-            branch-nick:)
-                bzrbranch=${j} ;;
-        esac
-    done
+        bzr version-info 2> /dev/null | while read i j; do
+            case "${i}" in
+                revno:)
+                    bzrrevno=${j} ;;
+                branch-nick:)
+                    bzrbranch=${j} ;;
+            esac
+        done
+    fi
 
     msg=$(VCS_INFO_format)
     zformat -f msg "${msg}" "a:" "b:${bzrbranch}:${bzrrevno}" "s:${vcs}" "r:${bzrbase:t}" "R:${bzrbase}"
