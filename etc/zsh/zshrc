@@ -1073,7 +1073,7 @@ fi
 # The default values for these in all contexts are:
 #   promptformat        " (%s)-[%b|%a]-"
 #   promptactionformat  " (%s)-[%b]-"
-#   branchformat        "%b:%r" (for bzr and svn)
+#   branchformat        "%b:%r" (for bzr, svn and svk)
 #   enable              true
 #   disable             (empty list)
 #   use-simple          false
@@ -1282,10 +1282,9 @@ VCS_INFO_svk_get_data () { # {{{
     local msg svkbranch svkbase
 
     svkbase=${vcs_comm[basedir]}
-    svkbranch=${svkbase##*
-  }
-    svkbase=${svkbase%%
-  *}
+
+    zstyle -s ":vcs_info:${vcs}" branchformat svkbranch || svkbranch="%b:%r"
+    zformat -f svkbranch "${svkbranch}" "b:${vcs_comm[branch]}" "r:${vcs_comm[revision]}"
 
     msg=$(VCS_INFO_format)
     zformat -f msg "${msg}" "a:" "b:${svkbranch}" "s:${vcs}" "r:${svkbase:t}" "R:${svkbase}"
@@ -1431,14 +1430,35 @@ VCS_INFO_mtn_detect() {
 }
 
 VCS_INFO_svk_detect() {
-    local basedir
+    setopt localoptions noksharrays
+    local -a info
 
     check_com -c svk || return 1
     [[ -f ~/.svk/config ]] || return 1
 
-    basedir=$(awk '/: *$/ { sub(/^ */,"",$0); sub(/: *$/,"",$0); if (match("'${PWD}'", $0"(/|$)")) { print $0; d=1; } } /depotpath/ && d == 1 { sub(".*/","",$0); r=$0 } /revision/ && d == 1 { print r ":" $2; exit 1 }' ~/.svk/config) && return 1
+    info=(
+        $(awk '
+          /: *$/ {
+            sub(/^ */,"",$0);
+            sub(/: *$/,"",$0);
+            if (match("'${PWD}'", $0"(/|$)")) {
+              print $0; d=1;
+            }
+          }
+          /depotpath/ && d == 1 {
+            sub(".*/","",$0);
+            r=$0
+          }
+          /revision/ && d == 1 {
+            print r "\n" $2;
+            exit 1
+          }' ~/.svk/config
+        )
+    ) && return 1
 
-    vcs_comm[basedir]=${basedir}
+    vcs_comm[basedir]=${info[1]}
+    vcs_comm[branch]=${info[2]}
+    vcs_comm[revision]=${info[3]}
     return 0
 }
 
