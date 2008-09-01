@@ -1,8 +1,9 @@
 grml-etc-core (0.3.55) unstable; urgency=low
 
+  [ Frank Terbeck ]
   * zshrc: Fixing ${YELLOW]}, which is bad zsh syntax.
 
- -- Frank Terbeck <ft@grml.org>  Mon, 01 Sep 2008 11:49:41 +0200
+ -- Michael Prokop <mika@grml.org>  Mon, 01 Sep 2008 11:55:18 +0200
 
 grml-etc-core (0.3.54) unstable; urgency=low
 
