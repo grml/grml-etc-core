@@ -1505,7 +1505,7 @@ else
     # these are the same, just with a lot of colours:
     zstyle ':vcs_info:*' promptactionformat "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOUR} "
     zstyle ':vcs_info:*' promptformat       "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${MAGENTA}]${NO_COLOUR}%} "
-    zstyle ':vcs_info:(svn|bzr)' branchformat "%b${YELLOW]}:%r"
+    zstyle ':vcs_info:(sv[nk]|bzr)' branchformat "%b${YELLOW}:%r"
 fi
 
 # }}}
