@@ -30,17 +30,19 @@ install: build
 	# Add here commands to install the package into debian/grml-etc-core.
 	cp -a etc/ debian/grml-etc-core/
 
-# Build architecture-independent files here.
-binary-indep: build install
-# We have nothing to do by default.
-
 # Build architecture-dependent files here.
 binary-arch: build install
+# We have nothing to do by default.
+
+# Build architecture-independent files here.
+binary-indep: build install
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs 
 	dh_installdocs
 	dh_compress
+	mkdir -p debian/grml-etc-core/usr/share/lintian/overrides/
+	cp -av debian/overrides debian/grml-etc-core/usr/share/lintian/overrides/grml-etc-core
 	dh_fixperms
 	dh_installdeb
 	#find debian/grml-etc-core/etc -type f ! -name \*.xpm ! -name \*.png -print | \

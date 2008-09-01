@@ -1,5 +1,6 @@
 grml-etc-core (0.3.54) unstable; urgency=low
 
+  [ Frank Terbeck ]
   * zshrc: Adding support for cvs repositories to vcs_info()
   * zshrc: Add an experimental bzr backend, that works without calling
     bzr itself; it is disabled by default.
@@ -8,7 +9,10 @@ grml-etc-core (0.3.54) unstable; urgency=low
   * zshrc: Actually tried svk myself; including vcs_info() fixes from
     that test.
 
- -- Frank Terbeck <ft@grml.org>  Sun, 31 Aug 2008 21:35:42 +0200
+  [ Michael Prokop ]
+  * Some cleanups to make lintian happy.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 01 Sep 2008 11:26:29 +0200
 
 grml-etc-core (0.3.53) unstable; urgency=low
 

@@ -1,0 +1,2 @@
+grml-etc-core source: maintainer-script-lacks-debhelper-token debian/preinst
+grml-etc-core source: maintainer-script-lacks-debhelper-token debian/postrm
