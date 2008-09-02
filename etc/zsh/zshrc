@@ -109,6 +109,11 @@ is42(){
     return 1
 }
 
+is425(){
+    [[ $ZSH_VERSION == 4.2.<5->* || $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
+    return 1
+}
+
 is43(){
     [[ $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
     return 1
@@ -1899,7 +1904,7 @@ fi
 
 # {{{ Use hard limits, except for a smaller stack and no core dumps
 unlimit
-is4 && limit stack 8192
+is425 && limit stack 8192
 isgrmlcd && limit core 0 # important for a live-cd-system
 limit -s
 # }}}

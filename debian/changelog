@@ -1,3 +1,9 @@
+grml-etc-core (0.3.56) unstable; urgency=low
+
+  * zshrc: 'limit stack' needs zsh 4.2.5 or newer (not just 4.*)
+
+ -- Frank Terbeck <ft@grml.org>  Wed, 03 Sep 2008 00:42:23 +0200
+
 grml-etc-core (0.3.55) unstable; urgency=low
 
   [ Frank Terbeck ]
