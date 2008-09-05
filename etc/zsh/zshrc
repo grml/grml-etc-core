@@ -1042,100 +1042,162 @@ fi
 
 # vcs_info() documentation: {{{
 #
+# This functionality requires zsh version >= 4.1.*.
+# To load vcs_info(), copy this file to your $fpath[] and do:
+#   % autoload -Uz vcs_info && vcs_info
+#
 # The vcs_info() feature can be configured via zstyle:
 #   First, the context in which we are working:
-#       :vcs_info:<vcs-string>
+#       :vcs_info:<user-context>:<vcs-string>
 #   ...where <vcs-string> is one of:
 #       - git, git-svn, hg, darcs, bzr, mtn, svn, cvs or svk
+#   ...and <user-context> is a freely configurable string, assignable
+#   by the user as the first argument to vcs_info().
 #
-#   You can of course use ':vcs_info:*' to match all VCSs at once.
+# There is one special value for <vcs-string> named 'init', that
+# is in effect as long as there was no decision what vcs backend to use.
 #
-# There is one special context named 'init', that is in effect as long
-# as there was no decision what vcs backend to use.
+# There are two pre-defined values for <user-context>:
+#   default  - the one used if none is specified
+#   command  - used by vcs_info_lastmsg to lookup its styles.
+# You may *not* use 'print_systems_' as a user-context string,
+# because it is used internally.
 #
-# There are currently two styles, that are looked up:
-#   promptformat        - Used in most circumstances.
-#   promptactionformat  - Used if a there is a special action going on;
+# You can of course use ':vcs_info:*' to match all VCSs in all
+# user-contexts at once.
+#
+# Another special context is 'formats', it is used by the
+# vcs_info_lastmsg() utility function (see below).
+#
+#
+# This is a description of all styles, that are looked up:
+#   format              - Used in most circumstances.
+#   actionformat        - Used if a there is a special action going on;
 #                         (like an interactive rebase or a merge conflict)
-#   branchformat        - Some backends replace %b in the prompt*format
-#                         styles above, not only by a branch name but also
-#                         by a revision number. This style let's you
-#                         modify how that string should look like.
+#   branchformat        - Some backends replace %b in the format and
+#                         actionformat styles above, not only by a branch
+#                         name but also by a revision number. This style
+#                         let's you modify how that string should look like.
 #   enable              - Check in the 'init' context. If set to false,
 #                         vcs_info() will do nothing.
 #   disable             - Provide a list of systems, you don't want
-#                         the prompt to check for repositories (checked
-#                         in the 'init' context, too).
+#                         the vcs_info() to check for repositories
+#                         (checked in the 'init' context, too).
 #   use-simple          - If there are two different ways of gathering
 #                         information, you can select the simpler one
 #                         by setting this style to true; the default
 #                         is to use the not-that-simple code, which is
 #                         potentially a lot slower but might be more
 #                         accurate in all possible cases.
+#   use-prompt-escapes  - determines if we assume that the assembled
+#                         string from vcs_info() includes prompt escapes.
+#                         (Used by vcs_info_lastmsg().
 #
 # The use-simple style is currently only available for the bzr backend.
 #
 # The default values for these in all contexts are:
-#   promptformat        " (%s)-[%b|%a]-"
-#   promptactionformat  " (%s)-[%b]-"
+#   format              " (%s)-[%b|%a]-"
+#   actionformat        " (%s)-[%b]-"
 #   branchformat        "%b:%r" (for bzr, svn and svk)
 #   enable              true
 #   disable             (empty list)
 #   use-simple          false
+#   use-prompt-escapes  true
 #
-# In the prompt*formats, the following replacements are done:
+#
+# In format and actionformat, the following replacements are done:
 #   %s  - The vcs in use (git, hg, svn etc.)
 #   %b  - Information about the current branch.
 #   %a  - An identifier, that describes the action.
-#         Only makes sense in promptactionformat.
+#         Only makes sense in actionformat.
 #   %R  - base directory of the repository.
 #   %r  - repository name
 #         If %R is '/foo/bar/repoXY', %r is 'repoXY'.
+#
 #
 # In branchformat these replacements are done:
 #   %b  - the branch name
 #   %r  - the current revision number
 #
-# Not all vcs backends may support all replacements
+# Not all vcs backends have to support all replacements.
+#
+#
+# Function descriptions:
+#   vcs_info()
+#       The main function, that runs all backends and assembles
+#       all data into ${VCS_INFO_message_}. This is the function
+#       you want to call from precmd() if you want to include
+#       up-to-date information in your prompt (see Variable
+#       description, too if you are interested in this).
+#
+#   vcs_info_printsys()
+#       Prints a list of all supported version control systems.
+#       Useful to find out possible contexts or values for the
+#       'disable' style.
+#
+#   vcs_info_lastmsg()
+#       Outputs the last ${VCS_INFO_message_} value. Takes into account
+#       the value of the use-prompt-escapes style in ':vcs_info:formats'.
+#
+#
+# Variable description:
+#   ${VCS_INFO_message_}    (Note the trailing underscore)
+#       This is the storage for the message the last vcs_info()
+#       call has assembled.
+#
 #
 # Examples:
 #   Don't use vcs_info at all (even though it's in your prompt):
 #   % zstyle ':vcs_info:*' enable false
 #
-#   Don't provide prompt info for bzr and svk:
+#   Disable the backends for bzr and svk:
 #   % zstyle ':vcs_info:*' disable bzr svk
 #
-#   Provide a prompt specifically for git:
-#   % zstyle ':vcs_info:git' promptformat       ' GIT, BABY! [%b]'
-#   % zstyle ':vcs_info:git' promptactionformat ' GIT ACTION! [%b|%a]'
+#   Provide a special format for git:
+#   % zstyle ':vcs_info:*:git' format       ' GIT, BABY! [%b]'
+#   % zstyle ':vcs_info:*:git' actionformat ' GIT ACTION! [%b|%a]'
 #
 #   Use the quicker bzr backend (if you do, please report if it does
 #   the-right-thing[tm] - thanks):
-#   % zstyle ':vcs_info:bzr' use-simple true
+#   % zstyle ':vcs_info:*:bzr' use-simple true
 #
 #   Display the revision number in yellow for bzr and svn:
-#   % zstyle ':vcs_info:(svn|bzr)' branchformat '%b%{'${fg[yellow]}'%}:%r'
+#   % zstyle ':vcs_info:*:(svn|bzr)' branchformat '%b%{'${fg[yellow]}'%}:%r'
 #
 # If you want colors, make sure you enclose the color codes in %{...%},
-# because the string provided by vcs_info() is used for prompts.
+# if you want to use the string provided by vcs_info() in prompts.
 #
-#   Example: PROMPT='%(?..[%?]-)%3~%$(vcs_info)#'
+# Here is an example of how to include vcs_info in PS1 (*requires*
+# 'setopt prompt_subst'):
 #
-# This *requires* 'setopt prompt_subst'.
+#       PS1='%(?..[%?]-)%3~%${VCS_INFO_message_}#'
+#       precmd () { vcs_info; }
+#
+# Here is how to print the vcs infomation as a command:
+#       alias vcsi='vcs_info command; vcs_info_lastmsg'
+#
+#   This way, you can even define different formats for output via
+#   vcs_info_lastmsg() in the ':vcs_info:command:*' namespace.
+#
 # }}}
 VCS_INFO_adjust () { #{{{
     [[ -n ${vcs_comm[overwrite_name]} ]] && vcs=${vcs_comm[overwrite_name]}
     return 0
 }
 # }}}
+VCS_INFO_check_com () { #{{{
+    (( ${+commands[$1]} )) && [[ -x ${commands[$1]} ]] && return 0
+    return 1
+}
+# }}}
 VCS_INFO_format () { # {{{
     local msg
 
     if [[ -n ${1} ]] ; then
-        zstyle -s ":vcs_info:${vcs}" promptactionformat msg
+        zstyle -s ":vcs_info:${usercontext}:${vcs}" actionformat msg
         [[ -z ${msg} ]] && msg=' (%s)-[%b|%a]-'
     else
-        zstyle -s ":vcs_info:${vcs}" promptformat msg
+        zstyle -s ":vcs_info:${usercontext}:${vcs}" format msg
         [[ -z ${msg} ]] && msg=' (%s)-[%b]-'
     fi
     printf '%s' ${msg}
@@ -1143,13 +1205,14 @@ VCS_INFO_format () { # {{{
 # }}}
 VCS_INFO_realpath () { #{{{
     # replacing 'readlink -f', which is really not portable.
-
-    # If there *is* a chpwd() function unfunction it here.
-    # The *real* zsh does not loose its chpwd(), because we run
-    # in a different context (process substitution in $PROMPT).
-    (( ${+functions[chpwd]} )) && unfunction chpwd
-    setopt chaselinks
-    cd $1 2>/dev/null && pwd
+    # forcing a subshell, to ensure chpwd() is not removed
+    # from the calling shell (if VCS_INFO_realpath() is called
+    # manually).
+    (
+        (( ${+functions[chpwd]} )) && unfunction chpwd
+        setopt chaselinks
+        cd $1 2>/dev/null && pwd
+    )
 }
 # }}}
 VCS_INFO_git_getaction () { #{{{
@@ -1288,7 +1351,7 @@ VCS_INFO_svk_get_data () { # {{{
 
     svkbase=${vcs_comm[basedir]}
 
-    zstyle -s ":vcs_info:${vcs}" branchformat svkbranch || svkbranch="%b:%r"
+    zstyle -s ":vcs_info:${usercontext}:${vcs}" branchformat svkbranch || svkbranch="%b:%r"
     zformat -f svkbranch "${svkbranch}" "b:${vcs_comm[branch]}" "r:${vcs_comm[revision]}"
 
     msg=$(VCS_INFO_format)
@@ -1308,7 +1371,7 @@ VCS_INFO_svn_get_data () { # {{{
     svnbase=$(VCS_INFO_realpath ${svnbase})
     svninfo=($(svn info "${svnbase}" | awk '/^URL/ { sub(".*/","",$0); r=$0 } /^Revision/ { sub("[^0-9]*","",$0); print r"\n"$0 }'))
 
-    zstyle -s ":vcs_info:${vcs}" branchformat svnbranch || svnbranch="%b:%r"
+    zstyle -s ":vcs_info:${usercontext}:${vcs}" branchformat svnbranch || svnbranch="%b:%r"
     zformat -f svnbranch "${svnbranch}" "b:${svninfo[1]}" "r:${svninfo[2]}"
 
     msg=$(VCS_INFO_format)
@@ -1319,7 +1382,7 @@ VCS_INFO_svn_get_data () { # {{{
 VCS_INFO_bzr_get_data () { # {{{
     local msg bzrbranch bzrbase bzrrevno bzrbr i j
 
-    if zstyle -t ":vcs_info:${vcs}" "use-simple" ; then
+    if zstyle -t ":vcs_info:${usercontext}:${vcs}" "use-simple" ; then
         bzrbase=${vcs_comm[basedir]}
         bzrbranch=${bzrbase:t}
         if [[ -f ${bzrbase}/.bzr/branch/last-revision ]] ; then
@@ -1340,7 +1403,7 @@ VCS_INFO_bzr_get_data () { # {{{
         done
     fi
 
-    zstyle -s ":vcs_info:${vcs}" branchformat bzrbr || bzrbr="%b:%r"
+    zstyle -s ":vcs_info:${usercontext}:${vcs}" branchformat bzrbr || bzrbr="%b:%r"
     zformat -f bzrbr "${bzrbr}" "b:${bzrbranch}" "r:${bzrrevno}"
 
     msg=$(VCS_INFO_format)
@@ -1392,27 +1455,27 @@ VCS_INFO_detect_by_dir() {
 }
 
 VCS_INFO_bzr_detect() {
-    check_com -c bzr || return 1
+    VCS_INFO_check_com bzr || return 1
     vcs_comm[detect_need_file]=branch/format
     VCS_INFO_detect_by_dir '.bzr'
     return $?
 }
 
 VCS_INFO_cvs_detect() {
-    check_com -c svn || return 1
+    VCS_INFO_check_com svn || return 1
     [[ -d "CVS" ]] && return 0
     return 1
 }
 
 VCS_INFO_darcs_detect() {
-    check_com -c darcs || return 1
+    VCS_INFO_check_com darcs || return 1
     vcs_comm[detect_need_file]=format
     VCS_INFO_detect_by_dir '_darcs'
     return $?
 }
 
 VCS_INFO_git_detect() {
-    if check_com -c git && git rev-parse --is-inside-work-tree &> /dev/null ; then
+    if VCS_INFO_check_com git && git rev-parse --is-inside-work-tree &> /dev/null ; then
         vcs_comm[gitdir]="$(git rev-parse --git-dir 2> /dev/null)" || return 1
         [[ -d ${vcs_comm[gitdir]}/svn ]] && vcs_comm[overwrite_name]='git-svn'
         return 0
@@ -1421,14 +1484,14 @@ VCS_INFO_git_detect() {
 }
 
 VCS_INFO_hg_detect() {
-    check_com -c hg || return 1
+    VCS_INFO_check_com hg || return 1
     vcs_comm[detect_need_file]=branch
     VCS_INFO_detect_by_dir '.hg'
     return $?
 }
 
 VCS_INFO_mtn_detect() {
-    check_com -c mtn || return 1
+    VCS_INFO_check_com mtn || return 1
     vcs_comm[detect_need_file]=revision
     VCS_INFO_detect_by_dir '_MTN'
     return $?
@@ -1438,7 +1501,7 @@ VCS_INFO_svk_detect() {
     setopt localoptions noksharrays
     local -a info
 
-    check_com -c svk || return 1
+    VCS_INFO_check_com svk || return 1
     [[ -f ~/.svk/config ]] || return 1
 
     info=(
@@ -1468,24 +1531,55 @@ VCS_INFO_svk_detect() {
 }
 
 VCS_INFO_svn_detect() {
-    check_com -c svn || return 1
+    VCS_INFO_check_com svn || return 1
     [[ -d ".svn" ]] && return 0
     return 1
 }
 
 # }}}
+vcs_info_printsys () { # {{{
+    vcs_info print_systems_
+}
+# }}}
+vcs_info_lastmsg () { # {{{
+    if zstyle -T ':vcs_info:command:formats' use-prompt-escapes ; then
+        print -P ${VCS_INFO_message_}
+    else
+        print ${VCS_INFO_message_}
+    fi
+}
+# }}}
 vcs_info () { # {{{
+    setopt localoptions #xtrace
     local string
     local -i found
     local -a VCSs disabled
-    local -x vcs
+    local -x vcs usercontext
     local -Ax vcs_comm
 
-    vcs="init"
-    zstyle -T ":vcs_info:${vcs}" "enable" || return 0
-    zstyle -a ":vcs_info:${vcs}" "disable" disabled
-
     VCSs=(git hg bzr darcs mtn svn cvs svk)
+    case ${1} in
+        (print_systems_)
+            print -l ${VCSs}
+            # and the special flavours
+            print -l '# flavours (cannot be used in the disable style; they' \
+                     '# are disabled with their master [git-svn -> git]):'   \
+                     'git-svn'
+            return 0
+            ;;
+        ('')
+            [[ -t ${usercontext} ]] && usercontext=default
+            ;;
+        (*) [[ -t ${usercontext} ]] && usercontext=${1}
+            ;;
+    esac
+
+    vcs="init"
+    zstyle -T ":vcs_info:${usercontext}:${vcs}" "enable" || {
+        typeset -gx VCS_INFO_message_=''
+        return 0
+    }
+    zstyle -a ":vcs_info:${usercontext}:${vcs}" "disable" disabled
 
     (( found = 0 ))
     for vcs in ${VCSs} ; do
@@ -1494,12 +1588,21 @@ vcs_info () { # {{{
         VCS_INFO_${vcs}_detect && (( found = 1 )) && break
     done
 
-    (( found == 0 )) && return 0
+    (( found == 0 )) && {
+        typeset -gx VCS_INFO_message_=''
+        return 0
+    }
 
-    string=$(VCS_INFO_${vcs}_get_data) || return 1
-    printf '%s' ${string}
+    string=$(VCS_INFO_${vcs}_get_data) || {
+        typeset -gx VCS_INFO_message_=''
+        return 1
+    }
+
+    typeset -gx VCS_INFO_message_=${string}
     return 0
 }
+
+typeset -gx VCS_INFO_message_=''
 # }}}
 
 # change vcs_info formats for the grml prompt
@@ -1534,6 +1637,9 @@ is41 && setopt transient_rprompt
 
 is4 && [[ -z $NOPRECMD ]] && precmd () {
     [[ -n $NOPRECMD ]] && return 0
+    # update VCS information
+    vcs_info
+
     # allow manual overwriting of RPROMPT
     if [[ -n $RPROMPT ]] ; then
         [[ $TERM == screen* ]] && echo -n $'\ekzsh\e\\'
@@ -1601,7 +1707,7 @@ fi
 
 # don't use colors on dumb terminals (like emacs):
 if [[ "$TERM" == dumb ]] ; then
-    PROMPT="${EXITCODE}${debian_chroot:+($debian_chroot)}%n@%m %40<...<%B%~%b%<< "'$(vcs_info)'"%# "
+    PROMPT="${EXITCODE}${debian_chroot:+($debian_chroot)}%n@%m %40<...<%B%~%b%<< "'${VCS_INFO_message_}'"%# "
 else
     # only if $GRMLPROMPT is set (e.g. via 'GRMLPROMPT=1 zsh') use the extended prompt
     # set variable identifying the chroot you work in (used in the prompt below)
@@ -1611,9 +1717,9 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
     else
         # This assembles the primary prompt string
         if (( EUID != 0 )); then
-            PROMPT="${RED}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< "'$(vcs_info)'"%# "
+            PROMPT="${RED}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< "'${VCS_INFO_message_}'"%# "
         else
-            PROMPT="${BLUE}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${RED}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< "'$(vcs_info)'"%# "
+            PROMPT="${BLUE}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${RED}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< "'${VCS_INFO_message_}'"%# "
         fi
     fi
 fi

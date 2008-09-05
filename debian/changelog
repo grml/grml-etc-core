@@ -1,8 +1,9 @@
 grml-etc-core (0.3.56) unstable; urgency=low
 
   * zshrc: 'limit stack' needs zsh 4.2.5 or newer (not just 4.*)
+  * zshrc: changing invocation of vcs_info()
 
- -- Frank Terbeck <ft@grml.org>  Wed, 03 Sep 2008 00:42:23 +0200
+ -- Frank Terbeck <ft@grml.org>  Sat, 06 Sep 2008 01:38:42 +0200
 
 grml-etc-core (0.3.55) unstable; urgency=low
 
