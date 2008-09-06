@@ -1607,12 +1607,12 @@ typeset -gx VCS_INFO_message_=''
 
 # change vcs_info formats for the grml prompt
 if [[ "$TERM" == dumb ]] ; then
-    zstyle ':vcs_info:*' promptactionformat "(%s%)-[%b|%a] "
-    zstyle ':vcs_info:*' promptformat       "(%s%)-[%b] "
+    zstyle ':vcs_info:*' actionformat "(%s%)-[%b|%a] "
+    zstyle ':vcs_info:*' format       "(%s%)-[%b] "
 else
     # these are the same, just with a lot of colours:
-    zstyle ':vcs_info:*' promptactionformat "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOUR} "
-    zstyle ':vcs_info:*' promptformat       "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${MAGENTA}]${NO_COLOUR}%} "
+    zstyle ':vcs_info:*' actionformat "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOUR} "
+    zstyle ':vcs_info:*' format       "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${MAGENTA}]${NO_COLOUR}%} "
     zstyle ':vcs_info:(sv[nk]|bzr)' branchformat "%b${YELLOW}:%r"
 fi
 
