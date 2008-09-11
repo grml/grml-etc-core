@@ -1,9 +1,10 @@
 grml-etc-core (0.3.57) unstable; urgency=low
 
+  [ Frank Terbeck ]
   * zshrc: Fixed $PS2, which included a backtick, which is special when
     setopt prompt_subst is set. Thanks to Matthias Merk for reporting.
 
- -- Frank Terbeck <ft@grml.org>  Thu, 11 Sep 2008 12:00:14 +0200
+ -- Michael Prokop <mika@grml.org>  Thu, 11 Sep 2008 12:12:56 +0200
 
 grml-etc-core (0.3.56) unstable; urgency=low
 
