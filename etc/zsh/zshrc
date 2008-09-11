@@ -1627,11 +1627,6 @@ fi
 
 setopt prompt_subst
 
-# precmd() => a function which is executed just before each prompt
-# use 'NOPRECMD=1' to disable the precmd + preexec commands
-
-# precmd () { setopt promptsubst; [[ -o interactive ]] && jobs -l;
-
 # make sure to use right prompt only when not running a command
 is41 && setopt transient_rprompt
 
@@ -1642,7 +1637,7 @@ is4 && [[ -z $NOPRECMD ]] && precmd () {
 
     # allow manual overwriting of RPROMPT
     if [[ -n $RPROMPT ]] ; then
-        [[ $TERM == screen* ]] && echo -n $'\ekzsh\e\\'
+        [[ $TERM == screen* ]] && print -nP "\ekzsh\e\\"
         # return 0
     fi
     # just use DONTSETRPROMPT=1 to be able to overwrite RPROMPT
@@ -1663,8 +1658,6 @@ is4 && [[ -z $NOPRECMD ]] && precmd () {
             ;;
     esac
 }
-
-# chpwd () => a function which is executed whenever the directory is changed
 
 # preexec() => a function running before every command
 is4 && [[ -z $NOPRECMD ]] && \
@@ -1696,7 +1689,7 @@ preexec () {
 }
 
 EXITCODE="%(?..%?%1v )"
-PS2='`%_> '       # secondary prompt, printed when the shell needs more information to complete a command.
+PS2='\`%_> '      # secondary prompt, printed when the shell needs more information to complete a command.
 PS3='?# '         # selection prompt used within a select loop.
 PS4='+%N:%i:%_> ' # the execution trace prompt (setopt xtrace). default: '+%N:%i>'
 
