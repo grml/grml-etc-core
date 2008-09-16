@@ -1056,7 +1056,7 @@ fi
 # which distributed under the same terms as zsh itself.
 
 # we will only be using one variable, so let the code know now.
-zstyle ':vcs_info:*' maxexports 1
+zstyle ':vcs_info:*' max-exports 1
 
 # vcs_info() documentation:
 #{{{
@@ -1931,7 +1931,7 @@ fi
 
 # don't use colors on dumb terminals (like emacs):
 if [[ "$TERM" == dumb ]] ; then
-    PROMPT="${EXITCODE}${debian_chroot:+($debian_chroot)}%n@%m %40<...<%B%~%b%<< "'${VCS_INFO_message_}'"%# "
+    PROMPT="${EXITCODE}${debian_chroot:+($debian_chroot)}%n@%m %40<...<%B%~%b%<< "'${VCS_INFO_message_0_}'"%# "
 else
     # only if $GRMLPROMPT is set (e.g. via 'GRMLPROMPT=1 zsh') use the extended prompt
     # set variable identifying the chroot you work in (used in the prompt below)
@@ -1941,9 +1941,9 @@ ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
     else
         # This assembles the primary prompt string
         if (( EUID != 0 )); then
-            PROMPT="${RED}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< "'${VCS_INFO_message_}'"%# "
+            PROMPT="${RED}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< "'${VCS_INFO_message_0_}'"%# "
         else
-            PROMPT="${BLUE}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${RED}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< "'${VCS_INFO_message_}'"%# "
+            PROMPT="${BLUE}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${RED}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< "'${VCS_INFO_message_0_}'"%# "
         fi
     fi
 fi
