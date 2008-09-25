@@ -1,9 +1,14 @@
 grml-scripts (1.1.10) unstable; urgency=low
 
+  [ Michael Gebetsroither ]
   * added grml-chroot including manpage
   * added xsltproc, docbook-xsl, asciidoc to build dependencies 
 
- -- Michael Gebetsroither <gebi@grml.org>  Fri, 29 Aug 2008 11:59:41 +0200
+  [ Michael Prokop ]
+  * Bump Standard-Version to 3.8.0 (no further changes).
+  * Drop deprecated xbase-clients package from Suggests.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 26 Sep 2008 01:26:37 +0200
 
 grml-scripts (1.1.9) unstable; urgency=low
 
