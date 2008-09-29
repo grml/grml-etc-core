@@ -1,8 +1,9 @@
 grml-etc-core (0.3.58) unstable; urgency=low
 
   * zshrc: partial rewrite and extension of vcs_info()
+  * zshrc: improvements by Kai Wilke. Thanks! [Closes: issue528]
 
- -- Frank Terbeck <ft@grml.org>  Tue, 16 Sep 2008 02:45:32 +0200
+ -- Frank Terbeck <ft@grml.org>  Mon, 29 Sep 2008 17:12:08 +0200
 
 grml-etc-core (0.3.57) unstable; urgency=low
 

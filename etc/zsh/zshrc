@@ -87,7 +87,7 @@
 
 # zsh profiling {{{
 # just execute 'ZSH_PROFILE_RC=1 zsh' and run 'zprof' to get the details
-if [[ -n $ZSH_PROFILE_RC ]] ; then
+if [[ $ZSH_PROFILE_RC -gt 0 ]] ; then
     zmodload zsh/zprof
 fi
 # }}}
@@ -431,7 +431,7 @@ else
     [[ -d /etc/zsh/completion.d ]] && fpath=( $fpath /etc/zsh/completion.d )
     if [[ -d /etc/zsh/functions.d ]] ; then
         fpath+=( /etc/zsh/functions.d )
-        for func in /etc/zsh/functions.d/[^_]*[^~] ; do
+        for func in /etc/zsh/functions.d/[^_]*[^~](N.) ; do
             zrcautoload -U ${func:t}
         done
     fi
@@ -805,7 +805,6 @@ if is4 ; then
     tmpargs=(
         a   stat
         a   zpty
-        ap  zprof
         ap  mapfile
     )
 
@@ -1003,16 +1002,26 @@ chpwd() {
 # }}}
 
 # {{{ display battery status on right side of prompt via running 'BATTERY=1 zsh'
-if [[ -n "$BATTERY" ]] ; then
-    if check_com -c acpi ; then
-        PERCENT="${(C)${(s| |)$(acpi 2>/dev/null)}[4]}"
-        [[ -z "$PERCENT" ]] && PERCENT='acpi not present'
+if [[ $BATTERY -gt 0 ]] ; then
+    if ! check_com -c acpi ; then
+        BATTERY=0
+    fi
+fi
 
-        if [[ "${PERCENT%%%}" -lt 20 ]] ; then
-            PERCENT="warning: ${PERCENT}%"
+battery() {
+if [[ $BATTERY -gt 0 ]] ; then
+    PERCENT="${${"$(acpi 2>/dev/null)"}/(#b)[[:space:]]##Battery <->: [^0-9]##, (<->)%*/${match[1]}}"
+    if [[ -z "$PERCENT" ]] ; then
+        PERCENT='acpi not present'
+    else
+        if [[ "$PERCENT" -lt 20 ]] ; then
+            PERCENT="warning: ${PERCENT}%%"
+        else
+            PERCENT="${PERCENT}%%"
         fi
     fi
 fi
+}
 # }}}
 
 # set colors for use in prompts {{{
@@ -1861,8 +1870,8 @@ setopt prompt_subst
 # make sure to use right prompt only when not running a command
 is41 && setopt transient_rprompt
 
-is4 && [[ -z $NOPRECMD ]] && precmd () {
-    [[ -n $NOPRECMD ]] && return 0
+is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
+    [[ $NOPRECMD -gt 0 ]] && return 0
     # update VCS information
     vcs_info
 
@@ -1872,8 +1881,10 @@ is4 && [[ -z $NOPRECMD ]] && precmd () {
         # return 0
     fi
     # just use DONTSETRPROMPT=1 to be able to overwrite RPROMPT
-    if [[ -z $DONTSETRPROMPT ]] ; then
-        if [[ -n $BATTERY ]] ; then
+    if [[ $DONTSETRPROMPT -eq 0 ]] ; then
+        if [[ $BATTERY -gt 0 ]] ; then
+            # update BATTERY information
+            battery
             RPROMPT="%(?..:()% ${PERCENT}${SCREENTITLE}"
             # RPROMPT="${PERCENT}${SCREENTITLE}"
         else
@@ -1891,9 +1902,9 @@ is4 && [[ -z $NOPRECMD ]] && precmd () {
 }
 
 # preexec() => a function running before every command
-is4 && [[ -z $NOPRECMD ]] && \
+is4 && [[ $NOPRECMD -eq 0 ]] && \
 preexec () {
-    [[ -n $NOPRECMD ]] && return 0
+    [[ $NOPRECMD -gt 0 ]] && return 0
 # set hostname if not running on host with name 'grml'
     if [[ -n "$HOSTNAME" ]] && [[ "$HOSTNAME" != $(hostname) ]] ; then
        NAME="@$HOSTNAME"
@@ -1935,7 +1946,7 @@ if [[ "$TERM" == dumb ]] ; then
 else
     # only if $GRMLPROMPT is set (e.g. via 'GRMLPROMPT=1 zsh') use the extended prompt
     # set variable identifying the chroot you work in (used in the prompt below)
-    if [[ -n $GRMLPROMPT ]] ; then
+    if [[ $GRMLPROMPT -gt 0 ]] ; then
         PROMPT="${RED}${EXITCODE}${CYAN}[%j running job(s)] ${GREEN}{history#%!} ${RED}%(3L.+.) ${BLUE}%* %D
 ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< %# "
     else
@@ -2119,7 +2130,7 @@ Basically meant for bash users who are not used to the power of
 the zsh yet. :)
 
   "NOCOR=1    zsh" => deactivate automatic correction
-  "NOMENU=1   zsh" => do not use menu completion (note: use strg-d for completion instead!)
+  "NOMENU=1   zsh" => do not use auto menu completion (note: use ctrl-d for completion instead!)
   "NOPRECMD=1 zsh" => disable the precmd + preexec commands (set GNU screen title)
   "BATTERY=1  zsh" => activate battery status (via acpi) on right side of prompt'
 
@@ -2285,7 +2296,7 @@ grmlcomp() {
     zstyle ':completion:*:matches'         group 'yes'
     zstyle ':completion:*'                 group-name ''
 
-    if [[ -z "$NOMENU" ]] ; then
+    if [[ "$NOMENU" -eq 0 ]] ; then
         # if there are more than 5 options allow selecting from a menu
         zstyle ':completion:*'               menu select=5
     else
@@ -2339,7 +2350,7 @@ grmlcomp() {
 
     ## correction
     # some people don't like the automatic correction - so run 'NOCOR=1 zsh' to deactivate it
-    if [[ -n "$NOCOR" ]] ; then
+    if [[ "$NOCOR" -gt 0 ]] ; then
         zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete _files _ignored
         setopt nocorrect
     else
