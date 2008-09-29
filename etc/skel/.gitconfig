@@ -1,0 +1,76 @@
+# Filename:      $HOME/.gitconfig
+# Purpose:       configuration file for git(1)
+# Authors:       grml-team (grml.org)
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2 or any later version.
+################################################################################
+
+[user]
+    name = Grml User
+    email = git@grml.org
+
+[core]
+    pager = less -Mr
+
+[format]
+    numbered = auto
+
+[color]
+    branch = yes
+    diff   = auto
+    pager  = yes
+    status = auto
+
+[color "branch"]
+    current = green
+    local   = yellow
+    remote  = cyan
+
+[color "diff"]
+    meta = yellow
+    frag = magenta
+    old  = red
+    new  = green
+
+[color "status"]
+    header    = magenta
+    added     = yellow
+    changed   = green
+    untracked = cyan
+
+#[gui]
+#    fontui   = -family terminus -size 9 -weight normal -slant roman -underline 0 -overstrike 0
+#    fontdiff = -family terminus -size 9 -weight normal -slant roman -underline 0 -overstrike 0
+
+[svn]
+    rmdir = true
+
+[http]
+    sslVerify=false
+
+[alias]
+    b    = branch
+    ca   = commit -a
+    chgd = diff HEAD
+    ci   = commit
+    co   = checkout
+    graphviz = "!f() { echo 'digraph git {' ; git log --pretty='format:  %h -> { %p }' \"$@\" | sed 's/[0-9a-f]\\+/\"&\"/g' ; echo '}'; }; f"
+    m    = checkout master
+    mnc  = merge --no-commit
+    olg  = log --abbrev-commit --abbrev=6 --pretty=oneline
+    one  = "!sh -c 'git show -s --pretty=\"tformat:%h (%s, %ai\" \"$@\" | sed -e \"s/ [012][0-9]:[0-5][0-9]:[0-5][0-9] [-+][0-9][0-9][0-9][0-9]$/)/\"' -"
+    out = !git push --dry-run
+    purge = !git checkout $(git rev-parse --show-cdup) && git clean -xdf
+    serve = !sh -c 'git daemon --reuseaddr --verbose \"$@\" --base-path=. --export-all ./.git' sh
+    stgd = diff --cached
+    st   = status
+    tush = push --tags
+    who  = "!sh -c 'git log -1 --pretty=\"format:%an <%ae>\" --author=\"$1\"' -"
+
+#[sendemail]
+#    aliasesfile   = /home/grml/.gitaliases
+#    aliasfiletype = mutt
+#    chainreplyto  = false
+
+## END OF FILE #################################################################
+# vim:tabstop=4 autoindent filetype=gitconfig expandtab
