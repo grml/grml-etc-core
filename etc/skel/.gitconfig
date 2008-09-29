@@ -53,28 +53,30 @@
     sslVerify=false
 
 [alias]
-    b    = branch
-    ca   = commit -a
-    chgd = diff HEAD
-    ci   = commit
-    co   = checkout
+    b     = branch
+    ca    = commit -a
+    chgd  = diff HEAD
+    ci    = commit
+    co    = checkout
+    fpu   = format-patch -s -p origin/master
     graphviz = "!f() { echo 'digraph git {' ; git log --pretty='format:  %h -> { %p }' \"$@\" | sed 's/[0-9a-f]\\+/\"&\"/g' ; echo '}'; }; f"
-    m    = checkout master
-    mnc  = merge --no-commit
-    olg  = log --abbrev-commit --abbrev=6 --pretty=oneline
-    one  = "!sh -c 'git show -s --pretty=\"tformat:%h (%s, %ai\" \"$@\" | sed -e \"s/ [012][0-9]:[0-5][0-9]:[0-5][0-9] [-+][0-9][0-9][0-9][0-9]$/)/\"' -"
-    out = !git push --dry-run
+    m     = checkout master
+    mnc   = merge --no-commit
+    olg   = log --abbrev-commit --abbrev=6 --pretty=oneline
+    one   = "!sh -c 'git show -s --pretty=\"tformat:%h (%s, %ai\" \"$@\" | sed -e \"s/ [012][0-9]:[0-5][0-9]:[0-5][0-9] [-+][0-9][0-9][0-9][0-9]$/)/\"' -"
+    out   = !git push --dry-run
     purge = !git checkout $(git rev-parse --show-cdup) && git clean -xdf
     serve = !sh -c 'git daemon --reuseaddr --verbose \"$@\" --base-path=. --export-all ./.git' sh
-    stgd = diff --cached
-    st   = status
-    tush = push --tags
-    who  = "!sh -c 'git log -1 --pretty=\"format:%an <%ae>\" --author=\"$1\"' -"
+    stgd  = diff --cached
+    st    = status
+    tush  = push --tags
+    who   = "!sh -c 'git log -1 --pretty=\"format:%an <%ae>\" --author=\"$1\"' -"
 
 #[sendemail]
 #    aliasesfile   = /home/grml/.gitaliases
 #    aliasfiletype = mutt
 #    chainreplyto  = false
+#    smtpserver = /usr/bin/msmtp
 
 ## END OF FILE #################################################################
 # vim:tabstop=4 autoindent filetype=gitconfig expandtab
