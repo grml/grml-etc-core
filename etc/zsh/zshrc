@@ -2132,7 +2132,12 @@ the zsh yet. :)
   "NOCOR=1    zsh" => deactivate automatic correction
   "NOMENU=1   zsh" => do not use auto menu completion (note: use ctrl-d for completion instead!)
   "NOPRECMD=1 zsh" => disable the precmd + preexec commands (set GNU screen title)
-  "BATTERY=1  zsh" => activate battery status (via acpi) on right side of prompt'
+  "BATTERY=1  zsh" => activate battery status (via acpi) on right side of prompt
+
+A value greater than 0 is enables a feature; a value equal to zero
+disables it. If you like one or the other of these settings, you can
+add them to ~/.zshenv to ensure they are set when sourcing grml'\''s
+zshrc.'
 
     print "
 $bg[white]$fg[black]
