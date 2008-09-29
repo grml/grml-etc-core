@@ -5,10 +5,10 @@
 # License:       This file is licensed under the GPL v2 or any later version.
 ################################################################################
 
-# Notice: We do not set user section by default so synching
-# with this file is as easy as possible. Use GIT_AUTHOR_NAME
-# and GIT_AUTHOR_EMAIL via your shell environment instead if
-# possible.
+# Notice: We do not set user section by default so syncing
+# with this file is as easy as possible. Use
+# GIT_AUTHOR_NAME, GIT_COMMITTER_NAME, GIT_AUTHOR_EMAIL and
+# GIT_COMMITTER_EMAIL via your shell environment instead.
 #[user]
 #    name = Grml User
 #    email = git@grml.org
