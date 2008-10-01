@@ -2100,8 +2100,8 @@ use them on a non-grml-system just get the tar.gz from
 http://deb.grml.org/ or get the files from the mercurial
 repository:
 
-  http://hg.grml.org/grml-etc-core/raw-file/tip/etc/skel/.zshrc
-  http://hg.grml.org/grml-etc-core/raw-file/tip/etc/zsh/zshrc
+  http://git.grml.org/?p=grml-etc-core.git;a=blob_plain;f=etc/zsh/zshrc
+  http://git.grml.org/?p=grml-etc-core.git;a=blob_plain;f=etc/skel/.zshrc
 
 If you want to stay in sync with zsh configuration of grml
 run '\''ln -sf /etc/skel/.zshrc $HOME/.zshrc'\'' and configure
