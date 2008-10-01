@@ -1,10 +1,16 @@
 grml-etc-core (0.3.58) unstable; urgency=low
 
+  [ Frank Terbeck ]
   * zshrc: partial rewrite and extension of vcs_info()
   * zshrc: improvements by Kai Wilke. Thanks! [Closes: issue528]
   * zshrc: update zsh-help() output
 
- -- Frank Terbeck <ft@grml.org>  Mon, 29 Sep 2008 17:22:38 +0200
+  [ Michael Prokop ]
+  * Replace hg with git URLs
+  * Add /etc/skel/.gitconfig (thanks to ft and gebi for feedback
+    and review).
+
+ -- Michael Prokop <mika@grml.org>  Wed, 01 Oct 2008 22:12:31 +0200
 
 grml-etc-core (0.3.57) unstable; urgency=low
 
