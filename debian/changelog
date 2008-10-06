@@ -1,3 +1,9 @@
+grml-etc-core (0.3.59) unstable; urgency=low
+
+  * zshrc: set default values for NOPRECMD and friends
+
+ -- Frank Terbeck <ft@grml.org>  Mon, 06 Oct 2008 18:29:30 +0200
+
 grml-etc-core (0.3.58) unstable; urgency=low
 
   [ Frank Terbeck ]

@@ -92,6 +92,13 @@ if [[ $ZSH_PROFILE_RC -gt 0 ]] ; then
 fi
 # }}}
 
+# setting some default values {{{
+NOCOR=${NOCOR:-0}
+NOMENU=${NOMENU:-0}
+NOPRECMD=${NOPRECMD:-0}
+BATTERY=${BATTERY:-0}
+# }}}
+
 # {{{ check for version/system
 # check for versions (compatibility reasons)
 is4(){
