@@ -1,0 +1,127 @@
+#!/bin/sh
+# Filename:      swspeak-setup
+# Purpose:       script for activating software speak(up) features
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2 or any later version.
+################################################################################
+# Note: the script is used via swspeak() function in grml's zshrc so
+#       the prompt of zsh is set accordingly
+# TODO: support disabling swspeakup again?
+
+if [ -r /etc/grml/script-functions ] ; then
+   . /etc/grml/script-functions
+else
+   echo "Failed to source /etc/grml/script-functions - exiting.">&2
+   exit 1
+fi
+
+if [ -r /etc/grml/lsb-functions ] ; then
+   . /etc/grml/lsb-functions
+else
+   echo "Failed to source /etc/grml/lsb-functions - exiting.">&2
+   exit 1
+fi
+
+if [ "$1" = '-h' ] || [ "$1" == '--help' ] ; then
+   cat << EOF
+swspeak - script for activating software speak features
+
+Usage: swspeak [-a] [-e|-s] [-f] [-h]
+
+Supported options:
+
+   -e   use espeakup (default, if available)
+   -s   use speechd-up (fallback, if available)
+   -a   do not execute aumix for setting mixer levels
+   -f   disable flite sound output
+   -h   display this help text
+EOF
+   exit 0
+fi
+
+NOAUMIX=''
+[ "$1" = '-a' ] && NOAUMIX=1
+ESPEAK=''
+[ "$1" = '-e' ] && ESPEAK=1
+NOFLITE=''
+[ "$1" = '-f' ] && NOFLITE=1
+SPEECHD=''
+[ "$1" = '-s' ] && SPEECHD=1
+
+check4root || exit 1
+
+# execute flite only if it's present
+flitewrapper() {
+   if [ -x /usr/bin/flite -a -z "$NOFLITE" ] ; then
+      flite -o play -t "$*"
+   fi
+}
+
+# execute aumix
+if [ -x /usr/bin/aumix -a -z "$NOAUMIX" ] ; then
+   einfo "Setting mixer levels to 90"
+   aumix -w 90 -v 90 -p 90 -m 90
+   eend $?
+fi
+
+# check for software synthesizer support
+if ! [ -r /dev/softsynth ] ; then
+   if [ ! -d /proc/speakup/ ] && ! grep -q speakup /proc/modules ; then
+      ewarn "Kernel does not support software speakup - trying to load kernel module:" ; eend 0
+      eindent
+      einfo "Loading speakup_soft"
+      if modprobe speakup_soft ; then
+         eend 0
+      else
+         flitewrapper "Fatal error setting up software speakup"
+         eend 1
+         exit 1
+      fi
+      eoutdent
+   fi
+fi
+
+# the kernel module takes some time until it can be accessed
+sleep 1
+
+# helper functions for espeakup and speechd-up
+espeak() {
+if [ -x /usr/bin/espeakup ] ; then
+   espeakup
+   flitewrapper "Finished setting up software synthesizer"
+else
+   flitewrapper "espeakup not available, sorry."
+   return 1
+fi
+}
+
+speechd() {
+if [ -x /usr/bin/speechd-up ] ; then
+   nice -n -20 speechd-up
+   flitewrapper "Finished setting up software synthesizer"
+else
+   flitewrapper "speechd-up not available, sorry."
+   return 1
+fi
+}
+
+# finally execute the according program:
+if [ -n "$ESPEAK" ] ; then
+   espeak && exit 0 || exit 1
+fi
+
+if [ -n "$SPEECHD" ] ; then
+   speechd && exit 0 || exit 1
+fi
+
+if grep -q 'swspeak=espeak' /proc/cmdline ; then
+   ( espeak && exit 0 ) || ( speechd && exit 0 ) || exit 1
+elif grep -q 'swspeak=speechd' /proc/cmdline ; then
+   ( speechd && exit 0 ) || ( espeak && exit 0 ) || exit 1
+else
+   ( espeak && exit 0 ) || ( speechd && exit 0 ) || exit 1
+fi
+
+## END OF FILE #################################################################
+# vim: ai tw=100 expandtab foldmethod=marker shiftwidth=3
