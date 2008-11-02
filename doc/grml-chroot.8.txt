@@ -15,9 +15,9 @@ SYNOPSIS
 
 DESCRIPTION
 -----------
-*grml-kerneltest* is a wrapper
+*grml-chroot* is a wrapper
 arround plain chroot with integrated proc/sys/pts/dev filesystem handling.
-After _COMMAND_ exits, mounts are cleand up properly.
+After _COMMAND_ exits, mounts are cleaned up properly.
 
 
 OPTIONS
@@ -40,4 +40,4 @@ chroot(8)
 
 AUTHOR
 ------
-grml-chroot and this manpages were written by Michael Gebetsroither <gebi@grml.org>.
+grml-chroot and this manpage were written by Michael Gebetsroither <gebi@grml.org>.
