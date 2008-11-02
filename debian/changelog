@@ -2,6 +2,7 @@ grml-scripts (1.1.11) unstable; urgency=low
 
   * New script swspeak-setup for activating software speak(up) features
   * Fix typos in grml-chroot manpage.
+  * Update VCS-headers (we're using git nowadays).
 
  -- Michael Prokop <mika@grml.org>  Mon, 03 Nov 2008 00:03:57 +0100
 
