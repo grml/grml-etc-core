@@ -1,8 +1,14 @@
 grml-etc-core (0.3.59) unstable; urgency=low
 
+  [ Frank Terbeck ]
   * zshrc: set default values for NOPRECMD and friends
 
- -- Frank Terbeck <ft@grml.org>  Mon, 06 Oct 2008 18:29:30 +0200
+  [ Michael Prokop ]
+  * gitconfig: update alias 'out', fix usage of pager config,
+    add new alias 'tagme'
+  * zshrc: update function swspeak for new script swspeak-setup
+
+ -- Michael Prokop <mika@grml.org>  Sun, 02 Nov 2008 23:50:38 +0100
 
 grml-etc-core (0.3.58) unstable; urgency=low
 

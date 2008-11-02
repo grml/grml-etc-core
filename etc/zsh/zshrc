@@ -3,7 +3,6 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Wed Aug 06 23:50:53 CEST 2008 [mika]
 ################################################################################
 # This file is sourced only for interactive shells. It
 # should contain commands to set up aliases, functions,
@@ -2060,18 +2059,25 @@ iso2utf() {
 
 # set up software synthesizer via speakup
 swspeak() {
-    aumix -w 90 -v 90 -p 90 -m 90
-    if ! [[ -r /dev/softsynth ]] ; then
-        flite -o play -t "Sorry, software synthesizer not available. Did you boot with swspeak bootoption?"
-        return 1
-    else
-        setopt singlelinezle
-        unsetopt prompt_cr
-        export PS1="%m%# "
-        nice -n -20 speechd-up
-        sleep 2
-        flite -o play -t "Finished setting up software synthesizer"
-    fi
+    if [ -x /usr/sbin/swspeak-setup ] ; then
+       setopt singlelinezle
+       unsetopt prompt_cr
+       export PS1="%m%# "
+       /usr/sbin/swspeak-setup $@
+     else # old version:
+        aumix -w 90 -v 90 -p 90 -m 90
+        if ! [[ -r /dev/softsynth ]] ; then
+            flite -o play -t "Sorry, software synthesizer not available. Did you boot with swspeak bootoption?"
+            return 1
+        else
+           setopt singlelinezle
+           unsetopt prompt_cr
+           export PS1="%m%# "
+            nice -n -20 speechd-up
+            sleep 2
+            flite -o play -t "Finished setting up software synthesizer"
+        fi
+     fi
 }
 
 # I like clean prompt, so provide simple way to get that
