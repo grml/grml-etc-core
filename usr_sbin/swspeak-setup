@@ -89,7 +89,6 @@ sleep 1
 espeak() {
 if [ -x /usr/bin/espeakup ] ; then
    espeakup
-   flitewrapper "Finished setting up software synthesizer"
 else
    flitewrapper "espeakup not available, sorry."
    return 1
@@ -98,8 +97,8 @@ fi
 
 speechd() {
 if [ -x /usr/bin/speechd-up ] ; then
+   /etc/init.d/speech-dispatcher start
    nice -n -20 speechd-up
-   flitewrapper "Finished setting up software synthesizer"
 else
    flitewrapper "speechd-up not available, sorry."
    return 1

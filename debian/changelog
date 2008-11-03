@@ -1,3 +1,12 @@
+grml-scripts (1.1.12) unstable; urgency=low
+
+  * swspeak-setup: start speech-dispatcher before executing speechd-up,
+    do not execute flite on success, otherwise we get tons of
+    "wave_open_sound > Pa_OpenStream : err=-9996 (Invalid device)" error
+    messages (sic).
+
+ -- Michael Prokop <mika@grml.org>  Mon, 03 Nov 2008 14:06:15 +0100
+
 grml-scripts (1.1.11) unstable; urgency=low
 
   * New script swspeak-setup for activating software speak(up) features
