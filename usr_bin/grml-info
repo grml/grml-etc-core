@@ -4,7 +4,6 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Mär 09 13:57:29 CET 2008 [mika]
 ################################################################################
 
 local PAGE='/usr/share/doc/grml-docs/startpage.html'
@@ -23,29 +22,42 @@ if [ -n "$DISPLAY" ]; then
       Xdialog --msgbox "Sorry, no usable X browser found." 0 0
    fi
 else # no X:
-   # is it grml-small?
-   if grep -q small /etc/grml_version ; then
-      check4progs links && links $PAGE || { echo "Sorry, links not available. Exiting.">&2 ; exit 10 }
-   else
-      # do we have a real console?
-      if [[ $(tty) == /dev/tty* ]] ; then
-         # do we have framebuffer support?
-         if [ -c /dev/fb0 ] ; then
-            if check4progs links2 ; then
-               links2 -driver fb $PAGE
-            elif check4progs w3m ; then
-               w3m $PAGE
-            else
-    	       echo "Sorry, neither links2 nor w3m available. Exiting.">&2
-    	       exit 20
-	    fi
+   # do we have a real console?
+   if [[ $(tty) == /dev/tty* ]] ; then
+      # do we have framebuffer support?
+      if [ -c /dev/fb0 ] ; then
+         if check4progs links2 ; then
+            links2 -driver fb $PAGE
+         elif check4progs w3m ; then
+            w3m $PAGE
+         elif check4progs links ; then
+            links $PAGE
          else
-            # no, we don't have framebuffer
-            check4progs w3m && w3m $PAGE || { echo "Sorry, w3m not available. Exiting.">&2 ; exit 30 }
+            echo "Sorry, neither links2 nor w3m nor links available. Exiting.">&2
+            exit 20
          fi
+      else # no, we don't have framebuffer
+         if check4progs w3m ; then
+            w3m $PAGE
+         elif check4progs links ; then
+            links $PAGE
+         elif check4progs links2 ; then
+            links2 $PAGE
+         else
+            echo "Sorry, neither w3m nor links nor links2 available. Exiting.">&2
+            exit 30
+         fi
+      fi
+   else # no, probably we are running inside GNU screen
+      if check4progs w3m ; then
+         w3m $PAGE
+      elif check4progs links2 ; then
+         links2 $PAGE
+      elif check4progs links ; then
+         links $PAGE
       else
-        # no, probably we are running inside GNU screen
-        check4progs w3m && w3m $PAGE || { echo "Sorry, w3m not available. Exiting.">&2 ; exit 40 }
+         echo "Sorry, neither w3m nor links2 nor links available. Exiting.">&2
+         exit 40
       fi
    fi
 fi

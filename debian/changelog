@@ -1,3 +1,10 @@
+grml-scripts (1.1.13) unstable; urgency=low
+
+  * grml-info: improve checks for present browsers.
+    Thanks to Charles Hewson for the bugreport.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 15 Nov 2008 13:56:58 +0100
+
 grml-scripts (1.1.12) unstable; urgency=low
 
   * swspeak-setup: start speech-dispatcher before executing speechd-up,
