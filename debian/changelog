@@ -1,3 +1,9 @@
+grml-etc-core (0.3.60) unstable; urgency=low
+
+  * zshrc: add alias http for running "python -m SimpleHTTPServer"
+
+ -- Michael Prokop <mika@grml.org>  Wed, 19 Nov 2008 12:52:40 +0100
+
 grml-etc-core (0.3.59) unstable; urgency=low
 
   [ Frank Terbeck ]

@@ -3,7 +3,6 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mit Aug 06 23:31:19 CEST 2008 [mika]
 ################################################################################
 
 # source ~/.zshrc.global {{{
@@ -219,6 +218,9 @@ alias fblinks='links2 -driver fb'
 #a2# ssh with StrictHostKeyChecking=no \\&\quad and UserKnownHostsFile unset
 alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
+
+# simple webserver
+check_com -c python && alias http="python -m SimpleHTTPServer"
 
 # Use 'g' instead of 'git':
 check_com g || alias g='git'
