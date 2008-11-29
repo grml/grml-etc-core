@@ -23,7 +23,7 @@ function printUsage
     cat <<EOT
 Usage: "$PROG_NAME_" NEWROOT [COMMAND....]
 
-$PROG_NAME__ is a chroot wrapper with proc/sys/pts/dev filesystem handling
+$PROG_NAME_ is a chroot wrapper with proc/sys/pts/dev filesystem handling
 
 EOT
 }
@@ -75,6 +75,7 @@ done
 shift $(($OPTIND - 1))
 
 if (( $# < 1 )); then
+    printUsage
     die "Wrong number of arguments."
 fi
 
