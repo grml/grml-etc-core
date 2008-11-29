@@ -9,7 +9,6 @@
 PROG_NAME_=$(basename $0)
 DEST_=""
 MOUNTED_=""     # all mounted destinations
-COMMAND_=""     # command to start in chroot
 
 
 function die
@@ -79,8 +78,7 @@ if (( $# < 1 )); then
     die "Wrong number of arguments."
 fi
 
-DEST_="$1"
-COMMAND_="${2}"
+DEST_="$1"; shift
 
 if [ ! -d "$DEST_" ]; then
     die "Target chroot does not exist: $DEST_"
@@ -90,6 +88,10 @@ fi
 mountit "proc"  "proc"
 mountit "sysfs" "sys"
 mountit "/dev"   "dev"   "--bind"
-chroot "$DEST_" $COMMAND_
+if (( $# < 1 )); then
+    chroot "$DEST_"
+else
+    chroot "$DEST_" "$@"
+fi
 umount_all
 
