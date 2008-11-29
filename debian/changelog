@@ -1,3 +1,11 @@
+grml-scripts (1.1.15) UNRELEASED; urgency=low
+
+  * grml-chroot: display usage info additionally to wrong number of arguments
+  * grml-chroot: send all parameters to chroot [thx Tong Sun
+    <suntong@cpan.org> for initial patches]
+
+ -- Michael Gebetsroither <gebi@grml.org>  Sat, 29 Nov 2008 17:55:10 +0100
+
 grml-scripts (1.1.14) unstable; urgency=low
 
   * Remove arename.pl, thanks ft.
