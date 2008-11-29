@@ -1,8 +1,6 @@
 grml-scripts: executable-not-elf-or-script ./usr/bin/exifinfo
 grml-scripts: executable-not-elf-or-script ./usr/bin/tinyp2p.py
 grml-scripts: executable-not-elf-or-script ./usr/bin/wwwis
-grml-scripts: manpage-has-bad-whatis-entry usr/share/man/man1/arename.1.gz
-grml-scripts: script-with-language-extension usr/bin/arename.pl
 grml-scripts: script-with-language-extension usr/bin/bincompare.pl
 grml-scripts: script-with-language-extension usr/bin/cpufreq-detect.sh
 grml-scripts: script-with-language-extension usr/bin/cpu-screen.sh

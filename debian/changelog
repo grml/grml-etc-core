@@ -1,3 +1,10 @@
+grml-scripts (1.1.14) unstable; urgency=low
+
+  * Remove arename.pl, thanks ft.
+    [Closes: issue574] [Closes: issue435]
+
+ -- Michael Prokop <mika@grml.org>  Sat, 29 Nov 2008 13:04:23 +0100
+
 grml-scripts (1.1.13) unstable; urgency=low
 
   * grml-info: improve checks for present browsers.

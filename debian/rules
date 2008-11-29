@@ -55,7 +55,7 @@ binary-arch: build install
 	dh_installchangelogs
 	dh_installdocs
 	dh_installman $(wildcard doc/*.gz)
-	dh_installman manpages/arename.1 manpages/grml-scripts.1 \
+	dh_installman manpages/grml-scripts.1 \
 	manpages/reread_partition_table.8 manpages/random-hostname.1 \
 	manpages/grml-setkeyboard.8 manpages/grml-setlang.8 manpages/getsf.1 \
 	manpages/grml-iptstate.8 manpages/qma.1 manpages/grml-swapon.8 \
@@ -153,8 +153,7 @@ binary-arch: build install
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/XF86AudioMute.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/XF86AudioRaiseVolume.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/zsh-login.1.gz \
-		/usr/share/man/man1/gsuggest.1.gz     /usr/share/man/man1/gsuggest.pl.1.gz \
-		/usr/share/man/man1/arename.1.gz     /usr/share/man/man1/arename.pl.1.gz
+		/usr/share/man/man1/gsuggest.1.gz     /usr/share/man/man1/gsuggest.pl.1.gz
 	dh_strip
 	dh_compress
 	mkdir -p $(CURDIR)/debian/grml-scripts/usr/share/lintian/overrides/
