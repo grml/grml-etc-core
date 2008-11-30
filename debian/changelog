@@ -1,10 +1,12 @@
-grml-scripts (1.1.15) UNRELEASED; urgency=low
+grml-scripts (1.1.15) unstable; urgency=low
 
-  * grml-chroot: display usage info additionally to wrong number of arguments
-  * grml-chroot: send all parameters to chroot [thx Tong Sun
-    <suntong@cpan.org> for initial patches]
+  [ Michael Gebetsroither ]
+  * grml-chroot:
+    - display usage information additionally to wrong number of arguments
+    - send all parameters to chroot [thx Tong Sun <suntong@cpan.org>
+      for initial patches]
 
- -- Michael Gebetsroither <gebi@grml.org>  Sat, 29 Nov 2008 17:55:10 +0100
+ -- Michael Prokop <mika@grml.org>  Sun, 30 Nov 2008 15:13:20 +0100
 
 grml-scripts (1.1.14) unstable; urgency=low
 
