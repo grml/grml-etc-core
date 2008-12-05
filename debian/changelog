@@ -1,3 +1,10 @@
+grml-etc-core (0.3.61) unstable; urgency=low
+
+  * zshrc: Fix a bug in urlencode(), thanks to Baptiste Daroussin
+    [Closes: issue583]
+
+ -- Frank Terbeck <ft@grml.org>  Fri, 05 Dec 2008 18:48:45 +0100
+
 grml-etc-core (0.3.60) unstable; urgency=low
 
   * zshrc: add alias http for running "python -m SimpleHTTPServer"
