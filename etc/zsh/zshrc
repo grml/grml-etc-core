@@ -2872,54 +2872,16 @@ fi
 #@# split functions-search 8
 ## }}}
 
-# add variable to be able to check whether the file has been read {{{
-ZSHRC_GLOBAL_HAS_BEEN_READ=1
-# }}}
-
 ###
 ### non-root (EUID == 0) code below
 ###
 
 (( GRML_ALWAYS_LOAD_ALL == 0 )) && (( $EUID == 0 )) && return 0
 
-# source ~/.zshrc.global {{{
-
-# see /etc/zsh/zshrc for some general settings
-# If you don't have write permissions to /etc/zsh/zshrc on your own
-# copy the file to your $HOME as /.zshrc.global and we source it:
-
-# Note, that xsource() is defined in the global file, so here,
-# we will have to do the sourcing manually for once:
-
-[[ -z "$ZSHRC_GLOBAL_HAS_BEEN_READ" ]]  \
-&& [[ -r "${HOME}/.zshrc.global" ]]     \
-&& source "${HOME}/.zshrc.global"
-# }}}
-
-# check whether global file has been read {{{
-if [[ -z "$ZSHRC_GLOBAL_HAS_BEEN_READ" ]] ; then
-    print 'Warning: global zsh config has not been read.' >&2
-    print '         prepare for possible errors!'         >&2
-    print '' >&2
-    print 'See our refcard for info on how to get the complete configuration:' >&2
-    print '    <http://grml.org/zsh/grml-zsh-refcard.pdf>' >&2
-fi
-# }}}
-
 # autoloading stuff {{{
 # associate types and extensions (be aware with perl scripts and anwanted behaviour!)
 #  check_com zsh-mime-setup || { autoload zsh-mime-setup && zsh-mime-setup }
 #  alias -s pl='perl -S'
-# }}}
-
-# completion system {{{
-# just make sure it is loaded in this file too
-# TODO: is this *really* needed? compsys should be run in the global zshrc already.
-check_com compinit || { autoload -U compinit && compinit }
-# }}}
-
-# make sure isgrmlsmall is defined {{{
-check_com isgrmlsmall || function isgrmlsmall () { return 1 }
 # }}}
 
 # variables {{{
