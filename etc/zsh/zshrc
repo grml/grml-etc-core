@@ -92,6 +92,10 @@ fi
 # }}}
 
 # setting some default values {{{
+
+# load .zshrc.pre to give the user the chance to overwrite the defaults
+[[ -r ${HOME}/.zshrc.pre ]] && source ${HOME}/.zshrc.pre
+
 NOCOR=${NOCOR:-0}
 NOMENU=${NOMENU:-0}
 NOPRECMD=${NOPRECMD:-0}
