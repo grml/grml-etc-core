@@ -2845,6 +2845,63 @@ bk() {
 #  exec $SHELL $SHELL_ARGS "$@"
 # }
 
+#f1# grep for patterns in grml's zsh setup
+zg() {
+#{{{
+    LANG=C perl -e '
+
+sub usage {
+    print "usage: zg -[anr] <pattern>\n";
+    print " Search for patterns in grml'\''s zshrc.\n";
+    print " zg takes no or exactly one option plus a non empty pattern.\n\n";
+    print "   options:\n";
+    print "     --  no options (use if your pattern starts in with a dash.\n";
+    print "     -a  search for the pattern in all code regions\n";
+    print "     -n  search for the pattern in non-root code only\n";
+    print "     -r  search in code for everyone (also root) only\n\n";
+    print "   The default is -a for non-root users and -r for root.\n\n";
+    print " If you installed the zshrc to a non-default locations (ie *NOT*\n";
+    print " in /etc/zsh/zshrc) do: export GRML_ZSHRC=\$HOME/.zshrc\n";
+    print " ...in case you copied the file to that location.\n\n";
+    exit 1;
+}
+
+if ($ENV{GRML_ZSHRC} ne "") {
+    $RC = $ENV{GRML_ZSHRC};
+} else {
+    $RC = "/etc/zsh/zshrc";
+}
+
+usage if ($#ARGV < 0 || $#ARGV > 1);
+if ($> == 0) { $mode = "allonly"; }
+else { $mode = "all"; }
+
+$opt = $ARGV[0];
+if ($opt eq "--")     { shift; }
+elsif ($opt eq "-a")  { $mode = "all"; shift; }
+elsif ($opt eq "-n")  { $mode = "nonroot"; shift; }
+elsif ($opt eq "-r" ) { $mode = "allonly"; shift; }
+elsif ($opt =~ m/^-/ || $#ARGV > 0) { usage(); }
+
+$pattern = $ARGV[0];
+usage() if ($pattern eq "");
+
+open FH, "<$RC" or die "zg: Could not open $RC: $!\n";
+while ($line = <FH>) {
+    chomp $line;
+    if ($line =~ m/^#:grep:marker:for:mika:/) { $markerfound = 1; next; }
+    next if ($mode eq "nonroot" && markerfound == 0);
+    break if ($mode eq "allonly" && markerfound == 1);
+    print $line, "\n" if ($line =~ /$pattern/);
+}
+close FH;
+exit 0;
+
+    ' -- "$@"
+#}}}
+    return $?
+}
+
 # }}}
 
 # log out? set timeout in seconds {{{
@@ -2876,8 +2933,8 @@ fi
 #@# split functions-search 8
 ## }}}
 
-###
-### non-root (EUID == 0) code below
+#:grep:marker:for:mika: :-)
+### non-root (EUID != 0) code below
 ###
 
 (( GRML_ALWAYS_LOAD_ALL == 0 )) && (( $EUID == 0 )) && return 0
