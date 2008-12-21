@@ -2920,7 +2920,6 @@ for color in BLUE RED GREEN CYAN YELLOW MAGENTA WHITE ; unset $color
 
 # source another config file if present {{{
 xsource "/etc/zsh/zshrc.local"
-xsource "${HOME}/.zshenv"
 # }}}
 
 # "persistent history" {{{
