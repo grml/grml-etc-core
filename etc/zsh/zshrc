@@ -12,10 +12,10 @@
 ################################################################################
 
 # zsh-refcard-tag documentation: {{{
-#   You may notice strange looking comments in the zshrc (and ~/.zshrc as
-#   well). These are there for a purpose. grml's zsh-refcard can now be
+#   You may notice strange looking comments in this file.
+#   These are there for a purpose. grml's zsh-refcard can now be
 #   automatically generated from the contents of the actual configuration
-#   files. However, we need a little extra information on which comments
+#   file. However, we need a little extra information on which comments
 #   and what lines of code to take into account (and for what purpose).
 #
 # Here is what they mean:
