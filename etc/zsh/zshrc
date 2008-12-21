@@ -2929,11 +2929,6 @@ if [[ -r ~/.important_commands ]] ; then
 fi
 # }}}
 
-## genrefcard.pl settings {{{
-### example: split functions-search 8,16,24,32
-#@# split functions-search 8
-## }}}
-
 #:grep:marker:for:mika: :-)
 ### non-root (EUID != 0) code below
 ###
@@ -4267,9 +4262,15 @@ xsource "${HOME}/.zshrc.local"
 
 # }}}
 
-### doc strings for external functions from files {{{
+## genrefcard.pl settings {{{
+
+### doc strings for external functions from files
 #m# f5 grml-wallpaper() Sets a wallpaper (try completion for possible values)
-#}}}
+
+### example: split functions-search 8,16,24,32
+#@# split functions-search 8
+
+## }}}
 
 ## END OF FILE #################################################################
 # vim:filetype=zsh foldmethod=marker autoindent expandtab shiftwidth=4
