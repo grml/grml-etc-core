@@ -2221,8 +2221,6 @@ if [[ -r /etc/debian_version ]] ; then
     alias llog="$PAGER /var/log/syslog"     # take a look at the syslog
     #a1# Take a look at the syslog: \kbd{tail -f /var/log/syslog}
     alias tlog="tail -f /var/log/syslog"    # follow the syslog
-    #a1# (Re)-source \kbd{/etc/skel/.zshrc}
-    alias zshskel="source /etc/skel/.zshrc" # source skeleton zshrc
 fi
 
 # sort installed Debian-packages by size
