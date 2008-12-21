@@ -2112,25 +2112,29 @@ zsh-help - hints for use of zsh on grml
 =======================================$reset_color"
 
     print '
-Main configuration of zsh happens in /etc/zsh/zshrc (global)
-and /etc/skel/.zshrc which is copied to $HOME/.zshrc once.
-The files are part of the package grml-etc-core, if you want to
+Main configuration of zsh happens in /etc/zsh/zshrc.
+That file is part of the package grml-etc-core, if you want to
 use them on a non-grml-system just get the tar.gz from
-http://deb.grml.org/ or get the files from the mercurial
-repository:
+http://deb.grml.org/ or (preferably) get it from the git repository:
 
-  http://git.grml.org/?p=grml-etc-core.git;a=blob_plain;f=etc/zsh/zshrc
-  http://git.grml.org/?p=grml-etc-core.git;a=blob_plain;f=etc/skel/.zshrc
+  http://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
 
-If you want to stay in sync with zsh configuration of grml
-run '\''ln -sf /etc/skel/.zshrc $HOME/.zshrc'\'' and configure
-your own stuff in $HOME/.zshrc.local. System wide configuration
-without touching configuration files of grml can take place
-in /etc/zsh/zshrc.local.
+This version of grml'\''s zsh setup does not use skel/.zshrc anymore.
+The file is still there, but it is empty for backwards compatibility.
 
-If you want to use the configuration of user grml also when
-running as user root just run '\''zshskel'\'' which will source
-the file /etc/skel/.zshrc.
+For your own changes use these two files:
+    $HOME/.zshrc.pre
+    $HOME/.zshrc.local
+
+The former is sourced very early in our zshrc, the latter is sourced
+very lately.
+
+System wide configuration without touching configuration files of grml
+can take place in /etc/zsh/zshrc.local.
+
+Normally, the root user (EUID == 0) does not get the whole grml setup.
+If you want to force the whole setup for that user, too, set
+GRML_ALWAYS_LOAD_ALL=1 in .zshrc.pre in root'\''s home directory.
 
 For information regarding zsh start at http://grml.org/zsh/
 
@@ -2155,7 +2159,7 @@ the zsh yet. :)
 
 A value greater than 0 is enables a feature; a value equal to zero
 disables it. If you like one or the other of these settings, you can
-add them to ~/.zshenv to ensure they are set when sourcing grml'\''s
+add them to ~/.zshrc.pre to ensure they are set when sourcing grml'\''s
 zshrc.'
 
     print "
