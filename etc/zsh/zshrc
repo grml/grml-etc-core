@@ -152,6 +152,11 @@ else
     isgrmlsmall() { return 1 }
 fi
 
+isdarwin(){
+    [[ $OSTYPE == darwin* ]] && return 0
+    return 1
+}
+
 #f1# are we running within an utf environment?
 isutfenv() {
     case "$LANG $CHARSET $LANGUAGE" in
@@ -427,6 +432,18 @@ export SHELL='/bin/zsh'
 
 # color setup for ls:
 check_com -c dircolors && eval $(dircolors -b)
+# color setup for ls on OS X:
+isdarwin && export CLICOLOR=1
+
+# do MacPorts setup on darwin
+if isdarwin && [[ -d /opt/local ]]; then
+    # Note: PATH gets set in /etc/zprofile on Darwin, so this can't go into
+    # zshenv.
+    PATH="/opt/local/bin:/opt/local/sbin:$PATH"
+    MANPATH="/opt/local/share/man:$MANPATH"
+fi
+# do Fink setup on darwin
+isdarwin && xsource /sw/bin/init.sh
 
 # set width of man pages to 80 for more convenient reading
 # export MANWIDTH=${MANWIDTH:-80}
