@@ -1264,6 +1264,11 @@ zstyle ':vcs_info:*' max-exports 1
 #   disable             - Provide a list of systems, you don't want
 #                         the vcs_info() to check for repositories
 #                         (checked in the 'init' context, too).
+#   disable-patterns    - A list of patterns that are checked against $PWD.
+#                         If the pattern matches, vcs_info will be disabled.
+#                         Say, ~/.zsh is a directory under version control,
+#                         in which you do not want vcs_info to be active, do:
+#                         zstyle ':vcs_info:*' disable-patterns "$HOME/.zsh+(|/*)"
 #   use-simple          - If there are two different ways of gathering
 #                         information, you can select the simpler one
 #                         by setting this style to true; the default
@@ -1284,6 +1289,7 @@ zstyle ':vcs_info:*' max-exports 1
 #   max-exports         2
 #   enable              true
 #   disable             (empty list)
+#   disable-patterns    (empty list)
 #   use-simple          false
 #   use-prompt-escapes  true
 #
@@ -1848,8 +1854,9 @@ vcs_info_lastmsg () { # {{{
 }
 # }}}
 vcs_info () { # {{{
+    local pat
     local -i found
-    local -a VCSs disabled
+    local -a VCSs disabled dps
     local -x vcs usercontext
     local -ax msgs
     local -Ax vcs_comm
@@ -1882,6 +1889,15 @@ vcs_info () { # {{{
         return 0
     }
     zstyle -a ":vcs_info:${vcs}:${usercontext}" "disable" disabled
+
+    zstyle -a ":vcs_info:${vcs}:${usercontext}:${rrn}" "disable-patterns" dps
+    for pat in ${dps} ; do
+        if [[ ${PWD} == ${~pat} ]] ; then
+            [[ -n ${vcs_info_msg_0_} ]] && VCS_INFO_set --clear
+            return 0
+        fi
+    done
+
     VCS_INFO_maxexports
 
     (( found = 0 ))
