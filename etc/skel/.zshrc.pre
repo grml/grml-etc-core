@@ -1,0 +1,2 @@
+# do not warn about old skel dot-files, if we are actually using the new ones.
+GRML_WARN_SKEL=0
