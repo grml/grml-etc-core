@@ -897,12 +897,6 @@ if is4 && [[ -n ${(k)modules[zsh/complist]} ]] ; then
     #k# menu selection: pick item but stay in the menu
     bindkey -M menuselect '\e^M' accept-and-menu-complete
 
-    # use the vi navigation keys (hjkl) besides cursor keys in menu completion
-    #bindkey -M menuselect 'h' vi-backward-char        # left
-    #bindkey -M menuselect 'k' vi-up-line-or-history   # up
-    #bindkey -M menuselect 'l' vi-forward-char         # right
-    #bindkey -M menuselect 'j' vi-down-line-or-history # bottom
-
     # accept a completion and try to complete again by using menu
     # completion; very useful with completing directories
     # by using 'undo' one's got a simple file browser
@@ -923,25 +917,8 @@ zle -N insert-last-typed-word;
 #k# Insert last typed word
 bindkey "\em" insert-last-typed-word
 
-# set command prediction from history, see 'man 1 zshcontrib'
-#  is4 && zrcautoload predict-on && \
-#  zle -N predict-on         && \
-#  zle -N predict-off        && \
-#  bindkey "^X^Z" predict-on && \
-#  bindkey "^Z" predict-off
-
 #k# Shortcut for \kbd{fg<enter>}
 bindkey -s '^z' "fg\n"
-
-# press ctrl-q to quote line:
-#  mquote () {
-#        zle beginning-of-line
-#        zle forward-word
-#        # RBUFFER="'$RBUFFER'"
-#        RBUFFER=${(q)RBUFFER}
-#        zle end-of-line
-#  }
-#  zle -N mquote && bindkey '^q' mquote
 
 # run command line as user root via sudo:
 sudo-command-line() {
@@ -987,8 +964,6 @@ is4 && setopt histignorealldups # If  a  new  command  line being added to the h
                             # list duplicates an older one, the older command is removed from the list
 setopt histignorespace      # remove command lines from the history list when
                             # the first character on the line is a space
-#  setopt histallowclobber    # add `|' to output redirections in the history
-#  setopt NO_clobber          # warning if file exists ('cat /dev/null > ~/.zshrc')
 setopt auto_cd              # if a command is issued that can't be executed as a normal command,
                             # and the command is the name of a directory, perform the cd command to that directory
 setopt extended_glob        # in order to use #, ~ and ^ for filename generation
@@ -1000,10 +975,7 @@ setopt notify               # report the status of backgrounds jobs immediately
 setopt hash_list_all        # Whenever a command completion is attempted, make sure \
                             # the entire command path is hashed first.
 setopt completeinword       # not just at the end
-# setopt nocheckjobs          # don't warn me about bg processes when exiting
 setopt nohup                # and don't kill them, either
-# setopt printexitvalue       # alert me if something failed
-# setopt dvorak               # with spelling correction, assume dvorak kb
 setopt auto_pushd           # make cd push the old directory onto the directory stack.
 setopt nonomatch            # try to avoid the 'zsh: no matches found...'
 setopt nobeep               # avoid "beep"ing
@@ -1012,12 +984,6 @@ setopt pushd_ignore_dups    # don't push the same dir twice.
 MAILCHECK=30       # mailchecks
 REPORTTIME=5       # report about cpu-/system-/user-time of command if running longer than 5 seconds
 watch=(notme root) # watch for everyone but me and root
-
-# define word separators (for stuff like backward-word, forward-word, backward-kill-word,..)
-#  WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' # the default
-#  WORDCHARS=.
-#  WORDCHARS='*?_[]~=&;!#$%^(){}'
-#  WORDCHARS='${WORDCHARS:s@/@}'
 
 # only slash should be considered as a word separator:
 slash-backward-kill-word() {
@@ -2462,12 +2428,6 @@ grmlcomp() {
             fi'
     fi
 
-    # zstyle ':completion:*' completer _complete _correct _approximate
-    # zstyle ':completion:*' expand prefix suffix
-
-    # complete shell aliases
-    # zstyle ':completion:*' completer _expand_alias _complete _approximate
-
     # command for process lists, the local web server details and host completion
     zstyle ':completion:*:urls' local 'www' '/var/www/' 'public_html'
 
@@ -2491,29 +2451,8 @@ grmlcomp() {
         localhost
     )
     zstyle ':completion:*:hosts' hosts $hosts
+    # TODO: so, why is this here?
     #  zstyle '*' hosts $hosts
-
-    # specify your logins:
-    # my_accounts=(
-    #  {grml,grml1}@foo.invalid
-    #  grml-devel@bar.invalid
-    # )
-    # other_accounts=(
-    #  {fred,root}@foo.invalid
-    #  vera@bar.invalid
-    # )
-    # zstyle ':completion:*:my-accounts' users-hosts $my_accounts
-    # zstyle ':completion:*:other-accounts' users-hosts $other_accounts
-
-    # specify specific port/service settings:
-    #  telnet_users_hosts_ports=(
-    #    user1@host1:
-    #    user2@host2:
-    #    @mail-server:{smtp,pop3}
-    #    @news-server:nntp
-    #    @proxy-server:8000
-    #  )
-    # zstyle ':completion:*:*:telnet:*' users-hosts-ports $telnet_users_hosts_ports
 
     # use generic completion system for programs not yet defined; (_gnu_generic works
     # with commands that provide a --help option with "standard" gnu-like output.)
@@ -2633,9 +2572,6 @@ if check_com qma ; then
     compdef _man qma
 else
     manzsh()  { /usr/bin/man zshall |  vim -c "se ft=man| se hlsearch" +/"$1" - ; }
-    # manzsh()  { /usr/bin/man zshall |  most +/"$1" ; }
-    # [[ -f ~/.terminfo/m/mostlike ]] && MYLESS='LESS=C TERMINFO=~/.terminfo TERM=mostlike less' || MYLESS='less'
-    # manzsh()  { man zshall | $MYLESS -p $1 ; }
 fi
 
 if check_com -c $PAGER ; then
@@ -2906,14 +2842,6 @@ bk() {
     cp -a "$1" "${1}_$(date --iso-8601=seconds)"
 }
 
-# Switching shell safely and efficiently? http://www.zsh.org/mla/workers/2001/msg02410.html
-# bash() {
-#  NO_SWITCH="yes" command bash "$@"
-# }
-# restart () {
-#  exec $SHELL $SHELL_ARGS "$@"
-# }
-
 #f1# grep for patterns in grml's zsh setup
 zg() {
 #{{{
@@ -2973,14 +2901,6 @@ exit 0;
 
 # }}}
 
-# log out? set timeout in seconds {{{
-# TMOUT=1800
-# do not log out in some specific terminals:
-#  if [[ "${TERM}" == ([Exa]term*|rxvt|dtterm|screen*) ]] ; then
-#    unset TMOUT
-#  fi
-# }}}
-
 # {{{ make sure our environment is clean regarding colors
 for color in BLUE RED GREEN CYAN YELLOW MAGENTA WHITE ; unset $color
 # }}}
@@ -3001,12 +2921,6 @@ fi
 ###
 
 (( GRML_ALWAYS_LOAD_ALL == 0 )) && (( $EUID == 0 )) && return 0
-
-# autoloading stuff {{{
-# associate types and extensions (be aware with perl scripts and anwanted behaviour!)
-#  check_com zsh-mime-setup || { autoload zsh-mime-setup && zsh-mime-setup }
-#  alias -s pl='perl -S'
-# }}}
 
 # variables {{{
 
@@ -3033,46 +2947,6 @@ fi
 [[ -f /usr/share/classpath/glibj.zip ]] && export JIKESPATH=/usr/share/classpath/glibj.zip
 # }}}
 
-# set options {{{
-
-# Allow comments even in interactive shells i. e.
-# $ uname # This command prints system informations
-# zsh: bad pattern: #
-# $ setopt interactivecomments
-# $ uname # This command prints system informations
-# Linux
-#  setopt interactivecomments
-
-# ctrl-s will no longer freeze the terminal.
-#  stty erase "^?"
-
-# }}}
-
-# {{{ global aliases
-# These do not have to be at the beginning of the command line.
-# Avoid typing cd ../../ for going two dirs down and so on
-# Usage, e.g.: "$ cd ...' or just '$ ...' with 'setopt auto_cd'
-# Notice: deactivated by 061112 by default, we use another approach
-# known as "power completion / abbreviation expansion"
-#  alias -g '...'='../..'
-#  alias -g '....'='../../..'
-#  alias -g BG='& exit'
-#  alias -g C='|wc -l'
-#  alias -g G='|grep'
-#  alias -g H='|head'
-#  alias -g Hl=' --help |& less -r'
-#  alias -g K='|keep'
-#  alias -g L='|less'
-#  alias -g LL='|& less -r'
-#  alias -g M='|most'
-#  alias -g N='&>/dev/null'
-#  alias -g R='| tr A-z N-za-m'
-#  alias -g SL='| sort | less'
-#  alias -g S='| sort'
-#  alias -g T='|tail'
-#  alias -g V='| vim -'
-# }}}
-
 # aliases {{{
 
 # Xterm resizing-fu.
@@ -3086,16 +2960,12 @@ alias large='echo -en "\033]50;-misc-fixed-medium-r-normal-*-*-150-*-*-c-*-iso88
 alias huge='echo -en "\033]50;-misc-fixed-medium-r-normal-*-*-210-*-*-c-*-iso8859-15\007"'
 alias smartfont='echo -en "\033]50;-artwiz-smoothansi-*-*-*-*-*-*-*-*-*-*-*-*\007"'
 alias semifont='echo -en "\033]50;-misc-fixed-medium-r-semicondensed-*-*-120-*-*-*-*-iso8859-15\007"'
-#  if [[ "$TERM" == "xterm" ]] && [[ "$LINES" -ge 50 ]] && [[ "$COLUMNS" -ge 100 ]] && [[ -z "$SSH_CONNECTION" ]] ; then
-#          large
-#  fi
 
 # general
 #a2# Execute \kbd{du -sch}
 alias da='du -sch'
 #a2# Execute \kbd{jobs -l}
 alias j='jobs -l'
-#  alias u='translate -i'          # translate
 
 # compile stuff
 #a2# Execute \kbd{./configure}
@@ -3104,6 +2974,7 @@ alias CO="./configure"
 alias CH="./configure --help"
 
 # http://conkeror.mozdev.org/
+# TODO: I think this should be removed, as conkeror is not a simple extension anymore
 #a2# Run a keyboard driven firefox
 alias conkeror='firefox -chrome chrome://conkeror/content'
 
@@ -3173,8 +3044,6 @@ alias fbmplayer='mplayer -vo fbdev -fs -zoom'
 #a2# Execute \kbd{links2 -driver fb}
 alias fblinks='links2 -driver fb'
 
-# ignore ~/.ssh/known_hosts entries
-#  alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null" -o "PreferredAuthentications=keyboard-interactive"'
 #a2# ssh with StrictHostKeyChecking=no \\&\quad and UserKnownHostsFile unset
 alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
@@ -3391,7 +3260,6 @@ alias GREP='grep -i --color=auto'
 
 # one blank line between each line
 if [[ -r ~/.terminfo/m/mostlike ]] ; then
-#   alias man2='MANPAGER="sed -e G |less" TERMINFO=~/.terminfo TERM=mostlike /usr/bin/man'
     #f5# Watch manpages in a stretched style
     man2() { PAGER='dash -c "sed G | /usr/bin/less"' TERM=mostlike /usr/bin/man "$@" ; }
 fi
@@ -3471,22 +3339,6 @@ trans() {
             echo "         -E == English to German"
     esac
 }
-
-# Some quick Perl-hacks aka /useful/ oneliner
-#  bew() { perl -le 'print unpack "B*","'$1'"' }
-#  web() { perl -le 'print pack "B*","'$1'"' }
-#  hew() { perl -le 'print unpack "H*","'$1'"' }
-#  weh() { perl -le 'print pack "H*","'$1'"' }
-#  pversion()    { perl -M$1 -le "print $1->VERSION" } # i. e."pversion LWP -> 5.79"
-#  getlinks ()   { perl -ne 'while ( m/"((www|ftp|http):\/\/.*?)"/gc ) { print $1, "\n"; }' $* }
-#  gethrefs ()   { perl -ne 'while ( m/href="([^"]*)"/gc ) { print $1, "\n"; }' $* }
-#  getanames ()  { perl -ne 'while ( m/a name="([^"]*)"/gc ) { print $1, "\n"; }' $* }
-#  getforms ()   { perl -ne 'while ( m:(\</?(input|form|select|option).*?\>):gic ) { print $1, "\n"; }' $* }
-#  getstrings () { perl -ne 'while ( m/"(.*?)"/gc ) { print $1, "\n"; }' $*}
-#  getanchors () { perl -ne 'while ( m/«([^«»\n]+)»/gc ) { print $1, "\n"; }' $* }
-#  showINC ()    { perl -e 'for (@INC) { printf "%d %s\n", $i++, $_ }' }
-#  vimpm ()      { vim `perldoc -l $1 | sed -e 's/pod$/pm/'` }
-#  vimhelp ()    { vim -c "help $1" -c on -c "au! VimEnter *" }
 
 #f5# List all occurrences of programm in current PATH
 plap() {
@@ -4249,6 +4101,7 @@ gethgsnap() {
 # }}}
 
 # some useful commands often hard to remember - let's grep for them {{{
+# actually use our zg() function now. :)
 
 # Work around ion/xterm resize bug.
 #if [[ "$SHLVL" -eq 1 ]]; then
