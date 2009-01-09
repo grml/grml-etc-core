@@ -41,11 +41,11 @@
 #}
 #zle -N mquote && bindkey '^q' mquote
 
-# define word separators (for stuff like backward-word, forward-word, backward-kill-word,..)
-#  WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' # the default
-#  WORDCHARS=.
-#  WORDCHARS='*?_[]~=&;!#$%^(){}'
-#  WORDCHARS='${WORDCHARS:s@/@}'
+## define word separators (for stuff like backward-word, forward-word, backward-kill-word,..)
+#WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' # the default
+#WORDCHARS=.
+#WORDCHARS='*?_[]~=&;!#$%^(){}'
+#WORDCHARS='${WORDCHARS:s@/@}'
 
 
 ## some popular options ##
@@ -184,4 +184,3 @@
 #showINC ()    { perl -e 'for (@INC) { printf "%d %s\n", $i++, $_ }' }
 #vimpm ()      { vim `perldoc -l $1 | sed -e 's/pod$/pm/'` }
 #vimhelp ()    { vim -c "help $1" -c on -c "au! VimEnter *" }
-
