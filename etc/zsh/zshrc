@@ -270,8 +270,32 @@ function grml_do_not_warn_skel() {
     printf 'GRML_WARN_SKEL=0\n' >>! ~/.zshrc.pre
 }
 
-grml_warn_skel_main
-grml_warn_skel_remove
+# let's try to guess how the user uses us.
+if is-at-least 4.3.7 ; then
+    # funcsourcetrace requires at least version 4.3.7 of zsh.
+    GRML_SRC_FILE="${${funcsourcetrace[1]}%:*}"
+
+    grml_warn_skel_main
+    case ${GRML_SRC_FILE} in
+        (${HOME}/.zshrc.global)
+            grml_warn_skel_remove
+            printf '\nIt looks like you copied the grml zshrc to '\''~/.zshrc.global'\''.\n'
+            printf 'Nowadays you just copy the global zshrc to '\''~/.zshrc'\'' to use\n'
+            printf 'it on a non-grml-system.\n'
+            ;;
+        (${HOME}/.zshrc)
+            printf '\nIt looks like you copied the grml zshrc to '\''~/.zshrc'\''.\n'
+            printf 'We'\''ll disable this warning automatically for later sessions.\n'
+            grml_do_not_warn_skel
+            ;;
+        (*)
+            grml_do_not_warn_skel
+            ;;
+    esac
+else
+    grml_warn_skel_main
+    grml_warn_skel_remove
+fi
 
 unfunction grml_warn_skel_remove grml_warn_skel_main
 
