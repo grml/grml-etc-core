@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2005 2006 Alexander Bernauer <alex@copton.net>
 # Copyright (C) 2005 2006 Rico Schiekel <fire@donwgra.de>
 # Copyright (C) 2005 2006 Ulrich Dangel <uli@spamt.net>
@@ -21,12 +21,17 @@
 
 import sys, getopt, logging
 from socket import *
-from os import popen
 from select import select
+try: 
+    import dbus
+except ImportError:
+    print >>sys.stderr, 'Please install python-dbus'
+    raise SystemExit(1)
+
 
 host='localhost'
 port=1234
-osdcmd = "/usr/bin/osd_cat"
+timeout=5
 
 def syntax():
     print "osd_server.py [options]"
@@ -34,39 +39,13 @@ def syntax():
     print "     -h --help       print this message"
     print "     -H --host       host of the osd server (def: " + host + ")"
     print "     -P --port       port of the osd server (def: " + str(port) + ")"
-    print "     -o --osd        set new osd parameter string"
+    print "     -t --timeout    timeout in seconds (def: " + str(timeout) + ")"
     print "     -l --log        log file ('-' logs to stdout)"
 
-def get_osd_paramstr(def_params, user_params):
-    ret = user_params
-    if user_params == '':
-        for n, v in def_params.iteritems():
-            if v != '':
-                ret += n + "=" + v + " "
-    return ret
-
-
-
-osd_params={ '--pos': 'middle',
-             '--offset': '100',
-             '--align': 'center',
-             '--indent': '100',
-             '--font':
-             '\-\*\-helvetica\-\*\-r\-\*\-\*\-34\-\*\-\*\-\*\-\*\-\*\-iso8859\-15',
-             '--colour': 'green',
-             '--shadow': '0',
-             '--shadowcolour': '',
-             '--outline': '1',
-             '--outlinecolour': 'black',
-             '--age': '4',
-             '--lines': '5',
-             '--delay': '4' }
-
 logfile_name = ''
-user_osd_params = ''
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "hH:P:o:l:", ["help", "host=", "port=", "osd=", "log="])
+    opts, args = getopt.getopt(sys.argv[1:], "hH:P:l:t:", ["help", "host=", "port=", "log=", 'timeout='])
 except getopt.GetoptError:
     syntax()
     sys.exit(2)
@@ -79,10 +58,10 @@ for opt, arg in opts:
         host = arg
     elif opt in ("-P", "--port"):
         port = int(arg)
-    elif opt in ("-o", "--osd"):
-        user_osd_params = arg
     elif opt in ("-l", "--log"):
         logfile_name = arg
+    elif opt in ("-p", "--timeout"):
+        timeout=int(arg)
 
 l = socket(AF_INET, SOCK_STREAM)
 l.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
@@ -102,25 +81,19 @@ else:
 logger.setLevel(logging.INFO)
 
 logger.info("osd_server running on [%s] port [%d]" % (host, port))
-osdpipe = popen("%s %s" % (osdcmd, get_osd_paramstr(osd_params, user_osd_params)), 'w')
 
-r = range(32,127)
-r.extend([ord(umlaut) for umlaut in "äöüßÄÖÜ¤" ])
+bus = dbus.SessionBus()
+devobj = bus.get_object('org.freedesktop.Notifications', '/org/freedesktop/Notifications')
+notify = dbus.Interface(devobj, 'org.freedesktop.Notifications')
 
 while 1:
     (con, addr) = l.accept()
     message = con.recv(60).strip()
     con.close()
 
-    message = message.replace("\n", "")
-    message = ''.join(map(lambda a: not a in r \
-                        and '[%.2d]' % a \
-                        or chr(a), \
-                        [ord(c) for c in message]))[:60]
+    message = message.splitlines()
+    if message:
+        body = ' '.join([m for m in message[1:]])
+        notify.Notify('', 0, '', message[0], body, '', [], timeout*1000)
+        logger.info(message)
 
-    logger.info(message)
-    osdpipe.write(message)
-    osdpipe.write("\n")
-    osdpipe.flush()
-
-osdpipe.close()
