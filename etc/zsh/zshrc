@@ -91,52 +91,8 @@ if [[ $ZSH_PROFILE_RC -gt 0 ]] ; then
 fi
 # }}}
 
-# setting some default values {{{
-
 # load .zshrc.pre to give the user the chance to overwrite the defaults
 [[ -r ${HOME}/.zshrc.pre ]] && source ${HOME}/.zshrc.pre
-
-NOCOR=${NOCOR:-0}
-NOMENU=${NOMENU:-0}
-NOPRECMD=${NOPRECMD:-0}
-BATTERY=${BATTERY:-0}
-GRMLSMALL_SPECIFIC=${GRMLSMALL_SPECIFIC:-1}
-GRML_ALWAYS_LOAD_ALL=${GRML_ALWAYS_LOAD_ALL:-0}
-GRML_WARN_SKEL=${GRML_WARN_SKEL:-1}
-
-if (( GRML_WARN_SKEL != 0 )) ; then
-    printf '
-Dear user,
-
-You updated grml'\''s zshrc which brings a major change.
-The configuration is kept only in one file, being the global zshrc.
-In the past, the configuration was split in two files, with the
-second file being the .zshrc file from /etc/skel.
-
-If you have a .zshrc file in your home directory that originally
-came from the skel directory, please remove it. This is also the case
-if you followed earlier instructions from the grml-zsh-refcard or
-from <http://grml.org/console> on non-grml systems.
-
-Please see the current grml-zsh-refcard for updated installation
-information. In short, you don'\''t want a .zshrc.global file. Install
-the global zshrc to ~/.zshrc and be done.
-
-If you need changes to the configuration, use ~/.zshrc.pre and
-~/.zshrc.local.
-
-To remove this warning execute '\''grml_do_not_warn_skel'\''.
-
-' | more
-
-function grml_do_not_warn_skel() {
-    printf '# Do not warn about old skel dot-files anymore\n' >>! ~/.zshrc.pre
-    printf 'GRML_WARN_SKEL=0\n' >>! ~/.zshrc.pre
-}
-
-fi
-
-# }}}
 
 # {{{ check for version/system
 # check for versions (compatibility reasons)
@@ -238,6 +194,88 @@ if ! [[ ${ZSH_VERSION} == 3.1.<7->*      \
 
     function zstyle() { : }
 fi
+
+# autoload wrapper - use this one instead of autoload directly
+# We need to define this function as early as this, because autoloading
+# 'is-at-least()' needs it.
+function zrcautoload() {
+    setopt local_options extended_glob
+    local fdir ffile
+    local -i ffound
+
+    ffile=${1}
+    (( found = 0 ))
+    for fdir in ${fpath} ; do
+        [[ -e ${fdir}/${ffile} ]] && (( ffound = 1 ))
+    done
+
+    (( ffound == 0 )) && return 1
+    if [[ $ZSH_VERSION == 3.1.<6-> || $ZSH_VERSION == <4->* ]] ; then
+        autoload -U ${ffile} || return 1
+    else
+        autoload ${ffile} || return 1
+    fi
+    return 0
+}
+
+# Load is-at-least() for more precise version checks
+# Note that this test will *always* fail, if the is-at-least
+# function could not be marked for autoloading.
+zrcautoload is-at-least || is-at-least() { return 1 }
+
+# }}}
+
+# setting some default values {{{
+
+NOCOR=${NOCOR:-0}
+NOMENU=${NOMENU:-0}
+NOPRECMD=${NOPRECMD:-0}
+BATTERY=${BATTERY:-0}
+GRMLSMALL_SPECIFIC=${GRMLSMALL_SPECIFIC:-1}
+GRML_ALWAYS_LOAD_ALL=${GRML_ALWAYS_LOAD_ALL:-0}
+GRML_WARN_SKEL=${GRML_WARN_SKEL:-1}
+
+if (( GRML_WARN_SKEL != 0 )) ; then
+
+function grml_warn_skel_main() {
+    printf '
+Dear user,
+
+You updated grml'\''s zshrc which brings a major change.
+The configuration is kept only in one file, being the global zshrc.
+In the past, the configuration was split in two files, with the
+second file being the .zshrc file from /etc/skel.
+
+If you have a .zshrc file in your home directory that originally
+came from the skel directory, please remove it. This is also the case
+if you followed earlier instructions from the grml-zsh-refcard or
+from <http://grml.org/console> on non-grml systems.
+
+Please see the current grml-zsh-refcard for updated installation
+information. In short, you don'\''t want a .zshrc.global file. Install
+the global zshrc to ~/.zshrc and be done.
+
+If you need changes to the configuration, use ~/.zshrc.pre and
+~/.zshrc.local.
+
+'
+}
+
+function grml_warn_skel_remove() {
+    printf 'To remove this warning execute '\''grml_do_not_warn_skel'\''.\n\n'
+}
+
+function grml_do_not_warn_skel() {
+    printf '# Do not warn about old skel dot-files anymore\n' >>! ~/.zshrc.pre
+    printf 'GRML_WARN_SKEL=0\n' >>! ~/.zshrc.pre
+}
+
+grml_warn_skel_main
+grml_warn_skel_remove
+
+unfunction grml_warn_skel_remove grml_warn_skel_main
+
+fi # GRML_WARN_SKEL
 
 # }}}
 
@@ -375,36 +413,7 @@ xunfunction() {
     return 0
 }
 
-# autoload wrapper - use this one instead of autoload directly
-function zrcautoload() {
-    setopt local_options extended_glob
-    local fdir ffile
-    local -i ffound
-
-    ffile=${1}
-    (( found = 0 ))
-    for fdir in ${fpath} ; do
-        [[ -e ${fdir}/${ffile} ]] && (( ffound = 1 ))
-    done
-
-    (( ffound == 0 )) && return 1
-    if [[ $ZSH_VERSION == 3.1.<6-> || $ZSH_VERSION == <4->* ]] ; then
-        autoload -U ${ffile} || return 1
-    else
-        autoload ${ffile} || return 1
-    fi
-    return 0
-}
-
 #}}}
-
-# Load is-at-least() for more precise version checks {{{
-
-# Note that this test will *always* fail, if the is-at-least
-# function could not be marked for autoloading.
-zrcautoload is-at-least || is-at-least() { return 1 }
-
-# }}}
 
 # locale setup {{{
 if [[ -z "$LANG" ]] ; then
