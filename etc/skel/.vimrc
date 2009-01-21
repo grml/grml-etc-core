@@ -3,7 +3,6 @@
 " Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 " Bug-Reports:   see http://grml.org/bugs/
 " License:       This file is licensed under the GPL v2.
-" Latest change: Don Jul 19 00:02:50 CEST 2007 [mika]
 "###############################################################################
 " Thanks to Sven Guckes for his template!
 "###############################################################################
@@ -11,10 +10,10 @@
 " be no-compatible with vi
   set nocp
 " turn these ON:
-  set digraph ek hidden ruler sc vb wmnu
+  set ek hidden ruler sc vb wmnu
 " set digraph
 " turn these OFF ("no" prefix):
-  set noeb noet nosol
+  set nodigraph noeb noet nosol
 " non-toggles:
   set bs=2 fo=cqrt ls=2 shm=at ww=<,>,h,l
 " set bs=2 fo=cqrt ls=2 shm=at tw=72 ww=<,>,h,l
@@ -34,8 +33,9 @@
 " some colors - as an example "white on black" [use bold fonts]:
 "  hi normal   ctermfg=white  ctermbg=black guifg=white  guibg=black
 "  hi nontext  ctermfg=blue   ctermbg=black guifg=blue   guibg=black
-" switch on syntax coloring!! "bunt ist meine lieblingsfarbe!" :-)
-  syn on
+  if has("syntax")
+     syn on
+  endif
 " set t_Co=256                " number of colors
 
 " some useful mappings:
@@ -118,7 +118,7 @@ if version >= 700
     map <F12> :set spell!<CR><Bar>:echo "Spell Check: " . strpart("OffOn", 3 * &spell, 3)<CR>
     set spellfile=~/.vim/spellfile.add
   " change language -  get spell files from http://ftp.vim.org/pub/vim/runtime/spell/ =>
-  " cd ~/.vim/spell && wget http://ftp.vim.org/pub/vim/runtime/spell/de.latin1.spl
+  " cd ~/.vim/spell && wget http://ftp.vim.org/pub/vim/runtime/spell/de.{latin1,utf-8}.spl
   " change to german:
   "  set spelllang=de
   " highlight spelling correction:
