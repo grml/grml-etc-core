@@ -3,7 +3,6 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: YDATE [mika]
 ################################################################################
 
   backtick 1 0 60   /usr/bin/cpu-screen
@@ -63,8 +62,12 @@
 # them to "nothing" (empty right-hand-side):
 # bind .  dumptermcap # default
   bind .
-  bind ^\
-  bind \\
+# bind ^\
+# bind \\
+  bind .
+  bind k
+  bind ^k
+  bind ^h
 
 # 040126 To be able to select windows with n > 9 ->
 # press "C-a - #" instead of just "C-a #"
@@ -97,13 +100,6 @@
 #  bindkey -k F1 prev
 #  bindkey -k F2 next
 
-# remove some stupid / dangerous key bindings
-  bind k
-  bind ^k
-  bind .
-  bind ^\
-  bind \\
-  bind ^h
   bind h  hardcopy
 # make them better
   bind 'K' kill
@@ -150,3 +146,5 @@
 
 # Welcome the user:
   echo "welcome BoFH!"
+
+## END OF FILE #################################################################

@@ -1,11 +1,14 @@
 grml-etc-core (0.3.62) unstable; urgency=low
 
   * /etc/skel/.vimrc:
-    * disable digraph by default (it's annoying for users not
+    - disable digraph by default (it's annoying for users not
       being aware of it)
-    * enable syntax highlighting only if the vim version supports it
+    - enable syntax highlighting only if the vim version supports it
+  * /etc/grml/screenrc:
+    - re-enable keybindings '^\' and '\\' for exiting screen with query
+      (thanks, gebi)
 
- -- Michael Prokop <mika@grml.org>  Wed, 21 Jan 2009 14:52:14 +0100
+ -- Michael Prokop <mika@grml.org>  Tue, 27 Jan 2009 21:57:00 +0100
 
 grml-etc-core (0.3.61) unstable; urgency=low
 
