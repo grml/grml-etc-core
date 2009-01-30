@@ -3562,7 +3562,7 @@ status() {
     print ""
     print "Date..: "$(date "+%Y-%m-%d %H:%M:%S")""
     print "Shell.: Zsh $ZSH_VERSION (PID = $$, $SHLVL nests)"
-    print "Term..: $TTY ($TERM), $BAUD bauds, $COLUMNS x $LINES cars"
+    print "Term..: $TTY ($TERM), ${BAUD:+$BAUD bauds, }$COLUMNS x $LINES cars"
     print "Login.: $LOGNAME (UID = $EUID) on $HOST"
     print "System: $(cat /etc/[A-Za-z]*[_-][rv]e[lr]*)"
     print "Uptime:$(uptime)"
