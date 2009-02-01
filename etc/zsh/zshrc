@@ -2058,12 +2058,14 @@ hash -d www=/var/www
 # }}}
 
 # {{{ some aliases
-if [[ $UID -eq 0 ]] ; then
-    [[ -r /etc/grml/screenrc ]] && alias screen='/usr/bin/screen -c /etc/grml/screenrc'
-elif [[ -r $HOME/.screenrc ]] ; then
-    alias screen="/usr/bin/screen -c $HOME/.screenrc"
-else
-    [[ -r /etc/grml/screenrc_grml ]] && alias screen='/usr/bin/screen -c /etc/grml/screenrc_grml'
+if check_com -c screen ; then
+    if [[ $UID -eq 0 ]] ; then
+        [[ -r /etc/grml/screenrc ]] && alias screen="${commands[screen]} -c /etc/grml/screenrc"
+    elif [[ -r $HOME/.screenrc ]] ; then
+        alias screen="${commands[screen]} -c $HOME/.screenrc"
+    else
+        [[ -r /etc/grml/screenrc_grml ]] && alias screen="${commands[screen]} -c /etc/grml/screenrc_grml"
+    fi
 fi
 
 # do we have GNU ls with color-support?
