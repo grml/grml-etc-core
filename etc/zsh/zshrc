@@ -2436,6 +2436,9 @@ grmlcomp() {
     zstyle ':completion:*:manuals.*'  insert-sections   true
     zstyle ':completion:*:man:*'      menu yes select
 
+    # provide .. as a completion
+    zstyle ':completion:*' special-dirs ..
+
     # run rehash on completion so new installed program are found automatically:
     _force_rehash() {
         (( CURRENT == 1 )) && rehash

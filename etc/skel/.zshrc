@@ -101,6 +101,9 @@
 #)
 #zstyle ':completion:*:*:telnet:*' users-hosts-ports $telnet_users_hosts_ports
 
+## the default grml setup provides '..' as a completion. it does not provide
+## '.' though. If you want that too, use the following line:
+#zstyle ':completion:*' special-dirs true
 
 ## aliases ##
 
