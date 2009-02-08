@@ -1,5 +1,6 @@
 grml-etc-core (0.3.62) unstable; urgency=low
 
+  [ Michael Prokop ]
   * /etc/skel/.vimrc:
     - disable digraph by default (it's annoying for users not
       being aware of it)
@@ -8,7 +9,21 @@ grml-etc-core (0.3.62) unstable; urgency=low
     - re-enable keybindings '^\' and '\\' for exiting screen with query
       (thanks, gebi)
 
- -- Michael Prokop <mika@grml.org>  Tue, 27 Jan 2009 21:57:00 +0100
+  [ Frank Terbeck ]
+  * zshrc: Big setup merge: etc/zsh/zshrc + etc/skel/.zshrc into one file
+    This includes various cleanups.
+  * zshrc: provide .. as a possible completion
+  * zshrc: Fix status() when $BAUD is unset, thanks to Alexander
+    Steinböck [Closes: issue605]
+  * zshrc: backport disable-patterns feature of vcs_info to the included
+    version, thanks Christian Hofstaedtler.
+  * zshrc: add support for OS X (fink and macports) thanks Christian
+    Hofstaedtler.
+  * zshrc: Use check_com for screen alias check/execution, thanks
+    Jan-Hendrik Zab.
+  * zshrc: add '-f' option to xtrename(), thanks esc.
+
+ -- Frank Terbeck <ft@grml.org>  Sun, 08 Feb 2009 13:32:29 +0100
 
 grml-etc-core (0.3.61) unstable; urgency=low
 
