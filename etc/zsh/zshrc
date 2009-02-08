@@ -3840,16 +3840,21 @@ mkmaildir() {
     mkdir -p ${root}/${subdir}/{cur,new,tmp}
 }
 
-# xtrename() rename xterm from within GNU-screen
+#f5# Change the xterm title from within GNU-screen
 xtrename() {
-    if [[ -z ${DISPLAY} ]] ; then
-        printf 'xtrename only makes sense in X11.\n'
-        return 1
+    if [[ ${1} != "-f" ]] ; then
+        if [[ -z ${DISPLAY} ]] ; then
+            printf 'xtrename only makes sense in X11.\n'
+            return 1
+        fi
+    else
+        shift
     fi
     if [[ -z ${1} ]] ; then
-        printf 'usage: xtrename() "title for xterm"\n'
+        printf 'usage: xtrename [-f] "title for xterm"\n'
         printf '  renames the title of xterm from _within_ screen.\n'
-        printf '  Also works without screen.\n'
+        printf '  also works without screen.\n'
+        printf '  will not work if DISPLAY is unset, use -f to override.\n'
         return 0
     fi
     print -n "\eP\e]0;${1}\C-G\e\\"
