@@ -139,6 +139,12 @@
 
 ## miscellaneous code ##
 
+## Use a default width of 80 for manpages for more convenient reading
+#export MANWIDTH=${MANWIDTH:-80}
+
+## Set a search path for the cd builtin
+#cdpath=(.. ~)
+
 ## variations of our manzsh() function; pick you poison:
 #manzsh()  { /usr/bin/man zshall |  most +/"$1" ; }
 #[[ -f ~/.terminfo/m/mostlike ]] && MYLESS='LESS=C TERMINFO=~/.terminfo TERM=mostlike less' || MYLESS='less'

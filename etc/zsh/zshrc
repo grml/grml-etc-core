@@ -512,12 +512,6 @@ fi
 # do Fink setup on darwin
 isdarwin && xsource /sw/bin/init.sh
 
-# set width of man pages to 80 for more convenient reading
-# export MANWIDTH=${MANWIDTH:-80}
-
-# Search path for the cd command
-#  cdpath=(.. ~)
-
 # completion functions go to /etc/zsh/completion.d
 # function files may be put into /etc/zsh/functions.d, from where they
 # will be automatically autoloaded.
