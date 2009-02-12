@@ -7,7 +7,11 @@ grml-scripts (1.1.17) unstable; urgency=low
     osd_server.py depends on them.
     [Closes: issue172]
 
- -- Michael Prokop <mika@grml.org>  Thu, 12 Feb 2009 19:26:04 +0100
+  [ Michael Prokop ]
+  * Adjust Makefile to get rid of '.sp' sequences in asciidoc
+    manpages. [Closes: issue567]
+
+ -- Michael Prokop <mika@grml.org>  Thu, 12 Feb 2009 20:49:56 +0100
 
 grml-scripts (1.1.16) unstable; urgency=low
 
