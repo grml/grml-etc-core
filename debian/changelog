@@ -1,3 +1,14 @@
+grml-scripts (1.1.17) unstable; urgency=low
+
+  [ Ulrich Dangel ]
+  * osd_server.py uses now the freedesktop.org specification for
+    notification instead of the old xosd way.
+  * Added python-dbus and notification-daemon as suggestion as
+    osd_server.py depends on them.
+    [Closes: issue172]
+
+ -- Michael Prokop <mika@grml.org>  Thu, 12 Feb 2009 19:26:04 +0100
+
 grml-scripts (1.1.16) unstable; urgency=low
 
   [ Michael Prokop ]
