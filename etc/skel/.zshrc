@@ -6,24 +6,27 @@
 ################################################################################
 # Nowadays, grml's zsh setup lives in only *one* zshrc file.
 # That is the global one: /etc/zsh/zshrc (from grml-etc-core).
-# It is best to leave this file untouched and do personal changes to
-# the setup via ${HOME}/.zshrc.local which is loaded at the end of the
-# global zshrc.
+# It is best to leave *this* file untouched and do personal changes to
+# your zsh setup via ${HOME}/.zshrc.local which is loaded at the end of
+# the global zshrc.
 #
 # That way, we enable people on other operating systems to use our
 # setup, too, just by copying our global zshrc to their ${HOME}/.zshrc.
 # Adjustments would still go to the .zshrc.local file.
 ################################################################################
 
-## Upgrade path for old zshrc layout, assuming
-## /etc/skel/.zshrc installed as .zshrc and
-## /etc/zsh/zshrc installed as .zshrc.global
-## and no ~/.zshrc.local exists yet.
+## Inform users about upgrade path for grml's old zshrc layout, assuming that:
+## /etc/skel/.zshrc was installed as ~/.zshrc,
+## /etc/zsh/zshrc was installed as ~/.zshrc.global and
+## ~/.zshrc.local does not exist yet.
 if [ -r ~/.zshrc -a -r ~/.zshrc.global -a ! -r ~/.zshrc.local ] ; then
     printf '-!-\n'
     printf '-!- Looks like you are using the old zshrc layout of grml.\n'
-    printf '-!- Please read the notes in ~/.zshrc and ~/.zshrc.global\n'
-    printf '-!- and/or check out grml-zsh-refcard at http://grml.org/zsh/\n'
+    printf '-!- Please read the notes in the grml-zsh-refcard, being'
+    printf '-!- available at: http://grml.org/zsh/\n'
+    printf '-!-\n'
+    printf '-!- If you just want to get rid of this warning message execute:\n'
+    printf '-!-        touch ~/.zshrc.local\n'
     printf '-!-\n'
 fi
 
@@ -207,3 +210,5 @@ fi
 #showINC ()    { perl -e 'for (@INC) { printf "%d %s\n", $i++, $_ }' }
 #vimpm ()      { vim `perldoc -l $1 | sed -e 's/pod$/pm/'` }
 #vimhelp ()    { vim -c "help $1" -c on -c "au! VimEnter *" }
+
+## END OF FILE #################################################################
