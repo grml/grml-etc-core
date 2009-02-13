@@ -8,6 +8,7 @@ grml-etc-core (0.3.62) unstable; urgency=low
   * /etc/grml/screenrc:
     - re-enable keybindings '^\' and '\\' for exiting screen with query
       (thanks, gebi)
+  * zshrc: provide upgrade path via /etc/skel/.zshrc
 
   [ Frank Terbeck ]
   * zshrc: Big setup merge: /etc/zsh/zshrc + /etc/skel/.zshrc into one file
@@ -23,7 +24,7 @@ grml-etc-core (0.3.62) unstable; urgency=low
     Jan-Hendrik Zab.
   * zshrc: add '-f' option to xtrename(), thanks esc.
 
- -- Michael Prokop <mika@grml.org>  Fri, 13 Feb 2009 12:37:17 +0100
+ -- Michael Prokop <mika@grml.org>  Fri, 13 Feb 2009 13:24:23 +0100
 
 grml-etc-core (0.3.61) unstable; urgency=low
 

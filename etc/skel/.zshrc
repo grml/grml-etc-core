@@ -15,6 +15,18 @@
 # Adjustments would still go to the .zshrc.local file.
 ################################################################################
 
+## Upgrade path for old zshrc layout, assuming
+## /etc/skel/.zshrc installed as .zshrc and
+## /etc/zsh/zshrc installed as .zshrc.global
+## and no ~/.zshrc.local exists yet.
+if [ -r ~/.zshrc -a -r ~/.zshrc.global -a ! -r ~/.zshrc.local ] ; then
+    printf '-!-\n'
+    printf '-!- Looks like you are using the old zshrc layout of grml.\n'
+    printf '-!- Please read the notes in ~/.zshrc and ~/.zshrc.global\n'
+    printf '-!- and/or check out grml-zsh-refcard at http://grml.org/zsh/\n'
+    printf '-!-\n'
+fi
+
 ## Now, we'll give a few examples of what you might want to use in your
 ## .zshrc.local file (just copy'n'paste and uncomment it there):
 
