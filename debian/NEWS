@@ -12,6 +12,11 @@ grml-etc-core (0.3.62) unstable; urgency=low
     That way, we enable people on other operating systems to use our
     setup, too, just by copying our global zshrc to their ${HOME}/.zshrc.
     Adjustments would still go to the .zshrc.local file.
+    Further information is available in the grml-zsh-refcard, available
+    at http://grml.org/zsh/
+
+    If you explore *any* problems please let us know:
+    http://grml.org/bugs/
 
  -- Michael Prokop <mika@grml.org>  Fri, 13 Feb 2009 12:40:28 +0100
 

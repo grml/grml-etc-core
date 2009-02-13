@@ -249,11 +249,12 @@ second file being the .zshrc file from /etc/skel.
 If you have a .zshrc file in your home directory that originally
 came from the skel directory, please remove it. This is also the case
 if you followed earlier instructions from the grml-zsh-refcard or
-from <http://grml.org/console> on non-grml systems.
+from <http://grml.org/console/> on non-grml systems.
 
-Please see the current grml-zsh-refcard for updated installation
-information. In short, you don'\''t want a .zshrc.global file. Install
-the global zshrc to ~/.zshrc and be done.
+Please see the current grml-zsh-refcard (available at
+<http://grml.org/zsh/>) for updated installation information. In short,
+you don'\''t want a .zshrc.global file. Install the global zshrc to
+~/.zshrc and be done.
 
 If you need changes to the configuration, use ~/.zshrc.pre and
 ~/.zshrc.local.
