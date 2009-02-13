@@ -22,7 +22,7 @@ grml-etc-core (0.3.62) unstable; urgency=low
 
 grml-etc-core (0.3.5) unstable; urgency=low
 
-  * Please notice, that the setup of zsh's completion functions has
+  * Please note, that the setup of zsh's completion functions has
     been changed. The setup has been cleaned up but as a sideeffect
     you might notice a problem like:
 
@@ -54,7 +54,7 @@ grml-etc-core (0.3.5) unstable; urgency=low
 
 grml-etc-core (0.1-31) unstable; urgency=low
 
-  * Please notice, that the behaviour of global aliases in /etc/skel/.zshrc
+  * Please note, that the behaviour of global aliases in /etc/skel/.zshrc
     has been changed. Now global aliases won't be expanded automatically
     anymore. You can still use them (and even some more now as well),
     just type the abbreviation/global alias and expand it via pressing

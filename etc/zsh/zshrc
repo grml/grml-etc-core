@@ -2342,7 +2342,7 @@ limit -s
 # {{{ completion system
 
 # called later (via is4 && grmlcomp)
-# notice: use 'zstyle' for getting current settings
+# note: use 'zstyle' for getting current settings
 #         press ^Xh (control-x h) for getting tags in context; ^X? (control-x ?) to run complete_debug with trace output
 grmlcomp() {
     # TODO: This could use some additional information
@@ -3298,7 +3298,7 @@ if [[ -r ~/.terminfo/m/mostlike ]] ; then
 fi
 
 # d():Copyright 2005 Nikolai Weibull <nikolai@bitwi.se>
-# notice: option AUTO_PUSHD has to be set
+# note: option AUTO_PUSHD has to be set
 #f5# Jump between directories
 d() {
     emulate -L zsh
