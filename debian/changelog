@@ -10,7 +10,7 @@ grml-etc-core (0.3.62) unstable; urgency=low
       (thanks, gebi)
 
   [ Frank Terbeck ]
-  * zshrc: Big setup merge: etc/zsh/zshrc + etc/skel/.zshrc into one file
+  * zshrc: Big setup merge: /etc/zsh/zshrc + /etc/skel/.zshrc into one file
     This includes various cleanups.
   * zshrc: provide .. as a possible completion
   * zshrc: Fix status() when $BAUD is unset, thanks to Alexander
@@ -23,7 +23,7 @@ grml-etc-core (0.3.62) unstable; urgency=low
     Jan-Hendrik Zab.
   * zshrc: add '-f' option to xtrename(), thanks esc.
 
- -- Frank Terbeck <ft@grml.org>  Sun, 08 Feb 2009 13:32:29 +0100
+ -- Michael Prokop <mika@grml.org>  Fri, 13 Feb 2009 12:37:17 +0100
 
 grml-etc-core (0.3.61) unstable; urgency=low
 

@@ -1,6 +1,10 @@
-## skel/.zshrc on grml systems
-#
-# Nowadays, grml's zsh setup lives in only in *one* zshrc file.
+# Filename:      /etc/skel/.zshrc
+# Purpose:       config file for zsh (z shell)
+# Authors:       (c) grml-team (grml.org)
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2 or any later version.
+################################################################################
+# Nowadays, grml's zsh setup lives in only *one* zshrc file.
 # That is the global one: /etc/zsh/zshrc (from grml-etc-core).
 # It is best to leave this file untouched and do personal changes to
 # the setup via ${HOME}/.zshrc.local which is loaded at the end of the
@@ -9,12 +13,10 @@
 # That way, we enable people on other operating systems to use our
 # setup, too, just by copying our global zshrc to their ${HOME}/.zshrc.
 # Adjustments would still go to the .zshrc.local file.
-#
-
+################################################################################
 
 ## Now, we'll give a few examples of what you might want to use in your
 ## .zshrc.local file (just copy'n'paste and uncomment it there):
-
 
 ## ZLE tweaks ##
 

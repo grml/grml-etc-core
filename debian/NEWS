@@ -1,3 +1,20 @@
+grml-etc-core (0.3.62) unstable; urgency=low
+
+  * Merged /etc/skel/.zshrc into /etc/zsh/zshrc:
+
+    Starting with grml-etc-core 0.3.62 grml's zsh setup lives only in
+    *one* zshrc file - that is the global one: /etc/zsh/zshrc
+    /etc/skel/.zshrc still exists but provides commented examples only.
+    It is best to leave the /etc/skel/.zshrc file untouched and do
+    personal changes to the setup via ${HOME}/.zshrc.local (as before)
+    which is loaded at the end of the global zshrc.
+
+    That way, we enable people on other operating systems to use our
+    setup, too, just by copying our global zshrc to their ${HOME}/.zshrc.
+    Adjustments would still go to the .zshrc.local file.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 13 Feb 2009 12:40:28 +0100
+
 grml-etc-core (0.3.5) unstable; urgency=low
 
   * Please notice, that the setup of zsh's completion functions has
