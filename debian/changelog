@@ -1,6 +1,7 @@
 grml-scripts (1.1.18) UNRELEASED; urgency=low
 
   * Add lzop to Depends. [Closes: issue613]
+  * Add new script grml-exec-wrapper.
 
  -- Michael Prokop <mika@grml.org>  Thu, 12 Feb 2009 21:04:59 +0100
 

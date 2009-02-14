@@ -1,0 +1,47 @@
+#!/bin/bash
+# Filename:      grml-exec-wrapper
+# Purpose:       simple but smart program execution wrapper
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2 or any later version.
+################################################################################
+
+# use Xdisplay only if present and running under X:
+display_info() {
+if type -a Xdialog 1>/dev/null 2>&1 && test -n "$DISPLAY" ; then
+    Xdialog --title "grml-exec-wrapper" --msgbox "$1" 0 0 0
+else
+    print "$1">&2
+fi
+}
+
+if [ -z "$1" ] ; then
+    display_info "Usage: $0 <program> [<arguments>]"
+    exit 1
+fi
+
+RC='0'
+PROG="$1"
+
+# make sure to support 'grml-exec-wrapper sudo wireshark' as well:
+case $PROG in
+	*sudo*) PROG="$2" ;;
+esac
+
+if type -a "$PROG" 1>/dev/null 2>&1 ; then
+    exec $@
+else
+    RC=1
+    display_info "Sorry: ${PROG} not available.
+
+Looks like the grml flavour you are using does not ship ${PROG}. :(
+
+You can search for ${PROG} executing:
+
+apt-get update && apt-cache search ${PROG}
+    "
+fi
+
+exit $RC
+
+## END OF FILE #################################################################
