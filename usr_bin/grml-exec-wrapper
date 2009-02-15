@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Filename:      grml-exec-wrapper
 # Purpose:       simple but smart program execution wrapper
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
@@ -28,7 +28,24 @@ case $PROG in
 	*sudo*) PROG="$2" ;;
 esac
 
-if type -a "$PROG" 1>/dev/null 2>&1 ; then
+is_installed() {
+    prog="$1"
+    [ -z "$prog" ] && return 1
+
+    ret=1
+    oifs="$IFS"
+    IFS=:
+    for dir in $PATH; do
+        [ -z "$dir" ] && continue
+        [ -x "$dir/$prog" ] && ret=0 && break
+    done
+
+    IFS="$oifs"
+    unset oifs
+    return "$ret"
+}
+
+if is_installed "$PROG" 1>/dev/null 2>&1 ; then
     exec $@
 else
     RC=1
