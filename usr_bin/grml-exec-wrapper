@@ -41,7 +41,7 @@ PROG="$1"
 
 # make sure to support 'grml-exec-wrapper sudo wireshark' as well:
 case $PROG in
-	*sudo*) PROG="$2" ;;
+    *sudo*) PROG="$2" ;;
 esac
 
 if is_installed "$PROG" ; then
