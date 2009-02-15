@@ -6,9 +6,26 @@
 # License:       This file is licensed under the GPL v2 or any later version.
 ################################################################################
 
+is_installed() {
+    prog="$1"
+    [ -z "$prog" ] && return 1
+
+    ret=1
+    oifs="$IFS"
+    IFS=:
+    for dir in $PATH; do
+        [ -z "$dir" ] && continue
+        [ -x "$dir/$prog" ] && ret=0 && break
+    done
+
+    IFS="$oifs"
+    unset oifs
+    return "$ret"
+}
+
 # use Xdisplay only if present and running under X:
 display_info() {
-if type -a Xdialog 1>/dev/null 2>&1 && test -n "$DISPLAY" ; then
+if is_installed Xdialog 1>/dev/null 2>&1 && test -n "$DISPLAY" ; then
     Xdialog --title "grml-exec-wrapper" --msgbox "$1" 0 0 0
 else
     print "$1">&2
@@ -27,23 +44,6 @@ PROG="$1"
 case $PROG in
 	*sudo*) PROG="$2" ;;
 esac
-
-is_installed() {
-    prog="$1"
-    [ -z "$prog" ] && return 1
-
-    ret=1
-    oifs="$IFS"
-    IFS=:
-    for dir in $PATH; do
-        [ -z "$dir" ] && continue
-        [ -x "$dir/$prog" ] && ret=0 && break
-    done
-
-    IFS="$oifs"
-    unset oifs
-    return "$ret"
-}
 
 if is_installed "$PROG" 1>/dev/null 2>&1 ; then
     exec $@
