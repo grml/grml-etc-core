@@ -37,7 +37,6 @@ if [ -z "$1" ] ; then
     exit 1
 fi
 
-RC='0'
 PROG="$1"
 
 # make sure to support 'grml-exec-wrapper sudo wireshark' as well:
@@ -47,9 +46,9 @@ esac
 
 if is_installed "$PROG" ; then
     exec "$@"
-else
-    RC=1
-    display_info "Sorry: ${PROG} not available.
+fi
+
+display_info "Sorry: ${PROG} not available.
 
 Looks like the grml flavour you are using does not ship ${PROG}. :(
 
@@ -57,8 +56,7 @@ You can search for ${PROG} executing:
 
 apt-get update && apt-cache search ${PROG}
     "
-fi
 
-exit $RC
+exit 1
 
 ## END OF FILE #################################################################
