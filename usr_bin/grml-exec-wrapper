@@ -46,7 +46,7 @@ case $PROG in
 esac
 
 if is_installed "$PROG" ; then
-    exec $@
+    exec "$@"
 else
     RC=1
     display_info "Sorry: ${PROG} not available.
