@@ -25,7 +25,7 @@ is_installed() {
 
 # use Xdisplay only if present and running under X:
 display_info() {
-if is_installed Xdialog 1>/dev/null 2>&1 && test -n "$DISPLAY" ; then
+if is_installed Xdialog && test -n "$DISPLAY" ; then
     Xdialog --title "grml-exec-wrapper" --msgbox "$1" 0 0 0
 else
     print "$1">&2
@@ -45,7 +45,7 @@ case $PROG in
 	*sudo*) PROG="$2" ;;
 esac
 
-if is_installed "$PROG" 1>/dev/null 2>&1 ; then
+if is_installed "$PROG" ; then
     exec $@
 else
     RC=1
