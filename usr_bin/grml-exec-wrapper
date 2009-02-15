@@ -28,7 +28,7 @@ display_info() {
 if is_installed Xdialog && test -n "$DISPLAY" ; then
     Xdialog --title "grml-exec-wrapper" --msgbox "$1" 0 0 0
 else
-    print "$1">&2
+    printf '%s\n' "$1">&2
 fi
 }
 
