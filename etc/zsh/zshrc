@@ -526,10 +526,12 @@ if [[ -n "$BROKEN_COMPLETION_DIR" ]] ; then
 else
     [[ -d /etc/zsh/completion.d ]] && fpath=( $fpath /etc/zsh/completion.d )
     if [[ -d /etc/zsh/functions.d ]] ; then
-        fpath+=( /etc/zsh/functions.d )
-        for func in /etc/zsh/functions.d/[^_]*[^~](N.) ; do
-            zrcautoload -U ${func:t}
+        fdir='/etc/zsh/functions.d'
+        fpath=( ${fdir} ${fdir}/**/*(/N) ${fpath} )
+        for func in ${fdir}/**/[^_]*[^~](N.) ; do
+            zrcautoload ${func:t}
         done
+        unset fdir
     fi
 fi
 
