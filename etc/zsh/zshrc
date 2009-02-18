@@ -3922,17 +3922,30 @@ if check_com -c highlight ; then
     compdef _hl_complete hl
 fi
 
-# create small urls via tinyurl.com using wget, grep and sed
-zurl() {
-    [[ -z ${1} ]] && print "please give an url to shrink." && return 1
-    local url=${1}
-    local tiny="http://tinyurl.com/create.php?url="
-    #print "${tiny}${url}" ; return
-    wget  -O-             \
-          -o/dev/null     \
-          "${tiny}${url}" \
-        | grep -Eio 'value="(http://tinyurl.com/.*)"' \
-        | sed 's/value=//;s/"//g'
+# Create small urls via http://tinyurl.com using wget(1).
+function zurl() {
+    [[ -z ${1} ]] && { print "USAGE: zurl <URL>" ; return 1 }
+
+    local PN url tiny grabber search result preview
+    PN=${0}
+    url=${1}
+#   Prepend 'http://' to given URL where necessary for later output.
+    [[ ${url} != http(s|)://* ]] && url='http://'${url}
+    tiny='http://tinyurl.com/create.php?url='
+    if check_com -c wget ; then
+        grabber='wget -O- -o/dev/null'
+    else
+        print "wget is not available, but mandatory for ${PN}. Aborting."
+    fi
+#   Looking for i.e.`copy('http://tinyurl.com/7efkze')' in TinyURL's HTML code.
+    search='copy\(?http://tinyurl.com/[[:alnum:]]##*'
+    result=${(M)${${${(f)"$(${=grabber} ${tiny}${url})"}[(fr)${search}*]}//[()\';]/}%%http:*}
+#   TinyURL provides the rather new feature preview for more confidence. <http://tinyurl.com/preview.php>
+    preview='http://preview.'${result#http://}
+
+    printf '%s\n\n' "${PN} - Shrinking long URLs via webservice TinyURL <http://tinyurl.com>."
+    printf '%s\t%s\n\n' 'Given URL:' ${url}
+    printf '%s\t%s\n\t\t%s\n' 'TinyURL:' ${result} ${preview}
 }
 
 #f2# Print a specific line of file(s).
