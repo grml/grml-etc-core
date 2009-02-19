@@ -1,6 +1,6 @@
 grml-etc-core (0.3.63) unstable; urgency=low
 
-  [ Michael Prokop [
+  [ Michael Prokop ]
   * zshrc: use 'rxvt*' to support setting title in rxvt-unicode as
     well. Thanks for reporting, gheift! [Closes: issue624]
 
