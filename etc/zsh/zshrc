@@ -1975,7 +1975,7 @@ is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
     # adjust title of xterm
     # see http://www.faqs.org/docs/Linux-mini/Xterm-Title.html
     case $TERM in
-        (xterm*|rxvt)
+        (xterm*|rxvt*)
             print -Pn "\e]0;%n@%m: %~\a"
             ;;
     esac
