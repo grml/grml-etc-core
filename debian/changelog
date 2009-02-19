@@ -1,9 +1,13 @@
 grml-etc-core (0.3.63) unstable; urgency=low
 
+  [ Michael Prokop [
   * zshrc: use 'rxvt*' to support setting title in rxvt-unicode as
     well. Thanks for reporting, gheift! [Closes: issue624]
 
- -- Michael Prokop <mika@grml.org>  Thu, 19 Feb 2009 17:10:41 +0100
+  [ Frank Terbeck ]
+  * zshrc: make /etc/zsh/functions.d recursive
+
+ -- Michael Prokop <mika@grml.org>  Thu, 19 Feb 2009 17:13:33 +0100
 
 grml-etc-core (0.3.62) unstable; urgency=low
 
