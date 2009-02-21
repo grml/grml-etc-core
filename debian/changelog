@@ -1,6 +1,6 @@
 grml-etc-core (0.3.64) unstable; urgency=low
 
-  * zshrc: rewrite of zurl() by Alexander Steinböck
+  * zshrc: rewrite of zurl() by Alexander Steinböck [Closes: issue627]
 
  -- Frank Terbeck <ft@grml.org>  Thu, 19 Feb 2009 17:46:26 +0100
 
