@@ -1,8 +1,10 @@
 grml-etc-core (0.3.64) unstable; urgency=low
 
   * zshrc: rewrite of zurl() by Alexander Steinböck [Closes: issue627]
+  * zshrc: put "zsh: repo-name" into screen title if the user is in a
+    VCS-controlled directory [Closes: issue635]
 
- -- Frank Terbeck <ft@grml.org>  Thu, 19 Feb 2009 17:46:26 +0100
+ -- Frank Terbeck <ft@grml.org>  Mon, 23 Feb 2009 00:54:05 +0100
 
 grml-etc-core (0.3.63) unstable; urgency=low
 
