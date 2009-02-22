@@ -1432,8 +1432,6 @@ VCS_INFO_formats () { # {{{
 }
 # }}}
 VCS_INFO_maxexports () { #{{{
-    local -ix maxexports
-
     zstyle -s ":vcs_info:${vcs}:${usercontext}" "max-exports" maxexports || maxexports=2
     if [[ ${maxexports} != <-> ]] || (( maxexports < 1 )); then
         printf 'vcs_info(): expecting numeric arg >= 1 for max-exports (got %s).\n' ${maxexports}
@@ -1865,6 +1863,7 @@ vcs_info () { # {{{
     local -i found
     local -a VCSs disabled dps
     local -x vcs usercontext
+    local -ix maxexports
     local -ax msgs
     local -Ax vcs_comm
 
