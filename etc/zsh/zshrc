@@ -1417,9 +1417,15 @@ VCS_INFO_formats () { # {{{
         (( ${#msgs} < 1 )) && msgs[1]=' (%s)-[%b]-'
     fi
 
-    (( ${#msgs} > maxexports )) && msgs[${maxexports},-1]=()
+    (( ${#msgs} > maxexports )) && msgs[$(( maxexports + 1 )),-1]=()
     for i in {1..${#msgs}} ; do
-        zformat -f msg ${msgs[$i]} a:${action} b:${branch} s:${vcs} r:${base:t} R:${base} S:"$(VCS_INFO_reposub ${base})"
+        zformat -f msg ${msgs[$i]}                      \
+                        a:${action}                     \
+                        b:${branch}                     \
+                        r:${base:t}                     \
+                        s:${vcs}                        \
+                        R:${base}                       \
+                        S:"$(VCS_INFO_reposub ${base})"
         msgs[$i]=${msg}
     done
     return 0
