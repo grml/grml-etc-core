@@ -1128,8 +1128,8 @@ fi
 # from <http://ft.bewatermyfriend.org/comp/zsh/zsh-dotfiles.tar.bz2>,
 # which distributed under the same terms as zsh itself.
 
-# we will only be using one variable, so let the code know now.
-zstyle ':vcs_info:*' max-exports 1
+# we will be using two variables, so let the code know now.
+zstyle ':vcs_info:*' max-exports 2
 
 # vcs_info() documentation:
 #{{{
@@ -1925,14 +1925,20 @@ vcs_info () { # {{{
 VCS_INFO_set --nvcs preinit
 # }}}
 
-# change vcs_info formats for the grml prompt
+# Change vcs_info formats for the grml prompt. The 2nd format sets up
+# $vcs_info_msg_1_ to contain "zsh: repo-name" used to set our screen title.
+# TODO: The included vcs_info() version still uses $VCS_INFO_message_N_.
+#       That needs to be the use of $VCS_INFO_message_N_ needs to be changed
+#       to $vcs_info_msg_N_ as soon as we use the included version.
 if [[ "$TERM" == dumb ]] ; then
-    zstyle ':vcs_info:*' actionformats "(%s%)-[%b|%a] "
-    zstyle ':vcs_info:*' formats       "(%s%)-[%b] "
+    zstyle ':vcs_info:*' actionformats "(%s%)-[%b|%a] " "zsh: %r"
+    zstyle ':vcs_info:*' formats       "(%s%)-[%b] "    "zsh: %r"
 else
     # these are the same, just with a lot of colours:
-    zstyle ':vcs_info:*' actionformats "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOUR} "
-    zstyle ':vcs_info:*' formats       "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${MAGENTA}]${NO_COLOUR}%} "
+    zstyle ':vcs_info:*' actionformats "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOUR} " \
+                                       "zsh: %r"
+    zstyle ':vcs_info:*' formats       "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${MAGENTA}]${NO_COLOUR}%} " \
+                                       "zsh: %r"
     zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "%b${RED}:${YELLOW}%r"
 fi
 
@@ -1956,7 +1962,11 @@ is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
     vcs_info
 
     if [[ $TERM == screen* ]] ; then
-        print -nP "\ekzsh\e\\"
+        if [[ -n ${VCS_INFO_message_1_} ]] ; then
+            print -nP "\ek${VCS_INFO_message_1_}\e\\"
+        else
+            print -nP "\ekzsh\e\\"
+        fi
     fi
     # just use DONTSETRPROMPT=1 to be able to overwrite RPROMPT
     if [[ $DONTSETRPROMPT -eq 0 ]] ; then
