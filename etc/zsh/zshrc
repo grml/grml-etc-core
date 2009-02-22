@@ -1955,21 +1955,17 @@ is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
     # update VCS information
     vcs_info
 
-    # allow manual overwriting of RPROMPT
-    if [[ -n $RPROMPT ]] ; then
-        [[ $TERM == screen* ]] && print -nP "\ekzsh\e\\"
-        # return 0
+    if [[ $TERM == screen* ]] ; then
+        print -nP "\ekzsh\e\\"
     fi
     # just use DONTSETRPROMPT=1 to be able to overwrite RPROMPT
     if [[ $DONTSETRPROMPT -eq 0 ]] ; then
         if [[ $BATTERY -gt 0 ]] ; then
-            # update BATTERY information
+            # update battery (dropped into $PERCENT) information
             battery
-            RPROMPT="%(?..:()% ${PERCENT}${SCREENTITLE}"
-            # RPROMPT="${PERCENT}${SCREENTITLE}"
+            RPROMPT="%(?..:() ${PERCENT}"
         else
-            RPROMPT="%(?..:()% ${SCREENTITLE}"
-            # RPROMPT="${SCREENTITLE}"
+            RPROMPT="%(?..:() "
         fi
     fi
     # adjust title of xterm
@@ -1995,12 +1991,6 @@ preexec () {
         # local CMD=${1[(wr)^(*=*|sudo|ssh|-*)]}       # don't use hostname
         local CMD="${1[(wr)^(*=*|sudo|ssh|-*)]}$NAME" # use hostname
         echo -ne "\ek$CMD\e\\"
-    fi
-# set the screen title to "zsh" when sitting at the command prompt:
-    if [[ "$TERM" == screen* ]] ; then
-        SCREENTITLE=$'%{\ekzsh\e\\%}'
-    else
-        SCREENTITLE=''
     fi
 # adjust title of xterm
     case $TERM in
