@@ -1961,6 +1961,8 @@ setopt prompt_subst
 # make sure to use right prompt only when not running a command
 is41 && setopt transient_rprompt
 
+# TODO: revise all these NO* variables and especially their documentation
+#       in zsh-help() below.
 is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
     [[ $NOPRECMD -gt 0 ]] && return 0
     # update VCS information
@@ -1985,6 +1987,7 @@ is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
     fi
     # adjust title of xterm
     # see http://www.faqs.org/docs/Linux-mini/Xterm-Title.html
+    [[ NOTITLE -gt 0 ]] && return 0
     case $TERM in
         (xterm*|rxvt*)
             print -Pn "\e]0;%n@%m: %~\a"
@@ -2008,6 +2011,7 @@ preexec () {
         echo -ne "\ek$CMD\e\\"
     fi
 # adjust title of xterm
+    [[ NOTITLE -gt 0 ]] && return 0
     case $TERM in
         (xterm*|rxvt)
             print -Pn "\e]0;%n@%m: $1\a"
@@ -2230,6 +2234,8 @@ the zsh yet. :)
   "NOCOR=1    zsh" => deactivate automatic correction
   "NOMENU=1   zsh" => do not use auto menu completion (note: use ctrl-d for completion instead!)
   "NOPRECMD=1 zsh" => disable the precmd + preexec commands (set GNU screen title)
+  "NOTITLE=1  zsh" => disable setting the title of xterms without disabling
+                      preexec() and precmd() completely
   "BATTERY=1  zsh" => activate battery status (via acpi) on right side of prompt
 
 A value greater than 0 is enables a feature; a value equal to zero
