@@ -1987,7 +1987,7 @@ is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
     fi
     # adjust title of xterm
     # see http://www.faqs.org/docs/Linux-mini/Xterm-Title.html
-    [[ NOTITLE -gt 0 ]] && return 0
+    [[ ${NOTITLE} -gt 0 ]] && return 0
     case $TERM in
         (xterm*|rxvt*)
             print -Pn "\e]0;%n@%m: %~\a"
@@ -2011,7 +2011,7 @@ preexec () {
         echo -ne "\ek$CMD\e\\"
     fi
 # adjust title of xterm
-    [[ NOTITLE -gt 0 ]] && return 0
+    [[ ${NOTITLE} -gt 0 ]] && return 0
     case $TERM in
         (xterm*|rxvt)
             print -Pn "\e]0;%n@%m: $1\a"
