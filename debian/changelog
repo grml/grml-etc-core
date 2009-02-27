@@ -2,8 +2,9 @@ grml-etc-core (0.3.65) unstable; urgency=low
 
   * zshrc: Add $NOTITLE to disable alteration of terminal titles.
     Based on an idea by Timo Boettcher.
+  * zshrc: Cleaned up abbreviations by Alexander Steinböck.
 
- -- Frank Terbeck <ft@grml.org>  Tue, 24 Feb 2009 20:44:29 +0100
+ -- Frank Terbeck <ft@grml.org>  Fri, 27 Feb 2009 22:06:31 +0100
 
 grml-etc-core (0.3.64) unstable; urgency=low
 
