@@ -96,7 +96,7 @@
   set dictionary=/usr/share/dict/word " used with CTRL-X CTRL-K
 
 """ set the screen hardstatus to vim(filename.ext)
-  if (&term =~ '^screen')
+  if (&term =~ '^screen') && ($NOPRECMD != '1')
     set t_ts=k
     set t_fs=\
     set title
