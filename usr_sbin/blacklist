@@ -4,11 +4,10 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Thu Aug 07 17:16:23 CEST 2008 [mika]
 ################################################################################
 
 PN="$(basename $0)"
-[ -n "$MODPROBEFILE" ] || MODPROBEFILE=/etc/modprobe.d/grml
+[ -n "$MODPROBEFILE" ] || MODPROBEFILE=/etc/modprobe.d/grml.conf
 [ -r /etc/grml/lsb-functions ] && . /etc/grml/lsb-functions
 
 if [ -z "$1" ] ; then
