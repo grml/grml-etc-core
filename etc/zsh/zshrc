@@ -965,6 +965,7 @@ setopt auto_pushd           # make cd push the old directory onto the directory 
 setopt nonomatch            # try to avoid the 'zsh: no matches found...'
 setopt nobeep               # avoid "beep"ing
 setopt pushd_ignore_dups    # don't push the same dir twice.
+setopt noglobdots           # * shouldn't match dotfiles. ever.
 
 MAILCHECK=30       # mailchecks
 REPORTTIME=5       # report about cpu-/system-/user-time of command if running longer than 5 seconds
