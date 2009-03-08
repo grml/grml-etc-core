@@ -443,6 +443,13 @@ xunfunction() {
     return 0
 }
 
+# this allows us to stay in sync with grml's zshrc and put own
+# modifications in ~/.zshrc.local
+zrclocal() {
+    xsource "${HOME}/.zshrc.local"
+    return 0
+}
+
 #}}}
 
 # locale setup {{{
@@ -2922,7 +2929,11 @@ fi
 ### non-root (EUID != 0) code below
 ###
 
-(( GRML_ALWAYS_LOAD_ALL == 0 )) && (( $EUID == 0 )) && return 0
+if (( GRML_ALWAYS_LOAD_ALL == 0 )) && (( $EUID == 0 )) ; then
+    zrclocal
+    return 0
+fi
+
 
 # variables {{{
 
@@ -4202,14 +4213,7 @@ fi
 
 #}}}
 
-# finally source a local zshrc {{{
-
-# this allows us to stay in sync with grml's zshrc and put own
-# modifications in ~/.zshrc.local
-
-xsource "${HOME}/.zshrc.local"
-
-# }}}
+zrclocal
 
 ## genrefcard.pl settings {{{
 
