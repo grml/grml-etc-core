@@ -789,7 +789,7 @@ abk=(
     '....' '../../..'
     'BG' '& exit'
     'C' '| wc -l'
-    'G' '|& grep --color=auto'
+    'G' '|& grep --color=auto '
     'H' '| head'
     'Hl' ' --help |& less -r'      #d (Display help in pager)
     'L' '| less'
