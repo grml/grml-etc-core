@@ -802,7 +802,7 @@ abk=(
     'T'    '| tail'
     'V'    '|& vim -'
 #A# end
-    'co'   "./configure && make && sudo make install"
+    'co'   './configure && make && sudo make install'
 )
 
 globalias() {
