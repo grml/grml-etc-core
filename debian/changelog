@@ -6,13 +6,15 @@ grml-etc-core (0.3.65) UNRELEASED; urgency=low
   * zshrc: Cleaned up abbreviations by Alexander Steinböck.
     [Closes: issue642]
   * zshrc: source ~/.zshrc.local for root, too.
+  * zshrc: Added a space to a grep related abbreviation for seamless
+    typing; by Alexander Steinböck [Closes: issue616]
 
   [ Michael Prokop ]
   * vimrc: add check for $NOPRECMD [Closes: issue447]
   * zshrc: use 'setopt noglobdots' as [Open]SuSE uses in its
     /etc/zshrc 'setopt globdots' by default.
 
- -- Frank Terbeck <ft@grml.org>  Sun, 08 Mar 2009 18:30:04 +0100
+ -- Frank Terbeck <ft@grml.org>  Sun, 22 Mar 2009 14:21:18 +0100
 
 grml-etc-core (0.3.64) unstable; urgency=low
 
