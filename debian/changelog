@@ -8,13 +8,15 @@ grml-etc-core (0.3.65) UNRELEASED; urgency=low
   * zshrc: source ~/.zshrc.local for root, too.
   * zshrc: Added a space to a grep related abbreviation for seamless
     typing; by Alexander Steinböck [Closes: issue616]
+  * zshrc: Fix pattern to extract battery status from newer acpi
+    versions. [Closes: issue657]
 
   [ Michael Prokop ]
   * vimrc: add check for $NOPRECMD [Closes: issue447]
   * zshrc: use 'setopt noglobdots' as [Open]SuSE uses in its
     /etc/zshrc 'setopt globdots' by default.
 
- -- Frank Terbeck <ft@grml.org>  Sun, 22 Mar 2009 14:21:18 +0100
+ -- Frank Terbeck <ft@grml.org>  Tue, 31 Mar 2009 00:16:19 +0200
 
 grml-etc-core (0.3.64) unstable; urgency=low
 

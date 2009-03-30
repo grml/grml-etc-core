@@ -1032,7 +1032,7 @@ fi
 
 battery() {
 if [[ $BATTERY -gt 0 ]] ; then
-    PERCENT="${${"$(acpi 2>/dev/null)"}/(#b)[[:space:]]##Battery <->: [^0-9]##, (<->)%*/${match[1]}}"
+    PERCENT="${${"$(acpi 2>/dev/null)"}/(#b)[[:space:]]#Battery <->: [^0-9]##, (<->)%*/${match[1]}}"
     if [[ -z "$PERCENT" ]] ; then
         PERCENT='acpi not present'
     else
