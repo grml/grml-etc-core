@@ -1,4 +1,4 @@
-grml-etc-core (0.3.65) UNRELEASED; urgency=low
+grml-etc-core (0.3.65) unstable; urgency=low
 
   [ Frank Terbeck ]
   * zshrc: Add $NOTITLE to disable alteration of terminal titles.
@@ -15,10 +15,11 @@ grml-etc-core (0.3.65) UNRELEASED; urgency=low
 
   [ Michael Prokop ]
   * vimrc: add check for $NOPRECMD [Closes: issue447]
+  * vimrc: enable features only if available [Closes: issue641]
   * zshrc: use 'setopt noglobdots' as [Open]SuSE uses in its
     /etc/zshrc 'setopt globdots' by default.
 
- -- Frank Terbeck <ft@grml.org>  Tue, 31 Mar 2009 13:21:52 +0200
+ -- Michael Prokop <mika@grml.org>  Tue, 31 Mar 2009 23:52:18 +0200
 
 grml-etc-core (0.3.64) unstable; urgency=low
 

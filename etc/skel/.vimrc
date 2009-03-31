@@ -25,10 +25,12 @@
 
 " autocommands:
 " when the file type is "mail" then set the textwidth to "70":
-  au FileType mail   set tw=70
+  if has("autocmd")
+     au FileType mail   set tw=70
 " When editing a file, always jump to the last cursor position
 "  au BufReadPost * if line("'\"") | exe "'\"" | endif
-  autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif
+     autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif
+  endif
 
 " some colors - as an example "white on black" [use bold fonts]:
 "  hi normal   ctermfg=white  ctermbg=black guifg=white  guibg=black
