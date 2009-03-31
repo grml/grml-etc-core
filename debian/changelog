@@ -10,13 +10,15 @@ grml-etc-core (0.3.65) UNRELEASED; urgency=low
     typing; by Alexander Steinböck [Closes: issue616]
   * zshrc: Fix pattern to extract battery status from newer acpi
     versions. [Closes: issue657]
+  * zshrc: Always read /etc/default/locale. Users are expected to
+    adjust locale settings via '.zshrc.local'.
 
   [ Michael Prokop ]
   * vimrc: add check for $NOPRECMD [Closes: issue447]
   * zshrc: use 'setopt noglobdots' as [Open]SuSE uses in its
     /etc/zshrc 'setopt globdots' by default.
 
- -- Frank Terbeck <ft@grml.org>  Tue, 31 Mar 2009 00:16:19 +0200
+ -- Frank Terbeck <ft@grml.org>  Tue, 31 Mar 2009 13:21:52 +0200
 
 grml-etc-core (0.3.64) unstable; urgency=low
 

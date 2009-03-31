@@ -453,9 +453,7 @@ zrclocal() {
 #}}}
 
 # locale setup {{{
-if [[ -z "$LANG" ]] ; then
-   xsource "/etc/default/locale"
-fi
+xsource "/etc/default/locale"
 
 export LANG=${LANG:-en_US.iso885915}
 for var in LC_ALL LC_MESSAGES ; do
