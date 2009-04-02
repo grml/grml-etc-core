@@ -2844,6 +2844,17 @@ minimal-shell() {
     exec env -i ENV="/etc/minimal-shellrc" HOME="$HOME" TERM="$TERM" ksh
 }
 
+# a wrapper for vim, that deals with title setting
+#   VIM_OPTIONS
+#       set this array to a set of options to vim you always want
+#       to have set when calling vim (in .zshrc.local), like:
+#           VIM_OPTIONS=( -p )
+#       This will cause vim to send every file given on the
+#       commandline to be send to it's own tab (needs vim7).
+vim() {
+    VIM_PLEASE_SET_TITLE='yes' command vim ${VIM_OPTIONS} "$@"
+}
+
 # make a backup of a file
 bk() {
     cp -a "$1" "${1}_$(date --iso-8601=seconds)"
