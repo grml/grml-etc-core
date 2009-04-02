@@ -1,3 +1,10 @@
+grml-etc-core (0.3.66) unstable; urgency=low
+
+  * vimrc: only set screen title if the caller explicitly asks for it.
+  * zshrc: ask for setting screen title in vim via a wrapper function.
+
+ -- Frank Terbeck <ft@grml.org>  Thu, 02 Apr 2009 13:11:12 +0200
+
 grml-etc-core (0.3.65) unstable; urgency=low
 
   [ Frank Terbeck ]
