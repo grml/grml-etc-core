@@ -628,6 +628,14 @@ grml_toggle_abbrev() {
 zle -N grml_toggle_abbrev
 bindkey '^xA' grml_toggle_abbrev
 
+# add a command line to the shells history without executing it
+commit-to-history() {
+    print -s ${(z)BUFFER}
+    zle send-break
+}
+zle -N commit-to-history
+bindkey "^x^h" commit-to-history
+
 # }}}
 
 # a generic accept-line wrapper {{{
