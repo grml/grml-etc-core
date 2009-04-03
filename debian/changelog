@@ -6,8 +6,10 @@ grml-etc-core (0.3.66) unstable; urgency=low
     exists.
   * zshrc: add commit-to-history widget, that allows users to add
     command lines to zsh's history without executing [Closes: issue407]
+  * zshrc: add a handler that uses debian's command-not-found package
+    if an external command could not be found. [Closes: issue564]
 
- -- Frank Terbeck <ft@grml.org>  Sat, 04 Apr 2009 11:35:06 +0200
+ -- Frank Terbeck <ft@grml.org>  Sat, 04 Apr 2009 11:52:50 +0200
 
 grml-etc-core (0.3.65) unstable; urgency=low
 

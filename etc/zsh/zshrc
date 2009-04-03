@@ -230,6 +230,8 @@ zrcautoload is-at-least || is-at-least() { return 1 }
 NOCOR=${NOCOR:-0}
 NOMENU=${NOMENU:-0}
 NOPRECMD=${NOPRECMD:-0}
+COMMAND_NOT_FOUND=${COMMAND_NOT_FOUND:-0}
+GRML_ZSH_CNF_HANDLER=${GRML_ZSH_CNF_HANDLER:-/usr/share/command-not-found/command-not-found}
 BATTERY=${BATTERY:-0}
 GRMLSMALL_SPECIFIC=${GRMLSMALL_SPECIFIC:-1}
 GRML_ALWAYS_LOAD_ALL=${GRML_ALWAYS_LOAD_ALL:-0}
@@ -1913,6 +1915,19 @@ fi
 
 # }}}
 
+# command not found handling {{{
+
+(( ${COMMAND_NOT_FOUND} == 1 )) &&
+function command_not_found_handler() {
+    setopt localoptions no_sh_wordsplit
+    if [[ -x ${GRML_ZSH_CNF_HANDLER} ]] ; then
+        ${GRML_ZSH_CNF_HANDLER} $1
+    fi
+    return 1
+}
+
+# }}}
+
 # {{{ set prompt
 if zrcautoload promptinit && promptinit 2>/dev/null ; then
     promptinit # people should be able to use their favourite prompt
@@ -2201,6 +2216,11 @@ the zsh yet. :)
   "NOTITLE=1  zsh" => disable setting the title of xterms without disabling
                       preexec() and precmd() completely
   "BATTERY=1  zsh" => activate battery status (via acpi) on right side of prompt
+  "COMMAND_NOT_FOUND=1 zsh"
+                   => Enable a handler if an external command was not found
+                      The command called in the handler can be altered by setting
+                      the GRML_ZSH_CNF_HANDLER variable, the default is:
+                      "/usr/share/command-not-found/command-not-found"
 
 A value greater than 0 is enables a feature; a value equal to zero
 disables it. If you like one or the other of these settings, you can
