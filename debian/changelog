@@ -2,10 +2,12 @@ grml-etc-core (0.3.66) unstable; urgency=low
 
   * vimrc: only set screen title if the caller explicitly asks for it.
   * zshrc: ask for setting screen title in vim via a wrapper function.
+  * zshrc: only compdef commands to _gnu_generic if no native completion
+    exists.
   * zshrc: add commit-to-history widget, that allows users to add
     command lines to zsh's history without executing [Closes: issue407]
 
- -- Frank Terbeck <ft@grml.org>  Fri, 03 Apr 2009 22:49:53 +0200
+ -- Frank Terbeck <ft@grml.org>  Sat, 04 Apr 2009 11:35:06 +0200
 
 grml-etc-core (0.3.65) unstable; urgency=low
 
