@@ -6,8 +6,19 @@
 # License:       This file is licensed under the GPL v2 or any later version.
 ################################################################################
 
+usage() {
+  printf "Usage: $0 <program> [<arguments>]
+
+Available options:
+
+  -h | --help   display this usage information
+  -p <program>  check specified argument instead of default args, like:
+		$(basename $0) -p aumix xterm -T aumix -e aumix
+"
+}
+
 is_installed() {
-    prog="$1"
+    prog="$(basename $1)"
     [ -z "$prog" ] && return 1
 
     ret=1
@@ -25,24 +36,33 @@ is_installed() {
 
 # use Xdisplay only if present and running under X:
 display_info() {
-if is_installed Xdialog && test -n "$DISPLAY" ; then
-    Xdialog --title "grml-exec-wrapper" --msgbox "$1" 0 0 0
+if is_installed xterm && test -n "$DISPLAY" ; then
+    xterm -T 'Sorry :(' -e "dialog --msgbox \"$1\" 0 0"
 else
     printf '%s\n' "$1">&2
 fi
 }
 
-if [ -z "$1" ] ; then
-    display_info "Usage: $0 <program> [<arguments>]"
+if [ -z "$1" -o "$1" = '-h' -o "$1" = '--help' ] ; then
+    usage
     exit 1
 fi
 
-PROG="$1"
-
-# make sure to support 'grml-exec-wrapper sudo wireshark' as well:
-case $PROG in
-    *sudo*) PROG="$2" ;;
-esac
+if [ "$1" = '-p' ] ; then
+    if [ -z "$2" ] ; then
+         usage
+	 exit 1
+    else
+         PROG="$2"
+	 shift ; shift
+    fi
+else
+    PROG="$1"
+    # make sure to support 'grml-exec-wrapper sudo wireshark' as well:
+    case $PROG in
+      *sudo*) PROG="$2" ;;
+    esac
+fi
 
 if is_installed "$PROG" ; then
     exec "$@"
@@ -54,7 +74,7 @@ Looks like the grml flavour you are using does not ship ${PROG}. :(
 
 You can search for ${PROG} executing:
 
-apt-get update && apt-cache search ${PROG}
+apt-get update && apt-cache search $(basename ${PROG})
     "
 
 exit 1
