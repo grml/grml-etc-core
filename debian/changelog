@@ -4,6 +4,7 @@ grml-scripts (1.1.18) UNRELEASED; urgency=low
   * blacklist: use /etc/modprobe.d/grml.conf instead of
     /etc/modprobe.d/grml. New module-init-tools will
     use only files using the .conf suffix.
+  * Add new script grml-exec-wrapper.
 
  -- Michael Prokop <mika@grml.org>  Tue, 03 Mar 2009 10:35:12 +0100
 
