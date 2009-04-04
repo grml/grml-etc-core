@@ -16,7 +16,7 @@ SYNOPSIS
 DESCRIPTION
 -----------
 *grml-chroot* is a wrapper
-arround plain chroot with integrated proc/sys/pts/dev filesystem handling.
+around plain chroot with integrated proc/sys/pts/dev filesystem handling.
 After _COMMAND_ exits, mounts are cleaned up properly.
 
 
