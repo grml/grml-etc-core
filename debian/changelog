@@ -1,3 +1,10 @@
+grml-etc-core (0.3.67) unstable; urgency=low
+
+  * zshrc: handle newer versions of hg, that don't create .hg/branch
+    anymore if there's only 'default'. Found by Andreas Korsten.
+
+ -- Frank Terbeck <ft@grml.org>  Mon, 06 Apr 2009 13:00:28 +0200
+
 grml-etc-core (0.3.66) unstable; urgency=low
 
   * vimrc: only set screen title if the caller explicitly asks for it.

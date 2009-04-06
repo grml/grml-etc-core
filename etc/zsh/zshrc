@@ -1627,10 +1627,17 @@ VCS_INFO_git_get_data () { # {{{
 }
 # }}}
 VCS_INFO_hg_get_data () { # {{{
-    local hgbranch hgbase
+    local hgbranch hgbase file
 
     hgbase=${vcs_comm[basedir]}
-    hgbranch=$(< ${hgbase}/.hg/branch)
+
+    file="${hgbase}/.hg/branch"
+    if [[ -r ${file} ]] ; then
+        hgbranch=$(< ${file})
+    else
+        hgbranch='default'
+    fi
+
     VCS_INFO_formats '' "${hgbranch}" "${hgbase}"
     return 0
 }
@@ -1691,7 +1698,7 @@ VCS_INFO_detect_by_dir() { #{{{
     while [[ ${realbasedir} != '/' ]]; do
         if [[ -n ${vcs_comm[detect_need_file]} ]] ; then
             [[ -d ${basedir}/${dirname} ]] && \
-            [[ -f ${basedir}/${dirname}/${vcs_comm[detect_need_file]} ]] && \
+            [[ -e ${basedir}/${dirname}/${vcs_comm[detect_need_file]} ]] && \
                 break
         else
             [[ -d ${basedir}/${dirname} ]] && break
@@ -1745,7 +1752,7 @@ VCS_INFO_git_detect() { #{{{
 # }}}
 VCS_INFO_hg_detect() { #{{{
     VCS_INFO_check_com hg || return 1
-    vcs_comm[detect_need_file]=branch
+    vcs_comm[detect_need_file]=store
     VCS_INFO_detect_by_dir '.hg'
     return $?
 }
