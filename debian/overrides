@@ -18,12 +18,6 @@ grml-scripts: script-with-language-extension usr/sbin/prepare_ramdisk.sh
 grml-scripts: script-with-language-extension usr/sbin/prepare_tmpfs.sh
 grml-scripts: script-with-language-extension usr/sbin/suspenduser_gui.sh
 grml-scripts: script-with-language-extension usr/sbin/suspenduser.sh
-grml-scripts: shell-script-fails-syntax-check ./usr/bin/caps-ctrl
-grml-scripts: shell-script-fails-syntax-check ./usr/bin/grml-info
-grml-scripts: shell-script-fails-syntax-check ./usr/bin/grml-lock
-grml-scripts: shell-script-fails-syntax-check ./usr/sbin/grml-nessus
-grml-scripts: shell-script-fails-syntax-check ./usr/sbin/grml-swapon
-grml-scripts: shell-script-fails-syntax-check ./usr/sbin/grml-tpm
 grml-scripts: statically-linked-binary ./usr/bin/cpu-screen
 grml-scripts: statically-linked-binary ./usr/bin/ip-screen
 grml-scripts: statically-linked-binary ./usr/bin/vmware-detect

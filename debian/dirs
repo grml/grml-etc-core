@@ -1,7 +1,5 @@
-bin
 etc/grml
 etc/postfix
 usr/bin
 usr/sbin
-sbin
 usr/share/grml-scripts
