@@ -13,13 +13,21 @@ Available options:
 
   -h | --help   display this usage information
   -p <program>  check specified argument instead of default args, like:
-		$(basename $0) -p aumix xterm -T aumix -e aumix
+                $(basename $0) -p aumix xterm -T aumix -e aumix
 "
 }
 
 is_installed() {
-    prog="$(basename $1)"
+    prog="$1"
     [ -z "$prog" ] && return 1
+
+    case "${prog}" in
+        /*) # deal with absolute-path programs
+            [ -x "${prog}" ] && return 0
+            return 1 ;;
+    esac
+
+    ret=1
 
     ret=1
     oifs="$IFS"
@@ -51,10 +59,10 @@ fi
 if [ "$1" = '-p' ] ; then
     if [ -z "$2" ] ; then
          usage
-	 exit 1
+         exit 1
     else
          PROG="$2"
-	 shift ; shift
+         shift ; shift
     fi
 else
     PROG="$1"
