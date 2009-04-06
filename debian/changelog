@@ -7,8 +7,9 @@ grml-scripts (1.1.18) UNRELEASED; urgency=low
   * Add new script grml-exec-wrapper (simple but smart program
     execution wrapper). Thanks to ft for help.
   * Fix typo in grml-chroot manpage.
+  * Add ${shlibs:Depends}, ${misc:Depends} to Depends.
 
- -- Michael Prokop <mika@grml.org>  Tue, 03 Mar 2009 10:35:12 +0100
+ -- Michael Prokop <mika@grml.org>  Mon, 06 Apr 2009 09:03:49 +0200
 
 grml-scripts (1.1.17) unstable; urgency=low
 
