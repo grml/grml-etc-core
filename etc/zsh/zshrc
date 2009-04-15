@@ -2290,9 +2290,9 @@ if [[ -r /etc/debian_version ]] ; then
      fi
 
     #a1# Take a look at the syslog: \kbd{\$PAGER /var/log/syslog}
-    alias llog="$PAGER /var/log/syslog"     # take a look at the syslog
+    salias llog="$PAGER /var/log/syslog"     # take a look at the syslog
     #a1# Take a look at the syslog: \kbd{tail -f /var/log/syslog}
-    alias tlog="tail -f /var/log/syslog"    # follow the syslog
+    salias tlog="tail -f /var/log/syslog"    # follow the syslog
 fi
 
 # sort installed Debian-packages by size
