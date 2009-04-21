@@ -1,9 +1,14 @@
 grml-etc-core (0.3.67) unstable; urgency=low
 
+  [ Frank Terbeck ]
   * zshrc: handle newer versions of hg, that don't create .hg/branch
     anymore if there's only 'default'. Found by Andreas Korsten.
 
- -- Frank Terbeck <ft@grml.org>  Mon, 06 Apr 2009 13:00:28 +0200
+  [ Moritz Augsburger ]
+  * zshrc: not every user is allowed to read logfiles... use sudo
+    for aliases llog and tlog if possible
+
+ -- Michael Prokop <mika@grml.org>  Tue, 21 Apr 2009 10:26:33 +0200
 
 grml-etc-core (0.3.66) unstable; urgency=low
 
