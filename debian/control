@@ -3,15 +3,15 @@ Section: grml
 Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
 Build-Depends: debhelper (>= 4.0.0)
-Standards-Version: 3.8.0
+Standards-Version: 3.8.1
 Homepage: http://git.grml.org/?p=grml-etc-core.git
-XS-Vcs-git: git://git.grml.org/grml-etc-core.git
-XS-Vcs-Browser: http://git.grml.org/?p=grml-etc-core.git
+Vcs-git: git://git.grml.org/grml-etc-core.git
+Vcs-Browser: http://git.grml.org/?p=grml-etc-core.git
 
 Package: grml-etc-core
 Architecture: all
 Conflicts: grml-etc (<< 0.8-11), grml-autoconfig (<< 0.5-7), grml-scripts (<< 0.8-27)
-Depends: editor | vim | nvi
+Depends: vim | nvi | editor
 Pre-Depends: zsh
 Description: core ecetera files for the grml system
  This package includes some /etc files for the

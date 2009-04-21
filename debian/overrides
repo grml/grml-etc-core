@@ -1,1 +1,2 @@
 grml-etc-core: unknown-section grml
+grml-etc-core: remove-of-unknown-diversion */* postrm:20

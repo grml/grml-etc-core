@@ -8,7 +8,14 @@ grml-etc-core (0.3.67) unstable; urgency=low
   * zshrc: not every user is allowed to read logfiles... use sudo
     for aliases llog and tlog if possible
 
- -- Michael Prokop <mika@grml.org>  Tue, 21 Apr 2009 10:26:33 +0200
+  [ Michael Prokop ]
+  * Debian packaging:
+    - replace XS-Vcs* with Vcs* headers.
+    - bump Standard Version to 3.8.1.
+    - bump Compat Version from 4 to 5.
+    - modify order of packages in Depends, so virtual package ist the last one
+
+ -- Michael Prokop <mika@grml.org>  Tue, 21 Apr 2009 11:06:00 +0200
 
 grml-etc-core (0.3.66) unstable; urgency=low
 
