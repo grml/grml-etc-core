@@ -3032,11 +3032,6 @@ alias CO="./configure"
 #a2# Execute \kbd{./configure --help}
 alias CH="./configure --help"
 
-# http://conkeror.mozdev.org/
-# TODO: I think this should be removed, as conkeror is not a simple extension anymore
-#a2# Run a keyboard driven firefox
-alias conkeror='firefox -chrome chrome://conkeror/content'
-
 # arch/tla stuff
 if check_com -c tla ; then
     #a2# Execute \kbd{tla what-changed --diffs | less}
