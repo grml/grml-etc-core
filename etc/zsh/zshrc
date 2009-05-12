@@ -1999,7 +1999,7 @@ preexec () {
 # adjust title of xterm
     [[ ${NOTITLE} -gt 0 ]] && return 0
     case $TERM in
-        (xterm*|rxvt)
+        (xterm*|rxvt*)
             print -Pn "\e]0;%n@%m: $1\a"
             ;;
     esac
