@@ -1,8 +1,13 @@
-grml-etc-core (0.3.68) unstable; urgency=low
+grml-etc-core (0.3.68) UNRELEASED; urgency=low
 
-  * Remove conkeror alias
+  [ Frank Terbeck ]
+  * zshrc: Remove conkeror alias
 
- -- Frank Terbeck <ft@grml.org>  Sat, 25 Apr 2009 01:13:06 +0200
+  [ Michael Prokop ]
+  * zshrc: Apply patch from Moritz Augsburger: enable title
+    inside urxvt-unicode
+
+ -- Michael Prokop <mika@grml.org>  Tue, 12 May 2009 15:29:21 +0200
 
 grml-etc-core (0.3.67) unstable; urgency=low
 
