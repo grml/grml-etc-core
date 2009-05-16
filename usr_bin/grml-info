@@ -14,6 +14,8 @@ local PAGE='/usr/share/doc/grml-docs/startpage.html'
 if [ -n "$DISPLAY" ]; then
    if check4progs dillo ; then
       dillo $PAGE
+   elif check4progs xlinks2 ; then
+      xlinks2 -mode 640x480 $PAGE
    elif check4progs firefox ; then
       firefox $PAGE
    elif check4progs x-www-browser ; then
