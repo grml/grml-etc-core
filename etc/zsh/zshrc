@@ -448,6 +448,7 @@ xunfunction() {
 # this allows us to stay in sync with grml's zshrc and put own
 # modifications in ~/.zshrc.local
 zrclocal() {
+    xsource "/etc/zsh/zshrc.local"
     xsource "${HOME}/.zshrc.local"
     return 0
 }
@@ -2958,10 +2959,6 @@ exit 0;
 
 # {{{ make sure our environment is clean regarding colors
 for color in BLUE RED GREEN CYAN YELLOW MAGENTA WHITE ; unset $color
-# }}}
-
-# source another config file if present {{{
-xsource "/etc/zsh/zshrc.local"
 # }}}
 
 # "persistent history" {{{
