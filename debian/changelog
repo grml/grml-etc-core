@@ -1,5 +1,6 @@
 grml-scripts (1.1.19) unstable; urgency=low
 
+  [ Michael Prokop ]
   * Some minor cleanups for lintian:
      - Cleanup of lintian's override file
      - Drop unneeded /bin and /sbin from debian/dirs
@@ -7,8 +8,10 @@ grml-scripts (1.1.19) unstable; urgency=low
      - Bump Compat Version to 5
   * grml-info: add support for xlinks2 as dillo isn't available
     in Debian/unstable due to removal of libgtk1.2
+  [ Frank Terbeck] 
+  * exec-wrapper: remove doubled ret=1
 
- -- Michael Prokop <mika@grml.org>  Sat, 16 May 2009 19:18:30 +0200
+ -- Michael Prokop <mika@grml.org>  Mon, 18 May 2009 08:17:39 +0200
 
 grml-scripts (1.1.18) unstable; urgency=low
 
