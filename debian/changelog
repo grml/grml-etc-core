@@ -1,3 +1,11 @@
+grml-etc-core (0.3.70) unstable; urgency=low
+
+  * zshrc: do not fall back to LANG en_US.iso885915 if it is unset.
+    (For one reason because we prefer utf8 nowdays, on the other
+    side it should resolve a cosmetic locales problem from grml-small.)
+
+ -- Michael Prokop <mika@grml.org>  Mon, 18 May 2009 22:31:46 +0200
+
 grml-etc-core (0.3.69) unstable; urgency=low
 
   * zshrc: properly source the global zshrc.local via zrclocal(), to
