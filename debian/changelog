@@ -1,4 +1,4 @@
-grml-etc-core (0.3.69) UNRELEASED; urgency=low
+grml-etc-core (0.3.69) unstable; urgency=low
 
   * zshrc: properly source the global zshrc.local via zrclocal(), to
     make sure it is always sourced when appropriate. Reported by
