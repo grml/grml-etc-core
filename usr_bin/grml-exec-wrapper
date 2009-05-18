@@ -28,8 +28,6 @@ is_installed() {
     esac
 
     ret=1
-
-    ret=1
     oifs="$IFS"
     IFS=:
     for dir in $PATH; do
