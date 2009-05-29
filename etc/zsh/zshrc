@@ -121,6 +121,11 @@ is43(){
     return 1
 }
 
+is433(){
+    [[ $ZSH_VERSION == 4.3.<3->* || $ZSH_VERSION == <5->* ]] && return 0
+    return 1
+}
+
 #f1# Checks whether or not you're running grml
 isgrml(){
     [[ -f /etc/grml_version ]] && return 0
@@ -1033,6 +1038,8 @@ chpwd() {
 
 # directory based profiles {{{
 
+if is433 ; then
+
 CHPWD_PROFILE='default'
 function chpwd_profiles() {
     # Say you want certain settings to be active in certain directories.
@@ -1065,6 +1072,32 @@ function chpwd_profiles() {
     #
     # The initial value for $CHPWD_PROFILE is 'default'.
     #
+    # Version requirement:
+    #   This feature requires zsh 4.3.3 or newer.
+    #   If you use this feature and need to know whether it is active in your
+    #   current shell, there are several ways to do that. Here are two simple
+    #   ways:
+    #
+    #   a) If knowing if the profiles feature is active when zsh starts is
+    #      good enough for you, you can put the following snippet into your
+    #      .zshrc.local:
+    #
+    #   (( ${+functions[chpwd_profiles]} )) && print "directory profiles active"
+    #
+    #   b) If that is not good enough, and you would prefer to be notified
+    #      whenever a profile changes, you can solve that by making sure you
+    #      start *every* profile function you create like this:
+    #
+    #   function chpwd_profile_myprofilename() {
+    #       [[ ${profile} == ${CHPWD_PROFILE} ]] && return 1
+    #       print "chpwd(): Switching to profile: $profile"
+    #     ...
+    #   }
+    #
+    #      That makes sure you only get notified if a profile is *changed*,
+    #      not everytime you change directory, which would probably piss
+    #      you off fairly quickly. :-)
+    #
     # There you go. Now have fun with that.
     local -x profile
 
@@ -1077,6 +1110,8 @@ function chpwd_profiles() {
     return 0
 }
 chpwd_functions=( ${chpwd_functions} chpwd_profiles )
+
+fi # is433
 
 # }}}
 
