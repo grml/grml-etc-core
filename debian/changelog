@@ -1,3 +1,9 @@
+grml-etc-core (0.3.71) UNRELEASED; urgency=low
+
+  * zshrc: Add directory based profiles
+
+ -- Frank Terbeck <ft@grml.org>  Fri, 29 May 2009 23:09:35 +0200
+
 grml-etc-core (0.3.70) unstable; urgency=low
 
   * zshrc: do not fall back to LANG en_US.iso885915 if it is unset.
