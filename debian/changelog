@@ -1,4 +1,4 @@
-grml-etc-core (0.3.71) UNRELEASED; urgency=low
+grml-etc-core (0.3.71) unstable; urgency=low
 
   * zshrc: Add directory based profiles
 
