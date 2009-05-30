@@ -1,3 +1,10 @@
+grml-etc-core (0.3.72) unstable; urgency=low
+
+  * zshrc: Clarify how the context of the styles for directory based
+    profiles are used and mention a "best practice".
+
+ -- Frank Terbeck <ft@grml.org>  Sat, 30 May 2009 19:20:12 +0200
+
 grml-etc-core (0.3.71) unstable; urgency=low
 
   * zshrc: Add directory based profiles
