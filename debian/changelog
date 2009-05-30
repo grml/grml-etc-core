@@ -2,8 +2,9 @@ grml-etc-core (0.3.72) unstable; urgency=low
 
   * zshrc: Clarify how the context of the styles for directory based
     profiles are used and mention a "best practice".
+  * zshrc: Add a note about where to send patches at the top of zshrc.
 
- -- Frank Terbeck <ft@grml.org>  Sat, 30 May 2009 19:20:12 +0200
+ -- Frank Terbeck <ft@grml.org>  Sat, 30 May 2009 19:31:55 +0200
 
 grml-etc-core (0.3.71) unstable; urgency=low
 

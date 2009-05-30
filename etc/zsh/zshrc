@@ -11,6 +11,18 @@
 # Global Order: zshenv, zprofile, zshrc, zlogin
 ################################################################################
 
+# Contributing:
+# If you want to help to improve grml's zsh setup, clone the grml-etc-core
+# repository from git.grml.org:
+#   git clone git://git.grml.org/grml-etc-core.git
+#
+# Make your changes, commit them; use 'git format-patch' to create a series
+# of patches and send those to the following address via 'git send-email':
+#   grml-etc-core@grml.org
+#
+# Doing so makes sure the right people get your patches for review and
+# possibly inclusion.
+
 # zsh-refcard-tag documentation: {{{
 #   You may notice strange looking comments in this file.
 #   These are there for a purpose. grml's zsh-refcard can now be
