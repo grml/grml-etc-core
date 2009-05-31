@@ -865,8 +865,8 @@ alias run-help >&/dev/null && unalias run-help
 zrcautoload run-help # use via 'esc-h'
 
 # completion system
-if zrcautoload compinit && compinit 2>/dev/null ; then
-    compinit 2>/dev/null || print 'Notice: no compinit available :('
+if zrcautoload compinit ; then
+    compinit || print 'Notice: no compinit available :('
 else
     print 'Notice: no compinit available :('
     function zstyle { }
