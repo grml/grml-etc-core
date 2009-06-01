@@ -46,6 +46,14 @@ This is an in depth description of non-standard features implemented by
 //grmlzshrc//.
 
 == DIRSTACK HANDLING ==
+The dirstack in //grmlzshrc// has a persistent nature. It is stored into a
+file each time zsh's working directory is changed. That file can be configured
+via the **DIRSTACKFILE** variable and it defaults to **~/.zdirs**. The
+**DIRSTACKSIZE** variable defaults to **20** in this setup.
+
+The **DIRSTACKFILE** is loaded each time zsh starts, therefore freshly started
+zshs inherit the dirstack of the zsh that most recently updated
+**DIRSTACKFILE**.
 
 == DIRECTORY BASED PROFILES ==
 
