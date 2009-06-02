@@ -130,9 +130,6 @@ fi
 ## ignore ~/.ssh/known_hosts entries
 #alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null" -o "PreferredAuthentications=keyboard-interactive"'
 
-## a variation of our man2 alias
-#alias man2='MANPAGER="sed -e G |less" TERMINFO=~/.terminfo TERM=mostlike /usr/bin/man'
-
 
 ## global aliases (for those who like them) ##
 
@@ -162,10 +159,8 @@ fi
 ## Set a search path for the cd builtin
 #cdpath=(.. ~)
 
-## variations of our manzsh() function; pick you poison:
+## variation of our manzsh() function; pick you poison:
 #manzsh()  { /usr/bin/man zshall |  most +/"$1" ; }
-#[[ -f ~/.terminfo/m/mostlike ]] && MYLESS='LESS=C TERMINFO=~/.terminfo TERM=mostlike less' || MYLESS='less'
-#manzsh()  { man zshall | $MYLESS -p $1 ; }
 
 ## Switching shell safely and efficiently? http://www.zsh.org/mla/workers/2001/msg02410.html
 #bash() {

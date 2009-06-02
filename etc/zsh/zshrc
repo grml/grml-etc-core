@@ -559,6 +559,15 @@ else
     fi
 fi
 
+# support colors in less
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
+
 # automatically remove duplicates from these arrays
 typeset -U path cdpath fpath manpath
 # }}}
@@ -3210,11 +3219,6 @@ check_com -c python && alias http="python -m SimpleHTTPServer"
 # Use 'g' instead of 'git':
 check_com g || alias g='git'
 
-# use colors when browsing man pages, but only if not using LESS_TERMCAP_* from /etc/zsh/zshenv:
-if [[ -z "$LESS_TERMCAP_md" ]] ; then
-    [[ -d ~/.terminfo/ ]] && alias man='TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man'
-fi
-
 # check whether Debian's package management (dpkg) is running
 if check_com salias ; then
     #a2# Check whether a dpkg instance is currently running
@@ -3414,11 +3418,8 @@ greph() { history 0 | grep $1 }
 #a2# Execute \kbd{grep -i -{}-color=auto}
 alias GREP='grep -i --color=auto'
 
-# one blank line between each line
-if [[ -r ~/.terminfo/m/mostlike ]] ; then
-    #f5# Watch manpages in a stretched style
-    man2() { PAGER='dash -c "sed G | /usr/bin/less"' TERM=mostlike /usr/bin/man "$@" ; }
-fi
+#f5# Watch manpages in a stretched style
+man2() { PAGER='dash -c "sed G | /usr/bin/less"' command man "$@" ; }
 
 # d():Copyright 2005 Nikolai Weibull <nikolai@bitwi.se>
 # note: option AUTO_PUSHD has to be set
