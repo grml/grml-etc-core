@@ -1,11 +1,16 @@
 grml-etc-core (0.3.73) UNRELEASED; urgency=low
 
+  [ Frank Terbeck ]
   * zshrc: Fix a problem when calling compinit can seem to cause zsh startup
     to hang forever. Reported by Rasmus Steinke.
   * zshrc: Fix problems related to TERM=mostlike in zshrc. Again reported by
     Rasmus Steinke.
 
- -- Frank Terbeck <ft@grml.org>  Tue, 02 Jun 2009 16:36:32 +0200
+  [ Michael Prokop ]
+  * zshrc: add deborphan, pal and hnb to compdef _gnu_generic. Thanks for
+    the suggestion to Carsten Hey.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 05 Jun 2009 09:35:58 +0200
 
 grml-etc-core (0.3.72) unstable; urgency=low
 
