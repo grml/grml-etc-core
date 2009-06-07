@@ -216,11 +216,12 @@ fi
 # We need to define this function as early as this, because autoloading
 # 'is-at-least()' needs it.
 function zrcautoload() {
-    setopt local_options extended_glob
+    emulate -L zsh
+    setopt extended_glob
     local fdir ffile
     local -i ffound
 
-    ffile=${1}
+    ffile=$1
     (( found = 0 ))
     for fdir in ${fpath} ; do
         [[ -e ${fdir}/${ffile} ]] && (( ffound = 1 ))
@@ -373,12 +374,13 @@ fi # GRML_WARN_SKEL
 #   -c  only checks for external commands
 #   -g  does the usual tests and also checks for global aliases
 check_com() {
+    emulate -L zsh
     local -i comonly gatoo
 
-    if [[ ${1} == '-c' ]] ; then
+    if [[ $1 == '-c' ]] ; then
         (( comonly = 1 ))
         shift
-    elif [[ ${1} == '-g' ]] ; then
+    elif [[ $1 == '-g' ]] ; then
         (( gatoo = 1 ))
     else
         (( comonly = 0 ))
@@ -413,9 +415,10 @@ check_com() {
 # creates an alias and precedes the command with
 # sudo if $EUID is not zero.
 salias() {
+    emulate -L zsh
     local only=0 ; local multi=0
-    while [[ ${1} == -* ]] ; do
-        case ${1} in
+    while [[ $1 == -* ]] ; do
+        case $1 in
             (-o) only=1 ;;
             (-a) multi=1 ;;
             (--) shift ; break ;;
@@ -427,7 +430,7 @@ salias() {
                 printf '  -o      only sets an alias if a preceding sudo would be needed.\n'
                 return 0
                 ;;
-            (*) printf "unkown option: '%s'\n" "${1}" ; return 1 ;;
+            (*) printf "unkown option: '%s'\n" "$1" ; return 1 ;;
         esac
         shift
     done
@@ -454,9 +457,10 @@ salias() {
 #   Note that foo is no typo; $foo would be wrong here!
 if ! is42 ; then
     uprint () {
+        emulate -L zsh
         local -a u
         local w
-        local parameter=${1}
+        local parameter=$1
 
         if [[ -z ${parameter} ]] ; then
             printf 'usage: uprint <parameter>\n'
@@ -464,22 +468,23 @@ if ! is42 ; then
         fi
 
         for w in ${(P)parameter} ; do
-            [[ -z ${(M)u:#${w}} ]] && u=( ${u} ${w} )
+            [[ -z ${(M)u:#$w} ]] && u=( $u $w )
         done
 
-        builtin print -l ${u}
+        builtin print -l $u
     }
 fi
 
 # Check if we can read given files and source those we can.
 xsource() {
+    emulate -L zsh
     if (( ${#argv} < 1 )) ; then
         printf 'usage: xsource FILE(s)...\n' >&2
         return 1
     fi
 
     while (( ${#argv} > 0 )) ; do
-        [[ -r ${1} ]] && source ${1}
+        [[ -r $1 ]] && source $1
         shift
     done
     return 0
@@ -487,18 +492,20 @@ xsource() {
 
 # Check if we can read a given file and 'cat(1)' it.
 xcat() {
+    emulate -L zsh
     if (( ${#argv} != 1 )) ; then
         printf 'usage: xcat FILE\n' >&2
         return 1
     fi
 
-    [[ -r ${1} ]] && cat ${1}
+    [[ -r $1 ]] && cat $1
     return 0
 }
 
 # Remove these functions again, they are of use only in these
 # setup files. This should be called at the end of .zshrc.
 xunfunction() {
+    emulate -L zsh
     local -a funcs
     funcs=(salias xcat xsource xunfunction zrcautoload)
 
@@ -904,6 +911,8 @@ abk=(
 )
 
 globalias() {
+    emulate -L zsh
+    setopt extendedglob
     local MATCH
 
     if (( NOABBREVIATION > 0 )) ; then
@@ -2054,7 +2063,7 @@ fi
 
 (( ${COMMAND_NOT_FOUND} == 1 )) &&
 function command_not_found_handler() {
-    setopt localoptions no_sh_wordsplit
+    emulate -L zsh
     if [[ -x ${GRML_ZSH_CNF_HANDLER} ]] ; then
         ${GRML_ZSH_CNF_HANDLER} $1
     fi
@@ -2395,7 +2404,8 @@ if [[ -r /etc/debian_version ]] ; then
     # debian upgrade
     #f3# Execute \kbd{apt-get update \&\& }\\&\quad \kbd{apt-get dist-upgrade}
     upgrade() {
-        if [[ -z "$1" ]] ; then
+        emulate -L zsh
+        if [[ -z $1 ]] ; then
             $SUDO apt-get update
             $SUDO apt-get -u upgrade
         else
@@ -2711,6 +2721,9 @@ setenv()  { typeset -x "${1}${1:+=}${(@)argv[2,$#]}" }  # csh compatibility
 #f1# Reload an autoloadable function
 freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
 
+# TODO: Who really uses reload()? The proper way to reload a zsh setup is to
+# actually restart the shell via 'exec zsh'. And reload with arguments is the
+# same as freload() above. -ft
 #f1# Reload zsh setup
 reload() {
     if [[ "$#*" -eq 0 ]] ; then
@@ -2728,8 +2741,7 @@ compdef _functions reload freload
 #f1# List symlinks in detail (more detailed version of 'readlink -f' and 'whence -s')
 sll() {
     [[ -z "$1" ]] && printf 'Usage: %s <file(s)>\n' "$0" && return 1
-    for i in "$@" ; do
-        file=$i
+    for file in "$@" ; do
         while [[ -h "$file" ]] ; do
             ls -l $file
             file=$(readlink "$file")
@@ -2746,20 +2758,24 @@ else
     manzsh()  { /usr/bin/man zshall |  vim -c "se ft=man| se hlsearch" +/"$1" - ; }
 fi
 
+# TODO: Is it supported to use pager settings like this?
+#   PAGER='less -Mr' - If so, the use of $PAGER here needs fixing
+# with respect to wordsplitting. (ie. ${=PAGER})
 if check_com -c $PAGER ; then
     #f1# View Debian's changelog of a given package
     dchange() {
-        if [[ -r /usr/share/doc/${1}/changelog.Debian.gz ]] ; then
-            $PAGER /usr/share/doc/${1}/changelog.Debian.gz
-        elif [[ -r /usr/share/doc/${1}/changelog.gz ]] ; then
-            $PAGER /usr/share/doc/${1}/changelog.gz
+        emulate -L zsh
+        if [[ -r /usr/share/doc/$1/changelog.Debian.gz ]] ; then
+            $PAGER /usr/share/doc/$1/changelog.Debian.gz
+        elif [[ -r /usr/share/doc/$1/changelog.gz ]] ; then
+            $PAGER /usr/share/doc/$1/changelog.gz
         else
             if check_com -c aptitude ; then
                 echo "No changelog for package $1 found, using aptitude to retrieve it."
                 if isgrml ; then
-                    aptitude -t unstable changelog ${1}
+                    aptitude -t unstable changelog $1
                 else
-                    aptitude changelog ${1}
+                    aptitude changelog $1
                 fi
             else
                 echo "No changelog for package $1 found, sorry."
@@ -2772,11 +2788,12 @@ if check_com -c $PAGER ; then
 
     #f1# View Debian's NEWS of a given package
     dnews() {
-        if [[ -r /usr/share/doc/${1}/NEWS.Debian.gz ]] ; then
-            $PAGER /usr/share/doc/${1}/NEWS.Debian.gz
+        emulate -L zsh
+        if [[ -r /usr/share/doc/$1/NEWS.Debian.gz ]] ; then
+            $PAGER /usr/share/doc/$1/NEWS.Debian.gz
         else
-            if [[ -r /usr/share/doc/${1}/NEWS.gz ]] ; then
-                $PAGER /usr/share/doc/${1}/NEWS.gz
+            if [[ -r /usr/share/doc/$1/NEWS.gz ]] ; then
+                $PAGER /usr/share/doc/$1/NEWS.gz
             else
                 echo "No NEWS file for package $1 found, sorry."
                 return 1
@@ -2788,8 +2805,9 @@ if check_com -c $PAGER ; then
 
     #f1# View upstream's changelog of a given package
     uchange() {
-        if [[ -r /usr/share/doc/${1}/changelog.gz ]] ; then
-            $PAGER /usr/share/doc/${1}/changelog.gz
+        emulate -L zsh
+        if [[ -r /usr/share/doc/$1/changelog.gz ]] ; then
+            $PAGER /usr/share/doc/$1/changelog.gz
         else
             echo "No changelog for package $1 found, sorry."
             return 1
@@ -2897,6 +2915,7 @@ check_com -c qma && alias ?='qma zshall'
 
 # grep for running process, like: 'any vim'
 any() {
+    emulate -L zsh
     if [[ -z "$1" ]] ; then
         echo "any - grep for process(es) by keyword" >&2
         echo "Usage: any <keyword>" >&2 ; return 1
@@ -2920,6 +2939,7 @@ deswap() {
 
 # print hex value of a number
 hex() {
+    emulate -L zsh
     [[ -n "$1" ]] && printf "%x\n" $1 || { print 'Usage: hex <number-to-convert>' ; return 1 }
 }
 
@@ -2961,6 +2981,7 @@ uiae() {
 
 # set up an ipv6 tunnel
 ipv6-tunnel() {
+    emulate -L zsh
     case $1 in
         start)
             if ifconfig sit1 2>/dev/null | grep -q 'inet6 addr: 2002:.*:1::1' ; then
@@ -3264,7 +3285,8 @@ fi
 agoogle() { ${=BROWSER} "http://groups.google.com/groups?as_uauthors=$*" ; }
 #f4# Search Debian Bug Tracking System
 debbug()  {
-    setopt localoptions extendedglob
+    emulate -L zsh
+    setopt extendedglob
     if [[ $# -eq 1 ]]; then
         case "$1" in
             ([0-9]##)
@@ -3283,79 +3305,177 @@ debbug()  {
     fi
 }
 #f4# Search Debian Bug Tracking System in mbox format
-debbugm() { bts show --mbox $1 } # provide bugnummer as "$1"
+debbugm() {
+    emulate -L zsh
+    bts show --mbox $1
+}
 #f4# Search DMOZ
-dmoz()    { ${=BROWSER} http://search.dmoz.org/cgi-bin/search\?search=${1// /_} }
+dmoz()    {
+    emulate -L zsh
+    ${=BROWSER} http://search.dmoz.org/cgi-bin/search\?search=${1// /_}
+}
 #f4# Search German   Wiktionary
-dwicti()  { ${=BROWSER} http://de.wiktionary.org/wiki/${(C)1// /_} }
+dwicti()  {
+    emulate -L zsh
+    ${=BROWSER} http://de.wiktionary.org/wiki/${(C)1// /_}
+}
 #f4# Search English  Wiktionary
-ewicti()  { ${=BROWSER} http://en.wiktionary.org/wiki/${(C)1// /_} }
+ewicti()  {
+    emulate -L zsh
+    ${=BROWSER} http://en.wiktionary.org/wiki/${(C)1// /_}
+}
 #f4# Search Google Groups
-ggogle()  { ${=BROWSER} "http://groups.google.com/groups?q=$*" }
+ggogle()  {
+    emulate -L zsh
+    ${=BROWSER} "http://groups.google.com/groups?q=$*"
+}
 #f4# Search Google
-google()  { ${=BROWSER} "http://www.google.com/search?&num=100&q=$*" }
+google()  {
+    emulate -L zsh
+    ${=BROWSER} "http://www.google.com/search?&num=100&q=$*"
+}
 #f4# Search Google Groups for MsgID
-mggogle() { ${=BROWSER} "http://groups.google.com/groups?selm=$*" }
+mggogle() {
+    emulate -L zsh
+    ${=BROWSER} "http://groups.google.com/groups?selm=$*"
+}
 #f4# Search Netcraft
-netcraft(){ ${=BROWSER} "http://toolbar.netcraft.com/site_report?url=$1" }
+netcraft(){
+    emulate -L zsh
+    ${=BROWSER} "http://toolbar.netcraft.com/site_report?url=$1"
+}
 #f4# Use German Wikipedia's full text search
-swiki()   { ${=BROWSER} http://de.wikipedia.org/wiki/Spezial:Search/${(C)1} }
+swiki()   {
+    emulate -L zsh
+    ${=BROWSER} http://de.wikipedia.org/wiki/Spezial:Search/${(C)1}
+}
 #f4# search \kbd{dict.leo.org}
-oleo()    { ${=BROWSER} "http://dict.leo.org/?search=$*" }
+oleo()    {
+    emulate -L zsh
+    ${=BROWSER} "http://dict.leo.org/?search=$*"
+}
 #f4# Search German   Wikipedia
-wikide()  { ${=BROWSER} http://de.wikipedia.org/wiki/"${(C)*}" }
+wikide()  {
+    emulate -L zsh
+    ${=BROWSER} http://de.wikipedia.org/wiki/"${(C)*}"
+}
 #f4# Search English  Wikipedia
-wikien()  { ${=BROWSER} http://en.wikipedia.org/wiki/"${(C)*}" }
+wikien()  {
+    emulate -L zsh
+    ${=BROWSER} http://en.wikipedia.org/wiki/"${(C)*}"
+}
 #f4# Search official debs
-wodeb()   { ${=BROWSER} "http://packages.debian.org/search?keywords=$1&searchon=contents&suite=${2:=unstable}&section=all" }
+wodeb()   {
+    emulate -L zsh
+    ${=BROWSER} "http://packages.debian.org/search?keywords=$1&searchon=contents&suite=${2:=unstable}&section=all"
+}
 
 #m# f4 gex() Exact search via Google
-check_com google && gex () { google "\"[ $1]\" $*" } # exact search at google
+check_com google && gex () {
+    google "\"[ $1]\" $*"
+}
 
 # misc
 #f5# Backup \kbd{file {\rm to} file\_timestamp}
-bk()      { cp -b ${1} ${1}_`date --iso-8601=m` }
+bk() {
+    emulate -L zsh
+    cp -b $1 $1_`date --iso-8601=m`
+}
 #f5# Copied diff
-cdiff()   { diff -crd "$*" | egrep -v "^Only in |^Binary files " }
+cdiff() {
+    emulate -L zsh
+    diff -crd "$*" | egrep -v "^Only in |^Binary files "
+}
 #f5# cd to directoy and list files
-cl()      { cd $1 && ls -a }        # cd && ls
+cl() {
+    emulate -L zsh
+    cd $1 && ls -a
+}
 #f5# Cvs add
-cvsa()    { cvs add $* && cvs com -m 'initial checkin' $* }
+cvsa() {
+    emulate -L zsh
+    cvs add $* && cvs com -m 'initial checkin' $*
+}
 #f5# Cvs diff
-cvsd()    { cvs diff -N $* |& $PAGER }
+cvsd() {
+    emulate -L zsh
+    cvs diff -N $* |& $PAGER
+}
 #f5# Cvs log
-cvsl()    { cvs log $* |& $PAGER }
+cvsl() {
+    emulate -L zsh
+    cvs log $* |& $PAGER
+}
 #f5# Cvs update
-cvsq()    { cvs -nq update }
+cvsq() {
+    emulate -L zsh
+    cvs -nq update
+}
 #f5# Rcs2log
-cvsr()    { rcs2log $* | $PAGER }
+cvsr() {
+    emulate -L zsh
+    rcs2log $* | $PAGER
+}
 #f5# Cvs status
-cvss()    { cvs status -v $* }
+cvss() {
+    emulate -L zsh
+    cvs status -v $*
+}
 #f5# Disassemble source files using gcc and as
-disassemble(){ gcc -pipe -S -o - -O -g $* | as -aldh -o /dev/null }
+disassemble(){
+    emulate -L zsh
+    gcc -pipe -S -o - -O -g $* | as -aldh -o /dev/null
+}
 #f5# Firefox remote control - open given URL
-fir()     { firefox -a firefox -remote "openURL($1)" }
+fir() {
+    firefox -a firefox -remote "openURL($1)"
+}
 #f5# Create Directoy and \kbd{cd} to it
-mcd()     { mkdir -p "$@"; cd "$@" } # mkdir && cd
+mcd() {
+    mkdir -p "$@" && cd "$@"
+}
 #f5# Unified diff to timestamped outputfile
-mdiff()   { diff -udrP "$1" "$2" > diff.`date "+%Y-%m-%d"`."$1" }
+mdiff() {
+    diff -udrP "$1" "$2" > diff.`date "+%Y-%m-%d"`."$1"
+}
 #f5# Memory overview
-memusage(){ ps aux | awk '{if (NR > 1) print $5; if (NR > 2) print "+"} END { print "p" }' | dc }
+memusage() {
+    ps aux | awk '{if (NR > 1) print $5; if (NR > 2) print "+"} END { print "p" }' | dc
+}
 #f5# Show contents of tar file
-shtar()   { gunzip -c $1 | tar -tf - -- | $PAGER }
+shtar() {
+    emulate -L zsh
+    gunzip -c $1 | tar -tf - -- | $PAGER
+}
 #f5# Show contents of tgz file
-shtgz()   { tar -ztf $1 | $PAGER }
+shtgz() {
+    emulate -L zsh
+    tar -ztf $1 | $PAGER
+}
 #f5# Show contents of zip file
-shzip()   { unzip -l $1 | $PAGER }
+shzip() {
+    emulate -L zsh
+    unzip -l $1 | $PAGER
+}
 #f5# Greps signature from file
-sig()     { agrep -d '^-- $' "$*" ~/.Signature }
+sig() {
+    emulate -L zsh
+    agrep -d '^-- $' "$*" ~/.Signature
+}
 #f5# Unified diff
-udiff()   { diff -urd $* | egrep -v "^Only in |^Binary files " }
+udiff() {
+    emulate -L zsh
+    diff -urd $* | egrep -v "^Only in |^Binary files "
+}
 #f5# (Mis)use \kbd{vim} as \kbd{less}
-viless()  { vim --cmd 'let no_plugin_maps = 1' -c "so \$VIMRUNTIME/macros/less.vim" "${@:--}" }
+viless() {
+    emulate -L zsh
+    vim --cmd 'let no_plugin_maps = 1' -c "so \$VIMRUNTIME/macros/less.vim" "${@:--}"
+}
 
 # download video from youtube
 ytdl() {
+    emulate -L zsh
     if ! [[ -n "$2" ]] ; then
         print "Usage: ydtl http://youtube.com/watch?v=.... outputfile.flv">&2
         return 1
@@ -3367,6 +3487,7 @@ ytdl() {
 # Function Usage: uopen $URL/$file
 #f5# Download a file and display it locally
 uopen() {
+    emulate -L zsh
     if ! [[ -n "$1" ]] ; then
         print "Usage: uopen \$URL/\$file">&2
         return 1
@@ -3380,7 +3501,10 @@ uopen() {
 
 # Function Usage: doc packagename
 #f5# \kbd{cd} to /usr/share/doc/\textit{package}
-doc() { cd /usr/share/doc/$1 && ls }
+doc() {
+    emulate -L zsh
+    cd /usr/share/doc/$1 && ls
+}
 _doc() { _files -W /usr/share/doc -/ }
 check_com compdef && compdef _doc doc
 
@@ -3405,6 +3529,7 @@ limg() {
 
 #f5# Create PDF file from source code
 makereadable() {
+    emulate -L zsh
     output=$1
     shift
     a2ps --medium A4dj -E -o $output $*
@@ -3415,16 +3540,23 @@ makereadable() {
 # regcheck '\s\d\.\d{3}\.\d{3} Euro' ' 1.000.000 Euro'
 #f5# Checks whether a regex matches or not.\\&\quad Example: \kbd{regcheck '.\{3\} EUR' '500 EUR'}
 regcheck() {
+    emulate -L zsh
     zmodload -i zsh/pcre
     pcre_compile $1 && \
     pcre_match $2 && echo "regex matches" || echo "regex does not match"
 }
 
 #f5# List files which have been modified within the last {\it n} days
-new() { print -l *(m-$1) }
+new() {
+    emulate -L zsh
+    print -l *(m-$1)
+}
 
 #f5# Grep in history
-greph() { history 0 | grep $1 }
+greph() {
+    emulate -L zsh
+    history 0 | grep $1
+}
 # use colors when GNU grep with color-support
 #a2# Execute \kbd{grep -{}-color=auto}
 (grep --help 2>/dev/null |grep -- --color) >/dev/null && alias grep='grep --color=auto'
@@ -3496,6 +3628,7 @@ purge() {
 #    /usr/local/lib/words/en-de.ISO-8859-1.vok > ~/.translate/de-en.ISO-8859-1.vok
 #f5# Translates a word
 trans() {
+    emulate -L zsh
     case "$1" in
         -[dD]*)
             translate -l de-en $2
@@ -3512,6 +3645,7 @@ trans() {
 
 #f5# List all occurrences of programm in current PATH
 plap() {
+    emulate -L zsh
     if [[ $# = 0 ]] ; then
         echo "Usage:    $0 program"
         echo "Example:  $0 zsh"
@@ -3540,11 +3674,15 @@ selhist() {
 
 # Use vim to convert plaintext to HTML
 #f5# Transform files to html with highlighting
-2html() { vim -u NONE -n -c ':syntax on' -c ':so $VIMRUNTIME/syntax/2html.vim' -c ':wqa' $1 &>/dev/null }
+2html() {
+    emulate -L zsh
+    vim -u NONE -n -c ':syntax on' -c ':so $VIMRUNTIME/syntax/2html.vim' -c ':wqa' $1 &>/dev/null
+}
 
 # Usage: simple-extract <file>
 #f5# Smart archive extractor
 simple-extract () {
+    emulate -L zsh
     if [[ -f $1 ]] ; then
         case $1 in
             *.tar.bz2)  bzip2 -v -d $1      ;;
@@ -3569,6 +3707,7 @@ simple-extract () {
 # Usage: smartcompress <file> (<type>)
 #f5# Smart archive creator
 smartcompress() {
+    emulate -L zsh
     if [[ -n $2 ]] ; then
         case $2 in
             tgz | tar.gz)   tar -zcvf$1.$2 $1 ;;
@@ -3589,6 +3728,7 @@ smartcompress() {
 # Usage: show-archive <archive>
 #f5# List an archive's content
 show-archive() {
+    emulate -L zsh
     if [[ -f $1 ]] ; then
         case $1 in
             *.tar.gz)      gunzip -c $1 | tar -tf - -- ;;
@@ -3606,11 +3746,15 @@ show-archive() {
 
 # It's shameless stolen from <http://www.vim.org/tips/tip.php?tip_id=167>
 #f5# Use \kbd{vim} as your manpage reader
-vman() { man $* | col -b | view -c 'set ft=man nomod nolist' - }
+vman() {
+    emulate -L zsh
+    man $* | col -b | view -c 'set ft=man nomod nolist' -
+}
 
 # function readme() { $PAGER -- (#ia3)readme* }
 #f5# View all README-like files in current directory in pager
 readme() {
+    emulate -L zsh
     local files
     files=(./(#i)*(read*me|lue*m(in|)ut)*(ND))
     if (($#files)) ; then
@@ -3650,6 +3794,7 @@ findsuid() {
     print 'Finished'
 }
 
+# TODO: So, this is the third incarnation of this function!?
 #f5# Reload given functions
 refunc() {
     for func in $argv ; do
@@ -3662,8 +3807,9 @@ refunc() {
 # stolen and modified from Sven's zshrc.forall
 #f5# Report diskusage of a directory
 dirspace() {
+    emulate -L zsh
     if [[ -n "$1" ]] ; then
-        for dir in $* ; do
+        for dir in "$@" ; do
             if [[ -d "$dir" ]] ; then
                 ( cd $dir; echo "-<$dir>"; du -shx .; echo);
             else
@@ -3684,7 +3830,7 @@ dirspace() {
 # % slow_print `cat /etc/passwd`
 #f5# Slowly print out parameters
 slow_print() {
-    for argument in "${@}" ; do
+    for argument in "$@" ; do
         for ((i = 1; i <= ${#1} ;i++)) ; do
             print -n "${argument[i]}"
             sleep 0.08
@@ -3696,14 +3842,14 @@ slow_print() {
 
 #f5# Show some status info
 status() {
-    print ""
-    print "Date..: "$(date "+%Y-%m-%d %H:%M:%S")""
+    print
+    print "Date..: "$(date "+%Y-%m-%d %H:%M:%S")
     print "Shell.: Zsh $ZSH_VERSION (PID = $$, $SHLVL nests)"
-    print "Term..: $TTY ($TERM), ${BAUD:+$BAUD bauds, }$COLUMNS x $LINES cars"
+    print "Term..: $TTY ($TERM), ${BAUD:+$BAUD bauds, }$COLUMNS x $LINES chars"
     print "Login.: $LOGNAME (UID = $EUID) on $HOST"
     print "System: $(cat /etc/[A-Za-z]*[_-][rv]e[lr]*)"
     print "Uptime:$(uptime)"
-    print ""
+    print
 }
 
 # Rip an audio CD
@@ -3744,6 +3890,7 @@ audioburn() {
 #f5# Make an audio CD from all mp3 files
 mkaudiocd() {
     # TODO: do the renaming more zshish, possibly with zmv()
+    emulate -L zsh
     cd ~/ripps
     for i in *.[Mm][Pp]3; do mv "$i" `echo $i | tr '[A-Z]' '[a-z]'`; done
     for i in *.mp3; do mv "$i" `echo $i | tr ' ' '_'`; done
@@ -3754,6 +3901,7 @@ mkaudiocd() {
 
 #f5# Create an ISO image. You are prompted for\\&\quad volume name, filename and directory
 mkiso() {
+    emulate -L zsh
     echo " * Volume name "
     read volume
     echo " * ISO Name (ie. tmp.iso)"
@@ -3794,19 +3942,21 @@ allulimit() {
 
 # ogg2mp3 with bitrate of 192
 ogg2mp3_192() {
-    oggdec -o - ${1} | lame -b 192 - ${1:r}.mp3
+    emulate -L zsh
+    oggdec -o - $1 | lame -b 192 - ${1:r}.mp3
 }
 
 #f5# RFC 2396 URL encoding in Z-Shell
 urlencode() {
-    setopt localoptions extendedglob
+    emulate -L zsh
+    setopt extendedglob
     input=( ${(s::)1} )
     print ${(j::)input/(#b)([^A-Za-z0-9_.!~*\'\(\)-])/%${(l:2::0:)$(([##16]#match))}}
 }
 
 #f5# Install x-lite (VoIP software)
 getxlite() {
-    setopt local_options
+    emulate -L zsh
     setopt errreturn
     [[ -d ~/tmp ]] || mkdir ~/tmp
     cd ~/tmp
@@ -3825,7 +3975,7 @@ getxlite() {
 
 #f5# Install skype
 getskype() {
-    setopt local_options
+    emulate -L zsh
     setopt errreturn
     echo "Downloading debian package of skype."
     echo "Notice: If you want to use a more recent skype version run 'getskypebeta'."
@@ -3835,7 +3985,7 @@ getskype() {
 
 #f5# Install beta-version of skype
 getskypebeta() {
-    setopt local_options
+    emulate -L zsh
     setopt errreturn
     echo "Downloading debian package of skype (beta version)."
     wget http://www.skype.com/go/getskype-linux-beta-deb
@@ -3844,7 +3994,7 @@ getskypebeta() {
 
 #f5# Install gizmo (VoIP software)
 getgizmo() {
-    setopt local_options
+    emulate -L zsh
     setopt errreturn
     echo "libgtk2.0-0, gconf2, libstdc++6, libasound2 and zlib1g have to be available. Installing."
     $SUDO apt-get update
@@ -3855,7 +4005,7 @@ getgizmo() {
 
 #f5# Get and run AIR (Automated Image and Restore)
 getair() {
-    setopt local_options
+    emulate -L zsh
     setopt errreturn
     [[ -w . ]] || { echo 'Error: you do not have write permissions in this directory. Exiting.' ; return 1 }
     local VER='1.2.8'
@@ -3868,6 +4018,7 @@ getair() {
 
 #f5# Get specific git commitdiff
 git-get-diff() {
+    emulate -L zsh
     if [[ -z $GITTREE ]] ; then
         GITTREE='linux/kernel/git/torvalds/linux-2.6.git'
     fi
@@ -3880,6 +4031,7 @@ git-get-diff() {
 
 #f5# Get specific git commit
 git-get-commit() {
+    emulate -L zsh
     if [[ -z $GITTREE ]] ; then
         GITTREE='linux/kernel/git/torvalds/linux-2.6.git'
     fi
@@ -3892,6 +4044,7 @@ git-get-commit() {
 
 #f5# Get specific git diff
 git-get-plaindiff () {
+    emulate -L zsh
     if [[ -z $GITTREE ]] ; then
        GITTREE='linux/kernel/git/torvalds/linux-2.6.git'
     fi
@@ -3910,13 +4063,14 @@ git-get-plaindiff () {
 # http://strcat.de/blog/index.php?/archives/335-Software-sauber-deinstallieren...html
 #f5# Log 'make install' output
 mmake() {
+    emulate -L zsh
     [[ ! -d ~/.errorlogs ]] && mkdir ~/.errorlogs
     make -n install > ~/.errorlogs/${PWD##*/}-makelog
 }
 
 #f5# Indent source code
 smart-indent() {
-    indent -npro -kr -i8 -ts8 -sob -l80 -ss -ncs $*
+    indent -npro -kr -i8 -ts8 -sob -l80 -ss -ncs "$@"
 }
 
 # highlight important stuff in diff output, usage example: hg diff | hidiff
@@ -3927,6 +4081,7 @@ check_com -c histring && \
 # rename pictures based on information found in exif headers
 #f5# Rename pictures based on information found in exif headers
 exirename() {
+    emulate -L zsh
     if [[ $# -lt 1 ]] ; then
         echo 'Usage: jpgrename $FILES' >& 2
         return 1
@@ -3945,6 +4100,7 @@ exirename() {
 # open file in vim and jump to line
 # http://www.downgra.de/archives/2007/05/08/T19_21_11/
 j2v() {
+    emulate -L zsh
     local -a params
     params=(${*//(#m):[0-9]*:/\\n+${MATCH//:/}}) # replace ':23:' to '\n+23'
     params=(${(s|\n|)${(j|\n|)params}}) # join array using '\n', then split on all '\n'
@@ -3953,6 +4109,7 @@ j2v() {
 
 # get_ic() - queries imap servers for capabilities; real simple. no imaps
 ic_get() {
+    emulate -L zsh
     local port
     if [[ ! -z $1 ]] ; then
         port=${2:-143}
@@ -3965,6 +4122,7 @@ ic_get() {
 
 # creates a Maildir/ with its {new,cur,tmp} subdirs
 mkmaildir() {
+    emulate -L zsh
     local root subdir
     root=${MAILDIR_ROOT:-${HOME}/Mail}
     if [[ -z ${1} ]] ; then print "Usage:\n $0 <dirname>" ; return 1 ; fi
@@ -3974,7 +4132,8 @@ mkmaildir() {
 
 #f5# Change the xterm title from within GNU-screen
 xtrename() {
-    if [[ ${1} != "-f" ]] ; then
+    emulate -L zsh
+    if [[ $1 != "-f" ]] ; then
         if [[ -z ${DISPLAY} ]] ; then
             printf 'xtrename only makes sense in X11.\n'
             return 1
@@ -3982,7 +4141,7 @@ xtrename() {
     else
         shift
     fi
-    if [[ -z ${1} ]] ; then
+    if [[ -z $1 ]] ; then
         printf 'usage: xtrename [-f] "title for xterm"\n'
         printf '  renames the title of xterm from _within_ screen.\n'
         printf '  also works without screen.\n'
@@ -3997,6 +4156,7 @@ xtrename() {
 # http://ft.bewatermyfriend.org/comp/data/zsh/zfunct.html
 if check_com -c highlight ; then
     function hl() {
+    emulate -L zsh
         local theme lang
         theme=${HL_THEME:-""}
         case ${1} in
@@ -4054,11 +4214,12 @@ fi
 
 # Create small urls via http://tinyurl.com using wget(1).
 function zurl() {
-    [[ -z ${1} ]] && { print "USAGE: zurl <URL>" ; return 1 }
+    emulate -L zsh
+    [[ -z $1 ]] && { print "USAGE: zurl <URL>" ; return 1 }
 
     local PN url tiny grabber search result preview
-    PN=${0}
-    url=${1}
+    PN=$0
+    url=$1
 #   Check existence of given URL with the help of ping(1).
 #   N.B. ping(1) only works without an eventual given protocol.
     ping -c 1 ${${url#(ftp|http)://}%%/*} >& /dev/null || \
@@ -4090,6 +4251,7 @@ function zurl() {
 #f2# Print a specific line of file(s).
 linenr () {
 # {{{
+    emulate -L zsh
     if [ $# -lt 2 ] ; then
        print "Usage: linenr <number>[,<number>] <file>" ; return 1
     elif [ $# -eq 2 ] ; then
@@ -4114,6 +4276,7 @@ linenr () {
 #f2# Find history events by search pattern and list them by date.
 whatwhen()  {
 # {{{
+    emulate -L zsh
     local usage help ident format_l format_s first_char remain first last
     usage='USAGE: whatwhen [options] <searchstring> <search range>'
     help='Use' \`'whatwhen -h'\'' for further explanations.'
@@ -4162,6 +4325,7 @@ whatwhen()  {
 
 # change fluxbox keys from 'Alt-#' to 'Alt-F#' and vice versa
 fluxkey-change() {
+    emulate -L zsh
     [[ -n "$FLUXKEYS" ]] || local FLUXKEYS="$HOME/.fluxbox/keys"
     if ! [[ -r "$FLUXKEYS" ]] ; then
         echo "Sorry, \$FLUXKEYS file $FLUXKEYS could not be read - nothing to be done."
@@ -4183,6 +4347,7 @@ fluxkey-change() {
 # retrieve weather information on the console
 # Usage example: 'weather LOWG'
 weather() {
+    emulate -L zsh
     [[ -n "$1" ]] || {
         print 'Usage: weather <station_id>' >&2
         print 'List of stations: http://en.wikipedia.org/wiki/List_of_airports_by_ICAO_code'>&2
@@ -4226,6 +4391,7 @@ if check_com -c hg ; then
     # http://www.selenic.com/mercurial/wiki/index.cgi/TipsAndTricks
     #f5# GNU like diff for mercurial
     hgdi() {
+        emulate -L zsh
         for i in $(hg status -marn "$@") ; diff -ubwd <(hg cat "$i") "$i"
     }
 
@@ -4241,12 +4407,13 @@ if check_com -c hg ; then
     #   hgstat 1234 => display diffstat between revision 1234 and tip
     #f5# Diffstat for specific version of a mercurial repos
     hgstat() {
+        emulate -L zsh
         [[ -n "$1" ]] && hg diff -r $1 -r tip | diffstat || hg export tip | diffstat
     }
 
     #f5# Get current mercurial tip via hg itself
     gethgclone() {
-        setopt local_options
+        emulate -L zsh
         setopt errreturn
         if [[ -f mercurial-tree/.hg ]] ; then
             cd mercurial-tree
@@ -4275,7 +4442,7 @@ fi # end of check whether we have the 'hg'-executable
 # get current mercurial snapshot
 #f5# Get current mercurial snapshot
 gethgsnap() {
-    setopt local_options
+    emulate -L zsh
     setopt errreturn
     if [[ -f mercurial-snapshot.tar.gz ]] ; then
          echo "mercurial-snapshot.tar.gz exists already, skipping download."
