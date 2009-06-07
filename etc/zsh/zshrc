@@ -2233,8 +2233,7 @@ alias term2iso="echo 'Setting terminal to iso mode' ; print -n '\e%@'"
 alias term2utf="echo 'Setting terminal to utf-8 mode'; print -n '\e%G'"
 
 # make sure it is not assigned yet
-[[ $(whence -w utf2iso &>/dev/null) == 'utf2iso: alias' ]] && unalias utf2iso
-
+[[ -n ${aliases[utf2iso]} ]] && unalias utf2iso
 utf2iso() {
     if isutfenv ; then
         for ENV in $(env | command grep -i '.utf') ; do
@@ -2244,7 +2243,7 @@ utf2iso() {
 }
 
 # make sure it is not assigned yet
-[[ $(whence -w iso2utf &>/dev/null) == 'iso2utf: alias' ]] && unalias iso2utf
+[[ -n ${aliases[iso2utf]} ]] && unalias iso2utf
 iso2utf() {
     if ! isutfenv ; then
         for ENV in $(env | command grep -i '\.iso') ; do

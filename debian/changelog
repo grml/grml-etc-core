@@ -6,12 +6,13 @@ grml-etc-core (0.3.73) UNRELEASED; urgency=low
   * zshrc: Fix problems related to TERM=mostlike in zshrc. Again reported by
     Rasmus Steinke.
   * zshrc: Give check_com a -g option to test for global aliases, too.
+  * zshrc: Get rid of whence, once and for all.
 
   [ Michael Prokop ]
   * zshrc: add deborphan, pal and hnb to compdef _gnu_generic. Thanks for
     the suggestion to Carsten Hey.
 
- -- Frank Terbeck <ft@grml.org>  Sun, 07 Jun 2009 12:55:15 +0200
+ -- Frank Terbeck <ft@grml.org>  Sun, 07 Jun 2009 13:10:49 +0200
 
 grml-etc-core (0.3.72) unstable; urgency=low
 
