@@ -677,6 +677,17 @@ commit-to-history() {
 zle -N commit-to-history
 bindkey "^x^h" commit-to-history
 
+# only slash should be considered as a word separator:
+slash-backward-kill-word() {
+    local WORDCHARS="${WORDCHARS:s@/@}"
+    # zle backward-word
+    zle backward-kill-word
+}
+zle -N slash-backward-kill-word
+
+#k# Kill everything in a word up to its last \kbd{/}
+bindkey '\ev' slash-backward-kill-word
+
 # }}}
 
 # a generic accept-line wrapper {{{
@@ -1024,17 +1035,6 @@ setopt noglobdots           # * shouldn't match dotfiles. ever.
 MAILCHECK=30       # mailchecks
 REPORTTIME=5       # report about cpu-/system-/user-time of command if running longer than 5 seconds
 watch=(notme root) # watch for everyone but me and root
-
-# only slash should be considered as a word separator:
-slash-backward-kill-word() {
-    local WORDCHARS="${WORDCHARS:s@/@}"
-    # zle backward-word
-    zle backward-kill-word
-}
-zle -N slash-backward-kill-word
-
-#k# Kill everything in a word up to its last \kbd{/}
-bindkey '\ev' slash-backward-kill-word
 
 # }}}
 
