@@ -9,12 +9,13 @@ grml-etc-core (0.3.73) UNRELEASED; urgency=low
   * zshrc: Get rid of whence, once and for all.
   * zshrc: Insert a condition for loading /etc/default/locale
     [Closes: issue706]
+  * zshrc: Set options a lot earlier and include noshwordsplit explicitly.
 
   [ Michael Prokop ]
   * zshrc: add deborphan, pal and hnb to compdef _gnu_generic. Thanks for
     the suggestion to Carsten Hey.
 
- -- Frank Terbeck <ft@grml.org>  Wed, 08 Jul 2009 13:15:23 +0200
+ -- Frank Terbeck <ft@grml.org>  Wed, 08 Jul 2009 13:23:14 +0200
 
 grml-etc-core (0.3.72) unstable; urgency=low
 
