@@ -1,3 +1,10 @@
+grml-scripts (1.1.20) unstable; urgency=low
+
+  * grml-lang and grml-quickconfig: add support for spanish keyboards,
+    thanks to Ernesto Domato!
+
+ -- Michael Prokop <mika@grml.org>  Fri, 12 Jun 2009 23:18:13 +0200
+
 grml-scripts (1.1.19) unstable; urgency=low
 
   [ Michael Prokop ]
