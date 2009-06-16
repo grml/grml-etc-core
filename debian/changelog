@@ -1,3 +1,11 @@
+grml-scripts (1.1.21) unstable; urgency=low
+
+  * wm-ng: start gkrellm on the right side of the screen by default
+    Thanks to gebi and Ulrich Dangel for their feedback.
+    [Closes: issue694]
+
+ -- Michael Prokop <mika@grml.org>  Tue, 16 Jun 2009 16:34:00 +0200
+
 grml-scripts (1.1.20) unstable; urgency=low
 
   * grml-lang and grml-quickconfig: add support for spanish keyboards,
