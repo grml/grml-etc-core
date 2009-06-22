@@ -598,22 +598,16 @@ fi
 # do Fink setup on darwin
 isdarwin && xsource /sw/bin/init.sh
 
-# completion functions go to /etc/zsh/completion.d
-# function files may be put into /etc/zsh/functions.d, from where they
-# will be automatically autoloaded.
-if [[ -n "$BROKEN_COMPLETION_DIR" ]] ; then
-    print 'Warning: not setting completion directories because broken files have been found.' >&2
-else
-    [[ -d /etc/zsh/completion.d ]] && fpath=( $fpath /etc/zsh/completion.d )
-    if [[ -d /etc/zsh/functions.d ]] ; then
-        fdir='/etc/zsh/functions.d'
-        fpath=( ${fdir} ${fdir}/**/*(/N) ${fpath} )
+# load our function and completion directories
+for fdir in /usr/share/grml/zsh/completion /usr/share/grml/functions; do
+    fpath=( ${fdir} ${fdir}/**/*(/N) ${fpath} )
+    if [[ ${fpath} == '/usr/share/grml/zsh/functions' ]] ; then
         for func in ${fdir}/**/[^_]*[^~](N.) ; do
             zrcautoload ${func:t}
         done
-        unset fdir
     fi
-fi
+done
+unset fdir func
 
 # support colors in less
 export LESS_TERMCAP_mb=$'\E[01;31m'
