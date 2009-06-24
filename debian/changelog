@@ -1,3 +1,10 @@
+grml-scripts (1.1.22) unstable; urgency=low
+
+  * Drop the simple service wrapper script, as sysvinit 2.86.ds1-62
+    provides /usr/sbin/service now.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 24 Jun 2009 11:33:43 +0200
+
 grml-scripts (1.1.21) unstable; urgency=low
 
   * wm-ng: start gkrellm on the right side of the screen by default
