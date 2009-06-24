@@ -135,7 +135,6 @@ binary-arch: build install
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/sepdate.pl.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/sepdate.rb.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/sepdate.sh.1.gz \
-		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/service.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/soundtest.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/suspenduser.sh.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/suspenduser_gui.sh.1.gz \
