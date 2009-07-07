@@ -1,3 +1,14 @@
+grml-scripts (1.1.24) UNRELEASED; urgency=low
+
+  * grml-setlang: do not set $LANGUAGE and $LC_MESSAGES any longer, but
+    instead just set $LANG and $LC_CTYPE. $LC_CTYPE is set to 'en_US.UTF-8'
+    by default and to 'C' if using a ISO system - this should avoid breakages
+    if logging in to a remote system where the according $LANG locale isn't
+    available. Thanks to Gebi and Thorsten 'mira' Glaser for discussing
+    the issue.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 08 Jul 2009 00:15:26 +0200
+
 grml-scripts (1.1.23) unstable; urgency=low
 
   * Drop symlink for 'service' manpage.
