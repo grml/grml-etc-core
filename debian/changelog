@@ -12,12 +12,13 @@ grml-etc-core (0.3.73) UNRELEASED; urgency=low
   * zshrc: Set options a lot earlier and include noshwordsplit explicitly.
   * zshrc: Make functions insusceptible to user option settings.
   * zsh: move completion.d and functions.d to usr/share
+  * zshrc: Include the current directory in the persistent directory stack.
 
   [ Michael Prokop ]
   * zshrc: add deborphan, pal and hnb to compdef _gnu_generic. Thanks for
     the suggestion to Carsten Hey.
 
- -- Frank Terbeck <ft@grml.org>  Wed, 08 Jul 2009 13:33:56 +0200
+ -- Frank Terbeck <ft@grml.org>  Wed, 08 Jul 2009 17:11:46 +0200
 
 grml-etc-core (0.3.72) unstable; urgency=low
 

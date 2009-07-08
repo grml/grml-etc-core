@@ -1064,10 +1064,12 @@ if [[ -f ${DIRSTACKFILE} ]] && [[ ${#dirstack[*]} -eq 0 ]] ; then
 fi
 
 chpwd() {
+    local -ax my_stack
+    my_stack=( ${PWD} ${dirstack} )
     if is42 ; then
-        builtin print -l ${(u)dirstack} >! ${DIRSTACKFILE}
+        builtin print -l ${(u)my_stack} >! ${DIRSTACKFILE}
     else
-        uprint dirstack >! ${DIRSTACKFILE}
+        uprint my_stack >! ${DIRSTACKFILE}
     fi
 }
 
