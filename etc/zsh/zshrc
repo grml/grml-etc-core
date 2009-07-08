@@ -252,6 +252,7 @@ GRML_ZSH_CNF_HANDLER=${GRML_ZSH_CNF_HANDLER:-/usr/share/command-not-found/comman
 BATTERY=${BATTERY:-0}
 GRMLSMALL_SPECIFIC=${GRMLSMALL_SPECIFIC:-1}
 GRML_ALWAYS_LOAD_ALL=${GRML_ALWAYS_LOAD_ALL:-0}
+ZSH_NO_DEFAULT_LOCALE=${ZSH_NO_DEFAULT_LOCALE:-0}
 
 if isgrmlcd ; then
     GRML_WARN_SKEL=${GRML_WARN_SKEL:-0}
@@ -483,7 +484,9 @@ zrclocal() {
 #}}}
 
 # locale setup {{{
-xsource "/etc/default/locale"
+if (( ZSH_NO_DEFAULT_LOCALE == 0 )); then
+    xsource "/etc/default/locale"
+fi
 
 for var in LANG LC_ALL LC_MESSAGES ; do
     [[ -n ${(P)var} ]] && export $var
