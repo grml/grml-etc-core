@@ -1,4 +1,4 @@
-grml-etc-core (0.3.73) UNRELEASED; urgency=low
+grml-etc-core (0.3.73) unstable; urgency=low
 
   [ Frank Terbeck ]
   * zshrc: Fix a problem when calling compinit can seem to cause zsh startup
@@ -18,7 +18,7 @@ grml-etc-core (0.3.73) UNRELEASED; urgency=low
   * zshrc: add deborphan, pal and hnb to compdef _gnu_generic. Thanks for
     the suggestion to Carsten Hey.
 
- -- Frank Terbeck <ft@grml.org>  Wed, 08 Jul 2009 17:11:46 +0200
+ -- Michael Prokop <mika@grml.org>  Tue, 28 Jul 2009 17:45:33 +0200
 
 grml-etc-core (0.3.72) unstable; urgency=low
 
