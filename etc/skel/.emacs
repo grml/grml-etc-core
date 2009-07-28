@@ -3,7 +3,6 @@
 ;; Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 ;; Bug-Reports:   see http://grml.org/bugs/
 ;; License:       This file is licensed under the GPL v2.
-  ;; Latest change: Son Mai 13 00:13:58 CEST 2007 [mika]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Activate UTF-8 mode:

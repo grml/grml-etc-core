@@ -2,7 +2,6 @@
 " Purpose:       configuration file for c programming with Vim
 " Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>, Bart Trojanowski <bart@jukie.net>
 " Bug-Reports:   see http://grml.org/bugs/
-" Latest change: Sam Feb 10 11:31:21 CET 2007 [mika]
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " This file is heavily based on Bart's blog entry
 " "vim and linux CodingStyle" => http://jukie.net/~bart/blog/20070209172606

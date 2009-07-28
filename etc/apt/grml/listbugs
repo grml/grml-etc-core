@@ -4,7 +4,6 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2 or any later version.
-# Latest change: Son Okt 14 11:49:36 CEST 2007 [mika]
 ################################################################################
 
 [ -n "$SEVERITY" ] || SEVERITY="critical,grave,serious"

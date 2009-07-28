@@ -3,7 +3,6 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mon Okt 23 00:06:34 CEST 2006 [mika]
 ################################################################################
 
 # See 'man 5 hgrc' and http://www.selenic.com/mercurial/hgrc.5.html
