@@ -17,8 +17,9 @@ grml-etc-core (0.3.73) unstable; urgency=low
   [ Michael Prokop ]
   * zshrc: add deborphan, pal and hnb to compdef _gnu_generic. Thanks for
     the suggestion to Carsten Hey.
+  * Minor Debian packaging updates (to make recent lintian versions happy).
 
- -- Michael Prokop <mika@grml.org>  Tue, 28 Jul 2009 17:45:33 +0200
+ -- Michael Prokop <mika@grml.org>  Tue, 28 Jul 2009 17:48:57 +0200
 
 grml-etc-core (0.3.72) unstable; urgency=low
 

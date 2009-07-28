@@ -2,8 +2,8 @@ Source: grml-etc-core
 Section: grml
 Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
-Build-Depends: debhelper (>= 4.0.0)
-Standards-Version: 3.8.1
+Build-Depends: debhelper (>= 5)
+Standards-Version: 3.8.2
 Homepage: http://git.grml.org/?p=grml-etc-core.git
 Vcs-git: git://git.grml.org/grml-etc-core.git
 Vcs-Browser: http://git.grml.org/?p=grml-etc-core.git
