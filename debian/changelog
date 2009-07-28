@@ -22,6 +22,7 @@ grml-etc-core (0.3.73) unstable; urgency=low
     - update Standard version to 3.8.2
     - depend on debhelper >= 5
     - don't call true binary with full path in preinst script
+    - update debian/overrides
 
  -- Michael Prokop <mika@grml.org>  Tue, 28 Jul 2009 17:53:08 +0200
 
