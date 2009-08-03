@@ -257,6 +257,11 @@ Sourced right before loading //grmlzshrc// is finished. There is a global
 version of this file (/etc/zsh/zshrc.local) which is sourced before the
 user-specific one.
 
+: .zdirs
+Directory listing for persistent dirstack (see above).
+
+: .important_commands
+List of commands, used by persistent history (see above).
 
 
 = INSTALLATION ON NON-DEBIAN SYSTEMS =
