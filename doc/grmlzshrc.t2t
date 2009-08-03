@@ -227,6 +227,13 @@ available via the usual history lookup widgets.
 
 = REFERENCE =
 == KEYBINDINGS ==
+Apart from zsh's default key bindings, //grmlzshrc// comes with its own set of
+key bindings. Note that bindings like **ESC-e** can also be typed as **ALT-e**
+on PC keyboards.
+
+: **ESC-e**
+Edit the current command buffer in your favourite editor.
+
 
 == SHELL FUNCTIONS ==
 //grmlzshrc// comes with a wide array of defined shell functions to ease the
