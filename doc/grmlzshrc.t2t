@@ -232,7 +232,7 @@ available via the usual history lookup widgets.
 //grmlzshrc// comes with a wide array of defined shell functions to ease the
 user's life.
 
-: urlencode()
+: **urlencode()**
 Takes a string as its first argument and prints it RFC 2396 URL encoded to
 standard out.
 
@@ -241,7 +241,7 @@ standard out.
 This is a set of files, that - if they exist - can be used to customize the
 behaviour of //grmlzshrc//.
 
-: .zshrc.pre
+: **.zshrc.pre**
 Sourced at the very beginning of //grmlzshrc//. Among other things, it can
 be used to permantenly change //grmlzshrc//'s STARTUP VARIABLES (see above):
 \
@@ -252,15 +252,15 @@ BATTERY=1
 GRML_ALWAYS_LOAD_ALL=1
 ```
 
-: .zshrc.local
+: **.zshrc.local**
 Sourced right before loading //grmlzshrc// is finished. There is a global
 version of this file (/etc/zsh/zshrc.local) which is sourced before the
 user-specific one.
 
-: .zdirs
+: **.zdirs**
 Directory listing for persistent dirstack (see above).
 
-: .important_commands
+: **.important_commands**
 List of commands, used by persistent history (see above).
 
 
