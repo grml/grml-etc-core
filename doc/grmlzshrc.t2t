@@ -139,6 +139,75 @@ This feature requires zsh //4.3.3// or newer.
 
 
 == ACCEPTLINE WRAPPER ==
+The //accept-line// wiget is the one that is taking action when the **return**
+key is hit. //grmlzshrc// uses a wrapper around that widget, which adds new
+functionality.
+
+This wrapper is configured via styles. That means, you issue commands, that look
+like:
+\
+```
+zstyle 'context' style value
+```
+
+The context namespace, that we are using is 'acceptline'. That means, the actual
+context for your commands look like: **':acceptline:<subcontext>'**.
+
+Where **<subcontext>** is one of: **default**, **normal**, **force**, **misc**
+or **empty**.
+
+
+=== Recognized Contexts ===
+: **default**
+This is the value, the context is initialized with.
+The //compwarnfmt and //rehash// styles are looked up in this context.
+
+: **normal**
+If the first word in the command line is either a command, alias, function,
+builtin or reserved word, you are in this context.
+
+: **force**
+This is the context, that is used if you hit enter again, after being warned
+about the existence of a _completion for the non-existing command you
+entered.
+
+: **empty**
+This is the context, you are in if the command line is empty or only
+consists of whitespace.
+
+: **misc**
+This context is in effect, if you entered something that does not match any
+of the above. (e.g.: variable assignments).
+
+
+=== Available Styles ===
+: **nocompwarn**
+If you set this style to true, the warning about non existent commands,
+for which completions exist will not be issued. (Default: **false**)
+
+: **compwarnfmt**
+The message, that is displayed to warn about the _completion issue.
+(default: **'%c will not execute and completion %f exists.'**)
+'%c' is replaced by the command name, '%f' by the completion's name.
+
+: **rehash**
+If this is set, we'll force rehashing, if appropriate. (Defaults to
+**true** in //grmlzshrc//).
+
+: **actions**
+This can be a list of wigdets to call in a given context. If you need a
+specific order for these to be called, name them accordingly. The default value
+is an **empty list**.
+
+: **default_action**
+The name of a widget, that is called after the widgets from 'actions'.
+By default, this will be '.accept-line' (which is the built-in accept-line
+widget).
+
+: **call_default**
+If true in the current context, call the widget in the 'default_action'
+style. (The default is **true** in all contexts.)
+
 
 == PROMPT ==
 
@@ -178,6 +247,7 @@ GRML_ALWAYS_LOAD_ALL=1
 Sourced right before loading //grmlzshrc// is finished. There is a global
 version of this file (/etc/zsh/zshrc.local) which is sourced before the
 user-specific one.
+
 
 
 = INSTALLATION ON NON-DEBIAN SYSTEMS =
