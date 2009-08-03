@@ -20,6 +20,7 @@ clean:
 
 	dh_clean 
 	rm -rf debian/grml-etc-core/
+	(cd $(CURDIR)/doc && $(MAKE) clean)
 
 install: build
 	dh_testdir
@@ -41,6 +42,8 @@ binary-indep: build install
 	dh_testroot
 	dh_installchangelogs 
 	dh_installdocs
+	(cd $(CURDIR)/doc && $(MAKE) all)
+	dh_installman $(CURDIR)/doc/grmlzshrc.5
 	dh_compress
 	mkdir -p debian/grml-etc-core/usr/share/lintian/overrides/
 	cp -av debian/overrides debian/grml-etc-core/usr/share/lintian/overrides/grml-etc-core

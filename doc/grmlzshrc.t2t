@@ -1,0 +1,123 @@
+GRMLZSHRC
+
+May, 2009
+
+%!target: man
+%!postproc(man): "^(\.TH.*) 1 "  "\1 5 "
+
+
+= NAME =
+grmlzshrc - grml's zsh setup
+
+
+= SYNOPSIS =
+//zsh// [**options**]...
+
+
+= DESCRIPTION =
+The grml project provides a fairly exhaustive interactive setup (referred to
+as //grmlzshrc// throughout this document) for the amazing unix shell zsh
+(http://zsh.sourceforge.net). This is the reference manual for that
+setup (which is currently vastly incomplete; patches welcome).
+
+To use //grmlzshrc//, you need at least version 3.1.7 of zsh (although not all
+features are enabled in every version).
+
+//grmlzshrc// behaves differently depending on which user loads it. For the
+root user (**EUID** == 0) only a subset of features is loaded by default. This
+behaviour can be altered by setting the **GRML_ALWAYS_LOAD_ALL** STARTUP
+VARIABLE (see below).
+
+= STARTUP VARIABLES =
+Some of the behaviour of //grmlzshrc// can be altered by setting certain shell
+variables. These may be set temporarily when starting zsh like this:
+\
+``` % BATTERY=1 zsh
+
+Or by setting them permanently in **zshrc.pre** (See AUXILIARY FILES below).
+
+: **BATTERY**
+If set to a value greater than zero and //acpi// installed, //grmlzshrc// will
+put the battery status into the right hand side interactive prompt.
+
+
+= FEATURE DESCRIPTION =
+This is an in depth description of non-standard features implemented by
+//grmlzshrc//.
+
+== DIRSTACK HANDLING ==
+
+== DIRECTORY BASED PROFILES ==
+
+== ACCEPTLINE WRAPPER ==
+
+== PROMPT ==
+
+== GNU/SCREEN STATUS SETTING ==
+
+== PERSISTENT HISTORY ==
+
+
+= REFERENCE =
+== KEYBINDINGS ==
+
+== SHELL FUNCTIONS ==
+//grmlzshrc// comes with a wide array of defined shell functions to ease the
+user's life.
+
+: urlencode()
+Takes a string as its first argument and prints it RFC 2396 URL encoded to
+standard out.
+
+
+= AUXILIARY FILES =
+This is a set of files, that - if they exist - can be used to customize the
+behaviour of //grmlzshrc//.
+
+: .zshrc.pre
+Sourced at the very beginning of //grmlzshrc//. Among other things, it can
+be used to permantenly change //grmlzshrc//'s STARTUP VARIABLES (see above):
+\
+```
+# show battery status in RPROMPT
+BATTERY=1
+# always load the complete setup, even for root
+GRML_ALWAYS_LOAD_ALL=1
+```
+
+: .zshrc.local
+Sourced right before loading //grmlzshrc// is finished. There is a global
+version of this file (/etc/zsh/zshrc.local) which is sourced before the
+user-specific one.
+
+
+= INSTALLATION ON NON-DEBIAN SYSTEMS =
+
+
+= CONTRIBUTING =
+If you want to help to improve grml's zsh setup, clone the grml-etc-core
+repository from git.grml.org:
+\
+``` % git clone git://git.grml.org/grml-etc-core.git
+
+Make your changes, commit them; use '**git format-patch**' to create a series
+of patches and send those to the following address via '**git send-email**':
+\
+``` grml-etc-core@grml.org
+
+Doing so makes sure the right people get your patches for review and
+possibly inclusion.
+
+
+= AUTHOR =
+This manpage was written by Frank Terbeck <ft@grml.org>.
+
+
+= COPYRIGHT =
+Copyright (c) 2009, grml project <http://grml.org>
+
+This manpage is distributed under the terms of the GPL version 2.
+
+Most parts of grml's zshrc are distributed under the terms of GPL v2, too,
+except for **accept-line()** and **vcs_info()**, which are distributed under
+the same conditions as zsh itself (which is BSD-like).
