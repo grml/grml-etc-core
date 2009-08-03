@@ -265,6 +265,20 @@ List of commands, used by persistent history (see above).
 
 
 = INSTALLATION ON NON-DEBIAN SYSTEMS =
+On Debian systems (http://www.debian.org) - and possibly Ubuntu
+(http://www.ubuntu.com) and similar systems - it is very easy to get
+//grmlzshrc// via grml's .deb repositories.
+
+On non-debian systems, that is not an option, but all is not lost:
+\
+```
+% wget -O .zshrc http://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
+```
+
+If you would also like to get seperate function files (which you can put into
+your **$fpath**), you can browse and download them at:
+
+http://git.grml.org/?p=grml-etc-core.git;a=tree;f=usr_share_grml/zsh;hb=HEAD
 
 
 = CONTRIBUTING =
