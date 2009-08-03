@@ -211,7 +211,13 @@ style. (The default is **true** in all contexts.)
 
 == PROMPT ==
 
+
 == GNU/SCREEN STATUS SETTING ==
+//grmlzshrc// sets screen's hardstatus lines to the currently running command
+or **'zsh'** if the shell is idling at its prompt. If the current working
+directory is inside a repository unter version control, screen status is set
+to: **'zsh: <repository name>'** via zsh's vcs_info.
+
 
 == PERSISTENT HISTORY ==
 
