@@ -18,7 +18,7 @@ grmlzshrc - grml's zsh setup
 The grml project provides a fairly exhaustive interactive setup (referred to
 as //grmlzshrc// throughout this document) for the amazing unix shell zsh
 (http://zsh.sourceforge.net). This is the reference manual for that
-setup (which is currently vastly incomplete; patches welcome).
+setup.
 
 To use //grmlzshrc//, you need at least version 3.1.7 of zsh (although not all
 features are enabled in every version).
@@ -196,6 +196,13 @@ of patches and send those to the following address via '**git send-email**':
 
 Doing so makes sure the right people get your patches for review and
 possibly inclusion.
+
+
+= STATUS =
+This manual page is supposed to be a **reference** manual for //grmlzshrc//.
+That means that in contrast to the existing refcard it should document **every**
+aspect of the setup. That is currently **not** the case. Not for a long time
+yet. Contributions are highly welcome.
 
 
 = AUTHOR =
