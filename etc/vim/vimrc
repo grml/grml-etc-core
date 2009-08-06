@@ -103,12 +103,6 @@
     let &titleold = fnamemodify(&shell, ":t")
   endif
 
-" Source a global configuration file if available
-" Deprecated by Debian but still supported by grml
-  if filereadable("/etc/vim/vimrc.local")
-    source /etc/vim/vimrc.local
-  endif
-
 " turn these ON:
   set ek hidden ruler sc vb wmnu
 " set digraph
@@ -183,11 +177,6 @@
     source /usr/share/doc/mercurial/examples/vim/hg-menu.vim
   endif
 
-" source local configuration file
-  if filereadable(expand("$HOME/.vimrc.local"))
-     source $HOME/.vimrc.local
-  endif
-
 " Vim 7 brings cool new features - see ':he version7'!
 " The coolest features of Vim7 by mika
 " ====================================
@@ -255,6 +244,16 @@ if version >= 700
   "  highlight PmenuSel   ctermbg=7      guifg=Black   guibg=Orange               " selected item
   "  highlight PmenuSbar  ctermbg=7      guifg=#CCCCCC guibg=#CCCCCC              " scrollbar
   "  highlight PmenuThumb cterm=reverse  gui=reverse guifg=Black   guibg=#AAAAAA  " thumb of the scrollbar
-
 endif
+
+" Source a global configuration file if available
+" Deprecated by Debian but still supported by grml
+  if filereadable("/etc/vim/vimrc.local")
+    source /etc/vim/vimrc.local
+  endif
+
+" source user-specific local configuration file
+  if filereadable(expand("$HOME/.vimrc.local"))
+    source $HOME/.vimrc.local
+  endif
 "# END OF FILE #################################################################
