@@ -1,3 +1,9 @@
+grml-etc-core (0.3.74) unstable; urgency=low
+
+  * vimrc: merged etc/vim/vimrc and etc/skel/.vimrc into one file
+
+ -- Frank Terbeck <ft@grml.org>  Thu, 06 Aug 2009 23:42:33 +0200
+
 grml-etc-core (0.3.73) unstable; urgency=low
 
   [ Frank Terbeck ]
