@@ -3,7 +3,6 @@
 # Purpose:       dialog interface for suspend user
 # Authors:       grml-team (grml.org), (c) Nico Golde <nico@grml.org>, (c) Michael Prokop <mika@grml.org>
 # License:       This file is licensed under the GPL v2.
-# Latest change: Thu Jan 12 22:15:45 CET 2006 [mika]
 ################################################################################
 
 PATH=${PATH:-'/usr/bin:/usr/sbin'}

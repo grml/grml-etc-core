@@ -175,7 +175,7 @@ else
 fi
 
 # read in the file where all the $LANGUAGE stuff is defined
-  source $LANGFUNC
+  . $LANGFUNC
 
 # make sure the file exists
 if ! [ -r $CONFFILE ] ; then

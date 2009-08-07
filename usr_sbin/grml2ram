@@ -4,7 +4,6 @@
 # Authors:       (c) Michael Schierl <schierlm-public@gmx.de>, (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Sep 30 16:04:17 CEST 2007 [mika]
 ################################################################################
 
 set -e

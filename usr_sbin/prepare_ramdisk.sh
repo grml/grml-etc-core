@@ -4,7 +4,6 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Okt 06 13:23:35 CEST 2007 [mika]
 ################################################################################
 
 if [ $UID != 0 ]; then

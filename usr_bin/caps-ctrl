@@ -4,7 +4,6 @@
 # Authors:       grml-team (grml.org),  (c) Matthias Kopfermann <maddi@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Don Nov 23 22:32:29 CET 2006 [mika]
 ################################################################################
 
 if . /etc/grml/script-functions ; then

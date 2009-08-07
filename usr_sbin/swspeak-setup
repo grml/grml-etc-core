@@ -23,7 +23,7 @@ else
    exit 1
 fi
 
-if [ "$1" = '-h' ] || [ "$1" == '--help' ] ; then
+if [ "$1" = '-h' ] || [ "$1" = '--help' ] ; then
    cat << EOF
 swspeak - script for activating software speak features
 

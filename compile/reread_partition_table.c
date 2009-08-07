@@ -4,7 +4,6 @@
  * Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
  * Bug-Reports:   see http://grml.org/bugs/
  * License:       This file is licensed under the GPL v2.
- * Latest change: Die Sep 05 23:13:57 CEST 2006 [mika]
  *******************************************************************************/
 
 // diet gcc -s -Os -o reread_partition_table reread_partition_table.c

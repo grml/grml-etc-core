@@ -4,7 +4,6 @@
  * Authors:       grml-team (grml.org), (c) Michael Gebetsroither <gebi@grml.org>
  * Bug-Reports:   see http://grml.org/bugs/
  * License:       This file is licensed under the GPL v2.
- * Latest change: Thu Mar 30 23:09:28 CEST 2006 [mika]
  *********************************************************************************/
 
 #include <unistd.h>

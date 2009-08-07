@@ -4,7 +4,6 @@
 # Authors:       (C) Copyright 2004 Diomidis Spinellis
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       See notes by author (Diomidis Spinellis).
-# Latest change: Sam Okt 16 22:54:03 CEST 2004 [mika]
 ################################################################################
 # See http://www.dmst.aueb.gr/dds/blog/20040319/index.html
 #

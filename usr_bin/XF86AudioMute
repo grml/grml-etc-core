@@ -1,10 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 # Filename:      XF86AudioMute
 # Purpose:       mute and restore audio settings
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sun May 14 15:03:53 CEST 2006 [mika]
 ################################################################################
 
 . /etc/grml/lsb-functions

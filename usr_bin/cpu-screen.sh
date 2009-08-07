@@ -4,7 +4,6 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mit Apr 20 00:06:21 CEST 2005 [mika]
 ################################################################################
 
 if [ -r /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq ] ; then

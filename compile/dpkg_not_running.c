@@ -3,7 +3,6 @@
 *  Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 *  Bug-Reports:   see http://grml.org/bugs/
 *  License:       This file is licensed under the GPL v2.
-*  Latest change: Mit Jun 28 18:13:43 CEST 2006 [mika]
 *******************************************************************************/
 // return 0 if it is not running; return 1 if it is running
 

@@ -4,7 +4,6 @@
 # Authors:       grml-team (grml.org), (C) Ubuntu, (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mit Jul 04 12:15:57 CEST 2007 [mika]
 ################################################################################
 # Notice: also check out /etc/init.d/loadcpufreq of current cpufrequtils in Debian.
 #
@@ -129,7 +128,7 @@ case "$VENDOR_ID" in
     ;;
     CentaurHauls*)
     # VIA
-    if [ $CPU_FAMILY == 6 ]; then
+    if [ $CPU_FAMILY = 6 ]; then
         MODULE=longhaul;
     fi
     ;;

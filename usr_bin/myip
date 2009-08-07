@@ -4,7 +4,6 @@
 # Authors:       grml-team (grml.org), (c) Alexander Wirt <formorer@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mon Aug 07 23:39:32 CEST 2006 [mika]
 ################################################################################
 
 # little helper functions that skips the httpheader of a site

@@ -4,7 +4,6 @@
  * Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
  * Bug-Reports:   see http://grml.org/bugs/
  * License:       This file is licensed under the GPL v2.
- * Latest change: Tue Mar 28 11:01:43 CEST 2006 [mika]
  *******************************************************************************/
 
 #include <stdio.h>

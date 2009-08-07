@@ -4,7 +4,6 @@
 # Authors:       Oliver Kiddle (<URL:http://www.zsh.org/mla/workers/2001/msg00390.html>)
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Sam Mai 27 15:12:27 CEST 2006 [mika]
 ################################################################################
 
 if (( ! $# )); then

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Filename:      grml-lang
 # Purpose:       load specific keyboard layout settings
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>

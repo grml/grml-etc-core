@@ -1,10 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 # Filename:      grml-resolution
 # Purpose:       change X resolution via a simple menu frontend
 # Authors:       Florian Keller <florian.keller@zuerich.ch>, (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Thu May 04 23:13:39 CEST 2006 [mika]
 ################################################################################
 
 PN=$(basename $0)

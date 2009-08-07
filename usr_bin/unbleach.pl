@@ -4,7 +4,6 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Feb 26 2005 [mika]
 ################################################################################
 
 # This script will replace all the unsighted unprintable characters bleached out of your source file by a:

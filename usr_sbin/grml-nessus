@@ -4,7 +4,6 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mon Sep 11 17:31:07 CEST 2006 [mika]
 ################################################################################
 
 PATH=${PATH:-'/bin/:/sbin/:/usr/local/bin:/usr/bin:/usr/sbin'}

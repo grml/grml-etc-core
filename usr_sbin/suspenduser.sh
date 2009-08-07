@@ -3,7 +3,6 @@
 # Purpose:       suspend a user account for the indefinite future
 # Authors:       Dave Taylor / http://www.intuitive.com/wicked/showscript.cgi?045-suspenduser.sh
 # Bug-Reports:   see http://grml.org/bugs/
-# Latest change: Sun Jan 15 22:47:34 CET 2006 [mika]
 ################################################################################
 
 homedir="/home"		# home directory for users

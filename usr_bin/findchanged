@@ -4,7 +4,6 @@
 # Authors:       grml-team (grml.org), (c) Klaus Knopper, (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Thu Oct 13 12:21:03 CEST 2005 [mika]
 ################################################################################
 
   if [ -d "$1" ]; then

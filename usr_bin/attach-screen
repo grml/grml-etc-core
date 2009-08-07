@@ -4,7 +4,6 @@
 # Authors:       (c) Phil Gregory <phil_g@pobox.com>, (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       Taken from http://aperiodic.net/phil/configs/bin/attach-screen
-# Latest change: Thu Dec 01 14:30:24 CET 2005 [mika]
 ################################################################################
 
 # -U option basically means "terminal does not have UTF-8 support"

@@ -16,7 +16,7 @@ if [ -z "$1" ] ; then
   exit 1
 fi
 
-if [ $UID != 0 ] ; then
+if [ "$(id -ru)" != "0" ] ; then
    echo Error: become root before starting $0 >& 2
    exit 100
 fi

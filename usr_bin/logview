@@ -4,7 +4,6 @@
 # Authors:       Joey Hess <joey@kitenet.net>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       Unknown (origin: see http://svn.kitenet.net/trunk/bin/logview)
-# Latest change: Fri Sep 16 18:19:05 CEST 2005 [mika]
 ################################################################################
 
 $|=1;

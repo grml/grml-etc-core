@@ -4,7 +4,6 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Mit Jän 10 23:40:04 CET 2007 [mika]
 ################################################################################
 
 use strict;

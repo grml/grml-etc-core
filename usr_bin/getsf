@@ -4,11 +4,10 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Fre Sep 29 13:56:15 CEST 2006 [mika]
 ################################################################################
 
-if ! type wget 1>&/dev/null 2>&1 ; then
-   echo "Binary wget not available. Exiting." 1>&2
+if ! which wget >/dev/null 2>&1 ; then
+   echo "wget is not available. Exiting." 1>&2
    exit 1
 fi
 

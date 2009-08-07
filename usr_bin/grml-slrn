@@ -4,7 +4,6 @@
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Mär 18 17:23:34 CET 2007 [mika]
 ################################################################################
 
 PATH=${PATH:-'/bin/:/sbin/:/usr/local/bin:/usr/bin:/usr/sbin'}
@@ -33,7 +32,6 @@ cat > $SLRNRC << EOF
 % Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 % Bug-Reports:   see http://grml.org/bugs/
 % License:       This file is licensed under the GPL v2.
-% Latest change: Son Nov 28 22:38:30 CET 2004 [mika]
 %###############################################################################
 
 %###############################################################################
@@ -227,7 +225,7 @@ mono quotes5		"underline"
 mono quotes6		"underline"
 mono quotes7		"underline"
 mono response_char	"bold"
-mono selection		"bold"  
+mono selection		"bold"
 mono signature		"none"
 mono status		"reverse"
 mono subject		"none"
@@ -313,12 +311,12 @@ WRITESLRNRC=$(dialog --stdout --title "$PN" --yesno "Write $SLRNRC?" 5 65)
 retval=$?
 
 case $retval in
-  0) 
+  0)
     if [ -f "$SLRNRC" ] ; then
       dialog --stdout --title "$PN" --yesno "$SLRNRC exists. Overwrite?" 5 65
       retval=$?
       case $retval in
-        0) 
+        0)
           writeslrnrc && writecolors && \
           dialog --stdout --title "$PN" --msgbox "Writing $SLRNRC was successful." 7 65 || \
 	  { dialog --stdout --title "$PN" --msgbox "Error $?: writing $SLRNRC failed." 7 65 ; exit 1 ; }
@@ -338,7 +336,7 @@ ASKRUN=$(dialog --stdout --title "$PN" --yesno "Run slrn now?" 0 0)
 retval=$?
 
 case $retval in
-  0) 
+  0)
      slrn -create -h $NEWSSERVER -f $HOME/.newsrc_$NEWSSERVER -i $SLRNRC && \
      echo "
 Start slrn with taken settings via:

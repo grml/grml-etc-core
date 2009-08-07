@@ -1,10 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 # Filename:      zsh-login
 # Purpose:       customized zsh login welcome screen for use at grml
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
-# Latest change: Son Mär 09 15:11:56 CET 2008 [mika]
 ################################################################################
 
 . /etc/grml/sh-lib
