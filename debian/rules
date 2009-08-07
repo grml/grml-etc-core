@@ -54,7 +54,7 @@ binary-arch: build install
 	dh_testroot
 	dh_installchangelogs
 	dh_installdocs
-	dh_installwm --priority=20 wm-ng
+	dh_installwm --priority=20 /usr/bin/wm-ng
 	dh_installman $(wildcard doc/*.gz)
 	dh_installman manpages/grml-scripts.1 \
 	manpages/reread_partition_table.8 manpages/random-hostname.1 \
