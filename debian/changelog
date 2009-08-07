@@ -1,4 +1,4 @@
-grml-scripts (1.1.24) UNRELEASED; urgency=low
+grml-scripts (1.1.24) unstable; urgency=low
 
   * grml-setlang: do not set $LANGUAGE and $LC_MESSAGES any longer, but
     instead just set $LANG and $LC_CTYPE. $LC_CTYPE is set to 'en_US.UTF-8'
@@ -6,6 +6,7 @@ grml-scripts (1.1.24) UNRELEASED; urgency=low
     if logging in to a remote system where the according $LANG locale isn't
     available. Thanks to Gebi and Thorsten 'mira' Glaser for discussing
     the issue.
+  * Install wm-ng as x-window-manager alternative.
 
  -- Michael Prokop <mika@grml.org>  Wed, 08 Jul 2009 00:15:26 +0200
 
