@@ -7,8 +7,10 @@ grml-scripts (1.1.24) unstable; urgency=low
     available. Thanks to Gebi and Thorsten 'mira' Glaser for discussing
     the issue.
   * Install wm-ng as x-window-manager alternative.
+  * Bump Standard-Version to 3.8.2 (no further changes).
+  * Bump Build-Depends on dh >=5.
 
- -- Michael Prokop <mika@grml.org>  Wed, 08 Jul 2009 00:15:26 +0200
+ -- Michael Prokop <mika@grml.org>  Fri, 07 Aug 2009 19:16:17 +0200
 
 grml-scripts (1.1.23) unstable; urgency=low
 
