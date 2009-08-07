@@ -7,9 +7,11 @@ Upstream Author: Michael Prokop <mika@grml.org>
 
 Copyright:
 
-This packages contains several scripts from several people.
-Please see the copyright information in the scripts for more details.
-Scripts by the grml-team are licensed under GPL v2.
+   Copyright (c) 2003+ by the grml team and others.
+
+   This packages contains several scripts from several people.
+   Please see the copyright information in the scripts for more details.
+   Scripts by the grml-team are licensed under GPL v2.
 
 On Debian GNU/Linux systems, the complete text of the GNU General
-Public License can be found in `/usr/share/common-licenses/GPL'.
+Public License can be found in `/usr/share/common-licenses/GPL-2'.

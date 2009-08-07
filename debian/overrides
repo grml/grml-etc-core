@@ -10,6 +10,7 @@ grml-scripts: script-with-language-extension usr/bin/irclog2html-2.1.pl
 grml-scripts: script-with-language-extension usr/bin/lesspipe.sh
 grml-scripts: script-with-language-extension usr/bin/osd_server.py
 grml-scripts: script-with-language-extension usr/bin/sepdate.pl
+grml-scripts: script-with-language-extension usr/bin/sepdate.rb
 grml-scripts: script-with-language-extension usr/bin/sepdate.sh
 grml-scripts: script-with-language-extension usr/bin/tinyp2p.py
 grml-scripts: script-with-language-extension usr/bin/unbleach.pl
