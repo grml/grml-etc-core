@@ -51,7 +51,7 @@ setdialog(){
 check4progs(){
   local RC=''
   for arg in $* ; do
-    type -p $arg >/dev/null 2>&1 || RC="$arg"
+    which $arg >/dev/null 2>&1 || RC="$arg"
   done
   if [ -n "$RC" ] ; then
      echo "$RC not installed"
