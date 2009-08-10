@@ -244,6 +244,56 @@ Takes a string as its first argument and prints it RFC 2396 URL encoded to
 standard out.
 
 
+== ALIASES ==
+//grmlzshrc// comes with a wide array of predefined aliases to ease the user's
+life.
+
+: **cmplayer** (//mplayer -vo fbdev//)
+Video player with framebuffer as video output device, so you can watch
+videos on a virtual tty. Hint: Using fbdev2 allows you to use the shell
+while watching a movie.
+
+: **da** (//du -sch//)
+Prints the summarized disk usage of the arguments as well as a grand total
+in human readable format.
+
+: **fblinks** (//links2 -driver fb//)
+A Web browser on the framebuffer device. So you can browse images and click
+links on the virtual tty.
+
+: **fbmplayer** (//mplayer -vo fbdev -fs -zoom//)
+Fullscreen Video player with the framebuffer as video output device. So you
+can watch videos on a virtual tty.
+
+: **g** (//git//)
+Revision control system by Linus Torvalds.
+
+: **http** (//python -m SimpleHTTPServer//)
+Basic HTTP server implemented in python. Listens on port 8000/tcp and
+serves current directory. Implements GET and HEAD methods.
+
+: **j** (//jobs -l//)
+Prints status of jobs in the current shell session in long format.
+
+: **md** (//mkdir -p//)
+Creates directory including parent directories, if necessary
+
+: **rw-** (//chmod 600//)
+Grants read and write permission of a file to the owner and nobody else.
+
+: **rwx** (//chmod 700//)
+Grants read, write and execute permission of a file to the owner and nobody
+else.
+
+: **r--** (//chmod 644//)
+Grants read and write permission of a file to the owner and read-only to
+anybody else.
+
+: **r-x** (//chmod 755//)
+Grants read, write and execute permission of a file to the owner and
+read-only plus execute permission to anybody else.
+
+
 = AUXILIARY FILES =
 This is a set of files, that - if they exist - can be used to customize the
 behaviour of //grmlzshrc//.
