@@ -938,7 +938,9 @@ alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magi
 
 #m# k ESC-h Call \kbd{run-help} for the 1st word on the command line
 alias run-help >&/dev/null && unalias run-help
-zrcautoload run-help # use via 'esc-h'
+for rh in run-help{,-git,-svk,-svn}; do
+    zrcautoload $rh
+done; unset rh
 
 # completion system
 if zrcautoload compinit ; then
