@@ -3471,17 +3471,6 @@ viless() {
     vim --cmd 'let no_plugin_maps = 1' -c "so \$VIMRUNTIME/macros/less.vim" "${@:--}"
 }
 
-# download video from youtube
-ytdl() {
-    emulate -L zsh
-    if ! [[ -n "$2" ]] ; then
-        print "Usage: ydtl http://youtube.com/watch?v=.... outputfile.flv">&2
-        return 1
-    else
-        wget -O${2} "http://youtube.com/get_video?"${${${"$(wget -o/dev/null -O- "${1}" | grep -e watch_fullscreen)"}##*watch_fullscreen\?}%%\&fs=*}
-    fi
-}
-
 # Function Usage: uopen $URL/$file
 #f5# Download a file and display it locally
 uopen() {
