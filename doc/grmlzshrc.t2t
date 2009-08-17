@@ -239,9 +239,35 @@ Edit the current command buffer in your favourite editor.
 //grmlzshrc// comes with a wide array of defined shell functions to ease the
 user's life.
 
+: **2html()**
+Converts plaintext files to HTML using vim. The output is written to
+<filename>.html.
+
+: **doc()**
+Takes packagename as argument. Sets current working directory to
+/usr/share/doc/<packagename> and prints out a directory listing.
+
+: **hex()**
+Prints the hexadecimal representation of the number supplied as argument
+(base ten only).
+
+: **readme()**
+Opens all README-like files in current working directory with the program
+defined in the $PAGER environment variable.
+
+: **startx()**
+Initializes an X session using startx(1) if /etc/X11/xorg.conf exists, else
+issues a Warning to use the grml-x(1) script. Can be overridden by using
+/usr/bin/startx directly.
+
 : **urlencode()**
 Takes a string as its first argument and prints it RFC 2396 URL encoded to
 standard out.
+
+: **xinit()**
+Initializes an X session using xinit(1) if /etc/X11/xorg.conf exists, else
+issues a Warning to use the grml-x(1) script. Can be overridden by using
+/usr/bin/xinit directly.
 
 
 == ALIASES ==
