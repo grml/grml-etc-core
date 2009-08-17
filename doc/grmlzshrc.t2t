@@ -386,8 +386,9 @@ aspect of the setup. That is currently **not** the case. Not for a long time
 yet. Contributions are highly welcome.
 
 
-= AUTHOR =
-This manpage was written by Frank Terbeck <ft@grml.org>.
+= AUTHORS =
+This manpage was written by Frank Terbeck <ft@grml.org> and Joerg Woelke
+<joewoe@fsmail.de>.
 
 
 = COPYRIGHT =
