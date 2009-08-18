@@ -294,12 +294,40 @@ can watch videos on a virtual tty.
 : **g** (//git//)
 Revision control system by Linus Torvalds.
 
+: **grep** (//grep --color=auto//)
+Shows grep output in nice colors, if available.
+
+: **GREP** (//grep -i --color=auto//)
+Case insensitive grep with colored output.
+
 : **http** (//python -m SimpleHTTPServer//)
 Basic HTTP server implemented in python. Listens on port 8000/tcp and
 serves current directory. Implements GET and HEAD methods.
 
 : **j** (//jobs -l//)
 Prints status of jobs in the current shell session in long format.
+
+: **lsbig** (//ls -flh *(.OL[1,10])//)
+Displays the ten biggest files (long and human readable output format).
+
+: **lsd** (//ls -d *(/)//)
+Shows directories.
+
+: **lse** (//ls -d *(/^F)//)
+Shows empty directories.
+
+: **lsnew** (//ls -rl *(D.om[1,10])//)
+Displays the ten newest files (long output format).
+
+: **lsold** (//ls -rtlh *(D.om[1,10])//)
+Displays the ten oldest files (long output format).
+
+: **lssmall** (//ls -Srl *(.oL[1,10])//)
+Displays the ten smallest files (long output format).
+
+: **lsw** (//ls -ld *(R,W,X.^ND/)//)
+Displays all files which are world readable and/or world writable and/or
+world executable (long output format).
 
 : **md** (//mkdir -p//)
 Creates directory including parent directories, if necessary
