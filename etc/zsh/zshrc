@@ -3102,7 +3102,7 @@ alias lss='ls -l *(s,S,t)'             # only files with setgid/setuid/sticky fl
 #a2# Only show 1st ten symlinks
 alias lsl='ls -l *(@[1,10])'           # only symlinks
 #a2# Display only executables
-alias lsx='ls -l *(*[1,10])'           # only executables
+alias lsx='ls -l *(*)'                 # only executables
 #a2# Display world-{readable,writable,executable} files
 alias lsw='ls -ld *(R,W,X.^ND/)'       # world-{readable,writable,executable} files
 #a2# Display the ten biggest files
