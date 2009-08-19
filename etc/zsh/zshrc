@@ -467,32 +467,6 @@ xsource "/etc/sysconfig/keyboard"
 TZ=$(xcat /etc/timezone)
 # }}}
 
-# check for potentially old files in 'completion.d' {{{
-setopt extendedglob
-xof=(/etc/zsh/completion.d/*~/etc/zsh/completion.d/_*(N))
-if (( ${#xof} > 0 )) ; then
-    printf '\n -!- INFORMATION\n\n'
-    printf ' -!- %s file(s) not starting with an underscore (_) found in\n' ${#xof}
-    printf ' -!- /etc/zsh/completion.d/.\n\n'
-    printf ' -!- While this has been the case in old versions of grml-etc-core,\n'
-    printf ' -!- recent versions of the grml-zsh-setup have all these files rewritten\n'
-    printf ' -!- and renamed. Furthermore, the grml-zsh-setup will *only* add files\n'
-    printf ' -!- named _* to that directory.\n\n'
-    printf ' -!- If you added functions to completion.d yourself, please consider\n'
-    printf ' -!- moving them to /etc/zsh/functions.d/. Files in that directory, not\n'
-    printf ' -!- starting with an underscore are marked for automatic loading\n'
-    printf ' -!- by default (so that is quite convenient).\n\n'
-    printf ' -!- If there are files *not* starting with an underscore from an older\n'
-    printf ' -!- grml-etc-core in completion.d, you may safely remove them.\n\n'
-    printf ' -!- Delete the files for example via running:\n\n'
-    printf "      rm ${xof}\n\n"
-    printf ' -!- Note, that this message will *not* go away, unless you yourself\n'
-    printf ' -!- resolve the situation manually.\n\n'
-    BROKEN_COMPLETION_DIR=1
-fi
-unset xof
-# }}}
-
 # {{{ set some variables
 if check_com -c vim ; then
 #v#
