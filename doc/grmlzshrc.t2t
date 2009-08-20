@@ -321,8 +321,30 @@ Case insensitive grep with colored output.
 Basic HTTP server implemented in python. Listens on port 8000/tcp and
 serves current directory. Implements GET and HEAD methods.
 
+: **l** (//ls -lF --color=auto//)
+Lists files in long output format with indicator for filetype appended
+to filename. If the terminal supports it, with colored output.
+
+: **la** (//ls -la --color=auto//)
+Lists files in long colored output format. Including file names
+starting with ".".
+
+: **lh** (//ls -hAl --color=auto//)
+Lists files in long and human readable output format in nice colors,
+if available. Includes file names starting with "." except "." and
+"..".
+
+: **ll** (//ls -l --color=auto//)
+Lists files in long colored output format.
+
 : **j** (//jobs -l//)
 Prints status of jobs in the current shell session in long format.
+
+: **ls** (//ls -b -CF --color=auto//)
+Lists directory printing octal escapes for nongraphic characters.
+Entries are listed by columns and an indicator for file type is appended
+to each file name. Additionally the output is colored, if the terminal
+supports it.
 
 : **lsbig** (//ls -flh *(.OL[1,10])//)
 Displays the ten biggest files (long and human readable output format).
@@ -346,8 +368,17 @@ Displays the ten smallest files (long output format).
 Displays all files which are world readable and/or world writable and/or
 world executable (long output format).
 
+: **lsx** (//ls -l *(*)//)
+Lists only executable files.
+
 : **md** (//mkdir -p//)
 Creates directory including parent directories, if necessary
+
+: **screen** (///usr/bin/screen -c ${HOME}/.screenrc//)
+If invoking user is root, starts screen session with /etc/grml/screenrc
+as config file. If invoked by a regular user, start a screen session
+with users .screenrc config if it exists, else use /etc/grml/screenrc_grml
+as configuration.
 
 : **rw-** (//chmod 600//)
 Grants read and write permission of a file to the owner and nobody else.
