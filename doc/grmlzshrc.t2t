@@ -243,17 +243,31 @@ user's life.
 Converts plaintext files to HTML using vim. The output is written to
 <filename>.html.
 
+: **cl()**
+Changes current directory to the one supplied by argument and lists the files
+in it, including file names starting with ".".
+
 : **doc()**
 Takes packagename as argument. Sets current working directory to
 /usr/share/doc/<packagename> and prints out a directory listing.
+
+: **greph()**
+Searches the zsh command history for a regular expression.
 
 : **hex()**
 Prints the hexadecimal representation of the number supplied as argument
 (base ten only).
 
+: **mcd()**
+Creates directory including parent directories, if necessary. Then changes
+current working directory to it.
+
 : **readme()**
 Opens all README-like files in current working directory with the program
 defined in the $PAGER environment variable.
+
+: **shtar()**
+Lists the content of a gzipped tar archive in default pager.
 
 : **startx()**
 Initializes an X session using startx(1) if /etc/X11/xorg.conf exists, else
@@ -263,6 +277,9 @@ issues a Warning to use the grml-x(1) script. Can be overridden by using
 : **urlencode()**
 Takes a string as its first argument and prints it RFC 2396 URL encoded to
 standard out.
+
+: **viless()**
+Vim as pager.
 
 : **xinit()**
 Initializes an X session using xinit(1) if /etc/X11/xorg.conf exists, else
