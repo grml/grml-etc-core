@@ -258,6 +258,43 @@ Searches the zsh command history for a regular expression.
 Prints the hexadecimal representation of the number supplied as argument
 (base ten only).
 
+: **is4()**
+Returns true, if zsh version is equal or greater than 4, else false.
+
+: **is41()**
+Returns true, if zsh version is equal or greater than 4.1, else false.
+
+: **is42()**
+Returns true, if zsh version is equal or greater than 4.2, else false.
+
+: **is425()**
+Returns true, if zsh version is equal or greater than 4.2.5, else false.
+
+: **is43()**
+Returns true, if zsh version is equal or greater than 4.3, else false.
+
+: **is433()**
+Returns true, if zsh version is equal or greater than 4.3.3, else false.
+
+: **isdarwin()**
+Returns true, if running on darwin, else false.
+
+: **isgrml()**
+Returns true, if running on a grml system, else false.
+
+: **isgrmlcd()**
+Returns true, if running on a grml system from a live cd, else false.
+
+: **isgrmlsmall()**
+Returns true, if run on grml-small, else false.
+
+: **isutfenv()**
+Returns true, if run within an utf environment, else false.
+
+: **limg()**
+Lists images (i. e. files ending with ".jpg", ".gif" or ".png") in current
+directory.
+
 : **mcd()**
 Creates directory including parent directories, if necessary. Then changes
 current working directory to it.
@@ -268,6 +305,13 @@ defined in the $PAGER environment variable.
 
 : **shtar()**
 Lists the content of a gzipped tar archive in default pager.
+
+: **sshot()**
+Creates directory named shots in user's home directory, if it does not yet
+exist and changes current working directory to it. Then sleeps 5 seconds,
+so you have plenty of time to switch desktops/windows. Then makes a screenshot
+of the current desktop. The result is stored in ~/shots to a timestamped
+jpg file.
 
 : **startx()**
 Initializes an X session using startx(1) if /etc/X11/xorg.conf exists, else
