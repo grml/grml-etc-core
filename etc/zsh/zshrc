@@ -3341,15 +3341,10 @@ mdiff() {
 memusage() {
     ps aux | awk '{if (NR > 1) print $5; if (NR > 2) print "+"} END { print "p" }' | dc
 }
-#f5# Show contents of tar file
+#f5# Show contents of gzipped tar file
 shtar() {
     emulate -L zsh
     gunzip -c $1 | tar -tf - -- | $PAGER
-}
-#f5# Show contents of tgz file
-shtgz() {
-    emulate -L zsh
-    tar -ztf $1 | $PAGER
 }
 #f5# Show contents of zip file
 shzip() {
