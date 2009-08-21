@@ -289,7 +289,10 @@ issues a Warning to use the grml-x(1) script. Can be overridden by using
 
 == ALIASES ==
 //grmlzshrc// comes with a wide array of predefined aliases to ease the user's
-life.
+life. A few aliases (like those involving //grep// or //ls//) use the option
+//--color=auto// for colourizing output. That option is part of **GNU**
+implementations of these tools, and will only be used if such an implementation
+is detected.
 
 : **cmplayer** (//mplayer -vo fbdev//)
 Video player with framebuffer as video output device, so you can watch
