@@ -7,7 +7,11 @@ grml-etc-core (0.3.74) unstable; urgency=low
   [ Michael Prokop ]
   * /etc/grml/script-functions: replace 'type -p' with 'which'.
 
- -- Frank Terbeck <ft@grml.org>  Wed, 12 Aug 2009 22:24:13 +0200
+  [ Joerg Woelke ]
+  * zshrc: Fix the lsx alias.
+  * zshrc: Removing shtgz(). shtar() does the same, just portably.
+
+ -- Frank Terbeck <ft@grml.org>  Fri, 21 Aug 2009 15:54:02 +0200
 
 grml-etc-core (0.3.73) unstable; urgency=low
 
