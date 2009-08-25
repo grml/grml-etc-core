@@ -243,6 +243,18 @@ user's life.
 Converts plaintext files to HTML using vim. The output is written to
 <filename>.html.
 
+: **audioburn()**
+Burns the files in ~/ripps (see audiorip() below) to an audio CD.
+Then prompts the user if she wants to remove that directory. You might need
+to tell audioburn which cdrom device to use like:
+"DEVICE=/dev/cdrom audioburn"
+
+: **audiorip()**
+Creates directory ~/ripps, if it does not exist. Then rips audio CD into
+it. Then prompts the user if she wants to burn a audio CD with audioburn()
+(see above). You might need to tell audiorip which cdrom device to use like:
+"DEVICE=/dev/cdrom audioburn"
+
 : **cl()**
 Changes current directory to the one supplied by argument and lists the files
 in it, including file names starting with ".".
@@ -299,12 +311,23 @@ directory.
 Creates directory including parent directories, if necessary. Then changes
 current working directory to it.
 
+: **mkiso()**
+Creates an iso9660 filesystem image with Rockridge and Joliet extensions
+enabled using mkisofs(8). Prompts the user for volume name, filename and
+target directory.
+
 : **readme()**
 Opens all README-like files in current working directory with the program
 defined in the $PAGER environment variable.
 
 : **shtar()**
 Lists the content of a gzipped tar archive in default pager.
+
+: **shzip()**
+Shows the content of a zip archive in default pager.
+
+: **slow_print()**
+Prints the arguments slowly by sleeping 0.08 seconds between each character.
 
 : **sshot()**
 Creates directory named shots in user's home directory, if it does not yet
@@ -317,6 +340,14 @@ jpg file.
 Initializes an X session using startx(1) if /etc/X11/xorg.conf exists, else
 issues a Warning to use the grml-x(1) script. Can be overridden by using
 /usr/bin/startx directly.
+
+: **status()**
+Shows some information about current system status.
+
+: **udiff()**
+Makes a unified diff of the command line arguments trying hard to find a
+smaller set of changes. Descends recursively into subdirectories. Ignores
+hows some information about current status.
 
 : **urlencode()**
 Takes a string as its first argument and prints it RFC 2396 URL encoded to
