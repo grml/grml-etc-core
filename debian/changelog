@@ -1,3 +1,10 @@
+grml-scripts (1.1.26) UNRELEASED; urgency=low
+
+  * Drop deprecated grml-saveconfig package from Suggests.
+  * Bump Standards-Version to 3.8.3 (no further changes).
+
+ -- Michael Prokop <mika@grml.org>  Wed, 26 Aug 2009 00:05:57 +0200
+
 grml-scripts (1.1.25) unstable; urgency=low
 
   * Remove all bashisms.
