@@ -25,7 +25,6 @@ MENU=$($DIALOG --stdout --clear --title "$PN" --menu \
 "grml-hostname" "Set hostname" \
 "grml-setlang" "Configure system wide language settings" \
 "grml-setkeyboard" "Configure system wide keyboard settings" \
-"grml-nessus" "Prepare nessus for use on grml" \
 "grml-network" "Configure network settings/setup" \
 "grml-postfix" "Configure some basic settings of the postfix MTA" \
 "grml-terminalserver" "Configure and start terminalserver for booting via network" \
@@ -44,9 +43,6 @@ case $retval in
         fi
         if [ "$MENU" = "grml-setkeyboard" ]; then
           exec grml-setkeyboard
-        fi
-        if [ "$MENU" = "grml-nessus" ]; then
-          exec grml-nessus
         fi
         if [ "$MENU" = "grml-network" ]; then
           exec grml-network
