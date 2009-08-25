@@ -3335,11 +3335,6 @@ shzip() {
     emulate -L zsh
     unzip -l $1 | $PAGER
 }
-#f5# Greps signature from file
-sig() {
-    emulate -L zsh
-    agrep -d '^-- $' "$*" ~/.Signature
-}
 #f5# Unified diff
 udiff() {
     emulate -L zsh

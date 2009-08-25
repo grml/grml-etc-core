@@ -5,6 +5,7 @@ grml-etc-core (0.3.74) unstable; urgency=low
   * zshrc: mark specialized run-help functions for autoloading
   * zshrc: remove reload(). 'exec zsh' is a much more robust way of
     reloading the configuration.
+  * zshrc: remove sig() function
 
   [ Michael Prokop ]
   * /etc/grml/script-functions: replace 'type -p' with 'which'.
@@ -14,7 +15,7 @@ grml-etc-core (0.3.74) unstable; urgency=low
   * zshrc: Removing shtgz(). shtar() does the same, just portably.
   * zshrc: Remove broken ytdl() function.
 
- -- Frank Terbeck <ft@grml.org>  Tue, 25 Aug 2009 22:06:05 +0200
+ -- Frank Terbeck <ft@grml.org>  Tue, 25 Aug 2009 22:31:04 +0200
 
 grml-etc-core (0.3.73) unstable; urgency=low
 
