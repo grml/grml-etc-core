@@ -2619,23 +2619,7 @@ setenv()  { typeset -x "${1}${1:+=}${(@)argv[2,$#]}" }  # csh compatibility
 
 #f1# Reload an autoloadable function
 freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
-
-# TODO: Who really uses reload()? The proper way to reload a zsh setup is to
-# actually restart the shell via 'exec zsh'. And reload with arguments is the
-# same as freload() above. -ft
-#f1# Reload zsh setup
-reload() {
-    if [[ "$#*" -eq 0 ]] ; then
-        [[ -r ~/.zshrc ]] && . ~/.zshrc
-    else
-        local fn
-        for fn in "$@"; do
-            unfunction $fn
-            autoload -U $fn
-        done
-    fi
-}
-compdef _functions reload freload
+compdef _functions freload
 
 #f1# List symlinks in detail (more detailed version of 'readlink -f' and 'whence -s')
 sll() {
