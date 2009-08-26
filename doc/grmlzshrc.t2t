@@ -263,6 +263,19 @@ in it, including file names starting with ".".
 Takes packagename as argument. Sets current working directory to
 /usr/share/doc/<packagename> and prints out a directory listing.
 
+: **fluxkey-change()**
+Switches the key combinations for changing current workspace under fluxbox(1)
+from Alt-[0-9] to Alt-F[0-9] and vice versa by rewriting $HOME/.fluxbox/keys.
+Requires the window manager to reread configuration to take effect.
+
+: **genthumbs()**
+A simple thumbnails generator. Resizes images (i. e. files that end in ".jpg",
+".jpeg", ".gif" or ".png") to 100x200. Output files are named "thumb-<original
+filename>". Creates an index.html with title "Images" showing the
+thumbnails as clickable links to the respective original file.
+//Warning:// On start genthumbs() silently removes a possibly existing "index.html"
+and all files and/or directories beginning with "thumb-" in current directory!
+
 : **greph()**
 Searches the zsh command history for a regular expression.
 
@@ -303,6 +316,10 @@ Returns true, if run on grml-small, else false.
 : **isutfenv()**
 Returns true, if run within an utf environment, else false.
 
+: **lcheck()**
+Lists libraries that define the symbol containing the string given as
+parameter.
+
 : **limg()**
 Lists images (i. e. files ending with ".jpg", ".gif" or ".png") in current
 directory.
@@ -316,9 +333,18 @@ Creates an iso9660 filesystem image with Rockridge and Joliet extensions
 enabled using mkisofs(8). Prompts the user for volume name, filename and
 target directory.
 
+: **purge()**
+Removes typical temporary files (i. e. files like "*~", ".*~", "#*#", "*.o",
+"a.out", "*.core", "*.cmo", "*.cmi" and ".*.swp") from current directory.
+Asks for confirmation.
+
 : **readme()**
 Opens all README-like files in current working directory with the program
 defined in the $PAGER environment variable.
+
+: **regcheck()**
+Checks whether a regular expression (first parameter) matches a string
+(second parameter) using perl.
 
 : **shtar()**
 Lists the content of a gzipped tar archive in default pager.
