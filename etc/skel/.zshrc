@@ -64,6 +64,19 @@ fi
 #WORDCHARS='*?_[]~=&;!#$%^(){}'
 #WORDCHARS='${WORDCHARS:s@/@}'
 
+# just type 'cd ...' to get 'cd ../..'
+#rationalise-dot() {
+#  if [[ $LBUFFER == *.. ]] ; then
+#    LBUFFER+=/..
+#  else
+#    LBUFFER+=.
+#  fi
+#}
+#zle -N rationalise-dot
+#bindkey . rationalise-dot
+
+#bindkey '\eq' push-line-or-edit
+
 
 ## some popular options ##
 
