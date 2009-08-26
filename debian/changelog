@@ -14,8 +14,9 @@ grml-etc-core (0.3.74) unstable; urgency=low
   * zshrc: Fix the lsx alias.
   * zshrc: Removing shtgz(). shtar() does the same, just portably.
   * zshrc: Remove broken ytdl() function.
+  * zshrc: Typo fixes
 
- -- Frank Terbeck <ft@grml.org>  Tue, 25 Aug 2009 22:31:04 +0200
+ -- Frank Terbeck <ft@grml.org>  Wed, 26 Aug 2009 13:19:31 +0200
 
 grml-etc-core (0.3.73) unstable; urgency=low
 

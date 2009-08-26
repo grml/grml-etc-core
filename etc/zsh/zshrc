@@ -3474,7 +3474,7 @@ purge() {
             rm ${FILES}
             echo ">> $PWD purged, $NBFILES files removed"
         else
-            echo "Ok. .. than not.."
+            echo "Ok. .. then not.."
         fi
     fi
 }
