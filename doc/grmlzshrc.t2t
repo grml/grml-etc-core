@@ -425,6 +425,15 @@ Case insensitive grep with colored output.
 Basic HTTP server implemented in python. Listens on port 8000/tcp and
 serves current directory. Implements GET and HEAD methods.
 
+: **insecscp** (//scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"//)
+scp with possible man-in-the-middle attack enabled. This is convenient, if the targets
+host key changes frequently, for example on virtualized test- or development-systems.
+To be used only inside trusted networks, of course.
+
+: **insecssh** (//ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"//)
+ssh with possible man-in-the-middle attack enabled
+(for an explanation see insecscp above).
+
 : **l** (//ls -lF --color=auto//)
 Lists files in long output format with indicator for filetype appended
 to filename. If the terminal supports it, with colored output.
