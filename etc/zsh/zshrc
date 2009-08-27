@@ -3071,7 +3071,7 @@ alias lsa='ls -a .*(.)'                # only show dot-files
 #a2# Only files with setgid/setuid/sticky flag
 alias lss='ls -l *(s,S,t)'             # only files with setgid/setuid/sticky flag
 #a2# Only show 1st ten symlinks
-alias lsl='ls -l *(@[1,10])'           # only symlinks
+alias lsl='ls -l *(@)'                 # only symlinks
 #a2# Display only executables
 alias lsx='ls -l *(*)'                 # only executables
 #a2# Display world-{readable,writable,executable} files
