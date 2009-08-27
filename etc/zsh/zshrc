@@ -3103,8 +3103,6 @@ alias r-x='chmod 755'
 #a2# Execute \kbd{mkdir -o}
 alias md='mkdir -p'
 
-check_com -c ipython && alias ips='ipython -p sh'
-
 # console stuff
 #a2# Execute \kbd{mplayer -vo fbdev}
 alias cmplayer='mplayer -vo fbdev'
@@ -3122,12 +3120,6 @@ check_com -c python && alias http="python -m SimpleHTTPServer"
 
 # Use 'g' instead of 'git':
 check_com g || alias g='git'
-
-# check whether Debian's package management (dpkg) is running
-if check_com salias ; then
-    #a2# Check whether a dpkg instance is currently running
-    salias check_dpkg_running="dpkg_running"
-fi
 
 # work around non utf8 capable software in utf environment via $LANG and luit
 if check_com isutfenv && check_com luit ; then

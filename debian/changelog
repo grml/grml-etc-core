@@ -15,8 +15,9 @@ grml-etc-core (0.3.74) unstable; urgency=low
   * zshrc: Removing shtgz(). shtar() does the same, just portably.
   * zshrc: Remove broken ytdl() function.
   * zshrc: Typo fixes
+  * zshrc: Remove aliases ips and check_dpkg_running.
 
- -- Frank Terbeck <ft@grml.org>  Wed, 26 Aug 2009 13:19:31 +0200
+ -- Frank Terbeck <ft@grml.org>  Thu, 27 Aug 2009 10:03:17 +0200
 
 grml-etc-core (0.3.73) unstable; urgency=low
 
