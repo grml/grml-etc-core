@@ -404,6 +404,10 @@ while watching a movie.
 Prints the summarized disk usage of the arguments as well as a grand total
 in human readable format.
 
+: **dir** (//ls -lSrah//)
+Lists files (including dot files) sorted by size (biggest last) in long and
+human readable output format.
+
 : **fblinks** (//links2 -driver fb//)
 A Web browser on the framebuffer device. So you can browse images and click
 links on the virtual tty.
@@ -445,6 +449,9 @@ to filename. If the terminal supports it, with colored output.
 Lists files in long colored output format. Including file names
 starting with ".".
 
+: **lad** (//ls -d .*(/)//)
+Lists the dot directories (not their contents) in current directory.
+
 : **lh** (//ls -hAl --color=auto//)
 Lists files in long and human readable output format in nice colors,
 if available. Includes file names starting with "." except "." and
@@ -459,6 +466,9 @@ Entries are listed by columns and an indicator for file type is appended
 to each file name. Additionally the output is colored, if the terminal
 supports it.
 
+: **lsa** (//ls -a .*(.)//)
+Lists dot files in current working directory.
+
 : **lsbig** (//ls -flh *(.OL[1,10])//)
 Displays the ten biggest files (long and human readable output format).
 
@@ -468,11 +478,18 @@ Shows directories.
 : **lse** (//ls -d *(/^F)//)
 Shows empty directories.
 
+: **lsl** (//ls -l *(@)//)
+Lists symbolic links in current directory.
+
 : **lsnew** (//ls -rl *(D.om[1,10])//)
 Displays the ten newest files (long output format).
 
 : **lsold** (//ls -rtlh *(D.om[1,10])//)
 Displays the ten oldest files (long output format).
+
+: **lss** (//ls -l *(s,S,t)//)
+Lists files in current directory that have the setuid, setgid or sticky bit
+set.
 
 : **lssmall** (//ls -Srl *(.oL[1,10])//)
 Displays the ten smallest files (long output format).
