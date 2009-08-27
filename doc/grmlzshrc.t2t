@@ -434,6 +434,9 @@ To be used only inside trusted networks, of course.
 ssh with possible man-in-the-middle attack enabled
 (for an explanation see insecscp above).
 
+: **j** (//jobs -l//)
+Prints status of jobs in the current shell session in long format.
+
 : **l** (//ls -lF --color=auto//)
 Lists files in long output format with indicator for filetype appended
 to filename. If the terminal supports it, with colored output.
@@ -449,9 +452,6 @@ if available. Includes file names starting with "." except "." and
 
 : **ll** (//ls -l --color=auto//)
 Lists files in long colored output format.
-
-: **j** (//jobs -l//)
-Prints status of jobs in the current shell session in long format.
 
 : **ls** (//ls -b -CF --color=auto//)
 Lists directory printing octal escapes for nongraphic characters.
