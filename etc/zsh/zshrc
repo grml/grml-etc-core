@@ -3047,20 +3047,6 @@ alias CO="./configure"
 #a2# Execute \kbd{./configure --help}
 alias CH="./configure --help"
 
-# arch/tla stuff
-if check_com -c tla ; then
-    #a2# Execute \kbd{tla what-changed --diffs | less}
-    alias tdi='tla what-changed --diffs | less'
-    #a2# Execute \kbd{tla-buildpackage}
-    alias tbp='tla-buildpackage'
-    #a2# Execute \kbd{tla archive-mirror}
-    alias tmi='tla archive-mirror'
-    #a2# Execute \kbd{tla commit}
-    alias tco='tla commit'
-    #a2# Execute \kbd{tla star-merge}
-    alias tme='tla star-merge'
-fi
-
 # listing stuff
 #a2# Execute \kbd{ls -lSrah}
 alias dir="ls -lSrah"

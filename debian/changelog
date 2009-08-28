@@ -16,8 +16,9 @@ grml-etc-core (0.3.74) unstable; urgency=low
   * zshrc: Remove broken ytdl() function.
   * zshrc: Typo fixes
   * zshrc: Remove aliases ips and check_dpkg_running.
+  * zshrc: Remove tla aliases.
 
- -- Frank Terbeck <ft@grml.org>  Thu, 27 Aug 2009 20:01:01 +0200
+ -- Frank Terbeck <ft@grml.org>  Fri, 28 Aug 2009 22:51:49 +0200
 
 grml-etc-core (0.3.73) unstable; urgency=low
 
