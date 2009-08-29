@@ -3350,7 +3350,7 @@ limg() {
     if [[ $#images -eq 0 ]] ; then
         print "No image files found"
     else
-        ls "$@" "$images[@]"
+        ls "$images[@]"
     fi
 }
 
