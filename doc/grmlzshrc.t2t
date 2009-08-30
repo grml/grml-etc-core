@@ -488,6 +488,9 @@ To be used only inside trusted networks, of course.
 ssh with possible man-in-the-middle attack enabled
 (for an explanation see insecscp above).
 
+: **help-zshglob** (//H-Glob()//)
+Runs the function H-Glob() to expand or explain wildcards.
+
 : **j** (//jobs -l//)
 Prints status of jobs in the current shell session in long format.
 
@@ -578,6 +581,12 @@ read-only plus execute permission to anybody else.
 : **up** (//aptitude update ; aptitude safe-upgrade//)
 Performs a system update followed by a system upgrade using aptitude; run
 by sudo, if necessary. See au and ag above.
+
+: **?** (//qma zshall//)
+Runs the grml script qma (quick manual access) to build the collected man
+pages for the z-shell. This compressed file is kept at
+~/man/zshall.txt.lzo Once it is built, the second use of the alias '?' is
+fast. See "man qma" for further information.
 
 
 = AUXILIARY FILES =
