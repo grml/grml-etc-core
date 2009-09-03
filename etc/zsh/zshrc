@@ -2325,12 +2325,17 @@ if check_com -c grep-status ; then
 fi
 
 # if cdrecord is a symlink (to wodim) or isn't present at all warn:
-if [[ -L /usr/bin/cdrecord ]] || ! check_com -c cdrecord ; then
-    if check_com -c wodim ; then
-        alias cdrecord="echo 'cdrecord is not provided under its original name by Debian anymore.
+if [[ -L /usr/bin/cdrecord ]] || ! check_com -c cdrecord; then
+    if check_com -c wodim; then
+        cdrecord() {
+            cat <<EOMESS
+cdrecord is not provided under its original name by Debian anymore.
 See #377109 in the BTS of Debian for more details.
 
-Please use the wodim binary instead' ; return 1"
+Please use the wodim binary instead
+EOMESS
+            return 1
+        }
     fi
 fi
 
@@ -2556,8 +2561,12 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
         fi
     }
 
-    if check_com -c 915resolution ; then
-        alias 855resolution='echo -e "Please use 915resolution as resolution modify tool for Intel graphic chipset."; return -1'
+    if check_com -c 915resolution; then
+        855resolution() {
+            echo "Please use 915resolution as resolution modifying tool for Intel \
+graphic chipset."
+            return -1
+        }
     fi
 
     #a1# Output version of running grml
@@ -2569,7 +2578,10 @@ If you want to use xinit anyway please call \"/usr/bin/xinit\"."
     fi
 
     if check_com -c grml-debootstrap ; then
-        alias debian2hd='print "Installing debian to harddisk is possible via using grml-debootstrap." ; return 1'
+        debian2hd() {
+            echo "Installing debian to harddisk is possible by using grml-debootstrap."
+            return 1
+        }
     fi
 }
 # }}}
