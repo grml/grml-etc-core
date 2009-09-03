@@ -243,6 +243,13 @@ user's life.
 Converts plaintext files to HTML using vim. The output is written to
 <filename>.html.
 
+: **agoogle()**
+Searches for USENET postings from authors using google groups.
+
+: **aoeu(), asdf(), uiae()**
+Pressing the 'asdf' keys toggles between dvorak or neon and us keyboard
+layout.
+
 : **audioburn()**
 Burns the files in ~/ripps (see audiorip() below) to an audio CD.
 Then prompts the user if she wants to remove that directory. You might need
@@ -255,9 +262,26 @@ it. Then prompts the user if she wants to burn a audio CD with audioburn()
 (see above). You might need to tell audiorip which cdrom device to use like:
 "DEVICE=/dev/cdrom audioburn"
 
+: **bk()**
+Simple backup of a file or directory using cp(1). The target file name is the
+original name plus a time stamp attached. Symlinks and file attributes like mode,
+ownership and timestamps are preserved.
+
+: **brltty()**
+The brltty(1) program provides a braille display, so a blind person can access
+the console screen. This wrapper function works around problems with some
+environments (f. e. utf8).
+
 : **cl()**
 Changes current directory to the one supplied by argument and lists the files
 in it, including file names starting with ".".
+
+: **debbug()**
+Searches the Debian bug tracking system (bugs.debian.org) for Bug numbers,
+email addresses of submitters or any string given on the command line.
+
+: **debbugm()**
+Shows bug report for debian given by number in mailbox format.
 
 : **doc()**
 Takes packagename as argument. Sets current working directory to
@@ -328,10 +352,18 @@ directory.
 Creates directory including parent directories, if necessary. Then changes
 current working directory to it.
 
+: **minimal-shell()**
+Spawns a absolute minimal Korn shell. It references no files in /usr, so
+that file system can be unmounted.
+
 : **mkiso()**
 Creates an iso9660 filesystem image with Rockridge and Joliet extensions
 enabled using mkisofs(8). Prompts the user for volume name, filename and
 target directory.
+
+: **peval()**
+Evaluates a perl expression; useful as command line
+calculator, therefore also available as "calc".
 
 : **purge()**
 Removes typical temporary files (i. e. files like "*~", ".*~", "#*#", "*.o",
@@ -382,10 +414,21 @@ standard out.
 : **viless()**
 Vim as pager.
 
+: **vim()**
+Wrapper for vim(1). It tries to set the title and hands vim the environment
+variable VIM_OPTIONS on the command line. So the user may define command
+line options, she always wants, in her .zshrc.local.
+
 : **xinit()**
 Initializes an X session using xinit(1) if /etc/X11/xorg.conf exists, else
 issues a Warning to use the grml-x(1) script. Can be overridden by using
 /usr/bin/xinit directly.
+
+: **zg()**
+Search for patterns in grml's zshrc using perl. zg takes no or exactly one
+option plus a non empty pattern. Run zg without any arguments for a listing
+of available command line switches. For a zshrc not in /etc/zsh, set the
+GRML_ZSHRC environment variable.
 
 
 == ALIASES ==
