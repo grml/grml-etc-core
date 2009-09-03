@@ -445,14 +445,28 @@ available packages are fetched from the location(s) specified in
 /etc/apt/sources.list. An update should always be performed before an
 upgrade or dist-upgrade; run by sudo, if necessary.
 
+: **calc** (//peval//)
+Evaluates a perl expression (see peval() above); useful as a command line
+calculator.
+
+: **CH** (//./configure --help//)
+Lists available compilation options for building program from source.
+
 : **cmplayer** (//mplayer -vo fbdev//)
 Video player with framebuffer as video output device, so you can watch
 videos on a virtual tty. Hint: Using fbdev2 allows you to use the shell
 while watching a movie.
 
+: **CO** (//./configure//)
+Prepares compilation for building program from source.
+
 : **da** (//du -sch//)
 Prints the summarized disk usage of the arguments as well as a grand total
 in human readable format.
+
+: **default** (//echo -en [ escape sequence ]//)
+Sets font of xterm to "-misc-fixed-medium-r-normal-*-*-140-*-*-c-*-iso8859-15"
+using escape sequence.
 
 : **dir** (//ls -lSrah//)
 Lists files (including dot files) sorted by size (biggest last) in long and
@@ -475,6 +489,12 @@ Shows grep output in nice colors, if available.
 : **GREP** (//grep -i --color=auto//)
 Case insensitive grep with colored output.
 
+: **grml-rebuildfstab** (//rebuildfstab -v -r -config//)
+Scans for new devices and updates /etc/fstab according to the findings.
+
+: **grml-version** (//cat /etc/grml_version//)
+Prints version of running grml.
+
 : **http** (//python -m SimpleHTTPServer//)
 Basic HTTP server implemented in python. Listens on port 8000/tcp and
 serves current directory. Implements GET and HEAD methods.
@@ -491,6 +511,13 @@ ssh with possible man-in-the-middle attack enabled
 : **help-zshglob** (//H-Glob()//)
 Runs the function H-Glob() to expand or explain wildcards.
 
+: **hide** (//echo -en [ escape sequence ]//)
+Tries to hide xterm window using escape sequence.
+
+: **huge** (//echo -en [ escape sequence ]//)
+Sets huge font in xterm ("-misc-fixed-medium-r-normal-*-*-210-*-*-c-*-iso8859-15")
+using escape sequence.
+
 : **j** (//jobs -l//)
 Prints status of jobs in the current shell session in long format.
 
@@ -504,6 +531,10 @@ starting with ".".
 
 : **lad** (//ls -d .*(/)//)
 Lists the dot directories (not their contents) in current directory.
+
+: **large** (//echo -en [ escape sequence ]//)
+Sets large font in xterm ("-misc-fixed-medium-r-normal-*-*-150-*-*-c-*-iso8859-15")
+using escape sequence.
 
 : **lh** (//ls -hAl --color=auto//)
 Lists files in long and human readable output format in nice colors,
@@ -557,6 +588,11 @@ Lists only executable files.
 : **md** (//mkdir -p//)
 Creates directory including parent directories, if necessary
 
+: **medium** (//echo -en [ escape sequence ]//)
+Sets medium sized font
+("-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso8859-15") in xterm
+using escape sequence.
+
 : **screen** (///usr/bin/screen -c ${HOME}/.screenrc//)
 If invoking user is root, starts screen session with /etc/grml/screenrc
 as config file. If invoked by a regular user, start a screen session
@@ -577,6 +613,32 @@ anybody else.
 : **r-x** (//chmod 755//)
 Grants read, write and execute permission of a file to the owner and
 read-only plus execute permission to anybody else.
+
+: **semifont** (//echo -en [ escape sequence ]//)
+Sets font of xterm to
+"-misc-fixed-medium-r-semicondensed-*-*-120-*-*-*-*-iso8859-15" using
+escape sequence.
+
+: **small** (//echo -en [ escape sequence ]//)
+Sets small xterm font ("6x10") using escape sequence.
+
+: **smartfont** (//echo -en [ escape sequence ]//)
+Sets font of xterm to "-artwiz-smoothansi-*-*-*-*-*-*-*-*-*-*-*-*" using
+escape sequence.
+
+: **su** (//sudo su//)
+If user is running a grml live-CD, dont ask for any password, if she
+wants a root shell.
+
+: **tiny** (//echo -en [ escape sequence ]//)
+Sets tiny xterm font
+("-misc-fixed-medium-r-normal-*-*-80-*-*-c-*-iso8859-15") using escape
+sequence.
+
+: **truec** (//truecrypt [ mount options ]//)
+Mount a truecrypt volume with some reasonable mount options
+("rw,sync,dirsync,users,uid=1000,gid=users,umask=077" and "utf8", if
+available).
 
 : **up** (//aptitude update ; aptitude safe-upgrade//)
 Performs a system update followed by a system upgrade using aptitude; run
