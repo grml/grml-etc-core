@@ -243,6 +243,10 @@ user's life.
 Converts plaintext files to HTML using vim. The output is written to
 <filename>.html.
 
+: **855resolution()**
+If 915resolution is available, issues a warning to the user to run it instead
+to modify the resolution on intel graphics chipsets.
+
 : **agoogle()**
 Searches for USENET postings from authors using google groups.
 
@@ -276,6 +280,11 @@ The brltty(1) program provides a braille display, so a blind person can access
 the console screen. This wrapper function works around problems with some
 environments (f. e. utf8).
 
+: **cdrecord()**
+If the original cdrecord is not installed, issues a warning to the user to
+use the wodim binary instead. Wodim is the debian fork of Joerg Schillings
+cdrecord.
+
 : **cl()**
 Changes current directory to the one supplied by argument and lists the files
 in it, including file names starting with ".".
@@ -286,6 +295,10 @@ email addresses of submitters or any string given on the command line.
 
 : **debbugm()**
 Shows bug report for debian given by number in mailbox format.
+
+: **debian2hd()**
+Tells the user to use grml-debootstrap, if she wants to install debian to
+harddisk.
 
 : **doc()**
 Takes packagename as argument. Sets current working directory to
