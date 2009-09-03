@@ -246,6 +246,10 @@ Converts plaintext files to HTML using vim. The output is written to
 : **agoogle()**
 Searches for USENET postings from authors using google groups.
 
+: **ansi-colors()**
+Prints a colored table of available ansi color codes (to be used in escape
+sequences) and the colors they represent.
+
 : **aoeu(), asdf(), uiae()**
 Pressing the 'asdf' keys toggles between dvorak or neon and us keyboard
 layout.
@@ -365,6 +369,9 @@ target directory.
 Evaluates a perl expression; useful as command line
 calculator, therefore also available as "calc".
 
+: **plap()**
+Lists all occurrences of the string given as argument in current $PATH.
+
 : **purge()**
 Removes typical temporary files (i. e. files like "*~", ".*~", "#*#", "*.o",
 "a.out", "*.core", "*.cmo", "*.cmi" and ".*.swp") from current directory.
@@ -378,14 +385,33 @@ defined in the $PAGER environment variable.
 Checks whether a regular expression (first parameter) matches a string
 (second parameter) using perl.
 
+: **selhist()**
+Greps the history for the string provided as parameter and shows the numbered
+findings in default pager. On exit of the pager the user is prompted for a
+number. The shells readline buffer is then filled with the corresponding
+command line.
+
+: **show-archive()**
+Lists the contents of a (compressed) archive with the appropriate programs.
+The choice is made along the filename extension.
+
 : **shtar()**
 Lists the content of a gzipped tar archive in default pager.
 
 : **shzip()**
 Shows the content of a zip archive in default pager.
 
+: **simple-extract()**
+Tries to uncompress/unpack given file with the appropriate programs. The
+choice is made along the filename ending.
+
 : **slow_print()**
 Prints the arguments slowly by sleeping 0.08 seconds between each character.
+
+: **smartcompress()**
+Compresses/archives the file given as first parameter. Takes an optional
+second argument, which denotes the compression/archive type as typical
+filename extension; defaults to "tar.gz".
 
 : **sshot()**
 Creates directory named shots in user's home directory, if it does not yet
@@ -418,6 +444,9 @@ Vim as pager.
 Wrapper for vim(1). It tries to set the title and hands vim the environment
 variable VIM_OPTIONS on the command line. So the user may define command
 line options, she always wants, in her .zshrc.local.
+
+: **vman()**
+Use vim(1) as manpage reader.
 
 : **xinit()**
 Initializes an X session using xinit(1) if /etc/X11/xorg.conf exists, else
