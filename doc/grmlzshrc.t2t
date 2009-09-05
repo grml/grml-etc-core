@@ -250,6 +250,9 @@ to modify the resolution on intel graphics chipsets.
 : **agoogle()**
 Searches for USENET postings from authors using google groups.
 
+: **allulimit()**
+Sets all ulimit values to "unlimited".
+
 : **ansi-colors()**
 Prints a colored table of available ansi color codes (to be used in escape
 sequences) and the colors they represent.
@@ -300,9 +303,21 @@ Shows bug report for debian given by number in mailbox format.
 Tells the user to use grml-debootstrap, if she wants to install debian to
 harddisk.
 
+: **dirspace()**
+Shows the disk usage of the directories given in human readable format;
+defaults to $path.
+
+: **disassemble()**
+Translates C source code to assembly and ouputs both.
+
 : **doc()**
 Takes packagename as argument. Sets current working directory to
 /usr/share/doc/<packagename> and prints out a directory listing.
+
+: **fir()**
+Opens given URL with Firefox (Iceweasel on Debian). If there is already an
+instance of firefox running, attaches to the first window found and opens the
+URL in a new tab (this even works across an ssh session).
 
 : **fluxkey-change()**
 Switches the key combinations for changing current workspace under fluxbox(1)
@@ -317,12 +332,29 @@ thumbnails as clickable links to the respective original file.
 //Warning:// On start genthumbs() silently removes a possibly existing "index.html"
 and all files and/or directories beginning with "thumb-" in current directory!
 
+: **git-get-diff()**
+Opens a specific git commitdiff from kernel.org in default browser. Tree is
+chosen by the environment variable GITTREE which defaults to Linus Torvalds'
+kernel tree.
+
+: **git-get-commit()**
+Opens a specific git commit from kernel.org in default browser. The tree to
+fetch from is controlled by the environment variable GITTREE which defaults
+to Linus Torvalds' kernel tree.
+
+: **git-get-plaindiff()**
+Fetches specific git diff from kernel.org. The tree is controlled by the
+environment variable GITTREE which defaults to Linus Torvalds' kernel tree.
+
 : **greph()**
 Searches the zsh command history for a regular expression.
 
 : **hex()**
 Prints the hexadecimal representation of the number supplied as argument
 (base ten only).
+
+: **hidiff()**
+Outputs highlighted diff; needs highstring(1).
 
 : **is4()**
 Returns true, if zsh version is equal or greater than 4, else false.
@@ -373,10 +405,22 @@ current working directory to it.
 Spawns a absolute minimal Korn shell. It references no files in /usr, so
 that file system can be unmounted.
 
+: **mkaudiocd()**
+Renames all mp3 files in ~/ripps (see audiorip above) to lowercase and
+replaces spaces in file names with underscores. Then mkaudiocd()
+normalizes the files and recodes them to WAV.
+
 : **mkiso()**
 Creates an iso9660 filesystem image with Rockridge and Joliet extensions
 enabled using mkisofs(8). Prompts the user for volume name, filename and
 target directory.
+
+: **mmake()**
+Runs "make install" and logs the output under ~/.errorlogs/; useful for
+a clean deinstall later.
+
+: **ogg2mp3_192()**
+Recodes an ogg file to mp3 with a bitrate of 192.
 
 : **peval()**
 Evaluates a perl expression; useful as command line
@@ -393,6 +437,9 @@ Asks for confirmation.
 : **readme()**
 Opens all README-like files in current working directory with the program
 defined in the $PAGER environment variable.
+
+: **refunc()**
+Reloads functions given as parameters.
 
 : **regcheck()**
 Checks whether a regular expression (first parameter) matches a string
@@ -425,6 +472,9 @@ Prints the arguments slowly by sleeping 0.08 seconds between each character.
 Compresses/archives the file given as first parameter. Takes an optional
 second argument, which denotes the compression/archive type as typical
 filename extension; defaults to "tar.gz".
+
+: **smartindent()**
+Indents C source code files given; uses Kernighan & Ritchie style.
 
 : **sshot()**
 Creates directory named shots in user's home directory, if it does not yet
