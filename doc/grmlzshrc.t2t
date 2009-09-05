@@ -234,6 +234,18 @@ on PC keyboards.
 : **ESC-e**
 Edit the current command buffer in your favourite editor.
 
+: **ESC-v**
+Deletes a word left of the cursor; seeing '/' as additional word separator.
+
+: **CTRL-x-1**
+Jump right after the first word.
+
+: **CTRL-x-p**
+Searches the last occurence of string before the cursor in the command history.
+
+: **CTRL-z**
+Brings a job, which got suspended with CTRL-z back to foreground.
+
 
 == SHELL FUNCTIONS ==
 //grmlzshrc// comes with a wide array of defined shell functions to ease the
