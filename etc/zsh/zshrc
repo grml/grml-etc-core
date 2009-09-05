@@ -3623,19 +3623,8 @@ ansi-colors() {
     done
 }
 
-# suidfind() { ls -latg $path | grep '^...s' }
 #f5# Find all files in \$PATH with setuid bit set
-suidfind() { ls -latg $path/*(sN) }
-
-# See above but this is /better/ ... anywise ..
-findsuid() {
-    print 'Output will be written to ~/suid_* ...'
-    $SUDO find / -type f \( -perm -4000 -o -perm -2000 \) -ls > ~/suid_suidfiles.`date "+%Y-%m-%d"`.out 2>&1
-    $SUDO find / -type d \( -perm -4000 -o -perm -2000 \) -ls > ~/suid_suiddirs.`date "+%Y-%m-%d"`.out 2>&1
-    $SUDO find / -type f \( -perm -2 -o -perm -20 \) -ls > ~/suid_writefiles.`date "+%Y-%m-%d"`.out 2>&1
-    $SUDO find / -type d \( -perm -2 -o -perm -20 \) -ls > ~/suid_writedirs.`date "+%Y-%m-%d"`.out 2>&1
-    print 'Finished'
-}
+suidfind() { ls -latg $path | grep '^...s' }
 
 # TODO: So, this is the third incarnation of this function!?
 #f5# Reload given functions
