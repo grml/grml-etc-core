@@ -4354,15 +4354,11 @@ if (( GRMLSMALL_SPECIFIC > 0 )) && isgrmlsmall ; then
     unset abk[V]
     unalias    'V'      &> /dev/null
     unfunction vman     &> /dev/null
-    unfunction vimpm    &> /dev/null
-    unfunction vimhelp  &> /dev/null
     unfunction viless   &> /dev/null
     unfunction 2html    &> /dev/null
 
     # manpages are not in grmlsmall
     unfunction manzsh   &> /dev/null
-    unalias    man2     &> /dev/null
-    unalias    man      &> /dev/null
     unfunction man2     &> /dev/null
 
 fi
