@@ -3288,7 +3288,11 @@ disassemble(){
 }
 #f5# Firefox remote control - open given URL
 fir() {
-    firefox -a firefox -remote "openURL($1)"
+    if [ -e /etc/debian_version ]; then
+        firefox -a iceweasel -remote "openURL($1)" || firefox ${1}&
+    else
+        firefox -a firefox -remote "openURL($1)" || firefox ${1}&
+    fi
 }
 #f5# Create Directoy and \kbd{cd} to it
 mcd() {
