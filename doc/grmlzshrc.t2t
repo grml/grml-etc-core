@@ -332,6 +332,22 @@ thumbnails as clickable links to the respective original file.
 //Warning:// On start genthumbs() silently removes a possibly existing "index.html"
 and all files and/or directories beginning with "thumb-" in current directory!
 
+: **getair()**
+Tries to download, unpack and run AIR (imaging software) version 1.2.8.
+
+: **getgizmo()**
+Tries to download and install Gizmo (VoIP software) for Debian.
+
+: **getskype()**
+Tries to download and install Skype (VoIP software) for Debian.
+
+: **getskypebeta()**
+Downloads and installs newer version of Skype.
+
+: **getxlite()**
+Tries to download and unpack X-lite (VoIP software) from counterpath.com into
+~/tmp.
+
 : **git-get-diff()**
 Opens a specific git commitdiff from kernel.org in default browser. Tree is
 chosen by the environment variable GITTREE which defaults to Linus Torvalds'
