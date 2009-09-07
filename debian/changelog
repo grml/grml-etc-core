@@ -10,6 +10,7 @@ grml-etc-core (0.3.74) unstable; urgency=low
   [ Michael Prokop ]
   * /etc/grml/script-functions: replace 'type -p' with 'which'.
   * zshrc: fix description of alias md (it's mkdir and not rmdir).
+  * Bump Standards-Version to 3.8.3 (no further changes).
 
   [ Joerg Woelke ]
   * zshrc: Fix lsx and lsl aliases.
@@ -19,7 +20,7 @@ grml-etc-core (0.3.74) unstable; urgency=low
   * zshrc: Remove aliases ips and check_dpkg_running.
   * zshrc: Remove tla aliases.
 
- -- Michael Prokop <mika@grml.org>  Mon, 07 Sep 2009 17:54:36 +0200
+ -- Michael Prokop <mika@grml.org>  Mon, 07 Sep 2009 17:56:23 +0200
 
 grml-etc-core (0.3.73) unstable; urgency=low
 
