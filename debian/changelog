@@ -1,14 +1,12 @@
-grml-etc-core (0.3.74) unstable; urgency=low
+grml-etc-core (0.3.75) unstable; urgency=low
 
   [ Frank Terbeck ]
-  * vimrc: merged /etc/vim/vimrc and /etc/skel/.vimrc into one file
   * zshrc: mark specialized run-help functions for autoloading
   * zshrc: remove reload(). 'exec zsh' is a much more robust way of
     reloading the configuration.
   * zshrc: remove sig() function
 
   [ Michael Prokop ]
-  * /etc/grml/script-functions: replace 'type -p' with 'which'.
   * zshrc: fix description of alias md (it's mkdir and not rmdir).
   * Bump Standards-Version to 3.8.3 (no further changes).
 
@@ -20,7 +18,17 @@ grml-etc-core (0.3.74) unstable; urgency=low
   * zshrc: Remove aliases ips and check_dpkg_running.
   * zshrc: Remove tla aliases.
 
- -- Michael Prokop <mika@grml.org>  Mon, 07 Sep 2009 17:56:23 +0200
+ -- Michael Prokop <mika@grml.org>  Mon, 07 Sep 2009 17:58:58 +0200
+
+grml-etc-core (0.3.74) unstable; urgency=low
+
+  [ Frank Terbeck ]
+  * vimrc: merged /etc/vim/vimrc and /etc/skel/.vimrc into one file
+
+  [ Michael Prokop ]
+  * /etc/grml/script-functions: replace 'type -p' with 'which'.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 10 Aug 2009 14:15:50 +0200
 
 grml-etc-core (0.3.73) unstable; urgency=low
 
