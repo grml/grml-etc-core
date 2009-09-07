@@ -2123,7 +2123,7 @@ alias rm='nocorrect rm'         # no spelling correction on rm
 
 #a1# Execute \kbd{rmdir}
 alias rd='rmdir'
-#a1# Execute \kbd{rmdir}
+#a1# Execute \kbd{mkdir}
 alias md='mkdir'
 
 # see http://www.cl.cam.ac.uk/~mgk25/unicode.html#term for details

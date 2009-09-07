@@ -9,6 +9,7 @@ grml-etc-core (0.3.74) unstable; urgency=low
 
   [ Michael Prokop ]
   * /etc/grml/script-functions: replace 'type -p' with 'which'.
+  * zshrc: fix description of alias md (it's mkdir and not rmdir).
 
   [ Joerg Woelke ]
   * zshrc: Fix lsx and lsl aliases.
@@ -18,7 +19,7 @@ grml-etc-core (0.3.74) unstable; urgency=low
   * zshrc: Remove aliases ips and check_dpkg_running.
   * zshrc: Remove tla aliases.
 
- -- Frank Terbeck <ft@grml.org>  Fri, 28 Aug 2009 22:51:49 +0200
+ -- Michael Prokop <mika@grml.org>  Mon, 07 Sep 2009 17:54:36 +0200
 
 grml-etc-core (0.3.73) unstable; urgency=low
 
@@ -395,7 +396,7 @@ grml-etc-core (0.3.45) unstable; urgency=low
     - thanks for the hint, James Vega!
 
   [ Alexander Steinböck ]
-  * /etc/zsh/zshrc: added bindkeys for navigating by vi keys (hjkl) 
+  * /etc/zsh/zshrc: added bindkeys for navigating by vi keys (hjkl)
     (disable by default though) as well as 'accept-and-infer-next history'
     (ctrl-o) to complete within directories and stay in menu completion.
     [Closes: issue350]
@@ -606,7 +607,7 @@ grml-etc-core (0.3.24) unstable; urgency=low
 grml-etc-core (0.3.23) unstable; urgency=low
 
   * /etc/zsh/zshenv: switch direction of check for lesspipe vs.
-    lesspipe.sh so we use the extended version by default if 
+    lesspipe.sh so we use the extended version by default if
     it's available.
 
  -- Michael Prokop <mika@grml.org>  Wed,  5 Sep 2007 18:22:57 +0200
@@ -1326,7 +1327,7 @@ grml-etc-core (0.1-34) grml-testing; urgency=low
 grml-etc-core (0.1-33) unstable; urgency=low
 
   * /etc/zsh/zshrc: improve error handling; do *not* export $FPATH
-    to avoid problems with different zsh versions. 
+    to avoid problems with different zsh versions.
   * Small fix in debian/preinst to prevent overwriting from original
     files when diverting several times (again: please report any
     problems you notice).
@@ -1411,7 +1412,7 @@ grml-etc-core (0.1-26) unstable; urgency=low
   * /etc/zsh/zshenv:
     - set /bin instead of /bin/ in $PATH
     - some minor code style improvements
-  * /etc/skel/.zshrc: 
+  * /etc/skel/.zshrc:
     - updated alias fbmplayer (thanks, wuehlmaus!)
     - added function gex (google exact search, thanks wuehlmaus!)
     - added gethgsnap and gethgclone for retrieving mercurial
