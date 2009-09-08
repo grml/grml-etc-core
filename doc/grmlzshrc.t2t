@@ -229,6 +229,87 @@ available via the usual history lookup widgets.
 
 
 = REFERENCE =
+== OPTIONS ==
+Apart from zsh's default options, //grmlzshrc// sets some options
+that change the behaviour of zsh. Options that change Z-shell's default
+settings are marked by <grml>. But note, that zsh's defaults vary depending
+on its emulation mode (csh, ksh, sh, or zsh). For details, see zshoptions(1).
+
+: **append_history**
+Zsh sessions, that use //grmlzshrc//, will append their history list to the
+history file, rather than replace it. Thus, multiple parallel zsh sessions
+will all have the new entries from their history lists added to the history
+file, in the order that they exit. The file will still be periodically
+re-written to trim it when the number of lines grows 20% beyond the value
+specified by $SAVEHIST.
+
+: **auto_cd** <grml>
+If a command is issued that can't be executed as a normal command, and the
+command is the name of a directory, perform the cd command to that directory.
+
+: **auto_pushd** <grml>
+Make cd push the old directory onto the directory stack.
+
+: **completeinword** <grml>
+If the cursor is inside a word, completion is done from both ends;
+instead of moving the cursor to the end of the word first and starting
+from there.
+
+: **extended_glob** <grml>
+Treat the '#', '~' and '^' characters as active globbing pattern characters.
+
+: **extended_history** <grml>
+Save each command's beginning timestamp (in seconds since the epoch) and the
+duration (in seconds) to the history file.
+
+: **hash_list_all**
+Whenever a command completion is attempted, make sure the entire command
+path is hashed first. This makes the first completion slower.
+
+: **histignorealldups** <grml>
+If a new command line being added to the history list duplicates an
+older one, the older command is removed from the list, even if it is
+not the previous event.
+
+: **histignorespace** <grml>
+Remove command lines from the history list when the first character on
+the line is a space, or when one of the expanded aliases contains a
+leading space. Note that the command lingers in the internal history
+until the next command is entered before it vanishes.
+
+: **longlistjobs** <grml>
+List jobs in long format by default.
+
+: **nobeep** <grml>
+Avoid to beep on errors in zsh command line editing (zle).
+
+: **noglobdots**
+A wildcard character never matches a leading '.'.
+
+: **nohup** <grml>
+Do not send the hangup signal (HUP:1) to running jobs when the shell exits.
+
+: **nonomatch** <grml>
+If a pattern for filename generation has no matches, do not print an error
+and leave it unchanged in the argument list. This also applies to file
+expansion of an initial `~' or `='.
+
+: **notify**
+Report the status of background jobs immediately, rather than waiting until
+just before printing a prompt.
+
+: **pushd_ignore_dups** <grml>
+Don't push multiple copies of the same directory onto the directory stack.
+
+: **share_history** <grml>
+As each line is added to the history file, it is checked to see if anything
+else was written out by another shell, and if so it is included in the
+history of the current shell too. Using !-style history, the commands from
+the other sessions will not appear in the history list unless you explicitly
+type the "history" command. This option is activated for zsh versions >= 4,
+only.
+
+
 == KEYBINDINGS ==
 Apart from zsh's default key bindings, //grmlzshrc// comes with its own set of
 key bindings. Note that bindings like **ESC-e** can also be typed as **ALT-e**
