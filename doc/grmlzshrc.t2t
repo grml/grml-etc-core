@@ -384,6 +384,15 @@ If the original cdrecord is not installed, issues a warning to the user to
 use the wodim binary instead. Wodim is the debian fork of Joerg Schillings
 cdrecord.
 
+: **check_com()**
+Returns true if given command exists either as program, function, alias,
+builtin or reserved word. If the option -c is given, only returns true,
+if command is a program.
+
+: **checkhome()**
+Changes directory to $HOME on first invocation of zsh. This is neccessary on
+grml systems with autologin.
+
 : **cl()**
 Changes current directory to the one supplied by argument and lists the files
 in it, including file names starting with ".".
@@ -498,6 +507,10 @@ Returns true, if running on a grml system from a live cd, else false.
 : **isgrmlsmall()**
 Returns true, if run on grml-small, else false.
 
+: **iso2utf()**
+Changes every occurrence of the string iso885915 or ISO885915 in
+environment variables to UTF-8.
+
 : **isutfenv()**
 Returns true, if run within an utf environment, else false.
 
@@ -557,6 +570,10 @@ Reloads functions given as parameters.
 Checks whether a regular expression (first parameter) matches a string
 (second parameter) using perl.
 
+: **salias()**
+Creates an alias whith sudo prepended, if $EUID is not zero. Run "salias -h"
+for details. See also xunfunction() below.
+
 : **selhist()**
 Greps the history for the string provided as parameter and shows the numbered
 findings in default pager. On exit of the pager the user is prompted for a
@@ -603,14 +620,25 @@ issues a Warning to use the grml-x(1) script. Can be overridden by using
 : **status()**
 Shows some information about current system status.
 
+: **swspeak()**
+Sets up software synthesizer by calling swspeak-setup(8). Kernel boot option
+swspeak must be set for this to work.
+
 : **udiff()**
 Makes a unified diff of the command line arguments trying hard to find a
 smaller set of changes. Descends recursively into subdirectories. Ignores
 hows some information about current status.
 
+: **uprint()**
+Works around the "print -l ${(u)foo}"-limitation on zsh older than 4.2.
+
 : **urlencode()**
 Takes a string as its first argument and prints it RFC 2396 URL encoded to
 standard out.
+
+: **utf2iso()**
+Changes every occurrence of the string UTF-8 or utf-8 in environment
+variables to iso885915.
 
 : **viless()**
 Vim as pager.
@@ -623,16 +651,38 @@ line options, she always wants, in her .zshrc.local.
 : **vman()**
 Use vim(1) as manpage reader.
 
+: **xcat()**
+Tries to cat(1) file(s) given as parameter(s). Always returns true.
+See also xunfunction() below.
+
 : **xinit()**
 Initializes an X session using xinit(1) if /etc/X11/xorg.conf exists, else
 issues a Warning to use the grml-x(1) script. Can be overridden by using
 /usr/bin/xinit directly.
+
+: **xsource()**
+Tries to source the file(s) given as parameter(s). Always returns true.
+See zshbuiltins(1) for a detailed description of the source command.
+See also xunfunction() below.
+
+: **xunfunction()**
+Removes the functions salias, xcat, xsource, xunfunction and zrcautoload.
 
 : **zg()**
 Search for patterns in grml's zshrc using perl. zg takes no or exactly one
 option plus a non empty pattern. Run zg without any arguments for a listing
 of available command line switches. For a zshrc not in /etc/zsh, set the
 GRML_ZSHRC environment variable.
+
+: **zrcautoload()**
+Wrapper around the autoload builtin. Loads the definitions of functions
+from the file given as argument. Searches $fpath for the file. See also
+xunfunction() above.
+
+: **zrclocal()**
+Sources /etc/zsh/zshrc.local and ${HOME}/.zshrc.local. These are the files
+where own modifications should go. See also zshbuiltins(1) for a description
+of the source command.
 
 
 == ALIASES ==
