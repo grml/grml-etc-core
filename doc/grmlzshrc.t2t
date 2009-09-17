@@ -397,6 +397,10 @@ grml systems with autologin.
 Changes current directory to the one supplied by argument and lists the files
 in it, including file names starting with ".".
 
+: **d()**
+Presents a numbered listing of the directory stack. Then changes current
+working directory to the one chosen by the user.
+
 : **debbug()**
 Searches the Debian bug tracking system (bugs.debian.org) for Bug numbers,
 email addresses of submitters or any string given on the command line.
@@ -418,6 +422,9 @@ Translates C source code to assembly and ouputs both.
 : **doc()**
 Takes packagename as argument. Sets current working directory to
 /usr/share/doc/<packagename> and prints out a directory listing.
+
+: **exirename()**
+Renames image files based on date/time informations in their exif headers.
 
 : **fir()**
 Opens given URL with Firefox (Iceweasel on Debian). If there is already an
@@ -477,6 +484,14 @@ Prints the hexadecimal representation of the number supplied as argument
 : **hidiff()**
 Outputs highlighted diff; needs highstring(1).
 
+: **hl()**
+Shows source files in less(1) with syntax highlighting. Run "hl -h"
+for detailed usage information.
+
+: **ic_get()**
+Queries IMAP server (first parameter) for its capabilities. Takes
+port number as optional second argument.
+
 : **is4()**
 Returns true, if zsh version is equal or greater than 4, else false.
 
@@ -522,9 +537,23 @@ parameter.
 Lists images (i. e. files ending with ".jpg", ".gif" or ".png") in current
 directory.
 
+: **makereadable()**
+Creates a PostScript and a PDF file (basename as first argument) from
+source code files.
+
+: **man2()**
+Displays manpage in a streched style.
+
 : **mcd()**
 Creates directory including parent directories, if necessary. Then changes
 current working directory to it.
+
+: **mdiff()**
+Diffs the two arguments recursively and writes the
+output (unified format) to a timestamped file.
+
+: **memusage()**
+Prints the summarized memory usage in bytes.
 
 : **minimal-shell()**
 Spawns a absolute minimal Korn shell. It references no files in /usr, so
@@ -540,9 +569,17 @@ Creates an iso9660 filesystem image with Rockridge and Joliet extensions
 enabled using mkisofs(8). Prompts the user for volume name, filename and
 target directory.
 
+: **mkmaildir()**
+Creates a directory with first parameter as name inside $MAILDIR_ROOT
+(defaults to $HOME/Mail) and subdirectories cur, new and tmp.
+
 : **mmake()**
 Runs "make install" and logs the output under ~/.errorlogs/; useful for
 a clean deinstall later.
+
+: **new()**
+Lists files in current directory, which have been modified within the
+last N days. N is an integer required as first and only argument.
 
 : **ogg2mp3_192()**
 Recodes an ogg file to mp3 with a bitrate of 192.
@@ -624,10 +661,17 @@ Shows some information about current system status.
 Sets up software synthesizer by calling swspeak-setup(8). Kernel boot option
 swspeak must be set for this to work.
 
+: **trans()**
+Translates a word from german to english (-D) or vice versa (-E).
+
 : **udiff()**
 Makes a unified diff of the command line arguments trying hard to find a
 smaller set of changes. Descends recursively into subdirectories. Ignores
 hows some information about current status.
+
+: **uopen()**
+Downloads and displays a file using a suitable program for its
+Content-Type.
 
 : **uprint()**
 Works around the "print -l ${(u)foo}"-limitation on zsh older than 4.2.
@@ -664,6 +708,10 @@ issues a Warning to use the grml-x(1) script. Can be overridden by using
 Tries to source the file(s) given as parameter(s). Always returns true.
 See zshbuiltins(1) for a detailed description of the source command.
 See also xunfunction() below.
+
+: **xtrename()**
+Changes the title of xterm window from within screen(1). Run without
+arguments for details.
 
 : **xunfunction()**
 Removes the functions salias, xcat, xsource, xunfunction and zrcautoload.
