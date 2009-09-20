@@ -639,7 +639,7 @@ Compresses/archives the file given as first parameter. Takes an optional
 second argument, which denotes the compression/archive type as typical
 filename extension; defaults to "tar.gz".
 
-: **smartindent()**
+: **smart-indent()**
 Indents C source code files given; uses Kernighan & Ritchie style.
 
 : **sshot()**
