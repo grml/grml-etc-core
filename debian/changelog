@@ -1,3 +1,9 @@
+grml-etc-core (0.3.76) UNRELEASED; urgency=low
+
+  * zshrc: add openssl hash functions
+
+ -- Frank Terbeck <ft@grml.org>  Mon, 21 Sep 2009 13:20:36 +0200
+
 grml-etc-core (0.3.75) unstable; urgency=low
 
   [ Frank Terbeck ]
