@@ -229,6 +229,22 @@ available via the usual history lookup widgets.
 
 
 = REFERENCE =
+== ENVIRONMENT VARIABLES ==
+//grmlzshrc// sets some environment variables, which influence the
+behaviour of applications.
+
+: **BROWSER**
+If X is running this is set to "firefox", otherwise to "w3m".
+
+: **COLORTERM**
+Set to "yes". Some applications read this to learn about properties
+of the terminal they are running in.
+
+: **QTDIR**
+Holds the path to shared files for the C++ application framework QT
+(version 3 or 4).
+
+
 == OPTIONS ==
 Apart from zsh's default options, //grmlzshrc// sets some options
 that change the behaviour of zsh. Options that change Z-shell's default
