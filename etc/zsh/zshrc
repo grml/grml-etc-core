@@ -622,6 +622,11 @@ zle -N slash-backward-kill-word
 #k# Kill everything in a word up to its last \kbd{/}
 bindkey '\ev' slash-backward-kill-word
 
+# use the new *-pattern-* widgets for incremental history search
+if is439 ; then
+    bindkey '^r' history-incremental-pattern-search-backward
+    bindkey '^s' history-incremental-pattern-search-forward
+fi
 # }}}
 
 # a generic accept-line wrapper {{{
