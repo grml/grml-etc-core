@@ -3,8 +3,9 @@ grml-etc-core (0.3.76) UNRELEASED; urgency=low
   * zshrc: add openssl hash functions [Closes: issue741]
   * zshrc: use history-incremental-pattern-search-* for incremental history
     searches per default (via ^r and ^s).
+  * zshrc: actively do 'setopt unset'
 
- -- Frank Terbeck <ft@grml.org>  Thu, 08 Oct 2009 11:29:38 +0200
+ -- Frank Terbeck <ft@grml.org>  Mon, 12 Oct 2009 01:10:02 +0200
 
 grml-etc-core (0.3.75) unstable; urgency=low
 

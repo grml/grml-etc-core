@@ -281,6 +281,7 @@ setopt nobeep               # avoid "beep"ing
 setopt pushd_ignore_dups    # don't push the same dir twice.
 setopt noglobdots           # * shouldn't match dotfiles. ever.
 setopt noshwordsplit        # use zsh style word splitting
+setopt unset                # don't error out when unset parameters are used
 
 # }}}
 
@@ -649,7 +650,7 @@ fi
 zstyle ':acceptline:*' rehash true
 
 function Accept-Line() {
-    setopt localoptions noksharrays
+    emulate -L zsh
     local -a subs
     local -xi aldone
     local sub
@@ -668,6 +669,7 @@ function Accept-Line() {
 }
 
 function Accept-Line-getdefault() {
+    emulate -L zsh
     local default_action
 
     zstyle -s ":acceptline:${alcontext}" default_action default_action
@@ -682,7 +684,7 @@ function Accept-Line-getdefault() {
 }
 
 function accept-line() {
-    setopt localoptions noksharrays
+    emulate -L zsh
     local -a cmdline
     local -x alcontext
     local buf com fname format msg default_action
@@ -1850,6 +1852,7 @@ vcs_info_printsys () { # {{{
 }
 # }}}
 vcs_info_lastmsg () { # {{{
+    emulate -L zsh
     local -i i
 
     VCS_INFO_maxexports
@@ -1865,6 +1868,8 @@ vcs_info_lastmsg () { # {{{
 }
 # }}}
 vcs_info () { # {{{
+    emulate -L zsh
+    setopt extendedglob
     local pat
     local -i found
     local -a VCSs disabled dps
