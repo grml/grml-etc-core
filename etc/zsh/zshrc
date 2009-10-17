@@ -2173,7 +2173,6 @@ swspeak() {
        export PS1="%m%# "
        /usr/sbin/swspeak-setup $@
      else # old version:
-        aumix -w 90 -v 90 -p 90 -m 90
         if ! [[ -r /dev/softsynth ]] ; then
             flite -o play -t "Sorry, software synthesizer not available. Did you boot with swspeak bootoption?"
             return 1
