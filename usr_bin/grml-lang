@@ -6,15 +6,45 @@
 # License:       This file is licensed under the GPL v2.
 ################################################################################
 
+CONFFILE=/etc/sysconfig/keyboard
+PN="$(basename $0)"
+
 usage(){
     echo "Usage: $0 <language>"
     echo "supported values: at, ch, de, dvorak, es, jp, us"
+}
+
+setvalue(){
+  [ -n "$2" ] || return 1
+  # already present in conffile?
+  if grep -q ${1} $CONFFILE 2>/dev/null ; then
+     sudo sed -i "s#^${1}.*#${1}=${2}#"   $CONFFILE
+  else
+     echo "$1=${2}" | sudo tee -a $CONFFILE >/dev/null
+  fi
 }
 
 if [ $# -lt "1" ] ; then
    usage
    exit -1
 fi
+
+[ -d /etc/sysconfig ] || sudo mkdir /etc/sysconfig
+
+
+LANGUAGE="$1"
+
+
+. /etc/grml/language-functions
+
+if [ ! -z "$KEYTABLE" ] ; then
+    setvalue KEYTABLE "$KEYTABLE"
+fi
+
+if [ ! -z "XKEYBOARD" ] ; then
+    setvalue XKEYBOARD $XKEYBOARD
+fi
+
 
 if [ -z "$DISPLAY" ] ;then
   if [ "$1" = "de" ] ; then
