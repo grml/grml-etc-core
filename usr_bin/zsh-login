@@ -41,7 +41,6 @@ case "$CMDLINE" in
    # turn on speakers for accessibility users:
    *swspeak*|*blind*|*brltty*|*speakup*)
       if [ -x /usr/bin/flite ] ; then
-         aumix -w 90 -v 90 -p 90 -m 90
          flite -o play -t "Finished booting"
       fi
       ;;

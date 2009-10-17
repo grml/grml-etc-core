@@ -4,7 +4,11 @@ grml-scripts (1.1.27) UNRELEASED; urgency=low
   * grml-lang now modifies the keyboard config file.
     [Closes: issue437]
 
- -- Ulrich Dangel <uli@spamt.net>  Sat, 17 Oct 2009 15:40:50 +0200
+  [ Michael Prokop ]
+  * zsh-login: do not execute aumix to avoid overriding of the vol
+    bootoption. Thanks to Michael Whapples for the bugreport.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 17 Oct 2009 18:35:26 +0200
 
 grml-scripts (1.1.26) unstable; urgency=low
 
