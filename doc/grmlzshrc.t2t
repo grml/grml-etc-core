@@ -1,6 +1,6 @@
 GRMLZSHRC
 
-August, 2009
+Oktober, 2009
 
 %!target: man
 %!postproc(man): "^(\.TH.*) 1 "  "\1 5 "
