@@ -1,8 +1,14 @@
 grml-etc-core (0.3.77) UNRELEASED; urgency=low
 
+  [ Michael Prokop ]
   * zshrc: drop aumix call in swspeak().
 
- -- Michael Prokop <mika@grml.org>  Sat, 17 Oct 2009 21:53:49 +0200
+  [ Frank Terbeck ]
+  * Added doc/ which contains a reference manual for grml's zsh setup.
+    See the manual's AUTHORS section and the git history for who was
+    involved. Thanks to everyone who helped!
+
+ -- Frank Terbeck <ft@grml.org>  Wed, 21 Oct 2009 16:08:49 +0200
 
 grml-etc-core (0.3.76) unstable; urgency=low
 
