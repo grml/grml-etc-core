@@ -1,4 +1,4 @@
-grml-etc-core (0.3.77) UNRELEASED; urgency=low
+grml-etc-core (0.3.77) unstable; urgency=low
 
   [ Michael Prokop ]
   * zshrc: drop aumix call in swspeak().
@@ -8,7 +8,7 @@ grml-etc-core (0.3.77) UNRELEASED; urgency=low
     See the manual's AUTHORS section and the git history for who was
     involved. Thanks to everyone who helped!
 
- -- Frank Terbeck <ft@grml.org>  Wed, 21 Oct 2009 16:08:49 +0200
+ -- Michael Prokop <mika@grml.org>  Thu, 22 Oct 2009 01:02:45 +0200
 
 grml-etc-core (0.3.76) unstable; urgency=low
 
