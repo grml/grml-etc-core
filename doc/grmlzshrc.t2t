@@ -1195,10 +1195,19 @@ possibly inclusion.
 
 
 = STATUS =
-This manual page is supposed to be a **reference** manual for //grmlzshrc//.
+This manual page is the **reference** manual for //grmlzshrc//.
+
 That means that in contrast to the existing refcard it should document **every**
-aspect of the setup. That is currently **not** the case. Not for a long time
-yet. Contributions are highly welcome.
+aspect of the setup.
+
+This manual is currently not complete. If you want to help improving it, visit
+the following pages:
+
+http://wiki.grml.org/doku.php?id=zshrcmanual
+
+http://lists.mur.at/pipermail/grml/2009-August/004609.html
+
+Contributions are highly welcome.
 
 
 = AUTHORS =
