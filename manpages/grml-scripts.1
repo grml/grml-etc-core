@@ -96,8 +96,9 @@ create chroot environment for a user
 .SS myip
 return IP address of running system on stdout (requires network access)
 .SS osd_server.py
-Listen for incoming messages on a specific port and print
-them via osd_cat.
+Symlink to notifyd.py
+.SS notifyd.py
+Listen for incoming messages on a specific port and print them via specific handlers (per default via libnotify).
 .SS say
 wrapper for festival to use the text to speech system
 .SS search
