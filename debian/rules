@@ -32,9 +32,9 @@ install: build
 	dh_installdirs
 
 	# Add here commands to install the package into debian/grml-scripts.
-	cp usr_bin/*         debian/grml-scripts/usr/bin/
-	cp usr_sbin/*        debian/grml-scripts/usr/sbin/
-	cp usr_share/*       debian/grml-scripts/usr/share/grml-scripts/
+	cp -a usr_bin/*         debian/grml-scripts/usr/bin/
+	cp -a usr_sbin/*        debian/grml-scripts/usr/sbin/
+	cp -a usr_share/*       debian/grml-scripts/usr/share/grml-scripts/
 	cp makefile.postfix  debian/grml-scripts/etc/postfix/Makefile
 	install -m 755 compile/align                  debian/grml-scripts/usr/bin/align
 	install -m 755 compile/cpu-screen             debian/grml-scripts/usr/bin/cpu-screen
@@ -125,6 +125,7 @@ binary-arch: build install
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/noeject.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/noprompt.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/osd_server.py.1.gz \
+		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/notifyd.py.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/pong.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/prepare_ramdisk.sh.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/prepare_tmpfs.sh.1.gz \
