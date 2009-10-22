@@ -1,3 +1,10 @@
+grml-etc-core (0.3.78) UNRELEASED; urgency=low
+
+  * Apply patch by Axel Beckert <abe@deuxchevaux.org> (thanks!) which
+    adds Emacs local variables at EOF equivalent to vim's.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 22 Oct 2009 02:55:40 +0200
+
 grml-etc-core (0.3.77) unstable; urgency=low
 
   [ Michael Prokop ]
