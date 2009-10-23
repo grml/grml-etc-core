@@ -1,4 +1,4 @@
-:
+#!/bin/sh
 ##########################################################################
 # Title      :	exifinfo - print EXIF information of an image file
 # Author     :	Heiner Steven <heiner.steven@odn.de>
@@ -117,6 +117,7 @@ for file
 do
     # Explanation of the "sed" expressions:
     #	 o  remove all lines not containing a "="
+    #	 o  remove "exif:" prefix from identify
     #	 o  remove all lines containing tag names that would form invalid
     #	    shell variable names
     #	 o  quote all apostrophy characters ' as '\''
@@ -127,6 +128,7 @@ do
     identify -format "%[EXIF:$info]" "$file" |
     	sed \
 		-e '/^[^=]*$/d'		\
+		-e 's/^exif://'		\
 		-e '/[^A-Za-z0-9_=][^=]*=/d'	\
 		-e "s/'/'\\\\''/g"	\
 		-e "s/=/='/"		\
