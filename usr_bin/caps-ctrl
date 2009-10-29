@@ -15,9 +15,9 @@ emulate zsh
 autoload -U colors ; colors
 
 if [[ -z $DISPLAY  ]] ; then # test if X is not running when calling us
-         if [[ $UID != 0 ]] ; then # test if user root did invoke this command
+         if [ $(id -u) != 0 ] ; then # test if user root did invoke this command
             eerror "As of Linux 2.6.15 you need root permissions for changing"
-	    eerror "the keyboard on console using loadkeys for security reasons."
+            eerror "the keyboard on console using loadkeys for security reasons."
             eerror "Run this program with root permissions. Exiting." ; eend 1
             exit 1
          fi

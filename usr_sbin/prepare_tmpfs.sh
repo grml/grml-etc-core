@@ -6,7 +6,7 @@
 # License:       This file is licensed under the GPL v2.
 ################################################################################
 
-if [ $UID != 0 ]; then
+if [ $(id -u) != 0 ] ; then
   echo "Error: $0 requires root permissions. Exiting."
   exit 1
 fi

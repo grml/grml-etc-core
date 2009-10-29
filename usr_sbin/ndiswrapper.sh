@@ -10,7 +10,7 @@ PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/local/bin"
 export PATH
 
 # Get root
-if [ $UID != 0 ] ; then
+if [ $(id -u) != 0 ] ; then
    echo Error: become root before starting $0 >& 2
    exit 100
 fi
