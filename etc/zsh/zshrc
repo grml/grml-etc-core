@@ -1731,6 +1731,7 @@ VCS_INFO_detect_by_dir() { #{{{
 
     realbasedir="$(VCS_INFO_realpath ${basedir})"
     while [[ ${realbasedir} != '/' ]]; do
+        [[ -r ${realbasedir} ]] || return 1
         if [[ -n ${vcs_comm[detect_need_file]} ]] ; then
             [[ -d ${basedir}/${dirname} ]] && \
             [[ -e ${basedir}/${dirname}/${vcs_comm[detect_need_file]} ]] && \
@@ -1870,6 +1871,9 @@ vcs_info_lastmsg () { # {{{
 vcs_info () { # {{{
     emulate -L zsh
     setopt extendedglob
+
+    [[ -r . ]] || return 1
+
     local pat
     local -i found
     local -a VCSs disabled dps

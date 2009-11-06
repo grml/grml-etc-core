@@ -1,10 +1,16 @@
 grml-etc-core (0.3.78) UNRELEASED; urgency=low
 
+  [ Michael Prokop ]
   * Apply patch by Axel Beckert <abe@deuxchevaux.org> (thanks!) which
     adds Emacs local variables at EOF equivalent to vim's.
     [Closes: issue745]
 
- -- Michael Prokop <mika@grml.org>  Thu, 22 Oct 2009 02:55:40 +0200
+  [ Frank Terbeck ]
+  * zshrc: Fixed a bug in vcs_info which led to an endless loop, when
+    a directory had really screwy premissions. Noticed by Christian
+    Hofstaedtler
+
+ -- Frank Terbeck <ft@grml.org>  Fri, 06 Nov 2009 15:18:23 +0100
 
 grml-etc-core (0.3.77) unstable; urgency=low
 
