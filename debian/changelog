@@ -1,4 +1,4 @@
-grml-etc-core (0.3.78) UNRELEASED; urgency=low
+grml-etc-core (0.3.78) unstable; urgency=low
 
   [ Michael Prokop ]
   * Apply patch by Axel Beckert <abe@deuxchevaux.org> (thanks!) which
@@ -8,9 +8,13 @@ grml-etc-core (0.3.78) UNRELEASED; urgency=low
   [ Frank Terbeck ]
   * zshrc: Fixed a bug in vcs_info which led to an endless loop, when
     a directory had really screwy premissions. Noticed by Christian
-    Hofstaedtler
+    Hofstaedtler.
 
- -- Frank Terbeck <ft@grml.org>  Fri, 06 Nov 2009 15:18:23 +0100
+  [ Ulrich Dangel ]
+  * Added top configuration file to skel directory. Thanks to Andras
+    Korn for the idea. [Closes: issue755]
+
+ -- Michael Prokop <mika@grml.org>  Wed, 11 Nov 2009 21:47:16 +0100
 
 grml-etc-core (0.3.77) unstable; urgency=low
 
