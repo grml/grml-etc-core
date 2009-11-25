@@ -240,9 +240,24 @@ If X is running this is set to "firefox", otherwise to "w3m".
 Set to "yes". Some applications read this to learn about properties
 of the terminal they are running in.
 
+: **EDITOR**
+If not already set, sets the default editor. Falls back to vi(1),
+if vim(1) is not available.
+
+: **MAIL**
+The mailbox file for the current user is set to /var/mail/$USER, if not
+already set otherwise.
+
+: **PAGER**
+Set less(1) as default pager, if not already set to something different.
+
 : **QTDIR**
 Holds the path to shared files for the C++ application framework QT
 (version 3 or 4).
+
+: **SHELL**
+Set explicitly to /bin/zsh, to prevent certain terminal emulators to
+default to /bin/sh or /bin/bash.
 
 
 == OPTIONS ==
