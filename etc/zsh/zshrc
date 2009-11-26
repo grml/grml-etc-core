@@ -3982,16 +3982,6 @@ exirename() {
     fi
 }
 
-# open file in vim and jump to line
-# http://www.downgra.de/archives/2007/05/08/T19_21_11/
-j2v() {
-    emulate -L zsh
-    local -a params
-    params=(${*//(#m):[0-9]*:/\\n+${MATCH//:/}}) # replace ':23:' to '\n+23'
-    params=(${(s|\n|)${(j|\n|)params}}) # join array using '\n', then split on all '\n'
-    vim ${params}
-}
-
 # get_ic() - queries imap servers for capabilities; real simple. no imaps
 ic_get() {
     emulate -L zsh
