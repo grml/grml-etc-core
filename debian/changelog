@@ -1,3 +1,14 @@
+grml-scripts (1.2.1) unstable; urgency=low
+
+  [ Ulrich Dangel ]
+  * Require xlock in grml-lock if DISPLAY is set. [Closes: issue768]
+
+  [ Michael Prokop ]
+  * iso-term: invoke xterm setting ZSH_NO_DEFAULT_LOCALE=1 (see
+    issue706).
+
+ -- Michael Prokop <mika@grml.org>  Fri, 27 Nov 2009 12:36:18 +0100
+
 grml-scripts (1.2.0) unstable; urgency=low
 
   * Drop usage of $UID in scripts.
