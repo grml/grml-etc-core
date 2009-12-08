@@ -43,6 +43,47 @@ Or by setting them permanently in **zshrc.pre** (See AUXILIARY FILES below).
 If set to a value greater than zero and //acpi// installed, //grmlzshrc// will
 put the battery status into the right hand side interactive prompt.
 
+: **COMMAND_NOT_FOUND**
+A non zero value activates a handler, which is called when a command can not
+be found. The handler is defined by GRML_ZSH_CNF_HANDLER (see below).
+
+: **GRML_ALWAYS_LOAD_ALL**
+Enables the whole grml setup for root, if set to a non zero value.
+
+: **GRML_ZSH_CNF_HANDLER**
+This variable contains the handler to be used by COMMAND_NOT_FOUND (see above)
+and defaults to "/usr/share/command-not-found/command-not-found".
+
+: **GRMLSMALL_SPECIFIC**
+Set this to zero to remove items in zsh config, which do not work in
+grml-small.
+
+: **MAILCHECK**
+Sets the frequency in seconds for zsh to check for new mail. Defaults to 30.
+A value of zero turns off checking.
+
+: **NOCOR**
+Non zero values deactivate automatic correction of commands.
+
+: **NOMENU**
+If set to zero (default), allows selection from a menu, if there are at least
+five possible options of completion.
+
+: **NOPRECMD**
+A non zero value disables precmd and preexec commands. These are functions
+that are run before every command (setting xterm/screen titles etc.).
+
+: **REPORTTIME**
+Show time (user, system and cpu) used by external commands, if they run longer
+than the defined number of seconds (default: 5).
+
+: **ZSH_NO_DEFAULT_LOCALE**
+Import "/etc/default/locale", if set to zero (default).
+
+: **ZSH_PROFILE_RC**
+A non zero value causes shell functions to be profiled. The results can be
+obtained with the zprof builtin command (see zshmodules(1) for details).
+
 
 = FEATURE DESCRIPTION =
 This is an in depth description of non-standard features implemented by
