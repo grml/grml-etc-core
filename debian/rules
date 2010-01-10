@@ -73,7 +73,6 @@ binary-arch: build install
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/bincompare.pl.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/blacklist.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/bt-hid.1.gz \
-		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/bt-audio.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/caps-ctrl.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/cicqhist.1.gz \
 		/usr/share/man/man1/grml-scripts.1.gz /usr/share/man/man1/code2color.1.gz \
