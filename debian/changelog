@@ -1,8 +1,8 @@
-grml-scripts (1.2.2) UNRELEASED; urgency=low
+grml-scripts (1.2.2) unstable; urgency=low
 
   * Remove deprecated bt-audio script.
 
- -- Michael Prokop <mika@grml.org>  Sun, 10 Jan 2010 16:13:45 +0100
+ -- Michael Prokop <mika@grml.org>  Sun, 10 Jan 2010 18:30:57 +0100
 
 grml-scripts (1.2.1) unstable; urgency=low
 
