@@ -12,7 +12,7 @@ Vcs-Browser: http://git.grml.org/?p=grml-scripts.git
 Package: grml-scripts
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, less, dialog, perl, zsh, dash, links | w3m | links2, screen, grml-network, grml-etc-core, libterm-readkey-perl, lzop
-Suggests: ruby, python, grml-x, ipcalc, hwinfo, antiword, grml-etc, grml-rebuildfstab, grml-scanpartitions, grml-files, grml-hwinfo, pptp-linux, flite, wmii, mutt, slrn, grml-docs, grml-autoconfig (>= 0.6.9), dirvish, sudo, idesk, xlockmore, python-dbus, notification-daemon, grml-quickconfig
+Suggests: ruby, python, grml-x, ipcalc, hwinfo, antiword, grml-etc, grml-rebuildfstab, grml-scanpartitions, grml-files, grml-hwinfo, pptp-linux, flite, wmii, mutt, slrn, grml-docs, grml-autoconfig (>= 0.6.9), dirvish, sudo, idesk, xlockmore, python-dbus, notification-daemon, grml-quickconfig, libwebservice-google-suggest-perl
 Conflicts: scanmodem, grml-etc-core (<< 0.1-30)
 Description: some small scripts which should make life easier
  Some scripts which should make life easier. For example:
