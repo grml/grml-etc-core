@@ -29,4 +29,4 @@ wrapper, as in: 'grml-exec-wrapper -p aumix xterm -T aumix -e aumix'
 
 AUTHOR
 ------
-grml-chroot and this manpage were written by Michael Prokop <mika@grml.org>.
+grml-exec-wrapper and this manpage were written by Michael Prokop <mika@grml.org>.
