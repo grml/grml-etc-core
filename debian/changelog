@@ -4,7 +4,11 @@ grml-etc-core (0.3.79) UNRELEASED; urgency=low
   * Use wrapper functions for changing title/screen status
     [Closes: Issue779]
 
- -- Ulrich Dangel <mru@grml.org>  Mon, 08 Feb 2010 23:01:26 +0100
+  [ Frank Terbeck ]
+  * zshrc: Fix another vcs_info bug, wrt to backwards compatibility with
+    older git versions. Reported by Timo Boettcher.
+
+ -- Frank Terbeck <ft@grml.org>  Mon, 08 Feb 2010 23:04:26 +0100
 
 grml-etc-core (0.3.78) unstable; urgency=low
 
@@ -17,8 +21,6 @@ grml-etc-core (0.3.78) unstable; urgency=low
   * zshrc: Fixed a bug in vcs_info which led to an endless loop, when
     a directory had really screwy premissions. Noticed by Christian
     Hofstaedtler.
-  * zshrc: Fix another vcs_info bug, wrt to backwards compatibility with
-    older git versions. Reported by Timo Boettcher.
 
   [ Ulrich Dangel ]
   * Added top configuration file to skel directory. Thanks to Andras
