@@ -1997,6 +1997,26 @@ setopt prompt_subst
 # make sure to use right prompt only when not running a command
 is41 && setopt transient_rprompt
 
+
+function ESC_print () {
+    info_print $'\ek' $'\e\\' "$@"
+}
+function set_title () {
+    info_print  $'\e]0;' $'\a' "$@"
+}
+
+function info_print () {
+    local esc_begin esc_end
+    esc_begin="$1"
+    esc_end="$2"
+    shift 2
+    printf '%s' ${esc_begin}
+    for item in "$@" ; do
+        printf '%s ' "$item"
+    done
+    printf '%s' "${esc_end}"
+}
+
 # TODO: revise all these NO* variables and especially their documentation
 #       in zsh-help() below.
 is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
@@ -2006,9 +2026,9 @@ is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
 
     if [[ $TERM == screen* ]] ; then
         if [[ -n ${VCS_INFO_message_1_} ]] ; then
-            print -nP "\ek${VCS_INFO_message_1_}\e\\"
+            ESC_print ${VCS_INFO_message_1_}
         else
-            print -nP "\ekzsh\e\\"
+            ESC_print "zsh"
         fi
     fi
     # just use DONTSETRPROMPT=1 to be able to overwrite RPROMPT
@@ -2026,7 +2046,7 @@ is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
     [[ ${NOTITLE} -gt 0 ]] && return 0
     case $TERM in
         (xterm*|rxvt*)
-            print -Pn "\e]0;%n@%m: %~\a"
+            set_title ${(%):-"%n@%m: %~"}
             ;;
     esac
 }
@@ -2044,13 +2064,13 @@ preexec () {
     if [[ "$TERM" == screen* ]] ; then
         # local CMD=${1[(wr)^(*=*|sudo|ssh|-*)]}       # don't use hostname
         local CMD="${1[(wr)^(*=*|sudo|ssh|-*)]}$NAME" # use hostname
-        echo -ne "\ek$CMD\e\\"
+        ESC_print ${CMD}
     fi
 # adjust title of xterm
     [[ ${NOTITLE} -gt 0 ]] && return 0
     case $TERM in
         (xterm*|rxvt*)
-            print -Pn "\e]0;%n@%m: $1\a"
+            set_title "${(%):-"%n@%m:"}" "$1"
             ;;
     esac
 }
