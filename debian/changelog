@@ -1,3 +1,11 @@
+grml-etc-core (0.3.79) UNRELEASED; urgency=low
+
+  [ Ulrich Dangel ]
+  * Use wrapper functions for changing title/screen status
+    [Closes: Issue779]
+
+ -- Ulrich Dangel <mru@grml.org>  Mon, 08 Feb 2010 23:01:26 +0100
+
 grml-etc-core (0.3.78) unstable; urgency=low
 
   [ Michael Prokop ]
