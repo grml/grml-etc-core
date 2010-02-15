@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
 Uploaders: Michael Gebetsroither <gebi@grml.org>
 Build-Depends: debhelper (>= 5), dietlibc-dev, xsltproc, docbook-xsl, asciidoc
-Standards-Version: 3.8.3
+Standards-Version: 3.8.4
 Homepage: http://git.grml.org/?p=grml-scripts.git
 Vcs-git: git://git.grml.org/grml-scripts.git
 Vcs-Browser: http://git.grml.org/?p=grml-scripts.git
