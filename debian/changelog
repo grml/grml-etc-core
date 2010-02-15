@@ -1,9 +1,10 @@
-grml-scripts (1.2.3) UNRELEASED; urgency=low
+grml-scripts (1.2.3) unstable; urgency=low
 
+  [ Ulrich Dangel ]
   * Moved grml-quickconfig to extra package.
   * Suggest libwebservice-google-suggest-perl for gsuggest.pl
 
- -- Ulrich Dangel <mru@grml.org>  Sat, 30 Jan 2010 15:08:01 +0100
+ -- Michael Prokop <mika@grml.org>  Mon, 15 Feb 2010 01:28:11 +0100
 
 grml-scripts (1.2.2) unstable; urgency=low
 
