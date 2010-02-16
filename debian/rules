@@ -62,7 +62,7 @@ binary-arch: build install
 	manpages/grml-iptstate.8 manpages/qma.1 manpages/grml-swapon.8 \
 	manpages/grml2ram.8 manpages/gsuggest.1 manpages/dirvish-setup.8 \
 	manpages/iso-term.1 manpages/alignmargins.8 manpages/get_3ware.1 \
-	manpages/grml-init-multitail.1
+	manpages/grml-init-multitail.1 manpages/grml-setservices.8
 #	cp --no-dereference man/*.1.gz debian/grml-scripts/usr/share/man/man1/
 	dh_link /usr/bin/soundtest /usr/bin/grml-soundtest
 	dh_link /usr/sbin/blacklist /usr/sbin/unblacklist \

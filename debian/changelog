@@ -6,6 +6,7 @@ grml-scripts (1.2.4) unstable; urgency=low
     - disable grml-quickconfig when booting with "serial" (actually
       check for "console=ttyS" in the cmdline) to avoid any
       possible conflicts. Thanks to Marc Haber. [Closes: issue474]
+  * Install grml-setservices manpages.
 
  -- Michael Prokop <mika@grml.org>  Tue, 16 Feb 2010 02:14:02 +0100
 
