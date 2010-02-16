@@ -9,11 +9,9 @@
 . /etc/grml/sh-lib
 
 [ -r /etc/grml_version ] && GRMLVERSION=$(cat /etc/grml_version) || GRMLVERSION='(no version information available)'
-
-# allow customized release information
-[ -r /etc/release_info ] && cat /etc/release_info
-
 PATH=$HOME/bin:/bin:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/home/grml/bin
+CMDLINE=$(cat /proc/cmdline)
+[ -n "$distri" ] || distri="grml"
 
 # Activate unicode console if running within utf8 environment
 # Dirty hack to fix unicode issue on amd64...
@@ -29,65 +27,65 @@ if [ -r /etc/default/locale ] ; then
    fi
 fi
 
-CMDLINE=$(cat /proc/cmdline)
 case "$CMDLINE" in
    # allow customized startup via bootoption startup:
-   *startup*)
+   *startup=*)
        script="$(getBootParam startup)"
        if [ -x $(which $script) ] ; then
           $script
        fi
        ;;
    # turn on speakers for accessibility users:
-   *swspeak*|*blind*|*brltty*|*speakup*)
-      if [ -x /usr/bin/flite ] ; then
+   *\ swspeak*|*blind*|*brltty*|*speakup*)
+      if [ $(which flite) ] ; then
          flite -o play -t "Finished booting"
       fi
       ;;
 
    # do nothing if booting with bootoption noquick:
-   *noquick*)
+   *\ noquick*|*\ console=ttyS*)
       ;;
    *) # by default run grml-quickconfig, but only if running as root
-      if [ $(id -u) = "0" ] ; then
+      if [ "$(id -u)" = "0" ] ; then
 	 # do not run grml-quickconfig on grml-small
 	 if ! grep -q small /etc/grml_version ; then
-            [ -x /usr/sbin/grml-quickconfig ] && /usr/sbin/grml-quickconfig
+            which grml-quickconfig &>/dev/null && grml-quickconfig
          fi
       fi
 esac
 
-# display version information depending on the version:
-if grep -q -- '-rc[0-9]' /etc/grml_version 2>/dev/null ; then
-   echo
-   echo
-   echo 'NOTICE: This is a release candidate of grml!'
-   echo 'Please notice that this is not yet a stable release.'
-   echo 'See http://wiki.grml.org/doku.php?id=release_candidate for known issues.'
-   echo 'Please report any bugs you notice: bugs@grml.org'
-   echo
-fi
-
-if grep -q 'grml-live-autobuild' /etc/grml_version 2>/dev/null ; then
-   echo
-   echo
-   echo 'NOTICE: This is a daily snapshot version of grml!'
-   echo 'Please notice that this is not yet a stable release.'
-   echo 'See http://daily.grml.org/ for more details.'
-   echo 'Please report any bugs you notice: daily@grml.org'
-   echo
-fi
-
-# just print out one single line if bootoption nowelcome is present,
-# otherwise print usual welcome screen
+# just print out an empty line if bootoption "nowelcome" is present
 if grep -q nowelcome /proc/cmdline 2>/dev/null ; then
-   echo
-else
-   echo "
+  echo
+# ... otherwise allow customized release information
+elif [ -r /etc/release_info ] ; then
+  cat /etc/release_info
+else # ... or finally fall back to grml's default
+  # display version information depending on the version:
+  if grep -q -- '-rc[0-9]' /etc/grml_version 2>/dev/null ; then
+     echo
+     echo
+     echo 'NOTICE: This is a release candidate version!'
+     echo 'Please notice that this is not yet a stable release.'
+     echo 'See http://wiki.grml.org/doku.php?id=release_candidate for known issues.'
+     echo 'Please report any bugs you notice: bugs@grml.org'
+     echo
+  fi
 
+  if grep -q 'grml-live-autobuild' /etc/grml_version 2>/dev/null ; then
+     echo
+     echo
+     echo 'NOTICE: This is a daily snapshot version!'
+     echo 'Please notice that this is not yet a stable release.'
+     echo 'See http://daily.grml.org/ for more details.'
+     echo 'Please report any bugs you notice: daily@grml.org'
+     echo
+  fi
+
+  echo "
 Welcome to ${GRMLVERSION}!
 
-New to grml? Want to read some documentation?
+New to ${distri}? Want to read some documentation?
 Start via running 'grml-info'.
 Get tips and hints via 'grml-tips \$KEYWORD'.
 New to zsh? Run 'zsh-help'.

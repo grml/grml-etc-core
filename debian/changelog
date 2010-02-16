@@ -1,3 +1,14 @@
+grml-scripts (1.2.4) unstable; urgency=low
+
+  * zsh-login:
+    - improve support for customization through /etc/release_info
+    - be more explicit with some checks regarding boot options
+    - disable grml-quickconfig when booting with "serial" (actually
+      check for "console=ttyS" in the cmdline) to avoid any
+      possible conflicts. Thanks to Marc Haber. [Closes: issue474]
+
+ -- Michael Prokop <mika@grml.org>  Tue, 16 Feb 2010 02:14:02 +0100
+
 grml-scripts (1.2.3) unstable; urgency=low
 
   [ Ulrich Dangel ]
