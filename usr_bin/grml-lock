@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 # Filename:      grml-lock
 # Purpose:       lock console
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
@@ -6,7 +6,7 @@
 # License:       This file is licensed under the GPL v2.
 ################################################################################
 
-PN="$0"
+PN="$(basename $0)"
 
 [ -n "$USER" ] || USER=grml
 
@@ -19,13 +19,27 @@ through the vlock application.
 Usage: just execute $PN without any further options."
   exit 0
 fi
+
 if [ -r /etc/grml/script-functions ] ; then
    . /etc/grml/script-functions
-   check4progs vlock sudo chpasswd dialog || { echo "Sorry, can't continue. Exiting.">&2 ; exit 1 }
+   check4progs vlock sudo chpasswd dialog || { echo "Sorry, necessary tools missing - can not continue. Exiting.">&2 ; exit 1 ; }
+fi
+
+PWD_TEXT1="Set password (hidden typing):"
+PWD_TEXT2="Retype new password:"
+
+# by default use console frontend
+DIALOG='dialog'
+PWD_CMD="dialog --stdout --title $PN --passwordbox"
+
+# only if using X and gdialog + zenity are available use graphical frontend
+if [ -n "$DISPLAY" -a -x $(which gdialog) -a -x $(which zenity) ] ; then
+  DIALOG='gdialog'
+  PWD_CMD="zenity --title $PN --entry --hide-text"
 fi
 
 if ! [ -r /etc/grml_version ] ; then
-  dialog --stdout --title "$PN" --msgbox "Warning: this system does not look like a grml (based) system
+  $DIALOG --title "$PN" --msgbox "Warning: this system does not look like a Grml (based) system
 and therefore might not work as intended." 7 70
 fi
 
@@ -42,19 +56,36 @@ is_passwd_set() {
 }
 
 set_passwd() {
-  PASSWD1=$(dialog --stdout --title "$PN" --passwordbox "Set password (hidden typing):" 0 0)
-  PASSWD2=$(dialog --stdout --title "$PN" --passwordbox "Retype new password:" 0 0)
+  if [ "$DIALOG" = "gdialog" ] ; then
+    PASSWD1="$($PWD_CMD --text="$PWD_TEXT1")"
+    PASSWD2="$($PWD_CMD --text="$PWD_TEXT2")"
+  else
+    PASSWD1="$($PWD_CMD "$PWD_TEXT1" 0 0)"
+    PASSWD2="$($PWD_CMD "$PWD_TEXT2" 0 0)"
+  fi
+
+  if [ -z "$PASSWD1" ] ; then
+    $DIALOG --title "$PN" --msgbox "Error retrieving password. Exiting." 0 0
+    exit 1
+  fi
   if [ "$PASSWD1" = "$PASSWD2" ] ; then
     echo "$USER:$PASSWD2" | sudo chpasswd
   else
-    dialog --stdout --title "$PN" --msgbox "Error: passwords to not match. Exiting." 0 0
+    $DIALOG --title "$PN" --msgbox "Error: passwords to not match. Exiting." 0 0
     exit 1
   fi
 }
 
 askpwd() {
-  dialog --stdout --title "$PN" --yesno "User $USER has no password set yet. Without a password you will not be able to log in again. Set password for user $USER?" 0 0
-  if [ "$?" -eq 0 ] ; then
+  if [ "$DIALOG" = "gdialog" ] ; then
+    zenity --title="$PN" --question --cancel-label='Exit' --ok-label='Set password' --text="User $USER has no password set yet. Without a password you will not be able to log in again. Set password for user $USER?"
+    RC=$?
+  else
+    $DIALOG --title "$PN" --no-label Exit --yes-label Continue --yesno "User $USER has no password set yet. Without a password you will not be able to log in again. Set password for user $USER?" 0 0
+    RC=$?
+  fi
+
+  if [ "$RC" = "0" ] ; then
     set_passwd
   else
     exit 1
@@ -65,7 +96,7 @@ if ! isgrmlcd ; then
   lock_desktop
 else
   is_passwd_set || askpwd
-  lock_desktop
+  [ "$?" = "0" ] && lock_desktop || exit 1
 fi
 
 ## END OF FILE #################################################################
