@@ -11,7 +11,7 @@ Starting with grml 0.9 booting the live-cd system does not activate swap
 parititions by default anymore. It is possible to force usage of swap partitions
 via booting with the bootoption "swap". In case you forgot to use this
 bootoption but want to use swap partition(s) anyway you could do that by running
-"swapon -a". But the command "swapon" does not take of suspend signatures -
+"swapon \-a". But the command "swapon" does not take of suspend signatures,
 therefore the existance of grml-swapon.  grml-swapon acts based on the
 information found in /etc/fstab. If your /etc/fstab is not up to date rebuild it
 running "grml-rebuildfstab".
