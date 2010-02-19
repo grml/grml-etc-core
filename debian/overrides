@@ -1,4 +1,3 @@
-grml-scripts: executable-not-elf-or-script ./usr/bin/exifinfo
 grml-scripts: executable-not-elf-or-script ./usr/bin/tinyp2p.py
 grml-scripts: executable-not-elf-or-script ./usr/bin/wwwis
 grml-scripts: script-with-language-extension usr/bin/bincompare.pl
@@ -8,7 +7,6 @@ grml-scripts: script-with-language-extension usr/bin/gsuggest.pl
 grml-scripts: script-with-language-extension usr/bin/hgrep.sh
 grml-scripts: script-with-language-extension usr/bin/irclog2html-2.1.pl
 grml-scripts: script-with-language-extension usr/bin/lesspipe.sh
-grml-scripts: script-with-language-extension usr/bin/osd_server.py
 grml-scripts: script-with-language-extension usr/bin/notifyd.py
 grml-scripts: script-with-language-extension usr/bin/sepdate.pl
 grml-scripts: script-with-language-extension usr/bin/sepdate.rb
