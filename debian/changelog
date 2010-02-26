@@ -1,14 +1,17 @@
-grml-etc-core (0.3.79) UNRELEASED; urgency=low
+grml-etc-core (0.3.79) unstable; urgency=low
 
   [ Ulrich Dangel ]
   * Use wrapper functions for changing title/screen status
-    [Closes: Issue779]
+    [Closes: issue779]
 
   [ Frank Terbeck ]
   * zshrc: Fix another vcs_info bug, wrt to backwards compatibility with
     older git versions. Reported by Timo Boettcher.
 
- -- Frank Terbeck <ft@grml.org>  Mon, 08 Feb 2010 23:04:26 +0100
+  [ Michael Prokop ]
+  * Bump Standards-Version to 3.8.4 (no further changes).
+
+ -- Michael Prokop <mika@grml.org>  Fri, 26 Feb 2010 22:04:31 +0100
 
 grml-etc-core (0.3.78) unstable; urgency=low
 

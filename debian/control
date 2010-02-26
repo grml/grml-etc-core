@@ -3,7 +3,7 @@ Section: grml
 Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
 Build-Depends: debhelper (>= 5), txt2tags
-Standards-Version: 3.8.3
+Standards-Version: 3.8.4
 Homepage: http://git.grml.org/?p=grml-etc-core.git
 Vcs-git: git://git.grml.org/grml-etc-core.git
 Vcs-Browser: http://git.grml.org/?p=grml-etc-core.git
