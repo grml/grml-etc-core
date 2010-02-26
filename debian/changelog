@@ -1,3 +1,9 @@
+grml-scripts (1.2.8) unstable; urgency=low
+
+  * grml-setlang: do not set LC_CTYPE any longer.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 26 Feb 2010 21:26:57 +0100
+
 grml-scripts (1.2.7) unstable; urgency=low
 
   * grml-info: improve support for customisation through
