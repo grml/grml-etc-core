@@ -1,8 +1,11 @@
 grml-scripts (1.2.8) unstable; urgency=low
 
   * grml-setlang: do not set LC_CTYPE any longer.
+  * zsh-login: do not disable grml-quickconfig for serial console
+    by default, we found a better solution through handling it
+    via inittab.
 
- -- Michael Prokop <mika@grml.org>  Fri, 26 Feb 2010 21:26:57 +0100
+ -- Michael Prokop <mika@grml.org>  Sat, 27 Feb 2010 02:26:58 +0100
 
 grml-scripts (1.2.7) unstable; urgency=low
 

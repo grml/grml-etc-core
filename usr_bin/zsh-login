@@ -43,7 +43,7 @@ case "$CMDLINE" in
       ;;
 
    # do nothing if booting with bootoption noquick:
-   *\ noquick*|*\ console=ttyS*)
+   *\ noquick*)
       ;;
    *) # by default run grml-quickconfig, but only if running as root
       if [ "$(id -u)" = "0" ] ; then
