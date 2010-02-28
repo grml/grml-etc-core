@@ -1,3 +1,11 @@
+grml-scripts (1.2.9) UNRELEASED; urgency=low
+
+  * caps-ctrl: using $(...) instead of backticks and do not load
+    colors module any longer. Thanks to Alexander Steinböck.
+    [Closes: issue382]
+
+ -- Michael Prokop <mika@grml.org>  Sun, 28 Feb 2010 02:12:43 +0100
+
 grml-scripts (1.2.8) unstable; urgency=low
 
   * grml-setlang: do not set LC_CTYPE any longer.
