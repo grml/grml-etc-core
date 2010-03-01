@@ -2953,9 +2953,17 @@ iwclient() {
     salias dhclient "$(wavemon -d | awk '/device/{print $2}')"
 }
 
-# spawn a minimally set up ksh - useful if you want to umount /usr/.
+# spawn a minimally set up mksh - useful if you want to umount /usr/.
 minimal-shell() {
-    exec env -i ENV="/etc/minimal-shellrc" HOME="$HOME" TERM="$TERM" ksh
+    emulate -L zsh
+    local shell="mksh"
+
+    if ! check_com -c ${shell}; then
+        printf '`%s'\'' not available, giving up.\n' ${shell} >&2
+        return 1
+    fi
+
+    exec env -i ENV="/etc/minimal-shellrc" HOME="$HOME" TERM="$TERM" ${shell}
 }
 
 # a wrapper for vim, that deals with title setting

@@ -1,3 +1,9 @@
+grml-etc-core (0.3.80) UNRELEASED; urgency=low
+
+  * zshrc: Switched `minimal-shell' from ksh93 to mksh.
+
+ -- Frank Terbeck <ft@grml.org>  Mon, 01 Mar 2010 17:48:01 +0100
+
 grml-etc-core (0.3.79) unstable; urgency=low
 
   [ Ulrich Dangel ]
