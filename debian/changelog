@@ -1,3 +1,12 @@
+grml-scripts (1.2.10) unstable; urgency=low
+
+  * grml-hostname: address xauth issue when changing hostname
+    within running X session. Now we can also set the hostname
+    directly within grml-hostname, no need to execute
+    /etc/init.d/hostname.sh manually afterwards any longer.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 01 Mar 2010 12:33:17 +0100
+
 grml-scripts (1.2.9) unstable; urgency=low
 
   * caps-ctrl: using $(...) instead of backticks and do not load

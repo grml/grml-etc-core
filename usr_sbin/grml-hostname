@@ -10,6 +10,8 @@
 
 check4root || exit 1
 
+[ -n "$SUDO_USER" ] && RUNASUSER=$SUDO_USER || RUNASUSER=grml
+
 PN='grml-hostname'
 OLDHOSTNAME="$(hostname)"
 
@@ -47,6 +49,14 @@ case $retval in
        sed -i "s/^myhostname = .*/myhostname = $NEW_HOSTNAME/" /etc/postfix/main.cf && POSTFIX='
 Configuration of myhostname in /etc/postfix/main.cf has been adjusted as well. Do not forget to restart postfix if necessary.'
      fi
+     if [ -n "$DISPLAY" ] ; then
+       if sudo -u $RUNASUSER xauth add $(xauth -n list | grep "${OLDHOSTNAME}/unix:0" | sed "s|${OLDHOSTNAME}/unix:0|${NEW_HOSTNAME}/unix:0|") ; then
+	  sudo -u $RUNASUSER xauth remove "${OLDHOSTNAME}/unix:0"
+       fi
+     fi
+
+     /etc/init.d/hostname.sh
+
      if [ -z "$NONINTERACTIVE" ] ; then
         dialog --stdout --title "${PN}" --msgbox "Setting hostname to $NEW_HOSTNAME was successful.$POSTFIX" 0 0
      else
