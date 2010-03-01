@@ -628,8 +628,8 @@ output (unified format) to a timestamped file.
 Prints the summarized memory usage in bytes.
 
 : **minimal-shell()**
-Spawns a absolute minimal Korn shell. It references no files in /usr, so
-that file system can be unmounted.
+Spawns a minimally set up MirBSD Korn shell. It references no files in /usr,
+so that file system can be unmounted.
 
 : **mkaudiocd()**
 Renames all mp3 files in ~/ripps (see audiorip above) to lowercase and
