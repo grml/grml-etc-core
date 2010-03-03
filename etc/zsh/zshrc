@@ -2956,7 +2956,7 @@ iwclient() {
 # spawn a minimally set up mksh - useful if you want to umount /usr/.
 minimal-shell() {
     emulate -L zsh
-    local shell="mksh"
+    local shell="/bin/mksh"
 
     if ! check_com -c ${shell}; then
         printf '`%s'\'' not available, giving up.\n' ${shell} >&2
