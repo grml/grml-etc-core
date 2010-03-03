@@ -912,8 +912,19 @@ zle -N insert-last-typed-word;
 #k# Insert last typed word
 bindkey "\em" insert-last-typed-word
 
-#k# Shortcut for \kbd{fg<enter>}
-bindkey -s '^z' "fg\n"
+function grml-zsh-fg() {
+  if (( ${#jobstates} )); then
+    zle .push-input
+    [[ -o hist_ignore_space ]] && BUFFER=' ' || BUFFER=''
+    BUFFER="${BUFFER}fg"
+    zle .accept-line
+  else
+    zle -M 'No background jobs. Doing nothing.'
+  fi
+}
+zle -N grml-zsh-fg
+#k# A smart shortcut for \kbd{fg<enter>}
+bindkey '^z' grml-zsh-fg
 
 # run command line as user root via sudo:
 sudo-command-line() {
