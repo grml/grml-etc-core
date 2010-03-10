@@ -2969,7 +2969,7 @@ minimal-shell() {
     emulate -L zsh
     local shell="/bin/mksh"
 
-    if ! check_com -c ${shell}; then
+    if [[ ! -x ${shell} ]]; then
         printf '`%s'\'' not available, giving up.\n' ${shell} >&2
         return 1
     fi
