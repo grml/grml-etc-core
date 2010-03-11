@@ -1,8 +1,15 @@
-grml-etc-core (0.3.80) UNRELEASED; urgency=low
+grml-etc-core (0.3.80) unstable; urgency=low
 
-  * zshrc: Switched `minimal-shell' from ksh93 to mksh.
+  [ Frank Terbeck ]
+  * zshrc: Switch `minimal-shell()' from ksh93 to mksh
+  * grmlzshrc.t2t: Updated minimal-shell entry
+  * Make our C-z shortcut smarter
 
- -- Frank Terbeck <ft@grml.org>  Mon, 01 Mar 2010 17:48:01 +0100
+  [ Michael Prokop ]
+  * Drop backupcopy option to avoid overwriting symlinks. Issue brought
+    up by Ulrich, thanks!
+
+ -- Michael Prokop <mika@grml.org>  Thu, 11 Mar 2010 01:34:37 +0100
 
 grml-etc-core (0.3.79) unstable; urgency=low
 
