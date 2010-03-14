@@ -458,7 +458,8 @@ cdrecord.
 
 : **changed()**
 Lists files in current directory, which have been changed within the
-last N days. N is an integer required as first and only argument.
+last N days. N is an integer to be passed as first and only argument.
+If no argument is specified N is set to 1.
 
 : **check_com()**
 Returns true if given command exists either as program, function, alias,
@@ -655,7 +656,8 @@ a clean deinstall later.
 
 : **new()**
 Lists files in current directory, which have been modified within the
-last N days. N is an integer required as first and only argument.
+last N days. N is an integer to be passed as first and only argument.
+If no argument is specified N is set to 1.
 
 : **ogg2mp3_192()**
 Recodes an ogg file to mp3 with a bitrate of 192.
