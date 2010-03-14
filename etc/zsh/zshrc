@@ -587,6 +587,13 @@ zle -N insert-unicode-char
 #k# Insert Unicode character
 bindkey '^Xi' insert-unicode-char
 
+#m# k Shift-tab Perform backwards menu completion
+if [[ -n "$terminfo[kcbt]" ]]; then
+    bindkey "$terminfo[kcbt]" reverse-menu-complete
+elif [[ -n "$terminfo[cbt]" ]]; then # required for GNU screen
+    bindkey "$terminfo[cbt]"  reverse-menu-complete
+fi
+
 ## toggle the ,. abbreviation feature on/off
 # NOABBREVIATION: default abbreviation-state
 #                 0 - enabled (default)
