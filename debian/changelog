@@ -1,3 +1,12 @@
+grml-etc-core (0.3.81) UNRELEASED; urgency=low
+
+  [ Carsten Hey ]
+  * zshrc: Added changed() function
+  * zshrc: Make backtab do `reverse-menu-complete'
+  * zshrc: Use reasonable defaults for `changed()' and `new()'
+
+ -- Frank Terbeck <ft@grml.org>  Mon, 15 Mar 2010 00:48:12 +0100
+
 grml-etc-core (0.3.80) unstable; urgency=low
 
   [ Frank Terbeck ]
