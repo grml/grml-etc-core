@@ -3496,6 +3496,12 @@ regcheck() {
     pcre_match $2 && echo "regex matches" || echo "regex does not match"
 }
 
+#f5# List files which have been changed within the last {\it n} days
+changed() {
+    emulate -L zsh
+    print -l *(c-$1)
+}
+
 #f5# List files which have been modified within the last {\it n} days
 new() {
     emulate -L zsh

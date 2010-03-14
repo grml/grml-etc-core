@@ -456,6 +456,10 @@ If the original cdrecord is not installed, issues a warning to the user to
 use the wodim binary instead. Wodim is the debian fork of Joerg Schillings
 cdrecord.
 
+: **changed()**
+Lists files in current directory, which have been changed within the
+last N days. N is an integer required as first and only argument.
+
 : **check_com()**
 Returns true if given command exists either as program, function, alias,
 builtin or reserved word. If the option -c is given, only returns true,
