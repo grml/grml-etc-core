@@ -1,3 +1,11 @@
+grml-scripts (1.2.11) UNRELEASED; urgency=low
+
+  [ Matthias Kopfermann ]
+  * caps-ctrl: make sure the script works on non-Grml systems
+    as well.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 21 Mar 2010 23:24:35 +0100
+
 grml-scripts (1.2.10) unstable; urgency=low
 
   * grml-hostname: address xauth issue when changing hostname
