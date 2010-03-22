@@ -33,7 +33,7 @@ DIALOG='dialog'
 PWD_CMD="dialog --stdout --title $PN --passwordbox"
 
 # only if using X and gdialog + zenity are available use graphical frontend
-if [ -n "$DISPLAY" -a -x $(which gdialog) -a -x $(which zenity) ] ; then
+if [ -n "$DISPLAY" ] && [ -x "$(which gdialog)" ] && [ -x "$(which zenity)" ] ; then
   DIALOG='gdialog'
   PWD_CMD="zenity --title $PN --entry --hide-text"
 fi

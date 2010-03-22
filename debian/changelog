@@ -4,7 +4,11 @@ grml-scripts (1.2.11) UNRELEASED; urgency=low
   * caps-ctrl: make sure the script works on non-Grml systems
     as well.
 
- -- Michael Prokop <mika@grml.org>  Sun, 21 Mar 2010 23:24:35 +0100
+  [ Michael Prokop ]
+  * grml-lock: avoid shell syntax warning if gdialog/zenity
+    aren't available.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 22 Mar 2010 23:31:05 +0100
 
 grml-scripts (1.2.10) unstable; urgency=low
 
