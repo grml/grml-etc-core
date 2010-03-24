@@ -1,4 +1,4 @@
-grml-scripts (1.2.11) UNRELEASED; urgency=low
+grml-scripts (1.3.0) unstable; urgency=low
 
   [ Matthias Kopfermann ]
   * caps-ctrl: make sure the script works on non-Grml systems
@@ -8,7 +8,7 @@ grml-scripts (1.2.11) UNRELEASED; urgency=low
   * grml-lock: avoid shell syntax warning if gdialog/zenity
     aren't available.
 
- -- Michael Prokop <mika@grml.org>  Mon, 22 Mar 2010 23:31:05 +0100
+ -- Michael Prokop <mika@grml.org>  Wed, 24 Mar 2010 01:15:52 +0100
 
 grml-scripts (1.2.10) unstable; urgency=low
 
