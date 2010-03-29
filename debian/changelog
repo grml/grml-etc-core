@@ -1,3 +1,10 @@
+grml-scripts (1.3.1) unstable; urgency=low
+
+  [ Matthias Kopfermann ]
+  * Fix tabs inside caps-ctrl.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 29 Mar 2010 08:59:44 +0200
+
 grml-scripts (1.3.0) unstable; urgency=low
 
   [ Matthias Kopfermann ]

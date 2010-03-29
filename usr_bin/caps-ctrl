@@ -7,15 +7,15 @@
 ################################################################################
 
 if [[ -f /etc/grml/script-functions ]] ; then
-        source /etc/grml/script-functions \
-        && check4progs xmodmap loadkeys dumpkeys
+	source /etc/grml/script-functions && \
+   	check4progs xmodmap loadkeys dumpkeys || exit 1
 fi
 if [[ -f /etc/grml/lsb-functions ]] ; then
-        source /etc/grml/lsb-functions
+	source /etc/grml/lsb-functions
 else
-         einfo() { echo "$*" ; }
-         eerror() { echo "$*" ; }
-         eend() { echo  "$*" ; }
+	einfo() { echo  "$*" ; }
+	eerror() { echo "$*" ; }
+	eend() { echo "$*" ; }
 fi
 
 emulate zsh
@@ -33,7 +33,7 @@ if [[ -z $DISPLAY  ]] ; then # test if X is not running when calling us
            loadkeys <<- EOT
            keycode 58 = $(repeat 15 echo -n 'Control ')
            keycode 29 = $(repeat 7 echo -n 'Caps_Lock ')
-                EOT
+		EOT
            eend $?
 
         ) || (
@@ -42,7 +42,7 @@ if [[ -z $DISPLAY  ]] ; then # test if X is not running when calling us
            loadkeys <<- EOT
            keycode 58 = $(repeat 15 echo -n 'Caps_Lock ')
            keycode 29 = $(repeat 7 echo -n 'Control ')
-                EOT
+		EOT
            eend $?
          )
 
@@ -54,7 +54,7 @@ else     # running under X
         xmodmap -pke | grep 'Caps_Lock' > /dev/null || (
         xmodmap - <<- EOT
         keycode 66 = Caps_Lock
-                EOT
+		EOT
         )
 
         xmodmap - <<- EOT
@@ -70,7 +70,7 @@ else     # running under X
         add lock = Caps_Lock
         add Control = Control_L
         !add Control = Control_R
-                EOT
+		EOT
         eend $?
         )
 fi # end of test if X or console is used
