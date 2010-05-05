@@ -49,7 +49,7 @@
 #
 ######################################################################
 
-SVN_ID="$Id: iimage 37 2006-08-22 13:50:17Z ronsc $"
+SVN_ID="$Id: iimage 38 2009-12-15 20:30:46Z ronsc $"
 
 # old templates might still use CVS_VERSION
 CVS_VERSION="$SVN_ID"
@@ -112,7 +112,7 @@ function AVI_handler_prepare() {
          mplayer -quiet -frames 1 -ao none -vo jpeg -jpeg outdir=$DATADIR $1 >/dev/null 2>/dev/null
 
          if  [ -f "$DATADIR/00000001.jpg" ] ; then
-            convert "$DATADIR/00000001.jpg" -geometry $THUMBNAIL_GEOMETRY "$DST"
+            convert "$DATADIR/00000001.jpg" -resize $THUMBNAIL_GEOMETRY "$DST"
          fi
 
          rm -f $DATADIR 00000001.jpg 00000002.jpg
@@ -533,7 +533,7 @@ function build_thumbnail() {
 
          echo -n " T"
          convert  -quality $THUMBNAIL_QUALITY \
-                  -geometry "$GEOMETRY+0+0>" "$LASTIMAGE" \
+                  -resize "$GEOMETRY+0+0>" "$LASTIMAGE" \
                   "$DST"
 #                  +profile "$LASTIMAGE" \
 
