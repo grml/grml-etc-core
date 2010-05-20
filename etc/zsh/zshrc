@@ -2149,7 +2149,11 @@ if check_com -c screen ; then
     elif [[ -r $HOME/.screenrc ]] ; then
         alias screen="${commands[screen]} -c $HOME/.screenrc"
     else
-        [[ -r /etc/grml/screenrc_grml ]] && alias screen="${commands[screen]} -c /etc/grml/screenrc_grml"
+        if [[ -r /etc/grml/screenrc_grml ]]; then
+            alias screen="${commands[screen]} -c /etc/grml/screenrc_grml"
+        else
+            [[ -r /etc/grml/screenrc ]] && alias screen="${commands[screen]} -c /etc/grml/screenrc"
+        fi
     fi
 fi
 
