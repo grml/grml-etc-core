@@ -1,11 +1,15 @@
-grml-etc-core (0.3.81) UNRELEASED; urgency=low
+grml-etc-core (0.3.81) unstable; urgency=low
 
   [ Carsten Hey ]
   * zshrc: Added changed() function
   * zshrc: Make backtab do `reverse-menu-complete'
   * zshrc: Use reasonable defaults for `changed()' and `new()'
 
- -- Frank Terbeck <ft@grml.org>  Mon, 15 Mar 2010 00:48:12 +0100
+  [ Michael Prokop ]
+  * Support /etc/grml/screenrc in screen function for non-root users.
+    Thanks to Michael Hammer.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 20 May 2010 21:43:01 +0200
 
 grml-etc-core (0.3.80) unstable; urgency=low
 
