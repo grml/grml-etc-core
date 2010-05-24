@@ -2248,6 +2248,12 @@ check_com 0 || alias 0='return 0'
 check_com S &>/dev/null || alias S='screen'
 check_com s &>/dev/null || alias s='ssh'
 
+# especially for roadwarriors using GNU screen and ssh:
+if ! check_com asc &>/dev/null ; then
+  asc() { autossh -t "$@" 'screen -RdU' }
+  compdef asc=ssh
+fi
+
 # get top 10 shell commands:
 alias top10='print -l ? ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
 

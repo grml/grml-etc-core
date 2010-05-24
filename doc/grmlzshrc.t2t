@@ -429,6 +429,12 @@ sequences) and the colors they represent.
 Pressing the 'asdf' keys toggles between dvorak or neon and us keyboard
 layout.
 
+: **asc()**
+Login on the host provided as argument using autossh. Then reattach a GNU screen
+session if a detached session is around or detach a currently attached screen or
+else start a new screen.  This is especially useful for roadwarriors using GNU
+screen and ssh.
+
 : **audioburn()**
 Burns the files in ~/ripps (see audiorip() below) to an audio CD.
 Then prompts the user if she wants to remove that directory. You might need
