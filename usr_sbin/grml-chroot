@@ -90,8 +90,11 @@ mountit "sysfs" "sys"
 mountit "/dev"   "dev"   "--bind"
 if (( $# < 1 )); then
     chroot "$DEST_"
+    RC=$?
 else
     chroot "$DEST_" "$@"
+    RC=$?
 fi
 umount_all
 
+exit $RC
