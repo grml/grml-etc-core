@@ -906,11 +906,11 @@ if is4 && [[ -n ${(k)modules[zsh/complist]} ]] ; then
 fi
 
 # press "ctrl-e d" to insert the actual date in the form yyyy-mm-dd
-_bkdate() { BUFFER="$BUFFER$(date '+%F')"; CURSOR=$#BUFFER; }
-zle -N _bkdate
+insert-datestamp() { LBUFFER+=${(%):-'%D{%Y-%m-%d}'}; }
+zle -N insert-datestamp
 
 #k# Insert a timestamp on the command line (yyyy-mm-dd)
-bindkey '^Ed' _bkdate
+bindkey '^Ed' insert-datestamp
 
 # press esc-m for inserting last typed word again (thanks to caphuso!)
 insert-last-typed-word() { zle insert-last-word -- 0 -1 };
