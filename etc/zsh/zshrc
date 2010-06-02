@@ -1790,7 +1790,7 @@ VCS_INFO_cdv_detect() { #{{{
 }
 # }}}
 VCS_INFO_cvs_detect() { #{{{
-    VCS_INFO_check_com svn || return 1
+    VCS_INFO_check_com cvs || return 1
     [[ -d "./CVS" ]] && [[ -r "./CVS/Repository" ]] && return 0
     return 1
 }
