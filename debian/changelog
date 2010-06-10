@@ -1,3 +1,19 @@
+grml-etc-core (0.3.83) unstable; urgency=low
+
+  [ Michael Prokop ]
+  * zshrc: rename _bkdate to insert-datestamp and enter date at
+    cursor position instead of end of line.
+  * zshrc: Run VCS_INFO_check_com cvs inside VCS_INFO_cvs_detect.
+    Thanks to Carsten Hey.
+  * zshrc: do not enable menu selection for directory-stack by
+    default as this modifies ctrl-d behaviour as well.
+
+  [ Frank Terbeck ]
+  * zshrc: prefer external vcs_info if available, fall back to
+    internal otherwise.
+
+ -- Michael Prokop <mika@grml.org>  Thu, 10 Jun 2010 23:32:05 +0200
+
 grml-etc-core (0.3.82) unstable; urgency=low
 
   * zshrc: function asc() for roadwarriors using GNU screen
