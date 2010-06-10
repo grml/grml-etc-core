@@ -2475,8 +2475,8 @@ grmlcomp() {
     # format on completion
     zstyle ':completion:*:descriptions'    format $'%{\e[0;31m%}completing %B%d%b%{\e[0m%}'
 
-    # complete 'cd -<tab>' with menu
-    zstyle ':completion:*:*:cd:*:directory-stack' menu yes select
+    # automatically complete 'cd -<tab>' and 'cd -<ctrl-d>' with menu
+    # zstyle ':completion:*:*:cd:*:directory-stack' menu yes select
 
     # insert all expansions for expand completer
     zstyle ':completion:*:expand:*'        tag-order all-expansions
