@@ -1,3 +1,9 @@
+grml-etc-core (0.3.84) UNRELEASED; urgency=low
+
+  * zshrc: Remove git-get-*() as discussed on IRC.
+
+ -- Frank Terbeck <ft@grml.org>  Sat, 19 Jun 2010 21:19:22 +0200
+
 grml-etc-core (0.3.83) unstable; urgency=low
 
   [ Michael Prokop ]
