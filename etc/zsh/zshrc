@@ -867,17 +867,9 @@ done
 
 # autoload zsh modules when they are referenced
 if is4 ; then
-    tmpargs=(
-        a   stat
-        a   zpty
-        ap  mapfile
-    )
-
-    while (( ${#tmpargs} > 0 )) ; do
-        zmodload -${tmpargs[1]} zsh/${tmpargs[2]} ${tmpargs[2]}
-        shift 2 tmpargs
-    done
-    unset tmpargs
+    zmodload -a  zsh/stat    zstat
+    zmodload -a  zsh/zpty    zpty
+    zmodload -ap zsh/mapfile mapfile
 fi
 
 if is4 && zrcautoload insert-files && zle -N insert-files ; then
