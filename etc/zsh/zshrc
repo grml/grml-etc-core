@@ -3514,6 +3514,12 @@ regcheck() {
     pcre_match $2 && echo "regex matches" || echo "regex does not match"
 }
 
+#f5# List files which have been accessed within the last {\it n} days, {\it n} defaults to 1
+accessed() {
+    emulate -L zsh
+    print -l *(a-${1:-1})
+}
+
 #f5# List files which have been changed within the last {\it n} days, {\it n} defaults to 1
 changed() {
     emulate -L zsh
@@ -3521,10 +3527,12 @@ changed() {
 }
 
 #f5# List files which have been modified within the last {\it n} days, {\it n} defaults to 1
-new() {
+modified() {
     emulate -L zsh
     print -l *(m-${1:-1})
 }
+# modified() was named new() in earlier versions, add an alias for backwards compatibility
+which new >/dev/null || alias new=modified
 
 #f5# Grep in history
 greph() {

@@ -415,6 +415,11 @@ Converts plaintext files to HTML using vim. The output is written to
 If 915resolution is available, issues a warning to the user to run it instead
 to modify the resolution on intel graphics chipsets.
 
+: **accessed()**
+Lists files in current directory, which have been accessed within the
+last N days. N is an integer to be passed as first and only argument.
+If no argument is specified N is set to 1.
+
 : **agoogle()**
 Searches for USENET postings from authors using google groups.
 
@@ -660,7 +665,7 @@ Creates a directory with first parameter as name inside $MAILDIR_ROOT
 Runs "make install" and logs the output under ~/.errorlogs/; useful for
 a clean deinstall later.
 
-: **new()**
+: **modified()**
 Lists files in current directory, which have been modified within the
 last N days. N is an integer to be passed as first and only argument.
 If no argument is specified N is set to 1.
