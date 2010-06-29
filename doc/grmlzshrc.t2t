@@ -1,6 +1,6 @@
 GRMLZSHRC
 
-Oktober, 2009
+June, 2010
 
 %!target: man
 %!postproc(man): "^(\.TH.*) 1 "  "\1 5 "
@@ -547,20 +547,6 @@ Downloads and installs newer version of Skype.
 : **getxlite()**
 Tries to download and unpack X-lite (VoIP software) from counterpath.com into
 ~/tmp.
-
-: **git-get-diff()**
-Opens a specific git commitdiff from kernel.org in default browser. Tree is
-chosen by the environment variable GITTREE which defaults to Linus Torvalds'
-kernel tree.
-
-: **git-get-commit()**
-Opens a specific git commit from kernel.org in default browser. The tree to
-fetch from is controlled by the environment variable GITTREE which defaults
-to Linus Torvalds' kernel tree.
-
-: **git-get-plaindiff()**
-Fetches specific git diff from kernel.org. The tree is controlled by the
-environment variable GITTREE which defaults to Linus Torvalds' kernel tree.
 
 : **greph()**
 Searches the zsh command history for a regular expression.
@@ -1290,7 +1276,7 @@ Beckert <abe@deuxchevaux.org>.
 
 
 = COPYRIGHT =
-Copyright (c) 2009, grml project <http://grml.org>
+Copyright (c) 2009-2010 grml project <http://grml.org>
 
 This manpage is distributed under the terms of the GPL version 2.
 

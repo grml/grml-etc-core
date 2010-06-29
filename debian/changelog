@@ -2,6 +2,7 @@ grml-etc-core (0.3.84) UNRELEASED; urgency=low
 
   [ Frank Terbeck ]
   * zshrc: Remove git-get-*() as discussed on IRC.
+  * grmlzshrc.t2t: Remove references to git-get-*().
 
   [ Carsten Hey ]
   * zshrc: Rename add() to modified().
@@ -9,7 +10,7 @@ grml-etc-core (0.3.84) UNRELEASED; urgency=low
   * zshrc: fix typo in default value handling of changed() and new()
     (now modified()).
 
- -- Frank Terbeck <ft@grml.org>  Tue, 29 Jun 2010 11:08:21 +0200
+ -- Frank Terbeck <ft@grml.org>  Tue, 29 Jun 2010 13:18:29 +0200
 
 grml-etc-core (0.3.83) unstable; urgency=low
 
