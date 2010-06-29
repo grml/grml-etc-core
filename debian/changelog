@@ -5,7 +5,7 @@ grml-etc-core (0.3.84) UNRELEASED; urgency=low
   * grmlzshrc.t2t: Remove references to git-get-*().
 
   [ Carsten Hey ]
-  * zshrc: Rename add() to modified().
+  * zshrc: Rename new() to modified().
   * zshrc: Load zsh/stat as zstat instead of stat.
   * zshrc: fix typo in default value handling of changed() and new()
     (now modified()).
