@@ -10,7 +10,10 @@ grml-etc-core (0.3.84) UNRELEASED; urgency=low
   * zshrc: fix typo in default value handling of changed() and new()
     (now modified()).
 
- -- Frank Terbeck <ft@grml.org>  Tue, 29 Jun 2010 13:18:29 +0200
+  [ Joerg Woelke ]
+  * zshrc: Comment out the non-working `zurl' function.
+
+ -- Frank Terbeck <ft@grml.org>  Fri, 23 Jul 2010 10:45:51 +0200
 
 grml-etc-core (0.3.83) unstable; urgency=low
 
