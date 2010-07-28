@@ -611,6 +611,10 @@ parameter.
 Lists images (i. e. files ending with ".jpg", ".gif" or ".png") in current
 directory.
 
+: **linenr()**
+Prints specified range of (numbered) lines of a file.
+Usage: linenr <start>[,<end>] <file>
+
 : **makereadable()**
 Creates a PostScript and a PDF file (basename as first argument) from
 source code files.
