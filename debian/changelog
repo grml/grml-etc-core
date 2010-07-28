@@ -2,6 +2,7 @@ grml-etc-core (0.3.84) UNRELEASED; urgency=low
 
   [ Frank Terbeck ]
   * zshrc: Remove git-get-*() as discussed on IRC.
+  * zshrc: Fixied a bug in whatwhen(); found be Joerg Woelke.
   * grmlzshrc.t2t: Remove references to git-get-*().
 
   [ Carsten Hey ]
@@ -14,7 +15,7 @@ grml-etc-core (0.3.84) UNRELEASED; urgency=low
   * zshrc: Comment out the non-working `zurl' function.
   * grmlzshrc.t2t: documentation updates.
 
- -- Frank Terbeck <ft@grml.org>  Wed, 28 Jul 2010 16:14:18 +0200
+ -- Frank Terbeck <ft@grml.org>  Wed, 28 Jul 2010 16:41:26 +0200
 
 grml-etc-core (0.3.83) unstable; urgency=low
 

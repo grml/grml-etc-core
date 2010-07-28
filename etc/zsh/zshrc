@@ -4201,7 +4201,7 @@ whatwhen()  {
     emulate -L zsh
     local usage help ident format_l format_s first_char remain first last
     usage='USAGE: whatwhen [options] <searchstring> <search range>'
-    help='Use' \`'whatwhen -h'\'' for further explanations.'
+    help='Use `whatwhen -h'\'' for further explanations.'
     ident=${(l,${#${:-Usage: }},, ,)}
     format_l="${ident}%s\t\t\t%s\n"
     format_s="${format_l//(\\t)##/\\t}"
