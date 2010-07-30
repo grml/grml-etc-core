@@ -14,8 +14,9 @@ grml-etc-core (0.3.84) UNRELEASED; urgency=low
   [ Joerg Woelke ]
   * zshrc: Comment out the non-working `zurl' function.
   * grmlzshrc.t2t: documentation updates.
+  * zshrc: Improve weather() function.
 
- -- Frank Terbeck <ft@grml.org>  Wed, 28 Jul 2010 16:41:26 +0200
+ -- Frank Terbeck <ft@grml.org>  Fri, 30 Jul 2010 19:05:20 +0200
 
 grml-etc-core (0.3.83) unstable; urgency=low
 
