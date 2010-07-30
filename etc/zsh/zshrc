@@ -4276,34 +4276,39 @@ weather() {
         return 1
     }
 
-    local PLACE="${1:u}"
-    local FILE="$HOME/.weather/$PLACE"
-    local LOG="$HOME/.weather/log"
+    local VERBOSE="yes"    # TODO: Make this a command line switch
 
-    [[ -d $HOME/.weather ]] || {
-        print -n "Creating $HOME/.weather: "
-        mkdir $HOME/.weather
+    local ODIR=`pwd`
+    local PLACE="${1:u}"
+    local DIR="${HOME}/.weather"
+    local LOG="${DIR}/log"
+
+    [[ -d ${DIR} ]] || {
+        print -n "Creating ${DIR}: "
+        mkdir ${DIR}
         print 'done'
     }
 
     print "Retrieving information for ${PLACE}:"
     print
-    wget -T 10 --no-verbose --output-file=$LOG --output-document=$FILE --timestamping http://weather.noaa.gov/pub/data/observations/metar/decoded/$PLACE.TXT
+    cd ${DIR} && wget -T 10 --no-verbose --output-file=$LOG --timestamping http://weather.noaa.gov/pub/data/observations/metar/decoded/$PLACE.TXT
 
     if [[ $? -eq 0 ]] ; then
         if [[ -n "$VERBOSE" ]] ; then
-            cat $FILE
+            cat ${PLACE}.TXT
         else
-            DATE=$(grep 'UTC' $FILE | sed 's#.* /##')
-            TEMPERATURE=$(awk '/Temperature/ { print $4" degree Celcius / " $2" degree Fahrenheit" }' $FILE| tr -d '(')
+            DATE=$(grep 'UTC' ${PLACE}.TXT | sed 's#.* /##')
+            TEMPERATURE=$(awk '/Temperature/ { print $4" degree Celcius / " $2" degree Fahrenheit" }' ${PLACE}.TXT | tr -d '(')
             echo "date: $DATE"
             echo "temp:  $TEMPERATURE"
         fi
     else
         print "There was an error retrieving the weather information for $PLACE" >&2
         cat $LOG
+        cd $ODIR
         return 1
     fi
+    cd $ODIR
 }
 # }}}
 
