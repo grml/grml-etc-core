@@ -792,6 +792,17 @@ line options, she always wants, in her .zshrc.local.
 : **vman()**
 Use vim(1) as manpage reader.
 
+: **whatwhen()**
+Searches the history for a given pattern and lists the results by date.
+The first argument is the search pattern. The second and third ones are
+optional and denote a search range (default: -100).
+
+: **weather()**
+Retrieves and prints weather information from "http://weather.noaa.gov".
+The first and only argument is the ICAO code for the desired station.
+For a list of ICAO codes see
+"http://en.wikipedia.org/wiki/List_of_airports_by_ICAO_code".
+
 : **xcat()**
 Tries to cat(1) file(s) given as parameter(s). Always returns true.
 See also xunfunction() below.
