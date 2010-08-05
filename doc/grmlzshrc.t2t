@@ -88,6 +88,10 @@ than the defined number of seconds (default: 5).
 Number of commands to be stored in ${HISTFILE}. Defaults to 1000 on a grml-CD
 and to 10000 on an installation on hard disk.
 
+: **watch**
+As in tcsh(1) an array of login/logout events to be reported by the shell
+builtin "log". For details see zshparam(1). Defaults to (notme root).
+
 : **ZSH_NO_DEFAULT_LOCALE**
 Import "/etc/default/locale", if set to zero (default).
 
