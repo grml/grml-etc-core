@@ -58,6 +58,13 @@ and defaults to "/usr/share/command-not-found/command-not-found".
 Set this to zero to remove items in zsh config, which do not work in
 grml-small.
 
+: **HISTFILE**
+Where zsh saves the history. Default: ${HOME}/.zsh_history.
+
+: **HISTSIZE**
+Number of commands to be kept in the history. On a grml-CD this defaults to
+500, on a hard disk installation to 5000.
+
 : **MAILCHECK**
 Sets the frequency in seconds for zsh to check for new mail. Defaults to 30.
 A value of zero turns off checking.
@@ -76,6 +83,10 @@ that are run before every command (setting xterm/screen titles etc.).
 : **REPORTTIME**
 Show time (user, system and cpu) used by external commands, if they run longer
 than the defined number of seconds (default: 5).
+
+: **SAVEHIST**
+Number of commands to be stored in ${HISTFILE}. Defaults to 1000 on a grml-CD
+and to 10000 on an installation on hard disk.
 
 : **ZSH_NO_DEFAULT_LOCALE**
 Import "/etc/default/locale", if set to zero (default).
