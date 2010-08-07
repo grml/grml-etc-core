@@ -570,6 +570,13 @@ Searches the zsh command history for a regular expression.
 Prints the hexadecimal representation of the number supplied as argument
 (base ten only).
 
+: **hgdi()**
+Use GNU diff with options -ubwd for mercurial.
+
+: **hgstat()**
+Displays diffstat between the revision given as argument and tip (no
+argument means last revision).
+
 : **hidiff()**
 Outputs highlighted diff; needs highstring(1).
 
