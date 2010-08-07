@@ -3925,68 +3925,6 @@ urlencode() {
     print ${(j::)input/(#b)([^A-Za-z0-9_.!~*\'\(\)-])/%${(l:2::0:)$(([##16]#match))}}
 }
 
-#f5# Install x-lite (VoIP software)
-getxlite() {
-    emulate -L zsh
-    setopt errreturn
-    [[ -d ~/tmp ]] || mkdir ~/tmp
-    cd ~/tmp
-
-    echo "Downloading http://www.counterpath.com/download/X-Lite_Install.tar.gz and storing it in ~/tmp:"
-    if wget http://www.counterpath.com/download/X-Lite_Install.tar.gz ; then
-        unp X-Lite_Install.tar.gz && echo done || echo failed
-    else
-        echo "Error while downloading." ; return 1
-    fi
-
-    if [[ -x xten-xlite/xtensoftphone ]] ; then
-        echo "Execute xten-xlite/xtensoftphone to start xlite."
-    fi
-}
-
-#f5# Install skype
-getskype() {
-    emulate -L zsh
-    setopt errreturn
-    echo "Downloading debian package of skype."
-    echo "Notice: If you want to use a more recent skype version run 'getskypebeta'."
-    wget http://www.skype.com/go/getskype-linux-deb
-    $SUDO dpkg -i skype*.deb && echo "skype installed."
-}
-
-#f5# Install beta-version of skype
-getskypebeta() {
-    emulate -L zsh
-    setopt errreturn
-    echo "Downloading debian package of skype (beta version)."
-    wget http://www.skype.com/go/getskype-linux-beta-deb
-    $SUDO dpkg -i skype-beta*.deb && echo "skype installed."
-}
-
-#f5# Install gizmo (VoIP software)
-getgizmo() {
-    emulate -L zsh
-    setopt errreturn
-    echo "libgtk2.0-0, gconf2, libstdc++6, libasound2 and zlib1g have to be available. Installing."
-    $SUDO apt-get update
-    $SUDO apt-get install libgtk2.0-0 gconf2 libstdc++6 libasound2 zlib1g
-    wget "$(lynx --dump http://gizmo5.com/pc/download/linux/ | awk '/libstdc\+\+6.*\.deb/ {print $2}')"
-    $SUDO dpkg -i gizmo-project*.deb && echo "gizmo installed."
-}
-
-#f5# Get and run AIR (Automated Image and Restore)
-getair() {
-    emulate -L zsh
-    setopt errreturn
-    [[ -w . ]] || { echo 'Error: you do not have write permissions in this directory. Exiting.' ; return 1 }
-    local VER='1.2.8'
-    wget http://puzzle.dl.sourceforge.net/sourceforge/air-imager/air-$VER.tar.gz
-    tar zxf air-$VER.tar.gz
-    cd air-$VER
-    INTERACTIVE=no $SUDO ./install-air-1.2.8
-    [[ -x /usr/local/bin/air ]] && [[ -n "$DISPLAY" ]] && $SUDO air
-}
-
 # http://strcat.de/blog/index.php?/archives/335-Software-sauber-deinstallieren...html
 #f5# Log 'make install' output
 mmake() {
