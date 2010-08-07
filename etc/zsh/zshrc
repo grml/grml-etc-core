@@ -4338,57 +4338,8 @@ if check_com -c hg ; then
         [[ -n "$1" ]] && hg diff -r $1 -r tip | diffstat || hg export tip | diffstat
     }
 
-    #f5# Get current mercurial tip via hg itself
-    gethgclone() {
-        emulate -L zsh
-        setopt errreturn
-        if [[ -f mercurial-tree/.hg ]] ; then
-            cd mercurial-tree
-            echo "Running hg pull for retreiving latest version..."
-            hg pull
-            echo "Finished update. Building mercurial"
-            make local
-            echo "Setting \$PATH to $PWD:\$PATH..."
-            export PATH="$PWD:$PATH"
-        else
-            echo "Downloading mercurial via hg"
-            hg clone http://selenic.com/repo/hg mercurial-tree
-            cd mercurial-tree
-            echo "Building mercurial"
-            make local
-            echo "Setting \$PATH to $PWD:\$PATH..."
-            export PATH="$PWD:$PATH"
-            echo "make sure you set it permanent via ~/.zshrc if you plan to use it permanently."
-            # echo "Setting \$PYTHONPATH to PYTHONPATH=\${HOME}/lib/python,"
-            # export PYTHONPATH=${HOME}/lib/python
-        fi
-    }
-
 fi # end of check whether we have the 'hg'-executable
 
-# get current mercurial snapshot
-#f5# Get current mercurial snapshot
-gethgsnap() {
-    emulate -L zsh
-    setopt errreturn
-    if [[ -f mercurial-snapshot.tar.gz ]] ; then
-         echo "mercurial-snapshot.tar.gz exists already, skipping download."
-    else
-        echo "Downloading mercurial snapshot"
-        wget http://www.selenic.com/mercurial/mercurial-snapshot.tar.gz
-    fi
-    echo "Unpacking mercurial-snapshot.tar.gz"
-    tar zxf mercurial-snapshot.tar.gz
-    cd mercurial-snapshot/
-    echo "Installing required build-dependencies"
-    $SUDO apt-get update
-    $SUDO apt-get install python2.4-dev
-    echo "Building mercurial"
-    make local
-    echo "Setting \$PATH to $PWD:\$PATH..."
-    export PATH="$PWD:$PATH"
-    echo "make sure you set it permanent via ~/.zshrc if you plan to use it permanently."
-}
 # }}}
 
 # some useful commands often hard to remember - let's grep for them {{{
