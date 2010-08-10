@@ -300,6 +300,10 @@ of the terminal they are running in.
 If not already set, sets the default editor. Falls back to vi(1),
 if vim(1) is not available.
 
+: **LESS_TERMCAP_***
+Some environment variables that add colour support to less(1) for viewing
+man pages. See termcap(5) for details.
+
 : **MAIL**
 The mailbox file for the current user is set to /var/mail/$USER, if not
 already set otherwise.
