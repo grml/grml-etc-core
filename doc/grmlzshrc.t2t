@@ -958,6 +958,9 @@ Scans for new devices and updates /etc/fstab according to the findings.
 : **grml-version** (//cat /etc/grml_version//)
 Prints version of running grml.
 
+: **hbp** (//hg-buildpackage//)
+Helper program to maintain Debian packages with mercurial.
+
 : **http** (//python -m SimpleHTTPServer//)
 Basic HTTP server implemented in python. Listens on port 8000/tcp and
 serves current directory. Implements GET and HEAD methods.
@@ -1055,6 +1058,9 @@ Creates directory including parent directories, if necessary
 Sets medium sized font
 ("-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso8859-15") in xterm
 using escape sequence.
+
+: **mq** (//hg -R $(readlink -f $(hg root)/.hg/patches)//)
+Executes the commands on the versioned patch queue from current repository.
 
 : **screen** (///usr/bin/screen -c ${HOME}/.screenrc//)
 If invoking user is root, starts screen session with /etc/grml/screenrc
