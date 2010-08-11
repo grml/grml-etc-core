@@ -980,6 +980,9 @@ Runs the function H-Glob() to expand or explain wildcards.
 : **hide** (//echo -en [ escape sequence ]//)
 Tries to hide xterm window using escape sequence.
 
+: **hidiff** (//histring -fE '^Comparing files .*|^diff .*' | histring -c yellow -fE '^\-.*' | histring -c green -fE '^\+.*'//)
+If histring(1) is installed, highlight important stuff in diff(1) output.
+
 : **huge** (//echo -en [ escape sequence ]//)
 Sets huge font in xterm ("-misc-fixed-medium-r-normal-*-*-210-*-*-c-*-iso8859-15")
 using escape sequence.
@@ -1054,6 +1057,10 @@ Lists only executable files.
 : **md** (//mkdir -p//)
 Creates directory including parent directories, if necessary
 
+: **mdstat** (//cat /proc/mdstat//)
+Lists all active md (i.e. linux software raid) devices with some information
+about them.
+
 : **medium** (//echo -en [ escape sequence ]//)
 Sets medium sized font
 ("-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso8859-15") in xterm
@@ -1112,6 +1119,13 @@ available).
 : **up** (//aptitude update ; aptitude safe-upgrade//)
 Performs a system update followed by a system upgrade using aptitude; run
 by sudo, if necessary. See au and ag above.
+
+: **url-quote** (//autoload -U url-quote-magic ; zle -N self-insert url-quote-magic//)
+After calling, characters of URLs as typed get automatically escaped, if necessary, to
+protect them from the shell.
+
+: **...** (cd ../../)
+Changes current directory two levels higher.
 
 : **?** (//qma zshall//)
 Runs the grml script qma (quick manual access) to build the collected man
