@@ -933,6 +933,9 @@ in human readable format.
 : **dbp** (//dpkg-buildpackage//)
 Builds binary or source packages from sources (See: dpkg-buildpackage(1)).
 
+: **debs-by-size** (//grep-status -FStatus -sInstalled-Size,Package -n "install ok installed" | paste -sd "  \n" | sort -rn//)
+Prints installed Packages sorted by size (descending).
+
 : **default** (//echo -en [ escape sequence ]//)
 Sets font of xterm to "-misc-fixed-medium-r-normal-*-*-140-*-*-c-*-iso8859-15"
 using escape sequence.
@@ -1175,7 +1178,7 @@ Gives a clean prompt (i.e. without $?).
 : **$(uname -r)-reboot** (//kexec -l --initrd=/boot/initrd.img-"$(uname -r)" --command-line=\"$(cat /proc/cmdline)\" /boot/vmlinuz-"$(uname -r)"//)
 Reboots using kexec(8) and thus reduces boot time by skipping hardware initialization of BIOS/firmware.
 
-: **...** (cd ../../)
+: **...** (//cd ../..///)
 Changes current directory two levels higher.
 
 : **?** (//qma zshall//)
