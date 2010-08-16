@@ -923,9 +923,15 @@ while watching a movie.
 : **CO** (//./configure//)
 Prepares compilation for building program from source.
 
+: **cp** (//nocorrect cp//)
+cp(1) without spelling correction.
+
 : **da** (//du -sch//)
 Prints the summarized disk usage of the arguments as well as a grand total
 in human readable format.
+
+: **dbp** (//dpkg-buildpackage//)
+Builds binary or source packages from sources (See: dpkg-buildpackage(1)).
 
 : **default** (//echo -en [ escape sequence ]//)
 Sets font of xterm to "-misc-fixed-medium-r-normal-*-*-140-*-*-c-*-iso8859-15"
@@ -945,6 +951,10 @@ can watch videos on a virtual tty.
 
 : **g** (//git//)
 Revision control system by Linus Torvalds.
+
+: **ge** (//grep-excuses//)
+Searches the testing excuses files for a specific maintainer (See:
+grep-excuses(1)).
 
 : **grep** (//grep --color=auto//)
 Shows grep output in nice colors, if available.
@@ -1013,6 +1023,9 @@ if available. Includes file names starting with "." except "." and
 : **ll** (//ls -l --color=auto//)
 Lists files in long colored output format.
 
+: **llog** (//$PAGER /var/log/syslog//)
+Opens syslog in pager.
+
 : **ls** (//ls -b -CF --color=auto//)
 Lists directory printing octal escapes for nongraphic characters.
 Entries are listed by columns and an indicator for file type is appended
@@ -1066,8 +1079,20 @@ Sets medium sized font
 ("-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso8859-15") in xterm
 using escape sequence.
 
+: **mkdir** (//nocorrect mkdir//)
+mkdir(1) without spelling correction.
+
 : **mq** (//hg -R $(readlink -f $(hg root)/.hg/patches)//)
 Executes the commands on the versioned patch queue from current repository.
+
+: **mv** (//nocorrect mv//)
+mv(1) without spelling correction.
+
+: **rd** (//rmdir//)
+Short rmdir(1) (remove directory).
+
+: **rm** (//nocorrect rm//)
+rm(1) without spelling correction.
 
 : **screen** (///usr/bin/screen -c ${HOME}/.screenrc//)
 If invoking user is root, starts screen session with /etc/grml/screenrc
@@ -1090,6 +1115,12 @@ anybody else.
 Grants read, write and execute permission of a file to the owner and
 read-only plus execute permission to anybody else.
 
+: **S** (//screen//)
+Short for screen(1).
+
+: **s** (//ssh//)
+Short for ssh(1).
+
 : **semifont** (//echo -en [ escape sequence ]//)
 Sets font of xterm to
 "-misc-fixed-medium-r-semicondensed-*-*-120-*-*-*-*-iso8859-15" using
@@ -1106,10 +1137,24 @@ escape sequence.
 If user is running a grml live-CD, dont ask for any password, if she
 wants a root shell.
 
+: **term2iso** (//echo 'Setting terminal to iso mode' ; print -n '\e%@'//)
+Sets mode from UTF-8 to ISO 2022 (See:
+http://www.cl.cam.ac.uk/~mgk25/unicode.html#term).
+
+: **term2utf** (//echo 'Setting terminal to utf-8 mode'; print -n '\e%G'//)
+Sets mode from ISO 2022 to UTF-8 (See:
+http://www.cl.cam.ac.uk/~mgk25/unicode.html#term).
+
 : **tiny** (//echo -en [ escape sequence ]//)
 Sets tiny xterm font
 ("-misc-fixed-medium-r-normal-*-*-80-*-*-c-*-iso8859-15") using escape
 sequence.
+
+: **tlog** (//tail -f /var/log/syslog//)
+Prints syslog continuously (See tail(1)).
+
+: **top10** (//print -l ? ${(o)history%% *} | uniq -c | sort -nr | head -n 10//)
+Prints the ten most used shell commands.
 
 : **truec** (//truecrypt [ mount options ]//)
 Mount a truecrypt volume with some reasonable mount options
@@ -1123,6 +1168,12 @@ by sudo, if necessary. See au and ag above.
 : **url-quote** (//autoload -U url-quote-magic ; zle -N self-insert url-quote-magic//)
 After calling, characters of URLs as typed get automatically escaped, if necessary, to
 protect them from the shell.
+
+: **0** (//return 0//)
+Gives a clean prompt (i.e. without $?).
+
+: **$(uname -r)-reboot** (//kexec -l --initrd=/boot/initrd.img-"$(uname -r)" --command-line=\"$(cat /proc/cmdline)\" /boot/vmlinuz-"$(uname -r)"//)
+Reboots using kexec(8) and thus reduces boot time by skipping hardware initialization of BIOS/firmware.
 
 : **...** (cd ../../)
 Changes current directory two levels higher.
