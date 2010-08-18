@@ -449,6 +449,9 @@ Sets all ulimit values to "unlimited".
 Prints a colored table of available ansi color codes (to be used in escape
 sequences) and the colors they represent.
 
+: **any()**
+Lists processes matching given pattern.
+
 : **aoeu(), asdf(), uiae()**
 Pressing the 'asdf' keys toggles between dvorak or neon and us keyboard
 layout.
@@ -511,6 +514,9 @@ in it, including file names starting with ".".
 Presents a numbered listing of the directory stack. Then changes current
 working directory to the one chosen by the user.
 
+: **dchange()**
+Shows the changelog of given package in $PAGER.
+
 : **debbug()**
 Searches the Debian bug tracking system (bugs.debian.org) for Bug numbers,
 email addresses of submitters or any string given on the command line.
@@ -529,9 +535,18 @@ defaults to $path.
 : **disassemble()**
 Translates C source code to assembly and ouputs both.
 
+: **dnews()**
+Shows the NEWS file for the given package in $PAGER.
+
 : **doc()**
 Takes packagename as argument. Sets current working directory to
 /usr/share/doc/<packagename> and prints out a directory listing.
+
+: **edalias()**
+Edit given alias.
+
+: **edfunc()**
+Edit given shell function.
 
 : **exirename()**
 Renames image files based on date/time informations in their exif headers.
@@ -545,6 +560,9 @@ URL in a new tab (this even works across an ssh session).
 Switches the key combinations for changing current workspace under fluxbox(1)
 from Alt-[0-9] to Alt-F[0-9] and vice versa by rewriting $HOME/.fluxbox/keys.
 Requires the window manager to reread configuration to take effect.
+
+: **freload()**
+Reloads an autoloadable shell function (See autoload in zshbuiltins(1)).
 
 : **genthumbs()**
 A simple thumbnails generator. Resizes images (i. e. files that end in ".jpg",
@@ -638,6 +656,10 @@ source code files.
 : **man2()**
 Displays manpage in a streched style.
 
+: **manzsh()**
+Shows the zshall manpage and jumps to the first match of the regular
+expression optionally given as argument (Needs qma(1)).
+
 : **mcd()**
 Creates directory including parent directories, if necessary. Then changes
 current working directory to it.
@@ -698,6 +720,10 @@ calculator, therefore also available as "calc".
 : **plap()**
 Lists all occurrences of the string given as argument in current $PATH.
 
+: **profile()**
+Runs a command in $SHELL with profiling enabled (See startup variable
+ZSH_PROFILE_RC above).
+
 : **purge()**
 Removes typical temporary files (i. e. files like "*~", ".*~", "#*#", "*.o",
 "a.out", "*.core", "*.cmo", "*.cmi" and ".*.swp") from current directory.
@@ -724,6 +750,9 @@ findings in default pager. On exit of the pager the user is prompted for a
 number. The shells readline buffer is then filled with the corresponding
 command line.
 
+: **setenv()**
+Reimplementation of the csh(1) builtin setenv.
+
 : **show-archive()**
 Lists the contents of a (compressed) archive with the appropriate programs.
 The choice is made along the filename extension.
@@ -737,6 +766,9 @@ Shows the content of a zip archive in default pager.
 : **simple-extract()**
 Tries to uncompress/unpack given file with the appropriate programs. The
 choice is made along the filename ending.
+
+: **sll()**
+Prints details of symlinks given as arguments.
 
 : **slow_print()**
 Prints the arguments slowly by sleeping 0.08 seconds between each character.
@@ -788,6 +820,9 @@ swspeak must be set for this to work.
 
 : **trans()**
 Translates a word from german to english (-D) or vice versa (-E).
+
+: **uchange()**
+Shows upstreams changelog of a given package in $PAGER.
 
 : **udiff()**
 Makes a unified diff of the command line arguments trying hard to find a
