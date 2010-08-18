@@ -453,6 +453,9 @@ sequences) and the colors they represent.
 Pressing the 'asdf' keys toggles between dvorak or neon and us keyboard
 layout.
 
+: **apache2-ssl-certificate()**
+Advices the user how to create self signed certificates.
+
 : **asc()**
 Login on the host provided as argument using autossh. Then reattach a GNU screen
 session if a detached session is around or detach a currently attached screen or
@@ -550,6 +553,9 @@ filename>". Creates an index.html with title "Images" showing the
 thumbnails as clickable links to the respective original file.
 //Warning:// On start genthumbs() silently removes a possibly existing "index.html"
 and all files and/or directories beginning with "thumb-" in current directory!
+
+: **get_tw_cli()**
+Fetches 3ware RAID controller software using get_3ware(1).
 
 : **greph()**
 Searches the zsh command history for a regular expression.
@@ -669,6 +675,18 @@ a clean deinstall later.
 Lists files in current directory, which have been modified within the
 last N days. N is an integer to be passed as first and only argument.
 If no argument is specified N is set to 1.
+
+: **nt()**
+A helper function for the "e" glob qualifier to list all files newer
+than a reference file.
+\
+Example usages:
+```
+% NTREF=/reference/file
+% ls -l *(e:nt:)
+% # Inline:
+% ls -l *(e:'nt /reference/file':)
+```
 
 : **ogg2mp3_192()**
 Recodes an ogg file to mp3 with a bitrate of 192.
