@@ -2986,7 +2986,7 @@ ipv6-tunnel() {
 
 # run dhclient for wireless device
 iwclient() {
-    salias dhclient "$(wavemon -d | awk '/device/{print $2}')"
+    sudo dhclient "$(wavemon -d | awk '/device/{print $3}')"
 }
 
 # spawn a minimally set up mksh - useful if you want to umount /usr/.
