@@ -528,6 +528,11 @@ Shows bug report for debian given by number in mailbox format.
 Tells the user to use grml-debootstrap, if she wants to install debian to
 harddisk.
 
+: **deswap()**
+A trick from $LINUX-KERNELSOURCE/Documentation/power/swsusp.txt. It brings
+back interactive responsiveness after suspend, when the system is swapping
+heavily.
+
 : **dirspace()**
 Shows the disk usage of the directories given in human readable format;
 defaults to $path.
@@ -599,6 +604,10 @@ for detailed usage information.
 : **ic_get()**
 Queries IMAP server (first parameter) for its capabilities. Takes
 port number as optional second argument.
+
+: **ipv6-tunnel()**
+Sets up an IPv6 tunnel on interface sit1. Needs one argument -
+either "start", "stop" or "status".
 
 : **is4()**
 Returns true, if zsh version is equal or greater than 4, else false.
@@ -805,6 +814,13 @@ Prints the SHA512, SHA256, SHA1 respective MD5 digest of a x509
 certificate. First and only parameter must be a file containing a
 certificate. Use /dev/stdin as file if you want to pipe a certificate
 to this function.
+
+: **Start(), Restart(), Stop(), Force-Reload(), Reload()**
+Functions for controlling daemons.
+```
+Example usage:
+% Restart ssh
+```
 
 : **startx()**
 Initializes an X session using startx(1) if /etc/X11/xorg.conf exists, else
