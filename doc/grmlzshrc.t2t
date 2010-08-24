@@ -540,6 +540,10 @@ defaults to $path.
 : **disassemble()**
 Translates C source code to assembly and ouputs both.
 
+: **dmoz()**
+Searches for the first argument (optional) in the Open Directory Project
+(See http://www.dmoz.org/docs/en/about.html).
+
 : **dnews()**
 Shows the NEWS file for the given package in $PAGER.
 
@@ -547,11 +551,19 @@ Shows the NEWS file for the given package in $PAGER.
 Takes packagename as argument. Sets current working directory to
 /usr/share/doc/<packagename> and prints out a directory listing.
 
+: **dwicti()**
+Looks up the first argument (optional) in the german Wiktionary
+which is an online dictionary (See: http://de.wiktionary.org/).
+
 : **edalias()**
 Edit given alias.
 
 : **edfunc()**
 Edit given shell function.
+
+: **ewicti()**
+Looks up the first argument (optional in the english Wiktionary
+which is an online dictionary (See: http://en.wiktionary.org/).
 
 : **exirename()**
 Renames image files based on date/time informations in their exif headers.
@@ -579,6 +591,12 @@ and all files and/or directories beginning with "thumb-" in current directory!
 
 : **get_tw_cli()**
 Fetches 3ware RAID controller software using get_3ware(1).
+
+: **ggogle()**
+Searches the arguments on Google Groups, a web to USENET gateway.
+
+: **google()**
+Searches the search engine Google using arguments as search string.
 
 : **greph()**
 Searches the zsh command history for a regular expression.
@@ -646,6 +664,9 @@ environment variables to UTF-8.
 : **isutfenv()**
 Returns true, if run within an utf environment, else false.
 
+: **iwclient()**
+Searches a wireless interface and runs dhclient(8) on it.
+
 : **lcheck()**
 Lists libraries that define the symbol containing the string given as
 parameter.
@@ -679,6 +700,9 @@ output (unified format) to a timestamped file.
 
 : **memusage()**
 Prints the summarized memory usage in bytes.
+
+: **mggogle()**
+Searches Google Groups for a USENET message-ID.
 
 : **minimal-shell()**
 Spawns a minimally set up MirBSD Korn shell. It references no files in /usr,
