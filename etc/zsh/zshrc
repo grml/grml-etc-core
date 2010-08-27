@@ -3369,7 +3369,7 @@ bk() {
 #f5# Copied diff
 cdiff() {
     emulate -L zsh
-    diff -crd "$*" | egrep -v "^Only in |^Binary files "
+    diff -crd "$@" | egrep -v "^Only in |^Binary files "
 }
 #f5# cd to directoy and list files
 cl() {
