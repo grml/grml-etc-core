@@ -592,6 +592,9 @@ and all files and/or directories beginning with "thumb-" in current directory!
 : **get_tw_cli()**
 Fetches 3ware RAID controller software using get_3ware(1).
 
+: **gex()**
+Performs an exact (i. e. quoted) web search using Google.
+
 : **ggogle()**
 Searches the arguments on Google Groups, a web to USENET gateway.
 
@@ -915,6 +918,17 @@ Retrieves and prints weather information from "http://weather.noaa.gov".
 The first and only argument is the ICAO code for the desired station.
 For a list of ICAO codes see
 "http://en.wikipedia.org/wiki/List_of_airports_by_ICAO_code".
+
+: **wikide()**
+Looks up the argument on Wikipedia (german).
+
+: **wikien()**
+Looks up the argument on Wikipedia (english).
+
+: **wodeb()**
+Searches the list of official debian packages for the term given as
+first argument. The optional second argument denotes the distribution
+(stable, testing or unstable) and defaults to unstable.
 
 : **xcat()**
 Tries to cat(1) file(s) given as parameter(s). Always returns true.
