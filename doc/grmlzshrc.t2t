@@ -487,6 +487,11 @@ The brltty(1) program provides a braille display, so a blind person can access
 the console screen. This wrapper function works around problems with some
 environments (f. e. utf8).
 
+: **cdiff()**
+Runs a recursive diff(1) over two given directories trying to find the
+smallest set of changes. Three lines of context will be printed and binary
+files filtered out.
+
 : **cdrecord()**
 If the original cdrecord is not installed, issues a warning to the user to
 use the wodim binary instead. Wodim is the debian fork of Joerg Schillings
@@ -509,6 +514,25 @@ grml systems with autologin.
 : **cl()**
 Changes current directory to the one supplied by argument and lists the files
 in it, including file names starting with ".".
+
+: **cvsa()**
+Adds and commits the given files using cvs(1). The commit message will be
+'initial checkin'.
+
+: **cvsd()**
+Shows a cvs diff of the arguments in $PAGER.
+
+: **cvsl()**
+Shows the cvs log in $PAGER.
+
+: **cvsq()**
+Runs a cvs update.
+
+: **cvsr()**
+Generates a changelog using rcs2log and shows it in $PAGER.
+
+: **cvss()**
+Shows cvs status of given files.
 
 : **d()**
 Presents a numbered listing of the directory stack. Then changes current
