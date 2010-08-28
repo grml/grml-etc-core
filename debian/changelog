@@ -17,11 +17,12 @@ grml-etc-core (0.3.84) UNRELEASED; urgency=low
   * zshrc: Improve weather() function.
   * zshrc: Remove functions gethgclone() and gethgsnap()
   * zshrc: zshrc: Fix iwclient().
+  * zshrc: Fix passing of args in cdiff().
 
   [ Ulrich Dangel ]
   * zshrc: Remove get{air,gizmo,skype,skypebeta,xlite} functions
 
- -- Frank Terbeck <ft@grml.org>  Thu, 19 Aug 2010 21:39:54 +0200
+ -- Frank Terbeck <ft@grml.org>  Sat, 28 Aug 2010 15:19:00 +0200
 
 grml-etc-core (0.3.83) unstable; urgency=low
 
