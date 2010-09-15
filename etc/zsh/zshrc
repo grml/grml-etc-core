@@ -11,6 +11,13 @@
 # Global Order: zshenv, zprofile, zshrc, zlogin
 ################################################################################
 
+# USAGE
+# If you are using this file as your ~/.zshrc file, please use ~/.zshrc.pre
+# and ~/.zshrc.local for your own customisations. The former file is read
+# before ~/.zshrc, the latter is read after it. Also, consider reading the
+# refcard and the reference manual for this setup, both available from:
+#     <http://grml.org/zsh/>
+
 # Contributing:
 # If you want to help to improve grml's zsh setup, clone the grml-etc-core
 # repository from git.grml.org:

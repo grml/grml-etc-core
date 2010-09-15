@@ -3,6 +3,8 @@ grml-etc-core (0.3.84) UNRELEASED; urgency=low
   [ Frank Terbeck ]
   * zshrc: Remove git-get-*() as discussed on IRC.
   * zshrc: Fixied a bug in whatwhen(); found be Joerg Woelke.
+  * zshrc: Added a note about modifying the zshrc file when it is
+    used as ~/.zshrc
   * grmlzshrc.t2t: Remove references to git-get-*().
 
   [ Carsten Hey ]
@@ -22,7 +24,7 @@ grml-etc-core (0.3.84) UNRELEASED; urgency=low
   [ Ulrich Dangel ]
   * zshrc: Remove get{air,gizmo,skype,skypebeta,xlite} functions
 
- -- Frank Terbeck <ft@grml.org>  Sat, 28 Aug 2010 15:19:00 +0200
+ -- Frank Terbeck <ft@grml.org>  Wed, 15 Sep 2010 11:51:40 +0200
 
 grml-etc-core (0.3.83) unstable; urgency=low
 
