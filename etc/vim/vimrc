@@ -244,6 +244,20 @@ if version >= 700
   "  highlight PmenuThumb cterm=reverse  gui=reverse guifg=Black   guibg=#AAAAAA  " thumb of the scrollbar
 endif
 
+if version >= 703
+ " enable persistent-undo
+ set undofile
+
+ " store the persistent undo file in ~/.vim/undo
+ set undodir=~/.vim/undo/
+
+ " create undodir directory if possible and does not exist yet
+ let targetdir=$HOME . "/.vim/undo"
+ if isdirectory(targetdir) != 1 && getftype(targetdir) == "" && exists("*mkdir")
+  call mkdir(targetdir, "p", 0700)
+ endif
+endif
+
 " Source a global configuration file if available
 " Deprecated by Debian but still supported by grml
   if filereadable("/etc/vim/vimrc.local")
