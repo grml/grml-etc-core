@@ -22,9 +22,10 @@ grml-etc-core (0.3.84) UNRELEASED; urgency=low
   * zshrc: Fix passing of args in cdiff().
 
   [ Ulrich Dangel ]
-  * zshrc: Remove get{air,gizmo,skype,skypebeta,xlite} functions
+  * zshrc: Remove get{air,gizmo,skype,skypebeta,xlite} functions.
+  * vimrc: Enable "persistent undo" if possible.
 
- -- Frank Terbeck <ft@grml.org>  Wed, 15 Sep 2010 11:51:40 +0200
+ -- Frank Terbeck <ft@grml.org>  Mon, 27 Sep 2010 22:00:25 +0200
 
 grml-etc-core (0.3.83) unstable; urgency=low
 
