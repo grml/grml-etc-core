@@ -1995,6 +1995,10 @@ else
     zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "%b${RED}:${YELLOW}%r"
 fi
 
+if [[ -o restricted ]]; then
+    zstyle ':vcs_info:*' enable false
+fi
+
 # }}}
 
 # command not found handling {{{
