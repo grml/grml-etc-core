@@ -13,9 +13,6 @@
 #    name = Grml User
 #    email = git@grml.org
 
-[core]
-    pager = less -Mr
-
 [format]
     numbered = auto
 
