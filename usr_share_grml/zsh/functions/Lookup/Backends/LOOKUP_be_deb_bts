@@ -1,0 +1,65 @@
+### vim:ft=zsh:foldmethod=marker
+## bugs.debian.org backend for lookup
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+LOOKUP_guard || return 1
+[[ -n ${lookup_describe} ]] &&
+    printf '%s' 'get information about debian bugs by #id' &&
+    return 0
+
+local -a comp_args
+
+LOOKUP_guard -fd LOOKUP_help_${backend} ||
+function LOOKUP_help_${backend}() {
+    LOOKUP_guard || return 1
+    printf 'usage: %s [-p] <query>\n' ${backend}
+    printf '  -p    go to the bts page of a given package\n'
+    printf '\n Query Debian[1]'\''s Bug Tracking System[2].\n'
+    printf '\n By default, this looks up bugs by bug id. In this mode, all non-digit\n'
+    printf ' characters are automatically stripped off of the query.\n'
+    printf '\nExamples:\n'
+    printf ' %% lookup %s 123456\n' ${backend}
+    printf ' %% lookup %s "#123456"\n' ${backend}
+    printf ' %% lookup %s -p zsh\n' ${backend}
+    printf '\n[1] <http://www.debian.org>\n'
+    printf '[2] <http://bugs.debian.org>\n'
+}
+LOOKUP_help && return 0
+
+if [[ -n ${lookup_complete} ]] ; then
+    comp_args=(
+        '-p[go to package'\''s bts page]:package:_deb_packages avail'
+        '*:debian bts query:true'
+    )
+
+    _arguments -s -w -A '-*' ${comp_args} && return 0
+    _message 'debian bts query'
+    return 0
+fi
+
+local mode
+local -A opts
+local -x QUERY
+
+mode='id'
+lu_parseopts_args=( p bool )
+LOOKUP_parseopts "$@" || return 1
+[[ ${opts[-p]} == 'yes' ]] && mode='package'
+
+QUERY="${args[*]}"
+LOOKUP_query_handler || return 1
+if [[ -z ${QUERY} ]] ; then
+    LOOKUP_help -f
+    return 1
+fi
+
+if [[ ${mode} == 'id' ]] ; then
+    QUERY="${QUERY//[^0-9]/}"
+    LOOKUP_encode -q
+    LOOKUP_browser "http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=${QUERY}"
+    return $?
+else
+    LOOKUP_encode -q
+    LOOKUP_browser "http://bugs.debian.org/${QUERY}"
+    return $?
+fi

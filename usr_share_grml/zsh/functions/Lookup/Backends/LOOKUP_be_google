@@ -1,0 +1,62 @@
+### vim:ft=zsh:foldmethod=marker
+## google search backend for lookup
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+LOOKUP_guard || return 1
+[[ -n ${lookup_describe} ]] && printf '%s' 'google websearch' && return 0
+
+if [[ -n ${lookup_complete} ]] ; then
+    local -a comp_args
+    comp_args=(
+        '-1[I'\''m Feeling Lucky!]'
+        '*:dict.leo.org query:true'
+    )
+
+    _arguments -s -w -A '-*' ${comp_args} && return 0
+    _message 'google query'
+    return 0
+fi
+
+local mode lookup_context
+local -x QUERY
+
+lookup_context="$(LOOKUP_context)"
+
+LOOKUP_guard -fd LOOKUP_help_${backend} ||
+function LOOKUP_help_${backend}() {
+    LOOKUP_guard || return 1
+    printf 'usage: %s [-1] <query>\n' ${backend}
+    printf '  -1    Go directly to the first hit using "I'\''m Feeling Lucky"\n'
+    printf '\n Make web searches via google.com\n'
+    printf ' If you always want to use the -1 option, you may set the use-first-hit\n'
+    printf ' style in this context: %s\n' ${lookup_context}
+    printf '\nExamples:\n'
+    printf ' %% lookup %s zsh\n' ${backend}
+    printf ' %% lookup %s -1 openbsd\n' ${backend}
+    printf ' %% zstyle '\'':lookup:*:%s:*'\'' use-first-hit true\n\n' ${backend}
+}
+LOOKUP_help && return 0
+
+lu_parseopts_args=( 1 bool )
+LOOKUP_parseopts "$@" || return 1
+
+if [[ ${opts[-1]} == 'yes' ]] ||
+   zstyle -t "${lookup_context}" use-first-hit ; then
+
+    mode='I'\''m Feeling Lucky'
+    mode="$(LOOKUP_encode ${mode})"
+    mode="&btnI=${mode}"
+else
+    mode=''
+fi
+
+QUERY="${args[*]}"
+LOOKUP_query_handler || return 1
+if [[ -z ${QUERY} ]] ; then
+    LOOKUP_help -f
+    return 1
+fi
+
+LOOKUP_encode -s -q
+LOOKUP_browser "http://www.google.com/search?q=${QUERY}${mode}"
+return $?

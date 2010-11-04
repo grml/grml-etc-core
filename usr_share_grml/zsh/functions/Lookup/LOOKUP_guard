@@ -1,0 +1,52 @@
+### vim:ft=zsh:foldmethod=marker
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+### Usage:
+##  Check if we're called from the lookup subsystem.
+#   This way you can guard your functions from being called by hand
+#   by the user. Every function in lookup should do this as soon as
+#   possible.
+#
+#       LOOKUP_guard || return 1
+#
+##  Check if a function is defined already.
+#   This is used to avoid nested functions to get defined over and
+#   over again. Everytime you introduce a function in a backend, you
+#   should use this idom. No matter if it's a helper function
+#   (LOOKU_beh_${backend}_my_helper) or the function, that prints
+#   the backend's documentation (LOOKUP_help_${backend}).
+#
+#       LOOKUP_guard -fd LOOKUP_help_${backend} ||
+#       function LOOKUP_help_${backend}() {
+#           LOOKUP_guard || return 1
+#           ...
+#       }
+
+local -i fail
+fail=1
+
+if [[ $1 == '-fd' ]] ; then
+    # This function cannot use LOOKUP_parseopts() because that function
+    # already uses LOOKUP_guard(). That would be an endless loop.
+    # Since this function does not alter any 'local -x' variables, it
+    # should be the one that doesn't require any other lookup() function.
+    shift
+    (( ${+functions[$1]} )) && return 0
+    return 1
+fi
+
+(( lookup_complete > 0 )) && fail=0
+[[ -n ${backend} ]] && [[ -n ${lookup_ei} ]] && [[ -n ${lookup_help} ]] && fail=0
+
+if (( fail > 0 )) ; then
+    printf '\nThis function is part of the lookup subsystem.\n'
+    printf 'It is not supposed to be run by you, the user directly.\n'
+    printf 'Use the appropriate backend via: lookup <backend>\n'
+    printf 'See:\n'
+    printf '    lookup -h\n'
+    printf '  and\n'
+    printf '    lookup -h <backend>\n'
+    printf 'for details.\n\n'
+    return 1
+fi
+return 0

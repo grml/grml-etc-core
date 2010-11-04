@@ -1,0 +1,48 @@
+### vim:ft=zsh:foldmethod=marker
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+LOOKUP_guard || return 1
+
+if [[ $1 != '-f' ]] ; then
+    (( lookup_help == 0 )) && return 1
+else
+    shift
+fi
+
+local line use_pager pager_auto pager
+local -i prompt_height
+local -a lines
+
+zstyle -t "${lookup_context}" use-pager  && use_pager='yes'  || use_pager='no'
+zstyle -t "${lookup_context}" pager-auto && pager_auto='yes' || pager_auto='no'
+zstyle -s "${lookup_context}" pager pager || pager=${PAGER:-more}
+zstyle -s "${lookup_context}" prompt-height prompt_height || prompt_height=1
+(( prompt_height == 0 )) && prompt_height=1
+
+if [[ ${LINES} != [0-9]## ]] || [[ ${LINES} -eq 0 ]] ; then
+    # $LINES is either 0, empty or other rubbish that's not a positive integer.
+    pager_auto='no'
+fi
+
+if [[ ${use_pager} == 'no' ]] ; then
+    LOOKUP_help_${backend}
+    return 0
+fi
+
+if [[ ${use_pager} == 'yes' ]] && [[ ${pager_auto} == 'no' ]] ; then
+    LOOKUP_help_${backend} | ${=pager}
+    return 0
+fi
+
+# use-pager: true, pager-auto: true
+lines=()
+LOOKUP_help_${backend} | while IFS='' read -r line; do
+    lines+=( "${line}" )
+done
+
+if (( ${#lines} > LINES - prompt_height )); then
+    print -l -- "${lines[@]}" | ${=pager}
+else
+    print -l -- "${lines[@]}"
+fi
+return 0

@@ -1,0 +1,91 @@
+#compdef lookup lu
+### vim:ft=zsh:foldmethod=marker
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+function _lookup_aliases() {
+    local al
+    local -a aliases
+
+    aliases=()
+    for al in ${(k)LOOKUP_aliases}; do
+        aliases+=("${al}:alias for ${LOOKUP_aliases[$al]}")
+    done
+
+    _describe  -t aliases 'backend alias' aliases
+}
+
+function _lookup_backends() {
+    local be
+    local -i hidealiased
+    local -a backends
+    local -x lookup_describe
+    lookup_describe='yes'
+
+    if [[ -z ${lookup_nohide} ]] &&
+       zstyle -t ":completion:${curcontext}" hide-aliased-backends ; then
+        hidealiased=1
+    else
+        hidealiased=0
+    fi
+
+    backends=()
+    for be in ${LOOKUP_backends}; do
+        (( hidealiased > 0 )) && [[ -n ${(Mv)LOOKUP_aliases:#$be} ]] && continue
+        backends+=("${be}:$(LOOKUP_be_${be})")
+    done
+
+    _describe -t backends 'backend' backends
+}
+
+function _lookup_backends_nohide() {
+    local -x lookup_nohide='yes'
+    _lookup_backends
+}
+
+function _lookup_backends_and_aliases() {
+    _alternative \
+        'aliases: :_lookup_aliases' \
+        'commands: :_lookup_backends'
+}
+
+function _lookup() {
+    local context curcontext state line ret
+    local -a args aw
+    local -x backend
+    local -ix lookup_complete
+
+    lookup_complete=1
+    args=(
+        '-a[add a backend alias]:alias definition:'
+        '-d[remove backand alias]:alias name:_lookup_aliases'
+        '-h[provide help]:lookup backend:_lookup_backends_nohide'
+        '-i[(re)initialize lookup]:'
+        '-l[list available backends]:'
+        '-L[list defined backend aliases]:'
+        '-Q[let a handler create the QUERY string]'
+        '-q[let a handler create the QUERY string, with arg]:argument for query handler:'
+        '-P[print which browser command would be used]'
+        '-R[send url to remote browser]'
+        '*:: :->be_or_options'
+    )
+    _arguments -C -s -w ${args} && return
+
+    if [[ ${state} == "be_or_options" ]]; then
+        if (( CURRENT == 1 )) ; then
+            _lookup_backends_and_aliases
+        else
+            backend="${words[1]}"
+            if [[ -n ${LOOKUP_aliases[$backend]} ]] ; then
+                aw=( ${(z)${LOOKUP_aliases[$backend]}} )
+                (( CURRENT = CURRENT + ${#aw} - 1 ))
+                words[1]=( ${aw} )
+                aw=()
+                backend="${words[1]}"
+            fi
+            curcontext="${curcontext%:*:*}:lookup-${backend}:"
+            _call_function ret LOOKUP_be_${backend}
+        fi
+    fi
+}
+
+_lookup

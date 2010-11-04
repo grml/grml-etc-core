@@ -1,0 +1,52 @@
+### vim:ft=zsh:foldmethod=marker
+## run query handlers
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+LOOKUP_guard || return 1
+local old_lookup_ei qh qh_return ret
+local -a qhs
+
+zstyle -t "${lookup_context}" debug &&
+    printf 'LOOKUP_query_handler: current context: "%s"\n' "${lookup_context}"
+
+(( lookup_use_qh == 0 )) && return 0
+zstyle -a "${lookup_context}" query-handlers qhs || return 0
+
+qh_return=0
+old_lookup_ei=${lookup_ei}
+lookup_ei='-queryhandler-'
+for qh in ${qhs} ; do
+    if (( ${+functions[LOOKUP_qh_$qh]} == 0 )) ; then
+        printf 'query-handler %s requires this function: %s\n' "${qa}" "LOOKUP_qh_${qh}"
+        printf 'Hit any key to continue...\n'
+        read -k 1
+    else
+        if [[ ${lookup_qh_arg-wasunset} == 'wasunset' ]] ; then
+            LOOKUP_qh_${qh}
+            ret=$?
+        else
+            LOOKUP_qh_${qh} ${lookup_qh_arg}
+            ret=$?
+        fi
+        case ${ret} in
+            (1) # stop processing
+                break
+                ;;
+            (2) # clear QUERY and stop processing
+                QUERY=''
+                break
+                ;;
+            (3) # clear QUERY and stop processing and return 1
+                # which means, the backends are supposed to return 1, too.
+                # thus, no browser will be called.
+                QUERY=''
+                qh_return=1
+                break
+                ;;
+            (0|*) # just continue
+                ;;
+        esac
+    fi
+done
+lookup_ei=${old_lookup_ei}
+return ${qh_return}

@@ -1,0 +1,189 @@
+### vim:ft=zsh:foldmethod=marker
+## koders.com source code search backend for lookup
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+LOOKUP_guard || return 1
+[[ -n ${lookup_describe} ]] &&
+    printf '%s' 'source code search via koders.com' &&
+    return 0
+
+local lookup_context
+local -a comp_args known_langs
+local -A known_licences
+
+lookup_context="$(LOOKUP_context)"
+
+known_langs=(
+#{{{
+    "ActionScript"
+    "Ada"
+    "ASP"
+    "ASP.NET"
+    "Assembler"
+    "C"
+    "C#"
+    "C++"
+    "Cobol"
+    "ColdFusion"
+    "Delphi"
+    "Eiffel"
+    "Erlang"
+    "Fortran"
+    "Java"
+    "JavaScript"
+    "JSP"
+    "Lisp"
+    "Lua"
+    "Mathematica"
+    "Matlab"
+    "ObjectiveC"
+    "Perl"
+    "PHP"
+    "Prolog"
+    "Python"
+    "Ruby"
+    "Scheme"
+    "Smalltalk"
+    "SQL"
+    "Tcl"
+    "VB"
+    "VB.NET"
+    "*"
+#}}}
+)
+
+known_licences=(
+#{{{
+    AFL     'Academic Free Licence'
+    AGPLv3  'Affero General Public Licence v3'
+    AL20    'Apache Licence, Version 2.0'
+    ASL     'Apache Software Licence'
+    APSL    'Apple Public Source Licence'
+    BSD     'Berkeley Software Distribution Licence'
+    CPL     'Common Public Licence'
+    EPL10   'Eclipse Public Licence v1.0'
+    GTPL    'Globus Toolkit Public Licence'
+    GPL     'GNU General Public Licence v1 v2 v3'
+    LGPL    'GNU Lesser General Public Licence'
+    IBMPL   'IBM Public Licence'
+    IBMILA  'International Licence Agreement for Non-Warranted Programs'
+    IOSL    'Intel Open Source Licence'
+    MSCL    'Microsoft Community Licence'
+    MSLCL   'Microsoft Limited Community Licence'
+    MSPL    'Microsoft Permissive Licence'
+    MSLPL   'Microsoft Limited Permissive Licence'
+    MSRL    'Microsoft Reference Licence'
+    MSVSSDK 'Microsoft Visual Studio SDK Licence'
+    MITD    'MIT Derived Licence'
+    MPL10   'Mozilla Public Licence Version 1.0'
+    MPL11   'Mozilla Public Licence Version 1.1'
+    NPL10   'Netscape Public Licence, Version 1.0'
+    NPL11   'Netscape Public Licence, Version 1.1'
+    OSL     'Open Software Licence'
+    PHPL    'PHP Licence'
+    CNRIPL  'Python Licence'
+    PSFL    'Python Software Foundation Licence'
+    SL      'Sleepycat Software Product Licence'
+    SISSL   'Sun Industry Standards Source Licence'
+    SPL     'Sun Public Licence'
+    W3C     'W3C Software Licence'
+    WXWLL   'wxWindows Library Licence'
+    ZLL     'zlib/libpng Licence'
+    ZPL     'Zope Public Licence'
+    "*"     'Match all licences'
+#}}}
+)
+
+LOOKUP_guard -fd LOOKUP_help_${backend} ||
+function LOOKUP_help_${backend}() {
+    LOOKUP_guard || return 1
+    local l
+    local -i i
+    local -a ls
+
+    i=8
+    ls=(${(on)known_langs})
+
+    printf 'usage: %s <query>\n' ${backend}
+    printf '  -l <lang>     limit search to specific language\n'
+    printf '  -L <licence>  limit search to specific licence\n'
+    printf '\n Search source code via koders.com\n'
+    printf '\nKnown languages:\n'
+    while (( ${#ls} > 0 )) ; do
+        if (( ${#ls} > i )) ; then
+            print ' ' ${ls[1,$i]}
+            shift $i ls
+        else
+            print ' ' ${ls}
+            ls=()
+        fi
+    done
+    printf '\nKnown licences:\n'
+    for l in ${(kon)known_licences} ; do
+        printf '%8s - %s\n' $l ${known_licences[$l]}
+    done
+    printf '\n Per default this backend makes unlimited searches.\n'
+    printf ' Results include code from all languages in all licences.\n'
+    printf '\n You may specify a default language and a default licence via\n'
+    printf ' the default-lang and default-licence styles (both default to '\''*'\''\n'
+    printf ' which means unlimited) in this context: %s\n' ${lookup_context}
+    printf '\nExamples:\n'
+    printf ' %% zstyle '\'':lookup:*:%s:*'\'' default-lang    C\n' ${backend}
+    printf ' %% zstyle '\'':lookup:*:%s:*'\'' default-licence BSD\n\n' ${backend}
+    printf ' %% lookup %s strlcpy\n' ${backend}
+    printf ' %% lookup %s -l C handle_keys\n' ${backend}
+    printf ' %% lookup %s -L GPL -l C strlcpy\n\n' ${backend}
+}
+LOOKUP_help && return 0
+
+if [[ -n ${lookup_complete} ]] ; then
+
+    LOOKUP_guard -fd __lookup_${backend}_langs ||
+    function __lookup_${backend}_langs() {
+        _describe -t koders_langs 'known languages' known_langs
+    }
+
+    LOOKUP_guard -fd __lookup_${backend}_licences ||
+    function __lookup_${backend}_licences() {
+        local l
+        local -a ls
+
+        ls=()
+        for l in ${(k)known_licences}; do
+            ls+=("$l:${known_licences[$l]}")
+        done
+        _describe -t koders_licences 'known licences' ls
+    }
+
+    comp_args=(
+        '-l[limit search to specific language]:language:__lookup_'${backend}'_langs'
+        '-L[limit search to specific licence]:licence:__lookup_'${backend}'_licences'
+        '*:source code search string:true'
+    )
+
+    _arguments -s -w -A '-*' ${comp_args} && return 0
+    _message 'source code search string'
+    return 0
+fi
+
+local lang licence
+local -x QUERY
+
+zstyle -s "${lookup_context}" default-lang    lang    || lang='*'
+zstyle -s "${lookup_context}" default-licence licence || licence='*'
+
+lu_parseopts_args=( l string L string )
+LOOKUP_parseopts "$@" || return 1
+[[ -n ${opts[-l]} ]] && lang="${opts[-l]}"
+[[ -n ${opts[-L]} ]] && licence="${opts[-L]}"
+
+QUERY="${args[*]}"
+LOOKUP_query_handler || return 1
+if [[ -z ${QUERY} ]] ; then
+    LOOKUP_help -f
+    return 1
+fi
+
+LOOKUP_encode -s -q
+LOOKUP_browser "http://koders.com/default.aspx?s=${QUERY}&la=${lang}&li=${licence}"
+return $?

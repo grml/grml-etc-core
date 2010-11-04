@@ -1,0 +1,89 @@
+### vim:ft=zsh:foldmethod=marker
+## letssingit.com search backend for lookup
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+LOOKUP_guard || return 1
+[[ -n ${lookup_describe} ]] &&
+    printf '%s' 'search letssingit.com' &&
+    return 0
+
+local mode lookup_context
+local -a comp_args
+local -A opts supported_modes
+local -x QUERY
+
+lookup_context="$(LOOKUP_context)"
+
+supported_modes=(
+    artist  'search by artist'
+    album   'search by album'
+    song    'search by song name'
+    lyrics  'search contents of lyrics'
+)
+
+LOOKUP_guard -fd LOOKUP_help_${backend} ||
+function LOOKUP_help_${backend}() {
+    LOOKUP_guard || return 1
+    printf 'usage: %s [-m mode] <query>\n' ${backend}
+    printf '  -m <mode>     specify search mode\n'
+    printf '\n Make music related queries via letssingit.com\n'
+    printf '\nAvailable modes are::\n'
+    for mode in ${(kon)supported_modes} ; do
+        printf '%8s   - %s\n' ${mode} ${supported_modes[$mode]}
+    done
+    printf '\n The default mode is '\''artist'\'', which can be modified via the\n'
+    printf ' '\''default-mode'\'' style in this context: %s\n\n' ${lookup_context}
+    printf 'Examples:\n'
+    printf ' %% zstyle '\'':lookup:*:%s:*'\'' default-mode song\n' ${backend}
+    printf ' %% lookup %s Led Zeppelin\n' ${backend}
+    printf ' %% lookup %s -m album Machine Head\n' ${backend}
+    printf ' %% lookup %s -m song Paint it Black\n' ${backend}
+}
+LOOKUP_help && return 0
+
+if [[ -n ${lookup_complete} ]] ; then
+    LOOKUP_guard -fd __lookup_${backend}_supported_modes ||
+    function __lookup_${backend}_supported_modes() {
+        local m
+        local -a ms
+
+        ms=()
+        for m in ${(k)supported_modes}; do
+            ms+=("$m:${supported_modes[$m]}")
+        done
+        _describe -t letssingit_modes 'supported search modes' ms
+    }
+
+    comp_args=(
+        '-m[set search mode]:supported search modes:__lookup_'${backend}'_supported_modes'
+        '*:letssingit.com query:true'
+    )
+
+    _arguments -s -w -A '-*' ${comp_args} && return 0
+    _message 'letssingit.com query'
+    return 0
+fi
+
+lu_parseopts_args=( m string )
+LOOKUP_parseopts "$@" || return 1
+mode=${opts[-m]}
+
+if [[ -z ${mode} ]] ; then
+    zstyle -s "${lookup_context}" default-mode mode || mode='artist'
+fi
+
+QUERY="${args[*]}"
+lookup_communicate[mode]=${mode}
+LOOKUP_query_handler || return 1
+if [[ -z ${(Mk)supported_modes:#$mode} ]] ; then
+    printf 'Unknown search mode: '\''%s'\''.\n\n' ${mode}
+    QUERY=''
+fi
+if [[ -z ${QUERY} ]] ; then
+    LOOKUP_help -f
+    return 1
+fi
+
+LOOKUP_encode -q
+LOOKUP_browser "http://search.letssingit.com/cgi-exe/am.cgi?a=search_quick&l=${mode}&s=${QUERY}"
+return $?

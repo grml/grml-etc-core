@@ -1,0 +1,115 @@
+### vim:ft=zsh:foldmethod=marker
+## wikipedia backend for lookup
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+LOOKUP_guard || return 1
+[[ -n ${lookup_describe} ]] &&
+    printf '%s' 'search wikipedia' &&
+    return 0
+
+local lookup_context
+local -a comp_args private_completions
+local -A known_locations
+
+lookup_context="$(LOOKUP_context)"
+
+known_locations=(
+    # yeah, there are more... a lot more.
+    ca      'Catalan'
+    cs      'Czech'
+    da      'Danish'
+    de      'German'
+    en      'English'
+    eo      'Esperanto'
+    es      'Spanish'
+    'fi'    'Finnish'
+    fr      'French'
+    hu      'Hungarian'
+    it      'Italian'
+    ja      'Japanese'
+    nl      'Dutch'
+    no      'Norwegian'
+    pt      'Portuguese'
+    pl      'Polish'
+    ro      'Romanian'
+    ru      'Russian'
+    sk      'Slovenian'
+    sv      'Swedish'
+    tr      'Turkish'
+    uk      'Ukrainian'
+)
+
+LOOKUP_guard -fd LOOKUP_help_${backend} ||
+function LOOKUP_help_${backend}() {
+    LOOKUP_guard || return 1
+    local l
+    printf 'usage: %s [-l <arg>] <query>\n' ${backend}
+    printf '  -l <location>     use a specific non-default wikipedia location\n'
+    printf '\n Query wikipedia.org about stuff you don'\''t know. :-)\n'
+    printf '\nKnown location codes:\n'
+    for l in ${(kon)known_locations}; do
+        printf '%6s - %s\n' $l ${known_locations[$l]}
+    done
+    printf '\n There are more than that, obviously. Inclusion of codes had to stop\n'
+    printf ' somewhere, so I settled for codes, that had 100.000+ articles at the time\n'
+    printf ' of writing. The default location is '\''en'\'', which can be modified via the\n'
+    printf ' '\''default-location'\'' style in this context:\n'
+    printf '        %s\n' ${lookup_context}
+    printf '\n The completion code only completes the known locations by default. If your\n'
+    printf ' code is missing you can add it via the '\''my-completions'\'' list style,\n'
+    printf ' looked up in this context: '\'':completion:*:lookup-%s:'\''\n' ${backend}
+    printf '\nExamples:\n'
+    printf ' %% zstyle '\'':lookup:*:%s:*'\''           default-location de\n' ${backend}
+    printf ' %% zstyle '\'':completion:*:lookup-%s:'\'' my-completions   gr:Greek\n' ${backend}
+    printf ' %% lookup %s zsh\n' ${backend}
+    printf ' %% lookup %s -l de zsh\n' ${backend}
+    printf ' %% lookup %s -l no zsh\n\n' ${backend}
+}
+LOOKUP_help && return 0
+
+if [[ -n ${lookup_complete} ]] ; then
+
+    zstyle -a ":completion:${curcontext}" my-completions private_completions
+
+    LOOKUP_guard -fd __lookup_${backend}_known_locations ||
+    function __lookup_${backend}_known_locations() {
+        local l
+        local -a ls
+
+        ls=(${private_completions})
+        for l in ${(k)known_locations}; do
+            ls+=("$l:${known_locations[$l]}")
+        done
+        _describe -t leo_langs 'known locations' ls
+    }
+
+    comp_args=(
+        '-l[choose a wikipedia flavour]:known locations:__lookup_'${backend}'_known_locations'
+        '*:wikipedia search:true'
+    )
+
+    _arguments -s -w -A '-*' ${comp_args} && return 0
+    _message 'wikipedia search'
+    return 0
+fi
+
+local loc
+local -A opts
+local -x QUERY
+
+zstyle -s "${lookup_context}" default-location loc || loc='en'
+
+lu_parseopts_args=( l string )
+LOOKUP_parseopts "$@" || return 1
+[[ -n ${opts[-l]} ]] && loc="${opts[-l]}"
+
+QUERY="${args[*]}"
+LOOKUP_query_handler || return 1
+if [[ -z ${QUERY} ]] ; then
+    LOOKUP_help -f
+    return 1
+fi
+
+LOOKUP_encode -q
+LOOKUP_browser "http://${loc}.wikipedia.org/w/wiki.phtml?search=${QUERY}&go=Go"
+return $?

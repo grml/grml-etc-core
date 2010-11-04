@@ -1,0 +1,100 @@
+### vim:ft=zsh:foldmethod=marker
+## usenet search backend for lookup via groups.google.com
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+LOOKUP_guard || return 1
+[[ -n ${lookup_describe} ]] &&
+    printf '%s' 'usenet search' &&
+    return 0
+
+local lookup_context
+local -a comp_args
+local -A known_modes
+
+lookup_context="$(LOOKUP_context)"
+
+known_modes=(
+    text    'Free text search'
+    msgid   'Search for Message-ID: header'
+    author  'Search for a specific author'
+)
+
+LOOKUP_guard -fd LOOKUP_help_${backend} ||
+function LOOKUP_help_${backend}() {
+    LOOKUP_guard || return 1
+    local m
+    printf 'usage: %s [-{t,m}] [-a <arg>] <query>\n' ${backend}
+    printf '  -m            search for message id\n'
+    printf '  -t            free text search\n'
+    printf '  -a <author>   search for messages by <author>\n'
+    printf '\n Search google'\''s usenet archives via groups.google.com.\n'
+    printf '\n Per default, free text searches are done, which can be modified via the\n'
+    printf ' '\''default-mode'\'' style in this context: %s\n\n' ${lookup_context}
+    for m in ${(k)known_modes} ; do
+        printf '%8s - %s\n' $m ${known_modes[$m]}
+    done
+    printf '\n As an exception the <query> argument may be empty in author mode.\n'
+    printf ' If you set default-mode to '\''author'\'', you may also set the\n'
+    printf ' '\''default-author'\'' style (which defaults to '\''Joe User'\'').\n'
+    printf '\nExamples:\n'
+    printf ' %% zstyle '\'':lookup:*:%s:*'\'' default-mode   author\n' ${backend}
+    printf ' %% zstyle '\'':lookup:*:%s:*'\'' default-author "Dr. Foo Bar"\n' ${backend}
+    printf ' %% lookup %s zsh prompt colours\n' ${backend}
+    printf ' %% lookup %s -a pws Bugs in zsh\n\n' ${backend}
+}
+LOOKUP_help && return 0
+
+if [[ -n ${lookup_complete} ]] ; then
+    comp_args=(
+        '-a[specify author]:author:'
+        '-m[search for message id]:message id:'
+        '-t[free text search]:text:'
+        '*:usenet search string:true'
+    )
+
+    _arguments -s -w -A '-*' ${comp_args} && return 0
+    _message 'usenet search string'
+    return 0
+fi
+
+local mode author
+local -A opts
+local -x QUERY
+
+lu_parseopts_args=( m bool t bool a string )
+LOOKUP_parseopts "$@" || return 1
+[[ ${opts[-t]} == 'yes' ]] && mode='text'
+[[ ${opts[-m]} == 'yes' ]] && mode='msgid'
+if [[ -n ${opts[-a]} ]] ; then
+    mode='author'
+    author="&as_uauthors=$(LOOKUP_encode ${opts[-a]})"
+fi
+
+if [[ -z ${mode} ]] ; then
+    zstyle -s "${lookup_context}" default-mode mode || mode='text'
+    if [[ mode == 'author' ]] && [[ -z ${author} ]] ; then
+        local a
+        zstyle -s "${lookup_context}" default-author a || a='Joe User'
+        author="&as_uauthors=$(LOOKUP_encode $a})"
+    fi
+fi
+
+QUERY="${args[*]}"
+LOOKUP_query_handler || return 1
+if [[ -z ${(Mk)known_modes:#$mode} ]] ; then
+    printf 'Unknown mode: '\''%s'\''.\n\n' ${mode}
+    QUERY=''
+fi
+if [[ -z ${QUERY} ]] && [[ ${mode} != 'author' ]] ; then
+    LOOKUP_help -f
+    return 1
+fi
+
+LOOKUP_encode -s -q
+if [[ ${mode} == 'msgid' ]] ; then
+    LOOKUP_browser "http://groups.google.com/groups?selm=${QUERY}"
+    return $?
+fi
+
+LOOKUP_browser "http://groups.google.com/groups?q=${QUERY}${author}"
+return $?

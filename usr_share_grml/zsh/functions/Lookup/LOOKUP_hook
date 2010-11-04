@@ -1,0 +1,37 @@
+### vim:ft=zsh:foldmethod=marker
+## run hooks
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+LOOKUP_guard || return 1
+local hook obackend old_lookup_ei ret lookup_context
+local -a hooks
+
+lookup_context="$(LOOKUP_context)"
+
+obackend="${backend}"
+if [[ $1 != '--' ]] ; then
+    backend="$1"
+fi
+shift
+
+zstyle -t "${lookup_context}" debug &&
+    printf 'LOOKUP_hook: current context: "%s"\n' "${lookup_context}"
+
+zstyle -a "${lookup_context}" hooks hooks || return 0
+
+old_lookup_ei=${lookup_ei}
+lookup_ei='-hook-'
+for hook in ${hooks} ; do
+    (( ${+functions[$hook]} == 0 )) && continue
+    ${hook} "$@"
+    case $? in
+        (1)
+            break
+            ;;
+        (0|*)
+            ;;
+    esac
+done
+lookup_ei="${old_lookup_ei}"
+backend="${obackend}"
+return 0

@@ -1,0 +1,181 @@
+### vim:ft=zsh:foldmethod=marker
+##
+## zsh function that looks up an argument in various webservices.
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+##
+## This file, all LOOKUP_* files and all backends in the Backends/ subdirectory
+## are distributed under the same licence as zsh itself (BSD-like).
+##
+
+typeset -ga LOOKUP_backends
+typeset -gA LOOKUP_aliases
+
+function lookup() {
+    emulate -L zsh
+    setopt extendedglob
+    setopt warncreateglobal
+
+    local file opt
+    local -a alias_words backend_args
+    local -A lu_aliases
+
+    local -x backend lookup_describe lookup_qh_arg lookup_lp lookup_ei unencQUERY
+    local -ix lookup_remote lookup_printout lookup_use_qh lookup_help
+    local -ax args
+    local -Ax lookup_communicate lu_parseopts_args opts
+
+    backend='-init-'
+    lookup_ei='-main-'
+    lookup_help=0
+    lookup_use_qh=0
+    lookup_remote=0
+    lookup_printout=0
+
+    lu_parseopts_args=(
+        a   string
+        d   string
+        q   string
+        h   bool
+        i   bool
+        l   bool
+        L   bool
+        P   bool
+        Q   bool
+        R   bool
+    )
+    LOOKUP_parseopts "$@" || return 1
+
+    if [[ -n ${opts[-l]} ]] ; then
+        printf 'Available backends:\n\n'
+        lookup_describe="yes"
+        for backend in ${LOOKUP_backends} ; do
+            printf '%16s - %s\n' ${backend} "$(LOOKUP_be_${backend})"
+        done
+        printf '\n'
+        return 0
+    fi
+
+    if [[ -n ${opts[-L]} ]] ; then
+        if (( ${#LOOKUP_aliases} == 0 )) ; then
+            printf 'lookup: No aliases defined.\n'
+            return 0
+        fi
+        printf 'Defined backend aliases:\n\n'
+        for al in ${(k)LOOKUP_aliases}; do
+            printf '%16s=%s\n' ${al} ${LOOKUP_aliases[$al]}
+        done
+        printf '\n'
+        return 0
+    fi
+
+    if [[ -n ${opts[-i]} ]] ; then
+        local f
+        local -a fcts
+
+        LOOKUP_backends=()
+        fcts=(
+            LOOKUP_browser LOOKUP_context LOOKUP_encode LOOKUP_guard
+            LOOKUP_help LOOKUP_hook LOOKUP_query_handler
+        )
+
+        for file in ${^fpath}/LOOKUP_be_*~*(\~|.zwc)(N.) ; do
+            file=${file:t}
+            : ${file:#(#b)LOOKUP_be_(*)}
+            backend=${match[1]}
+
+            [[ -n ${(M)LOOKUP_backends:#${backend}} ]] && continue
+            LOOKUP_backends+=(${backend})
+            (( ${+functions[LOOKUP_be_$backend]} )) ||
+                autoload -Uz LOOKUP_be_${backend}
+        done
+
+        for f in ${fcts} ; do
+            (( ${+functions[$f]} )) || autoload -Uz $f
+        done
+        return 0
+    fi
+
+    if [[ -n ${opts[-a]} ]] ; then
+        local al val
+
+        match=()
+        : ${${opts[-a]}/(#b)(*)=(*)}
+        al="${match[1]}"
+        val="${match[2]}"
+        if [[ -z ${al} ]] || [[ -z ${val} ]] ; then
+            printf 'An alias definition *must* look like this: aliasname="originalname -options"\n'
+            return 1
+        fi
+
+        LOOKUP_aliases[$al]="${val}"
+        return 0
+    fi
+
+    if [[ -n ${opts[-d]} ]] ; then
+        if [[ -n ${LOOKUP_aliases[${opts[-d]}]} ]] ; then
+            unset "LOOKUP_aliases[${opts[-d]}]"
+            return 0
+        else
+            printf 'No such backend alias defined: "%s"\n' ${opts[-d]}
+            printf 'Use lookup -L to get a list.\n'
+            return 1
+        fi
+    fi
+
+    [[ -n ${opts[-h]} ]] && lookup_help=1
+    [[ -n ${opts[-R]} ]] && lookup_remote=1
+    [[ -n ${opts[-P]} ]] && lookup_printout=1
+    [[ -n ${opts[-Q]} ]] && lookup_use_qh=1
+    [[ -n ${opts[-q]} ]] && lookup_use_qh=1 && lookup_qh_arg=${opts[-q]}
+
+    if (( ${#args} == 0 )) ; then
+        printf 'usage: lookup [-{i,a,d,Q,l,L,P,R}] [-{h,q} <arg>] <backend> OPTION(s)...\n'
+        printf '  Options:\n'
+        printf '    -h [backend] print this text or help for '\''backend'\''\n\n'
+        printf '    -i           (re)initialize lookup\n\n'
+        printf '    -a           add a backend alias\n'
+        printf '    -d           remove an alias for a backend\n\n'
+        printf '    -Q           let a handler create the QUERY string\n'
+        printf '    -q <arg>     same as -Q, but let'\''s you give an argument, too\n\n'
+        printf '    -l           list available backends\n'
+        printf '    -L           list defined backend aliases\n\n'
+        printf '    -P           print which browser command would be used\n'
+        printf '    -R           send url to remote browser\n'
+        (( ${+functions[lu]} )) &&
+            printf '\n Instead of '\''lookup'\'' the shorter '\''lu'\'' may be used.\n'
+        (( lookup_help > 0 )) && return 0 || return 1
+    fi
+
+    if (( ${+LOOKUP_aliases[${args[1]}]} )) ; then
+        alias_words=( ${(z)${LOOKUP_aliases[${args[1]}]}} )
+        shift args
+        backend=${alias_words[1]}
+        shift alias_words
+        backend_args=( "${alias_words[@]}" "${args[@]}" )
+    else
+        backend=${args[1]}
+        shift args
+        backend_args=( "${args[@]}" )
+    fi
+
+    if [[ -z ${(M)LOOKUP_backends:#$backend} ]] ; then
+        printf 'Unknown backend '\''%s'\''.\n' ${backend}
+        return 1
+    fi
+
+    args=()
+    opts=()
+    LOOKUP_hook -- "${backend_args[@]}"
+    lookup_ei='-backend-'
+    LOOKUP_context -d
+    LOOKUP_be_${backend} "${backend_args[@]}"
+    return $?
+}
+
+function lu() {
+    lookup "$@"
+}
+
+# initialize the system
+autoload -Uz LOOKUP_parseopts LOOKUP_guard  # lookup -i needs this
+lookup -i

@@ -1,0 +1,42 @@
+### vim:ft=zsh:foldmethod=marker
+## patch-tracking.debian.net backend for lookup
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+LOOKUP_guard || return 1
+[[ -n ${lookup_describe} ]] &&
+    printf '%s' 'check patch information of debian packages' &&
+    return 0
+
+local -a comp_args
+
+LOOKUP_guard -fd LOOKUP_help_${backend} ||
+function LOOKUP_help_${backend}() {
+    LOOKUP_guard || return 1
+    printf 'usage: %s <package>\n' ${backend}
+    printf '\n Warps you to a package'\''s page in Debian[1]'\''s Patch Tracking System[2].\n'
+    printf '\nExamples\n'
+    printf ' %% lookup %s fdm\n' ${backend}
+    printf ' %% lookup %s zsh\n' ${backend}
+    printf '\n[1] <http://www.debian.org>\n'
+    printf '[2] <http://patch-tracking.debian.net>\n'
+}
+LOOKUP_help && return 0
+
+if [[ -n ${lookup_complete} ]] ; then
+    _message 'debian package'
+    _deb_packages avail
+    return 0
+fi
+
+local -x QUERY
+
+QUERY="$*"
+LOOKUP_query_handler || return 1
+if [[ -z ${QUERY} ]] ; then
+    LOOKUP_help -f
+    return 1
+fi
+
+LOOKUP_encode -q
+LOOKUP_browser "http://patch-tracker.debian.org/package/${QUERY}"
+return $?

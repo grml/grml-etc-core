@@ -3143,6 +3143,7 @@ if (( GRML_ALWAYS_LOAD_ALL == 0 )) && (( $EUID == 0 )) ; then
     return 0
 fi
 
+zrcautoload lookupinit && lookupinit
 
 # variables {{{
 

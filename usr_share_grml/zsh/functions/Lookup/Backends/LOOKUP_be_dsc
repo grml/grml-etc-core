@@ -1,0 +1,34 @@
+### vim:ft=zsh:foldmethod=marker
+## datasheetcatalog.net backend for lookup
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+LOOKUP_guard || return 1
+[[ -n ${lookup_describe} ]] &&
+    printf '%s' 'search for datasheets via datasheetcatalog.net' && return 0
+
+LOOKUP_guard -fd LOOKUP_help_${backend} ||
+function LOOKUP_help_${backend}() {
+    LOOKUP_guard || return 1
+    printf 'usage: %s <query>\n' ${backend}
+    printf '\n Searches for datasheets via datasheetcatalog.net.\n'
+    printf '\nExamples:\n'
+    printf ' %% lookup %s 7447\n' ${backend}
+}
+LOOKUP_help && return 0
+
+if [[ -n ${lookup_complete} ]] ; then
+    _message 'datasheetcatalog.net query'
+    return 0
+fi
+
+local -x QUERY
+QUERY="$*"
+LOOKUP_query_handler || return 1
+if [[ -z ${QUERY} ]] ; then
+    LOOKUP_help -f
+    return 1
+fi
+
+LOOKUP_encode -q
+LOOKUP_browser "http://search.datasheetcatalog.net/key/${QUERY}"
+return $?

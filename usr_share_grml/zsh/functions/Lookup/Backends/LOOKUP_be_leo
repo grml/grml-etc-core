@@ -1,0 +1,190 @@
+### vim:ft=zsh:foldmethod=marker
+## dict.leo.org search backend for lookup
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+##
+## This was the first non-trivial backend for lookup. Therefore,
+## it contains some guidelines on how to write backends and what they
+## are expected to do.
+##
+## For consistency in usage among different backends, please try
+## to follow the general style of this one.
+##
+
+# This should be the first thing a backend does.
+# It makes sure a backend function is not run directly by a user, but
+# only via lookup(), lu() or _lookup().
+LOOKUP_guard || return 1
+
+# This check is required and it should be the second thing the backend does.
+# If $lookup_describe is not empty, only print a short description
+# of what the backend does. Without a newline at the end!
+[[ -n ${lookup_describe} ]] &&
+    printf '%s' 'translations via dict.leo.org' &&
+    return 0
+
+# declare variables. Assume warncreateglobal is enabled.
+local lang lookup_context
+local -a comp_args
+local -A opts supported_langs interface_lang
+
+# For the actual query string, always use QUERY and make it 'local -x'!
+# Parts of the lookup system depend on $QUERY to be declared like this!
+local -x QUERY
+
+supported_langs=(
+    ende    'english german'
+    frde    'french german'
+    esde    'spanish german'
+    itde    'italian german'
+    chde    'chinese german'
+)
+
+# To find out the current context string you can use the LOOKUP_context()
+# function like this. Please don't use $context or $curcontext to store
+# the result (that may clash with compsys). If you use lookup_context
+# you cannot go wrong. For modifying the local-part of the context, see
+# the comment in the LOOKUP_context file.
+lookup_context="$(LOOKUP_context)"
+
+# Lookup backends should be self-documenting.
+# You need to provide a function that prints a useful message that helps
+# the user use the backend.
+# DO NOT hardcode the name of the function. Always use LOOKUP_help_${backend}
+# and guard its definition by 'LOOKUP_guard -fd LOOKUP_help_${backend}' just
+# like it is done here.
+LOOKUP_guard -fd LOOKUP_help_${backend} ||
+function LOOKUP_help_${backend}() {
+    LOOKUP_guard || return 1
+           #-80characters-----------------------------------------------------------------#
+    printf 'usage: %s [-l lang] <query>\n' ${backend}
+    printf '  -l <lang>     specify a language definition string\n'
+    printf '\nAvailable language definition strings:\n'
+    for lang in ${(k)supported_langs} ; do
+        printf '%6s   - %s\n' ${lang} ${supported_langs[$lang]}
+    done
+    printf '\n Makes dictionary lookups via dict.leo.org.\n\n'
+    printf ' Default language code: ende (german <-> english).\n'
+    printf ' The interface language used by the website defaults to: en\n'
+    printf '\n These can be modified via the '\''default-lang'\'' and '\''interface-lang'\''\n'
+    printf ' styles in this context: %s\n\n' ${lookup_context}
+    printf 'Examples:\n'
+    printf ' %% zstyle '\'':lookup:*:%s:*'\'' default-lang   frde\n' ${backend}
+    printf ' %% zstyle '\'':lookup:*:%s:*'\'' interface-lang de\n\n' ${backend}
+    printf ' %% lookup %s sugar\n' ${backend}
+    printf ' %% lookup %s -l frde Zucker\n\n' ${backend}
+}
+
+# This call must be here, too. Just after you defined the help function.
+# It handles the global -h option of lookup correctly.
+LOOKUP_help && return 0
+
+# This test is needed, too.
+# Backends are supposed to bring there own completion.
+if [[ -n ${lookup_complete} ]] ; then
+    # During development, you can just put a
+    #return 0
+    # here. That will disable completion for the backend and
+    # prevent breakage for other backends.
+
+    # completion sub-functions should be called:
+    # __lookup_${backend}_<completion_feature>()
+    # Again, DO NOT hardcode the name. Use ${backend}!
+    # guard their definition by checking the $functions[] entry
+    # that belongs to your sub-function.
+    LOOKUP_guard -fd __lookup_${backend}_supported_langs ||
+    function __lookup_${backend}_supported_langs() {
+        local l
+        local -a ls
+
+        ls=()
+        for l in ${(k)supported_langs}; do
+            ls+=("$l:${supported_langs[$l]}")
+        done
+        _describe -t leo_langs 'supported languages' ls
+    }
+
+    comp_args=(
+        '-l[set languages]:supported languages:__lookup_'${backend}'_supported_langs'
+        '*:dict.leo.org query:true'
+    )
+
+    _arguments -s -w -A '-*' ${comp_args} && return 0
+    _message 'dict.leo.org query'
+
+    return 0
+    # end of completion code #
+fi
+
+# parse possible options of the backend.
+# 'LOOKUP_parseopts' is the recommended way of doing that.
+# See the top of that function's file for an explained example.
+# Since LOOKUP_parseopts() returns its findings via $opt[] and $args[], you
+# should *never* use variables of those names in your backends.
+lu_parseopts_args=( l string )
+LOOKUP_parseopts "$@" || return 1
+lang=${opts[-l]}
+
+# all configuration should be done via zstyle. The context should always be
+# the result of what LOOKUP_context() tells us (see the $lookup_context comment
+# earlier, too). Also set reasonable defaults.
+if [[ -z ${lang} ]] ; then
+    zstyle -s "${lookup_context}" default-lang lang || lang='ende'
+fi
+
+zstyle -s "${lookup_context}" interface-lang interface_lang || interface_lang='en'
+
+# If applicable, use the remaining arguments as QUERY.
+# If the backend used LOOKUP_parseopts() before, the remaining arguments
+# are in $args[]. If not, they can be assigned like this:
+#   QUERY="$*"
+#
+# Since we do use LOOKUP_parseopts(), we'll do it like this:
+QUERY="${args[*]}"
+
+# Call LOOKUP_query_handler() to support the -Q and -q options of lookup.
+# This should also be called like this in every case, as this supports
+# a return value from handler functions that indicates unrecoverable errors.
+# If you want to support return values from handlers, use the
+# $lookup_communicate[] hash, which is meant to be used for that. It can
+# also be used to get additional information into the handler.
+# See LOOKUP_be_letssingit for an example.
+LOOKUP_query_handler || return 1
+
+# Do appropriate error checking and give usage information
+# if the query is empty.
+if [[ -z ${(Mk)supported_langs:#$lang} ]] ; then
+    printf 'Unknown language definition: '\''%s'\''.\n\n' ${lang}
+    # Clear out $QUERY, so we get the usage message below.
+    QUERY=''
+fi
+if [[ -z ${QUERY} ]] ; then
+    # -f means, "display the help text, no matter what."
+    LOOKUP_help -f
+    return 1
+fi
+
+# You may also put in hooks into your backend. You don't need to though. :)
+# To do so, use the LOOKUP_hook function. The first argument should be a name
+# for the hook. That will adjust the local-part of the context to that name.
+# If you don't want that, use -- as the first argument. Then the context
+# remains unchanged.
+# The rest of the arguments are handed over to the hook function unchanged.
+# There is no convention as to what arguments should be provided or whether
+# $lookup_communicate[] should be used. Everything is possible; just make
+# sure you document your hooks properly in the help function earlier.
+#
+# A sample hook call may look like this:
+#LOOKUP_hook "pre-encode" $QUERY $lang $interface_lang
+
+# Use LOOKUP_encode() for proper url encoding of the QUERY.
+# Since, QUERY is the most common use case of LOOKUP_encode, it has
+# a special option to handle that variable.
+# For other variables you want to encode, do:
+#   foo="$(LOOKUP_encode ${foo})"
+LOOKUP_encode -q
+
+# Use our browser wrapper to open the URI, it'll handle everything just right.
+LOOKUP_browser "http://dict.leo.org?lang=${interface_lang}&lp=${lang}&search=${QUERY}"
+
+# Explicitly return $?.
+return $?

@@ -1,0 +1,36 @@
+### vim:ft=zsh:foldmethod=marker
+## url encoding for lookup queries, etc.
+
+LOOKUP_guard || return 1
+emulate -L zsh
+setopt extendedglob
+local input output ws=$'\t '
+local -A opts
+
+lu_parseopts_args=( s bool q bool )
+LOOKUP_parseopts "$@" || return 1
+if [[ ${opts[-q]} == 'yes' ]] ; then
+    # -q: QUERY is declared 'local -x QUERY' in backends.
+    #     That means, it gets handed down to us. Apply our filters to it.
+    unencQUERY="${QUERY}"
+    set -- "${QUERY}"
+else
+    set -- "${args[@]}"
+fi
+
+input=( ${(s::)1} )
+output=${(j::)input/(#b)([^A-Za-z0-9_${ws}.!~*\'\(\)+-])/%${(l:2::0:)$(([##16]#match))}}
+
+if [[ ${opts[-s]} == 'yes' ]] ; then
+    output=${${output##[$ws]#}%%[$ws]#}
+    output="${output//+/%2B}"
+    output=${output//[$ws]##/+}
+else
+    output="${output//[$ws]/%20}"
+fi
+
+if [[ ${opts[-q]} == 'yes' ]] ; then
+    QUERY=${output}
+else
+    printf '%s' ${output}
+fi

@@ -1,0 +1,138 @@
+### vim:ft=zsh:foldmethod=marker
+## RFC backend for lookup
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+# TODO: This is currently just a real lookup. rfc-editor.com supports searching.
+#       ...would be nice...
+
+LOOKUP_guard || return 1
+[[ -n ${lookup_describe} ]] &&
+    printf '%s' 'RFC lookup' &&
+    return 0
+
+local lookup_context
+local -a comp_args
+
+lookup_context="$(LOOKUP_context)"
+
+LOOKUP_guard -fd LOOKUP_help_${backend} ||
+function LOOKUP_help_${backend}() {
+    LOOKUP_guard || return 1
+           #-80characters-----------------------------------------------------------------#
+    printf 'usage: %s [-{d,w}] <RFC number>\n' ${backend}
+    printf '  -d    ask to download RFC before reading\n'
+    printf '  -w    just watch. do not ask to download\n'
+    printf '\n Read RFCs by number.\n'
+    printf ' Supports local files and remote files (via rfc-editor.com).\n'
+    printf '\n First, it looks for a local version of the RFC (within a given path, see\n'
+    printf ' Styles below); if a local version is found, it is opened in a browser. If it\n'
+    printf ' cannot be found (per default) the user is asked if we should try to download\n'
+    printf ' the RFC in question via FTP from rfc-editor.com (only works if the zsh/zftp\n'
+    printf ' module can be loaded). If the answer is yes, the file is downloaded. If that\n'
+    printf ' was successful the *local* file is viewed. If the answer is no, the remote\n'
+    printf ' URL is opened in a browser.\n'
+    printf '\nStyles:\n'
+    printf ' The context in which styles are looked up is:\n'
+    printf '        %s\n' ${lookup_context}
+    LOOKUP_context -l local-files
+    lookup_context="$(LOOKUP_context)"
+    printf ' If a local file is viewed, that changes to:\n'
+    printf '        %s\n\n' ${lookup_context}
+    printf ' search-path: a list style, defining where to look for local RFCs\n'
+    printf '              (Default: one entry: $HOME - "%s")\n' ${HOME}
+    printf '   save-path: when downloading RFCs, save them to this directory\n'
+    printf '              (Default: $HOME - "%s")\n' ${HOME}
+    printf '    download: boolean; changes the default downloading behaviour\n'
+    printf '              (Default: true: always ask to download non-local RFCs)\n'
+    printf '\n When looking for local RFCs, this backend looks for files named like this:\n'
+    printf '    rfc<->.txt(|.gz|.bz2) (eg: rfc123.txt, rfc234.txt.gz or rfc345.txt.bz2)\n'
+    printf '\nExamples:\n'
+    printf ' %% zstyle '\'':lookup:*:%s:*'\'' search-path /usr/share/doc/RFC/links ~/myrfcs\n' ${backend}
+    printf ' %% zstyle '\'':lookup:*:%s:*'\'' save-path   ~/myrfcs\n' ${backend}
+    printf ' %% zstyle '\'':lookup:*:%s:*'\'' download    false\n' ${backend}
+    printf ' %% lookup %s 881\n' ${backend}
+    printf ' %% lookup %s -w 881\n\n' ${backend}
+}
+LOOKUP_help && return 0
+
+if [[ -n ${lookup_complete} ]] ; then
+    comp_args=(
+        '-d[attempt do download RFCs]:'
+        '-w[never attempt do download RFCs]:'
+        '*:RFC number:true'
+    )
+
+    _arguments -s -w -A '-*' ${comp_args} && return 0
+    _message 'RFC number'
+    return 0
+fi
+
+local dir file save_path search_path yesno
+local -i justwatch
+local -A opts
+local -x QUERY
+
+zstyle -s "${lookup_context}" save-path   save_path   || save_path=${HOME}
+zstyle -a "${lookup_context}" search-path search_path || search_path=(${HOME})
+
+if zstyle -t "${lookup_context}" download ; then
+    justwatch='0'
+else
+    justwatch='1'
+fi
+
+lu_parseopts_args=( d bool w bool )
+LOOKUP_parseopts "$@" || return 1
+[[ ${opts[-d]} == 'yes' ]] && justwatch=0
+[[ ${opts[-w]} == 'yes' ]] && justwatch=1
+
+QUERY="${args[*]}"
+LOOKUP_query_handler || return 1
+if [[ -z ${QUERY} ]] ; then
+    LOOKUP_help -f
+    return 1
+fi
+
+for dir in ${search_path} ; do
+    file="${dir}/rfc${QUERY}.txt"
+    if [[ -r ${file} ]] ; then
+        LOOKUP_browser ${file}
+        return $?
+    elif [[ -r ${file}.gz ]]  ; then
+        LOOKUP_context -l local-files
+        LOOKUP_browser ${file}.gz
+        return $?
+    elif [[ -r ${file}.bz2 ]] ; then
+        LOOKUP_context -l local-files
+        LOOKUP_browser ${file}.bz2
+        return $?
+    fi
+done
+
+if (( lookup_printout == 0 )) && (( justwatch == 0 )) && [[ -n ${save_path} ]] ; then
+    if [[ -z ${builtins[zftp]} ]] ; then
+        if ! zmodload zsh/zftp ; then
+            printf 'Module zsh/zftp could not be loaded, cannot download.\n'
+            return 1
+        fi
+    fi
+    printf 'RFC: %s, save-path: %s\n' ${QUERY} ${save_path}
+    printf 'Shall I download the rfc in question? [y/n] '
+    read -q yesno
+    if [[ ${yesno} == 'y' ]] ; then
+        LOOKUP_context -l local-files
+        file="${save_path}/rfc${QUERY}.txt"
+
+        zftp open ftp.rfc-editor.org "anonymous" "zsh_lookup@somewhere.tld"
+        zftp cd "/in-notes"
+        zftp binary
+        zftp get "rfc${QUERY}.txt" > ${file}
+        quit
+
+        LOOKUP_browser ${file}
+        return $?
+    fi
+fi
+
+LOOKUP_browser "ftp://ftp.rfc-editor.org/in-notes/rfc${QUERY}.txt"
+return $?

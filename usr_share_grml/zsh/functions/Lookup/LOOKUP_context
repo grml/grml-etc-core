@@ -1,0 +1,22 @@
+### vim:ft=zsh:foldmethod=marker
+## get and set the current context
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+# If called without arguments, it spits out the current context.
+# If called with -l <string> it sets the <localpart> of the context
+# to <string>. If called with -d, it sets the <localpart> to its default.
+
+LOOKUP_guard || return 1
+local opt
+local -A opts
+
+lu_parseopts_args=( d bool l string )
+LOOKUP_parseopts "$@" || return 1
+if [[ ${opts[-d]} == 'yes' ]] ; then
+    lookup_lp="-default-"
+elif [[ -n ${opts[-l]} ]] ; then
+    lookup_lp="${opts[-l]}"
+else
+    printf ':lookup:%s:%s:%s' ${lookup_ei} ${backend} ${lookup_lp}
+fi
+return 0

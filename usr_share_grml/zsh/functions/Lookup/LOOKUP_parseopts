@@ -1,0 +1,101 @@
+### vim:ft=zsh:foldmethod=marker
+## parse cmdline options
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+# This is lookup's option parsing slave.
+# To use it, you'll have to follow the following idiom:
+#   lu_parseopts_args=(
+#       l   bool
+#       h   bool
+#       x   string
+#       i   int
+#   )
+#   LOOKUP_parseopts "$@" || return 1
+#
+#   ...the result of LOOKUP_parseopts is now stored in $opts[] and $args[].
+#   $args[] is an array containing the remaining args from "$@" after parsing.
+#   $opts[] is an associative array containing key value pairs in the following
+#   form:
+#       -x  "a string"
+#       -i  12345
+#   For boolean args an entry is only added if the was given and will look
+#   like this:
+#       -l  "yes"
+#       -h  "yes"
+#
+# If you define integer arguments in $lu_parseopts_args[], LOOKUP_parseopts()
+# will check its value and return with an error if the argument is not a
+# signed integer.
+# Hence, in the above example the following calls are valid:
+#   foo -i 123
+#   foo -i -123
+#   foo -i +123
+# while this is not:
+#   foo -i bar
+
+LOOKUP_guard || return 1
+
+local char o dashdash firstarg who
+local -a largs match
+
+if [[ ${lookup_ei} == '-backend-' ]] ; then
+    who="${backend}"
+else
+    who="lookup"
+fi
+
+if (( ${#lu_parseopts_args} == 0 )) ; then
+    printf '%s: $lu_parseopts_args is emtpy.\n' ${who}
+    printf '%s: Read the example on top of the LOOKUP_parseopts file.\n' ${who}
+    return 1
+fi
+
+args=()
+opts=()
+for o in ${(k)lu_parseopts_args} ; do
+    case ${lu_parseopts_args[$o]} in
+    (bool)       largs+=($o)  ;;
+    (string|int) largs+=($o:) ;;
+    (*)
+        printf '%s: Unknown option type (%s: %s)!\n' ${who} $o ${lu_parseopts_args[$o]}
+        return 1
+        ;;
+    esac
+done
+
+for o in "$@" ; do
+    case $o in
+    (-|--)
+        dashdash='found'
+        continue
+        ;;
+    esac
+    if [[ ${dashdash} == 'found' ]] ; then
+        firstarg="$o"
+        break
+    fi
+done
+zparseopts -A opts -D "${largs[@]}" || return 1
+if [[ $1 == -* ]] && [[ $1 != ${firstarg} ]] ; then
+    printf '%s: Unknown option: %s\n' ${who} "$1"
+    return 1
+fi
+for o in ${(k)opts} ; do
+    match=()
+    : ${o/(#b)-(*)/}
+    char="${match[1]}"
+    case ${lu_parseopts_args[$char]} in
+    (bool)
+        [[ -z ${opts[$o]} ]] && opts[$o]='yes'
+        ;;
+    (int)
+        opts[$o]=${${opts[$o]}/(#s)+/}
+        if [[ ${${opts[$o]}/(#s)-/} == (-|)*[^0-9]* ]]; then
+            printf '%s: %s requires an integer argument.\n' ${who} $o
+            return 1
+        fi
+        ;;
+    esac
+done
+
+args=( "$@" )

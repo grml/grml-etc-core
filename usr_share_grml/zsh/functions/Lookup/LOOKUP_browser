@@ -1,0 +1,46 @@
+### vim:ft=zsh:foldmethod=marker
+##
+## Spawn an appropriate browser.
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+##
+
+LOOKUP_guard || return 1
+local arg debug format lookup_browser uri i lookup_context
+local -a lookup_browser_args
+
+lookup_ei='-browser-'
+uri="$1"
+
+lookup_context="$(LOOKUP_context)"
+
+LOOKUP_hook -- "$@"
+zstyle -t "${lookup_context}" debug &&
+    printf 'LOOKUP_browser: current context: "%s"\n' "${lookup_context}"
+
+if (( lookup_printout > 0 )) || zstyle -t "${lookup_context}" debug ; then
+    debug='yes'
+fi
+
+if (( lookup_remote > 0 )) ; then
+    zstyle -s "${lookup_context}" gui-browser lookup_browser
+    zstyle -a "${lookup_context}" gui-formats lookup_browser_args
+else
+    zstyle -s "${lookup_context}" txt-browser lookup_browser
+    zstyle -a "${lookup_context}" txt-formats lookup_browser_args
+fi
+
+[[ -z ${lookup_browser} ]] && lookup_browser=${BROWSER:-w3m}
+(( ${#lookup_browser_args} == 0 )) && lookup_browser_args=( "%s" )
+
+for i in {1..${#lookup_browser_args}} ; do
+    zformat -f format ${lookup_browser_args[$i]} s:${uri}
+    lookup_browser_args[$i]="${format}"
+done
+
+if [[ -n ${debug} ]] ; then
+    print -- ${lookup_browser} ${(qq)lookup_browser_args}
+    return 0
+else
+    ${lookup_browser} ${lookup_browser_args}
+    return $?
+fi

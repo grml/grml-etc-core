@@ -1,0 +1,61 @@
+### vim:ft=zsh:foldmethod=marker
+## lists.debian.org message-id search backend for lookup
+## Copyright: 2009, Frank Terbeck <ft@bewatermyfriend.org>
+
+LOOKUP_guard || return 1
+[[ -n ${lookup_describe} ]] &&
+    printf '%s' 'search lists.debian.org by message-ids' &&
+    return 0
+
+local lookup_context
+local -a comp_args
+
+lookup_context="$(LOOKUP_context)"
+
+LOOKUP_guard -fd LOOKUP_help_${backend} ||
+function LOOKUP_help_${backend}() {
+    LOOKUP_guard || return 1
+    printf 'usage: %s [-1] <query>\n' ${backend}
+    printf '  -1    use the search'\''s first-hit option\n'
+    printf '\n Search Debian[1]'\''s Mailinglist Archive[2] my Message-ID: header.\n'
+    printf ' If you always want to use the -1 option, you may set the use-first-hit\n'
+    printf ' style in this context: %s\n' ${lookup_context}
+    printf '\nExamples:\n'
+    printf ' %% lookup %s 20090215095848.GA21661@schmehl.info\n' ${backend}
+    printf ' %% lookup %s -1 20090215095848.GA21661@schmehl.info\n' ${backend}
+    printf ' %% zstyle '\'':lookup:*:%s:*'\'' use-first-hit true\n' ${backend}
+    printf '\n[1] <http://www.debian.org>\n'
+    printf '[2] <http://lists.debian.org>\n'
+}
+LOOKUP_help && return 0
+
+if [[ -n ${lookup_complete} ]] ; then
+    comp_args=(
+        '-1[use /firsthit option]'
+        '*:message-id for l.d.o:true'
+    )
+
+    _arguments -s -w -A '-*' ${comp_args} && return 0
+    _message 'message-id for l.d.o'
+    return 0
+fi
+
+local end
+local -A opts
+local -x QUERY
+
+lu_parseopts_args=( 1 bool )
+LOOKUP_parseopts "$@" || return 1
+[[ ${opts[-1]} == 'yes' ]] && end='/firsthit' || end='/links'
+zstyle -t "${lookup_context}" use-first-hit && end='/firsthit'
+
+QUERY="${args[*]}"
+LOOKUP_query_handler || return 1
+if [[ -z ${QUERY} ]] ; then
+    LOOKUP_help -f
+    return 1
+fi
+
+LOOKUP_encode -q
+LOOKUP_browser "http://lists.debian.org/msgid-search/${QUERY}${end}"
+return $?
