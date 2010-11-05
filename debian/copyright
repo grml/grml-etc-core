@@ -25,3 +25,30 @@ Copyright:
 
 On Debian GNU/Linux systems, the complete text of the GNU General
 Public License can be found in `/usr/share/common-licenses/GPL-2'.
+
+
+The zsh-lookup sub-system (`/usr/share/grml/zsh/functions/Lookup' and
+`/usr/share/grml/zsh/completion/unix/_lookup') is subject to the same
+copyright terms as zsh itself:
+
+Copyright (c) 2009-2010 Frank Terbeck <ft@bewatermyfriend.org>
+All rights reserved.
+
+Permission is hereby granted, without written agreement and without
+license or royalty fees, to use, copy, modify, and distribute this
+software and to distribute modified versions of this software for any
+purpose, provided that the above copyright notice and the following
+two paragraphs appear in all copies of this software.
+
+In no event shall Frank Terbeck or the Zsh Development Group be liable
+to any party for direct, indirect, special, incidental, or consequential
+damages arising out of the use of this software and its documentation,
+even if Frank Terbeck and the Zsh Development Group have been advised of
+the possibility of such damage.
+
+Frank Terbeck and the Zsh Development Group specifically disclaim any
+warranties, including, but not limited to, the implied warranties of
+merchantability and fitness for a particular purpose.  The software
+provided hereunder is on an "as is" basis, and Frank Terbeck and the
+Zsh Development Group have no obligation to provide maintenance,
+support, updates, enhancements, or modifications.
