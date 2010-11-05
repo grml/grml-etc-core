@@ -7,6 +7,7 @@ grml-etc-core (0.3.84) UNRELEASED; urgency=low
     used as ~/.zshrc
   * zshrc: Disable `vcs_info' in restricted shells.
   * grmlzshrc.t2t: Remove references to git-get-*().
+  * Added zsh-lookup subsystem from <https://github.com/ft/zsh-lookup>.
 
   [ Carsten Hey ]
   * zshrc: Rename new() to modified().
@@ -26,7 +27,7 @@ grml-etc-core (0.3.84) UNRELEASED; urgency=low
   * zshrc: Remove get{air,gizmo,skype,skypebeta,xlite} functions.
   * vimrc: Enable "persistent undo" if possible.
 
- -- Frank Terbeck <ft@grml.org>  Thu, 21 Oct 2010 10:43:38 +0200
+ -- Frank Terbeck <ft@grml.org>  Fri, 05 Nov 2010 09:32:10 +0100
 
 grml-etc-core (0.3.83) unstable; urgency=low
 
