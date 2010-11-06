@@ -14,6 +14,41 @@
   sudo chmod 660       $TTY
   sudo chown $USER.tty $TTY
 
+# FIXME: fix for screen race-conditions
+PID_FILE_="/var/run/grml-screen"
+MY_PID_="$$"
+if [ ! -d "/var/run/screen/S-$USER" ]; then
+    # no /var/run/screen/S-$USER and possible no /var/run/screen either -> locking
+    for i in `seq 40`; do   # 40*0.25 = 10 seconds
+        if lockfile-create --retry 0 $PID_FILE_; then
+            echo $MY_PID_ >$PID_FILE_
+            break
+        fi
+        sleep 0.25
+    done
+fi
+if [ -f $PID_FILE_ ]; then
+    # FORK BEGIN
+    (
+    for i in `seq 40`; do   # 40*0.25 = 10 seconds
+        if [ ! -d "/var/run/screen/S-$USER" ]; then
+            sleep 0.25  # educated guess
+        else
+            break
+        fi
+    done
+    if [ `cat $PID_FILE_` = $MY_PID_ ]; then
+        rm $PID_FILE_
+        lockfile-remove $PID_FILE_
+    fi
+    )&
+    # FORK END
+else
+    SLEEP_TIME_="$(( $$ % 5 * 5 + 5 ))"
+    echo "grml-screen: Error could not create lockfile! (sleeping for $SLEEP_TIME_)"
+    sleep $SLEEP_TIME_
+fi
+
 # now run screen with config
   cd $HOME     # important for e.g. hardcopy-feature
   # do we have a utf8 enabled terminal?
