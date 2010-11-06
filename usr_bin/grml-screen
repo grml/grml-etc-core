@@ -16,37 +16,41 @@
 
 # FIXME: fix for screen race-conditions
 PID_FILE_="/var/run/grml-screen"
+PID_FILE_CREATED_="false"
 MY_PID_="$$"
 if [ ! -d "/var/run/screen/S-$USER" ]; then
     # no /var/run/screen/S-$USER and possible no /var/run/screen either -> locking
     for i in `seq 40`; do   # 40*0.25 = 10 seconds
         if lockfile-create --retry 0 $PID_FILE_; then
             echo $MY_PID_ >$PID_FILE_
+            PID_FILE_CREATED_="true"
             break
         fi
         sleep 0.25
     done
 fi
-if [ -f $PID_FILE_ ]; then
-    # FORK BEGIN
-    (
-    for i in `seq 40`; do   # 40*0.25 = 10 seconds
-        if [ ! -d "/var/run/screen/S-$USER" ]; then
-            sleep 0.25  # educated guess
-        else
-            break
+if [ $PID_FILE_CREATED_ = "true" ]; then
+    if [ -f $PID_FILE_ ]; then
+        # FORK BEGIN
+        (
+        for i in `seq 40`; do   # 40*0.25 = 10 seconds
+            if [ ! -d "/var/run/screen/S-$USER" ]; then
+                sleep 0.25  # educated guess
+            else
+                break
+            fi
+        done
+        if [ `cat $PID_FILE_` = $MY_PID_ ]; then
+            rm $PID_FILE_
+            lockfile-remove $PID_FILE_
         fi
-    done
-    if [ `cat $PID_FILE_` = $MY_PID_ ]; then
-        rm $PID_FILE_
-        lockfile-remove $PID_FILE_
+        )&
+        # FORK END
+    else
+        SLEEP_TIME_="$(( $$ % 5 * 5 + 5 ))"
+        echo "grml-screen: Error could not create lockfile! (sleeping for $SLEEP_TIME_)"
+        sleep $SLEEP_TIME_
     fi
-    )&
-    # FORK END
-else
-    SLEEP_TIME_="$(( $$ % 5 * 5 + 5 ))"
-    echo "grml-screen: Error could not create lockfile! (sleeping for $SLEEP_TIME_)"
-    sleep $SLEEP_TIME_
 fi
 
 # now run screen with config
