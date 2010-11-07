@@ -15,7 +15,7 @@
   sudo chown $USER.tty $TTY
 
 # FIXME: fix for screen race-conditions
-PID_FILE_="/var/run/grml-screen"
+PID_FILE_="/var/lock/grml-screen"
 PID_FILE_CREATED_="false"
 MY_PID_="$$"
 if [ ! -d "/var/run/screen/S-$USER" ]; then
