@@ -513,7 +513,7 @@ fi
 isdarwin && xsource /sw/bin/init.sh
 
 # load our function and completion directories
-for fdir in /usr/share/grml/zsh/completion /usr/share/grml/functions; do
+for fdir in /usr/share/grml/zsh/completion /usr/share/grml/zsh/functions; do
     fpath=( ${fdir} ${fdir}/**/*(/N) ${fpath} )
     if [[ ${fpath} == '/usr/share/grml/zsh/functions' ]] ; then
         for func in ${fdir}/**/[^_]*[^~](N.) ; do
