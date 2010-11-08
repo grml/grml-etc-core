@@ -1,4 +1,4 @@
-grml-etc-core (0.3.84) UNRELEASED; urgency=low
+grml-etc-core (0.3.84) unstable; urgency=low
 
   [ Frank Terbeck ]
   * zshrc: Remove git-get-*() as discussed on IRC.
@@ -25,7 +25,8 @@ grml-etc-core (0.3.84) UNRELEASED; urgency=low
 
   [ Ulrich Dangel ]
   * zshrc: Remove get{air,gizmo,skype,skypebeta,xlite} functions.
-  * vimrc: Enable "persistent undo" if possible.
+  * vimrc: Enable "persistent undo" if possible. [Closes: issue909]
+    [Closes: issue927]
 
   [ Michael Prokop ]
   * /etc/skel/.gitconfig: drop core.pager option (less -Mr) causing
