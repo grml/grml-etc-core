@@ -49,12 +49,12 @@ if [ $PID_FILE_CREATED_ = "true" ]; then
     # FORK END
 elif [ $PID_FILE_CREATED_ = "error" ]; then
     SLEEP_TIME_="$(( $$ % 5 * 5 + 5 ))"
-    echo "grml-screen: Error could not create lockfile! (sleeping for $SLEEP_TIME_)"
+    echo "grml-screen: Error could not create lockfile! (sleeping for $SLEEP_TIME_)" >&2
     sleep $SLEEP_TIME_
 elif [ $PID_FILE_CREATED_ = "false" ]; then
     echo "nothing to do" &>/dev/null
 else
-    echo "grml-screen: internal error - PID_FILE_CREATED_ == \"$PID_FILE_CREATED_\""
+    echo "grml-screen: internal error - PID_FILE_CREATED_ == \"$PID_FILE_CREATED_\"" >&2
 fi
 
 # now run screen with config
