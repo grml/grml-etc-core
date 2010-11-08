@@ -27,7 +27,12 @@ grml-etc-core (0.3.84) UNRELEASED; urgency=low
   * zshrc: Remove get{air,gizmo,skype,skypebeta,xlite} functions.
   * vimrc: Enable "persistent undo" if possible.
 
- -- Frank Terbeck <ft@grml.org>  Fri, 05 Nov 2010 09:32:10 +0100
+  [ Michael Prokop ]
+  * /etc/skel/.gitconfig: drop core.pager option (less -Mr) causing
+    terminal problems.
+  * Bump Standards-Version to 3.9.1.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 08 Nov 2010 11:54:26 +0100
 
 grml-etc-core (0.3.83) unstable; urgency=low
 
