@@ -248,11 +248,11 @@ if version >= 703
  " enable persistent-undo
  set undofile
 
- " store the persistent undo file in ~/.vim/undo
- set undodir=~/.vim/undo/
+ " store the persistent undo file in ~/.cache/vim
+ set undodir=~/.cache/vim/
 
  " create undodir directory if possible and does not exist yet
- let targetdir=$HOME . "/.vim/undo"
+ let targetdir=$HOME . "/.cache/vim"
  if isdirectory(targetdir) != 1 && getftype(targetdir) == "" && exists("*mkdir")
   call mkdir(targetdir, "p", 0700)
  endif
