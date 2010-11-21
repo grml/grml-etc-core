@@ -2632,28 +2632,6 @@ grmlcomp() {
 # {{{ grmlstuff
 grmlstuff() {
 # people should use 'grml-x'!
-    startx() {
-        if [[ -e /etc/X11/xorg.conf ]] ; then
-            [[ -x /usr/bin/startx ]] && /usr/bin/startx "$@" || /usr/X11R6/bin/startx "$@"
-        else
-            echo "Please use the script \"grml-x\" for starting the X Window System
-because there does not exist /etc/X11/xorg.conf yet.
-If you want to use startx anyway please call \"/usr/bin/startx\"."
-            return -1
-        fi
-    }
-
-    xinit() {
-        if [[ -e /etc/X11/xorg.conf ]] ; then
-            [[ -x /usr/bin/xinit ]] && /usr/bin/xinit || /usr/X11R6/bin/xinit
-        else
-            echo "Please use the script \"grml-x\" for starting the X Window System.
-because there does not exist /etc/X11/xorg.conf yet.
-If you want to use xinit anyway please call \"/usr/bin/xinit\"."
-            return -1
-        fi
-    }
-
     if check_com -c 915resolution; then
         855resolution() {
             echo "Please use 915resolution as resolution modifying tool for Intel \
