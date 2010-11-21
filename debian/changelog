@@ -1,3 +1,10 @@
+grml-etc-core (0.3.85) UNRELEASED; urgency=low
+
+  [ Ulrich Dangel ]
+  * zshrc: Removed `startx()' and `xinit()' functions
+
+ -- Frank Terbeck <ft@grml.org>  Sun, 21 Nov 2010 12:03:50 +0100
+
 grml-etc-core (0.3.84) unstable; urgency=low
 
   [ Frank Terbeck ]
