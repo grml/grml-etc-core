@@ -1,14 +1,14 @@
-grml-etc-core (0.3.85) UNRELEASED; urgency=low
+grml-etc-core (0.3.85) unstable; urgency=low
 
   [ Ulrich Dangel ]
-  * zshrc: Removed `startx()' and `xinit()' functions
+  * zshrc: Remove `startx()' and `xinit()' functions.
 
   [ Frank Terbeck ]
   * zshrc: Do not set `localoptions' in `xsource()'. That makes it
-    impossible to set options in `.zshrc.pre' or `.zshrc.local'. Reported
-    by Dominic Hopf. Thanks!
+    impossible to set options in `.zshrc.pre' or `.zshrc.local'.
+    Reported by Dominic Hopf. Thanks!
 
- -- Frank Terbeck <ft@grml.org>  Tue, 23 Nov 2010 23:13:50 +0100
+ -- Michael Prokop <mika@grml.org>  Tue, 23 Nov 2010 23:30:17 +0100
 
 grml-etc-core (0.3.84) unstable; urgency=low
 
