@@ -1143,6 +1143,15 @@ fi
 
 if zrcautoload vcs_info; then
     GRML_VCS_INFO=0
+    # `vcs_info' in zsh versions 4.3.10 and below have a broken `_realpath'
+    # function, which can cause a lot of trouble with our directory-based
+    # profiles. So:
+    if [[ ${ZSH_VERSION} == 4.3.<-10> ]] ; then
+        function VCS_INFO_realpath () {
+            setopt localoptions NO_shwordsplit chaselinks
+            ( builtin cd -q $1 2> /dev/null && pwd; )
+        }
+    fi
 else
 # I'm not reindenting the whole code below.
 GRML_VCS_INFO=1
