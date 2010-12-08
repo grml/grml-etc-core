@@ -635,6 +635,10 @@ zle -N slash-backward-kill-word
 
 #k# Kill everything in a word up to its last \kbd{/}
 bindkey '\ev' slash-backward-kill-word
+#k# Kill everything in a word up to its last \kbd{/}
+bindkey '\e^h' slash-backward-kill-word
+#k# Kill everything in a word up to its last \kbd{/}
+bindkey '\e^?' slash-backward-kill-word
 
 # use the new *-pattern-* widgets for incremental history search
 if is439 ; then
