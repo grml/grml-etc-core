@@ -1,3 +1,10 @@
+grml-etc-core (0.3.87) unstable; urgency=low
+
+  [ Frank Terbeck ]
+  * [fff04ca] Adding a kill to slash binding to alt-backspace.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 17 Dec 2010 12:35:47 +0100
+
 grml-etc-core (0.3.86) unstable; urgency=low
 
   [ Frank Terbeck ]
