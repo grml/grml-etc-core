@@ -14,14 +14,16 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, less, dash, perl, screen, grml-etc-core, lockfile-progs
 Replaces: grml-scripts (<< 1.4.1)
 Breaks: grml-scripts (<< 1.4.1)
-Description: some small scripts which should make life easier
- Some scripts which should make life easier. For example:
- code2color, grml-mutt, grml-slrn, iimage, lesspipe.sh
- make_chroot_jail.sh, sepdate.pl, sepdate.rb, sepdate.sh*, wwwis.
+Description: core scripts for the grml system
+ This package includes some scripts for the grml system.
  .
- Notice: not all the packages which are required in all the scripts
- are in the "Depends:" line. If you want to get a full featured
- grml-scripts-package install the packages from the 'Suggests' line
- too or just use the grml(-large)-system.
+ Whereas the main grml-scripts package is meant for use on grml
+ systems only, this package can be used on plain Debian
+ (stable/testing/unstable) systems as well. It is intended as a
+ complement to grml-etc-core.
  .
- For more details take a look at the manpage grml-scripts.
+ Currently, this package includes code2color, cpu-screen, ip-screen
+ and lesspipe.sh, a more full-featured replacement for the standard
+ Debian lesspipe.
+ .
+ For more details take a look at the grml-scripts-core manpage.
