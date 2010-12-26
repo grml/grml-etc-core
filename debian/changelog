@@ -1,3 +1,12 @@
+grml-etc-core (0.3.88) unstable; urgency=low
+
+  [ Ulrich Dangel ]
+  * [efcb69a] Disable persistent undo feature for vim. This feature
+    is nice but possibly dangerous if the user doesn't expect this
+    behaviour, therefore disable it per default.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 27 Dec 2010 00:05:55 +0100
+
 grml-etc-core (0.3.87) unstable; urgency=low
 
   [ Frank Terbeck ]
