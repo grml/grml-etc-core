@@ -20,7 +20,7 @@ clean:
 
 	# Add here commands to clean up after the build process.
 	rm -rf $(CURDIR)/debian/grml-scripts-core/
-	( cd compile ; make clean )
+	( cd compile && make clean )
 
 	dh_clean
 
