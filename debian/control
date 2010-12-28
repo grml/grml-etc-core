@@ -11,7 +11,7 @@ Vcs-Browser: http://git.grml.org/?p=grml-scripts.git
 
 Package: grml-scripts-core
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, less, dash, perl, screen, grml-etc-core, lockfile-progs
+Depends: ${misc:Depends}, less, dash, perl, screen, grml-etc-core, lockfile-progs
 Replaces: grml-scripts (<< 1.4.1)
 Breaks: grml-scripts (<< 1.4.1)
 Description: core scripts for the grml system

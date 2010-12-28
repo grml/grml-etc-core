@@ -57,7 +57,6 @@ binary-arch: build install
 	cp -av debian/overrides $(CURDIR)/debian/grml-scripts-core/usr/share/lintian/overrides/grml-scripts-core
 	dh_fixperms
 	dh_installdeb
-	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
