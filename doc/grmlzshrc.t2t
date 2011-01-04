@@ -534,10 +534,6 @@ Generates a changelog using rcs2log and shows it in $PAGER.
 : **cvss()**
 Shows cvs status of given files.
 
-: **d()**
-Presents a numbered listing of the directory stack. Then changes current
-working directory to the one chosen by the user.
-
 : **dchange()**
 Shows the changelog of given package in $PAGER.
 
