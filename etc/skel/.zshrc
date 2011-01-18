@@ -64,19 +64,23 @@ fi
 #WORDCHARS='*?_[]~=&;!#$%^(){}'
 #WORDCHARS='${WORDCHARS:s@/@}'
 
-# just type 'cd ...' to get 'cd ../..'
+# just type '...' to get '../..'
 #rationalise-dot() {
-#  if [[ $LBUFFER == *.. ]] ; then
-#    LBUFFER+=/..
-#  else
-#    LBUFFER+=.
-#  fi
+#local MATCH
+#if [[ $LBUFFER =~ '(^|/| |	|'$'\n''|\||;|&)\.\.$' ]]; then
+#  LBUFFER+=/
+#  zle self-insert
+#  zle self-insert
+#else
+#  zle self-insert
+#fi
 #}
 #zle -N rationalise-dot
 #bindkey . rationalise-dot
+## without this, typing a . aborts incremental history search
+#bindkey -M isearch . self-insert
 
 #bindkey '\eq' push-line-or-edit
-
 
 ## some popular options ##
 
