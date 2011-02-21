@@ -1,3 +1,9 @@
+grml-scripts (1.4.1) unstable; urgency=low
+
+  * [198fea7] Move lzop from Depends to Suggests.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 21 Feb 2011 13:26:13 +0100
+
 grml-scripts (1.4.0) unstable; urgency=low
 
   [ Michael Prokop ]
