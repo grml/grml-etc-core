@@ -1,3 +1,10 @@
+grml-scripts (1.4.2) unstable; urgency=low
+
+  * [68e8f65] grml-screen/grml-init-screen: no longer use vt-is-UTF8 but
+    instead default to UTF-8. [Closes: issue959]
+
+ -- Michael Prokop <mika@grml.org>  Mon, 28 Feb 2011 12:31:27 +0100
+
 grml-scripts (1.4.1) unstable; urgency=low
 
   * [198fea7] Move lzop from Depends to Suggests.
