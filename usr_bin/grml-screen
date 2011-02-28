@@ -59,14 +59,13 @@ fi
 
 # now run screen with config
   cd $HOME     # important for e.g. hardcopy-feature
-  # do we have a utf8 enabled terminal?
-  [ -x /usr/bin/vt-is-UTF8 ] && /usr/bin/vt-is-UTF8 -q && UTF='-U'
+
   if [ `id -u` = 0 ] ; then
-    exec screen $UTF -c /etc/grml/screenrc
+    exec screen -U -c /etc/grml/screenrc
   elif [ -r "$HOME/.screenrc" ] ; then
-    exec screen $UTF -c "$HOME/.screenrc"
+    exec screen -U -c "$HOME/.screenrc"
   else
-    exec screen $UTF -c /etc/grml/screenrc_grml
+    exec screen -U -c /etc/grml/screenrc_grml
   fi
 
 ## END OF FILE #################################################################

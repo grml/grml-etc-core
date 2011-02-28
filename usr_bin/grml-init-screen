@@ -17,7 +17,6 @@
 # now start screen:
   cd $HOME
   # do we have a utf8 enabled terminal?
-  [ -x /usr/bin/vt-is-UTF8 ] && /usr/bin/vt-is-UTF8 -q && UTF='-U'
-  /usr/bin/screen $UTF -c /etc/grml/screenrc ; exec /bin/zsh
+  /usr/bin/screen -U -c /etc/grml/screenrc ; exec /bin/zsh
 
 ## END OF FILE #################################################################
