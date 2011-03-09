@@ -1524,5 +1524,5 @@ Copyright (c) 2009-2011 Grml project <http://grml.org>
 This manpage is distributed under the terms of the GPL version 2.
 
 Most parts of grml's zshrc are distributed under the terms of GPL v2, too,
-except for **accept-line()** and **vcs_info()**, which are distributed under
-the same conditions as zsh itself (which is BSD-like).
+except for **accept-line()** which are distributed under the same conditions
+as zsh itself (which is BSD-like).
