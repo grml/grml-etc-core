@@ -103,6 +103,14 @@
 #   *all* aliases, for example, use @@INSERT-aliases-all@@.
 #}}}
 
+# Only load once
+[[ ${(t)GRML} != *association* ]] && typeset -gA GRML
+if (( ${GRML[ZSHRC_LOADED]} )); then
+    return 0
+else
+    GRML[ZSHRC_LOADED]=1
+fi
+
 # zsh profiling {{{
 # just execute 'ZSH_PROFILE_RC=1 zsh' and run 'zprof' to get the details
 if [[ $ZSH_PROFILE_RC -gt 0 ]] ; then
