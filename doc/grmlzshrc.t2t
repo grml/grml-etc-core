@@ -28,6 +28,18 @@ root user (**EUID** == 0) only a subset of features is loaded by default. This
 behaviour can be altered by setting the **GRML_ALWAYS_LOAD_ALL** STARTUP
 VARIABLE (see below).
 
+Users may want to keep an up-to-date version of the setup (possibly from the
+git-sources) in //~/.zshrc//. If that happens on a system where the global
+zshrc is also a //grmlzshrc// (but possibly an older one), you can inhibit
+loading the global version by doing:
+\
+```
+echo setopt no_global_rcs >> ~/.zshenv
+```
+
+Note, that this will disable //ANY// global files, except for the global
+zshenv file.
+
 = STARTUP VARIABLES =
 Some of the behaviour of //grmlzshrc// can be altered by setting certain shell
 variables. These may be set temporarily when starting zsh like this:
