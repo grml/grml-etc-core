@@ -1,6 +1,7 @@
 build-stamp
 debian/files
 debian/*.log
+debian/*.substvars
 debian/grml-etc-core
 doc/*.[1-8]
 doc/*.html
