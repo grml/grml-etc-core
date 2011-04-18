@@ -1,0 +1,177 @@
+#!/bin/sh
+
+# Karsten Kruse - www.tecneeq.de
+#
+# dir2html - create HTML-listung for a directory
+#
+#  Copyright (c) 2001 - 2004, Karsten Kruse tecneeq(at)tecneeq(dot)de
+#  All rights reserved.
+#
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
+#
+#  1. Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following  disclaimer.
+#  2. Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in
+#     the documentation and/or other materials provided with the
+#     distribution.
+#  3. Neither the name of the author nor the names of its contributors
+#     may be used to endorse or promote products derived from this
+#     software without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+#  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+#  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+#  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+#  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+#  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+#  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+#  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+#  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+#  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# any last words before we die?
+die(){
+	echo ERROR: $1
+	exit 1
+}
+
+# print some help
+usage(){
+cat <<EOF
+
+ Usage:
+   `basename $0` [Options]
+
+ Options:
+  -h          => print this help
+  -o out.html => output to file             => default: $my_output
+  -t title    => title                      => default: $my_title
+  -s file.css => path to a css              => default: $my_style
+  -e exclude  => exclude this from listing  => default: $my_exclude
+  -k keywords => keywords for metatag       => default: $my_keywords
+  -d diricon  => icon for directorys        => default: $my_diricon
+  -f fileicon => icon for files             => default: $my_fileicon
+  -p path     => directory to HTMLifiy      => default: $my_dir
+
+EOF
+}
+
+# hardwired defaults
+my_output="stdout"
+my_title="Filelisting"
+my_style="unset"
+my_exclude="index.html"
+my_keywords="Files, Stuff"
+my_diricon="/icons/folder.gif"
+my_fileicon="/icons/"
+my_dir=$(pwd)
+
+#parse commandline
+while getopts ho:t:s:e:k:i:d:f:p: opt ; do
+  case "$opt" in
+    h)  usage ; exit          ;;
+    o)  my_output="$OPTARG"   ;;
+    t)  my_title="$OPTARG"    ;;
+    s)  my_style="$OPTARG"    ;;
+    e)  my_exclude="$OPTARG"  ;;
+    k)  my_keywords="$OPTARG" ;;
+    d)  my_diricon="$OPTARG"  ;;
+    f)  my_fileicon="$OPTARG" ;;
+    p)  my_dir="$OPTARG"      ;;
+    \?) usage >&2 ; exit 1    ;;
+  esac
+done
+shift `expr $OPTIND - 1`
+
+do_work(){
+
+  cd $my_dir || die "Could not change directory to $my_dir"
+
+  cat <<EOF
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>$my_title</title>
+    <meta name="description" content="$my_title">
+    <meta name="keywords" content="$my_keywords">
+    <meta name="generator" content="dir2html from www.tecneeq.de">
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+EOF
+
+  if [ ! $my_style = unset ] ; then
+    echo "      <link rel=\"stylesheet\" href=\"'$my_style'\" type=\"text/css\">"
+  fi
+
+  cat <<EOF
+    $style
+  </head>
+  <body>
+    <h1 align="center">$my_title</h1>
+    <table summary="Verzeichnislisting" align="center" border="1" cellpadding="6" cellspacing="0">
+      <tr bgcolor="grey">
+        <td>&nbsp;</td>
+        <td>Name</td>
+        <td>Grösse</td>
+        <td>Mimetype</td>
+      </tr>
+EOF
+
+for i in `find -type d -maxdepth 1 -printf "%f\n" | sort | sed 's/ /+++A_BLANK+++/g'` ; do
+  doit=true
+  for e in $(echo "$my_exclude .") ; do
+    if [ "$i" = "$e" ] ; then
+      doit=false
+      break
+    fi
+  done
+  if [ $doit = true ] ; then
+    rname="$(echo $i | sed 's/+++A_BLANK+++/ /g')"
+    echo "      <tr>"
+    echo "        <td><img src=\"$my_diricon\" alt=\"Verzeichnis\"></td>"
+    echo "        <td><a href=\"$rname\">$rname/</a></td>"
+    echo "        <td>&nbsp;</td>"
+    echo "        <td>Verzeichnis</td>"
+    echo "      </tr>"
+  fi
+done
+
+for i in `find ! -type d -maxdepth 1 -printf "%f\n" | sort | sed 's/ /+++A_BLANK+++/g'` ; do
+  doit=true
+  for e in $(echo "$my_exclude") ; do
+    if [ "$e" = "$i" ] ; then
+      doit=false
+      break
+    fi
+  done
+  if [ $doit = true ] ; then
+    rname="$(echo $i | sed 's/+++A_BLANK+++/ /g')"
+    echo "      <tr>"
+    echo "        <td><img src=\"$my_fileicon\"   alt=\"File     \"></td>"
+    echo "        <td><a href=\"$rname\">$rname</a></td>"
+    echo "        <td>$([ -h "$rname" ] || du -h "$rname" | awk '{print $1}')&nbsp;</td>"
+    echo "        <td>$(file -biL "$rname" | awk '{print $1}' | sed 's/;//g')&nbsp;</td>"
+    echo "      </tr>"
+  fi
+done
+
+  cat <<EOF
+    </table>
+    <p align="center"><small>Created with <a href="http://www.tecneeq.de/">dir2html</a>.</small></p>
+  </body>
+</html>
+
+EOF
+}
+
+if [ $my_output = "stdout" ] ; then
+  do_work
+else
+  echo Writing to $my_output
+  do_work > $my_output
+fi
+
+# eof

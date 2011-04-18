@@ -1,0 +1,213 @@
+#!/bin/zsh
+# Filename:      fex
+# Purpose:       extract archives via smart frontend
+# Authors:       grml-team ( grml.org), (c) Matthias Kopfermann, (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+zmodload zsh/files
+autoload -U colors && colors
+emulate zsh
+
+FILENAME=$0
+ARGV=$1
+alarmcol=$fg_bold[red]
+defcol=$fg[default]$bg[default]
+col1=$fg_bold[green]
+col2=$fg_bold[magenta]
+col3=$fg_bold[cyan]
+col4=$fg[cyan]
+
+usage() { print "Usage: $FILENAME file_to_extract" && exit  ; }
+ (( $ARGC != 1 )) && usage
+ [[ $ARGV == "-h" || $ARGV == "--help" ]] && usage
+ file=$1
+ FILEPRG=$( which file )
+ [[ $( tar --version 3>&1 ) != *(GNU|star)* ]] && echo "sorry, GNU tar or star is needed" && exit
+ test -z $FILEPRG && echo $0 needs a program named file to detect the filetype && exit
+
+qprompt="
+        Really decompress $alarmcol${file}$defcol? Press y or Y for YES
+        or any other key for NO $defcol
+"
+
+nothing_to_do="
+        ${col1}Okay, I will not uncompress the file $col2${file}$defcol as requested.
+"
+decision="read -q '?$qprompt'"
+
+local -A filetype; filetype=(\
+        bz2cpio "cpio archive *bzip2*"
+        cpiogz  "cpio archive *gzip*"
+        tarbz2  "*tar archive*bzip2*"
+        targz   "*tar archive*gzip*"
+        tarz    "*POSIX tar archive \(compress\'d data 16 bits\)*"
+        bz2     "*\(bzip2 compressed data*"
+        tar     "*tar*"
+        gz      "*gzip*"
+        7zip    "*7-zip archive data*"
+        arj     "ARJ archive data*"
+        zip     "*Zip archive data*"
+        Z       "*compress'd data 16 bits*"
+        deb     "Debian binary package*"
+        uu      "*uuencoded*xxencoded*"
+        lzo     "lzop compressed data - *"
+        cpio    "cpio archive"
+        rar     "RAR archive data*"
+        cab     "CAB file"
+        #rpm    "$file: *RPM*"
+)
+
+tarlist='/usr/bin/env tar -tvf'                 ; tarextract='/usr/bin/env tar -C $whereto -xvf'
+tarbz2list='/usr/bin/env tar -tvjf'             ; tarbz2extract='/usr/bin/env tar -C ${whereto:-$PWD} -xvjf'
+targzlist='/usr/bin/env tar -tvzf'              ; targzextract='/usr/bin/env tar -C $whereto -xvzf'
+gzlist='/usr/bin/env gzip -lv'                  ; gzextract='/usr/bin/env gzip -dc'
+tarzlist='/usr/bin/env tar -tvZf'               ; tarzextract='/usr/bin/env tar -C $whereto -xvZf'
+tarcompresslist='/usr/bin/env tar -tvZf'        ; tarcompressextract='/usr/bin/env tar -$ whereto -xvZf'
+#cpiobz2list='bzip2 -cd $file | cpio -ivt'; cpiobz2extract='bzip2 -cd $CWD/$file  | cpio -idv'
+#cpiogzlist='gzip -cd $file | cpio -tv'
+#cpiogzextract='gzip -cd $file | cpio -ivd'
+cpiogz='/usr/bin/env star tzvf'                 ; cpiogzextract='/usr/bin/env star xzvf'
+_7ziplist='/usr/bin/env 7zr l'                  ; _7zipextract='/usr/bin/env 7zr e -o$whereto'
+arjlist='/usr/bin/env arj l'                    ; arjextract='/usr/bin/env arj e -e $CWD/$file'
+compresslist='/usr/bin/env uncompress -l'       ; compressextract='/usr/bin/env uncompress -cv'
+lhalist='/usr/bin/env lha -l'                   ; lhaextract='/usr/bin/env lha -xw=$whereto'
+deblist='/usr/bin/env dpkg-deb -c'              ; debextract='/usr/bin/env dpkg -X'
+lzolist='/usr/bin/env lzop -l'                  ; lzoextract='/usr/bin/env lzop -dN -p$whereto'
+cpiolist='/usr/bin/env cpio -t'                 ; cpioextract='/usr/bin/env cpio -idv'
+rarlist='/usr/bin/env unrar lb'                 ; rarextract='/usr/bin/env unrar e'
+cablist='/usr/bin/env cabextract -l'            ; cabextract='/usr/bin/env cabextract -d $whereto'
+#rpmlist='/usr/bin/env rpm2cpio  #rpmextract=
+ziplist='/usr/bin/env unzip -l'                 ; zipextract='/usr/bin/env unzip -d $whereto'
+
+
+# ------------------------------------------------- functions
+put_there() {
+        vared -p "
+        ${col2}Where should I extract to?
+        ${col4}( Non existing directories will be created,
+        completion works as do usual editing commands )$defcol
+        " whereto  && test -d $whereto \
+        || builtin mkdir -p $whereto
+}
+# -------------------------------------------end of functions
+
+((  ${+PAGER} )) || local PAGER=less
+
+
+ if [[ -f $file ]]
+ then
+        filetest=$( $FILEPRG -bz $file )
+        echo "This is a $col2$filetest$defcol"
+        sleep 1
+ whereto=$PWD
+         case "$filetest" in
+          ( ${~filetype[bz2cpio]} )
+                $=cpiobz2list  |&  $PAGER && eval $decision \
+                && put_there \
+                && CWD=$PWD \
+                && ( cd $whereto &&  print "${col1}extracting to $whereto$defcol" && ${(e)=cpiobz2extract}  ) \
+                || print $nothing_to_do ;;
+         ( ${~filetype[cpiogz]} )
+                ${(e)=cpiogzlist}  |  $PAGER && eval $decision \
+                && put_there \
+                && CWD=$PWD \
+                && ( cd $whereto &&  print "${col1}extracting to $whereto$defcol" && ${(e)=cpiogzextract}  ) \
+                || print $nothing_to_do ;;
+         ( ${~filetype[tarbz2]} )
+                $=tarbz2list $file \
+                       |
+                     $PAGER && eval $decision && put_there \
+                     && ${(e)=tarbz2extract} $file \
+                      || print $nothing_to_do ;;
+         ( ${~filetype[targz]} )
+                $=targzlist $file  | $PAGER && eval $decision \
+                && put_there \
+                && ${(e)=targzextract} $file \
+                || print $nothing_to_do ;;
+         ( ${~filetype[tarz]} )
+                $=tarzlist $file  | $PAGER && eval $decision \
+                && put_there \
+                && print "${col3}extracting to $whereto:$defcol" \
+                && ${(e)=tarzextract} $file \
+                || print $nothing_to_do ;;
+         ( ${~filetype[bz2]} )
+                bzip2 -tv $file  | $PAGER && eval $decision \
+                && put_there \
+                && bzip2 -dc $file > $whereto/${file:t:r} \
+                && print "extracting to $whereto/${file:t:r}" || print $nothing_to_do ;;
+         ( ${~filetype[gz]} )
+                $=gziplist  $file | $PAGER && eval $decision \
+                && put_there \
+                && dest="$whereto/${file:t:r}" \
+                && gzip -dc $file > $dest && print "extracting to $dest" || print $nothing_to_do ;;
+         ( ${~filetype[tar]} )
+                $=tarlist $file | $PAGER && eval $decision \
+                && put_there \
+                && ${(e)=tarextract} $file || print $nothing_to_do ;; #ok
+         ( ${~filetype[7zip]} )
+                $=_7ziplist $file | $PAGER && eval $decision \
+                && put_there \
+                && ${(e)=_7zipextract} $file || print $nothing_to_do ;; # -o cannot stand a space, attention! #ok
+         ( ${~filetype[arj]} )
+                $=arjlist $file | $PAGER && eval $decision \
+                && put_there \
+                && CWD=$PWD \
+                && ( cd $whereto && arj e -e $CWD/$file ) || print $nothing_to_do ;;
+         ( ${~filetype[zip]} )
+                ${=ziplist} $file | $PAGER && eval $decision \
+                && put_there \
+                && ${(e)=zipextract} $file || print $nothing_to_do ;; #ok
+         ( ${~filetype[Z]} )
+                $=compresslist $file | $PAGER && eval $decision \
+                && put_there \
+                && dest="$whereto/${file:t:r}" \
+                && ${(e)=compressextract} $file > $dest && print "extracting to $dest" || print $nothing_to_do ;; #ok
+         ( ${~filetype[lha]} )
+                $=lhalist $file   | $PAGER && eval $decision \
+                && put_there \
+                && ${(e)=lhaextract} $file || print $nothing_to_do ;; #ok
+         ( ${~filetype[rar]} )
+                 $=rarlist $file | $PAGER && eval $decision \
+                && put_there \
+                && CWD=$PWD \
+                && (cd $whereto && ${(e)=rarextract} $CWD/$file ) || print $nothing_to_do ;;  #ok
+         ( ${~filetype[lzo]} )
+                $=lzolist $file | $PAGER && eval $decision \
+                && put_there \
+                && ${(e)=lzoextract} $file || print $nothing_to_do ;; #ok
+         ( ${~filetype[cpio]} )
+                $=cpiolist < $file | $PAGER && eval $decision \
+                && put_there \
+                && CWD=$PWD \
+                && ( cd $whereto &&  ${(e)=cpioextract} < $CWD/$file ) || print $nothing_to_do ;; #ok
+         ( ${~filetype[deb]} )
+                ${(e)=deblist} $file | $PAGER && eval $decision \
+                && put_there \
+                && ${(e)=debextract} $file $whereto || print $nothing_to_do ;; #ok
+         ( ${~filetype[uu]} )
+                put_there \
+                && CWD=$PWD \
+                && ( cd $whereto && uudecode $CWD/$file ) || print $nothing_to_do ;;
+         ( ${~filetype[cab]} )
+                $=cablist $file | $PAGER && eval $decision \
+                put_there \
+                &&  ${(e)=cabextract} $file || print $nothing_to_do ;;
+        #( ${~filetype[rpm]} )
+        #       temp=$( dd if=/dev/urandom bs=1 count=30 2>/dev/null | uuencode - | tr -d '[[:punct:]]' | sed '2!d' )
+        #       temp=${(C)${${${(f)"$(dd if=/dev/urandom bs=1 count=20 2>/dev/null | uuencode - 2>/dev/null)"}[2]}//[[:punct:]]}}
+        # (cd $temp &&  rpm2cpio $file && CPIO=*.cpio && cpio -ivt < $CPIO )\
+        #       put_there \
+        #
+        #       && ( cd $whereto && cpio -ivd < $temp/$file ) || print $nothing_to_do
+        #       rm -r $temp ;;
+         ( * )
+                echo "${alarmcol}Error. Not the expected arguments or other problem!$defcol"
+                echo "Usage: $0 file" ; exit 1 ;;
+         esac
+ else
+         echo "'$file' is not a valid file"
+ fi
+
+## END OF FILE #################################################################

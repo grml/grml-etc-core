@@ -1,0 +1,17 @@
+#!/bin/sh
+# Filename:      findchanged
+# Purpose:       find changes in (real) files of dir1 ... dir2
+# Authors:       grml-team (grml.org), (c) Klaus Knopper, (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+  if [ -d "$1" ]; then
+    for i in `( cd "$1"; find . -type f 2>/dev/null | sed 's,^\./,,g' | grep -v ' ' )`; do
+      cmp -s "$1/$i" "$2/$i" || echo "$1/$i"
+    done
+  elif [ -e "$1" ]; then
+    cmp -s "$1" "$2" || echo "$1"
+  fi
+
+## END OF FILE #################################################################

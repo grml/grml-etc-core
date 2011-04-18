@@ -1,0 +1,83 @@
+#!/bin/zsh
+# Filename:      grml-info
+# Purpose:       start browser with documentation for Grml (based) system
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+# allow customisation
+[ -n "$distri" ] || distri=grml
+
+if [ -r "/usr/share/doc/${distri}-docs/index.html" ] ; then
+  # support easy customisation, file doesn't exist
+  # by default on mainline Grml
+  local PAGE="/usr/share/doc/${distri}-docs/index.html"
+else
+  local PAGE='/usr/share/doc/grml-docs/startpage.html'
+fi
+
+. /etc/grml/script-functions
+
+# do we have X?
+if [ -n "$DISPLAY" ] ; then
+   if check4progs dillo &>/dev/null ; then
+     dillo $PAGE
+   elif check4progs xlinks2 &>/dev/null ; then
+     xlinks2 -mode 640x480 $PAGE
+   elif check4progs firefox &>/dev/null ; then
+     firefox $PAGE
+   elif check4progs x-www-browser &>/dev/null ; then
+     x-www-browser $PAGE
+   elif check4progs Xdialog &>/dev/null ; then
+     Xdialog --msgbox "Sorry, no usable X browser (dillo, xlinks2, firefox,...) found." 0 0
+     exit 1
+   elif check4progs gdialog &>/dev/null ; then
+     gdialog --msgbox "Sorry, no usable X browser (dillo, xlinks2, firefox,...) found." 0 0
+     exit 1
+   elif check4progs zenity &>/dev/null ; then
+     zenity --info --text="Sorry, no usable X browser (dillo, xlinks2, firefox,...) found."
+     exit 1
+   fi
+else # no X:
+   # do we have a real console?
+   if [[ $(tty) == /dev/tty* ]] ; then
+      # do we have framebuffer support?
+      if [ -c /dev/fb0 ] ; then
+         if check4progs links2 &>/dev/null ; then
+            links2 -driver fb $PAGE
+         elif check4progs w3m &>/dev/null; then
+            w3m $PAGE
+         elif check4progs links &>/dev/null ; then
+            links $PAGE
+         else
+            echo "Sorry, neither links2 nor w3m nor links available. Exiting.">&2
+            exit 1
+         fi
+      else # no, we don't have framebuffer
+         if check4progs w3m &>/dev/null ; then
+            w3m $PAGE
+         elif check4progs links &>/dev/null ; then
+            links $PAGE
+         elif check4progs links2 &>/dev/null ; then
+            links2 $PAGE
+         else
+            echo "Sorry, neither w3m nor links nor links2 available. Exiting.">&2
+            exit 1
+         fi
+      fi
+   else # no, probably we are running inside GNU screen
+      if check4progs w3m &>/dev/null ; then
+         w3m $PAGE
+      elif check4progs links2 &>/dev/null ; then
+         links2 $PAGE
+      elif check4progs links &>/dev/null ; then
+         links $PAGE
+      else
+         echo "Sorry, neither w3m nor links2 nor links available. Exiting.">&2
+         exit 1
+      fi
+   fi
+fi
+
+## END OF FILE #################################################################

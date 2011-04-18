@@ -1,0 +1,2048 @@
+#!/bin/bash
+######################################################################
+#
+#           I_I_M_A_G_E
+#
+# Copyright (c) 1996-2004, Ronald Schmidt    <ronsc@ronsc.de>
+#               2000-2004, Holm Sieber       <sieber@prudsys.com>
+#                    2004, Daniel Molkentin  <daniel@molkentin.de>
+#                    2004, Sven Guckes       <guckes@guckes.net>
+#
+# Download: http://www.ronsc.de
+#
+######################################################################
+#
+# All rights reserved.
+#
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+# Redistributions in binary form must reproduce the above copyright
+# notice, this list of conditions and the following disclaimer in the
+# documentation and/or other materials provided with the distribution.
+# Neither the name of the organization nor the names of its
+# contributors may be used to endorse or promote products derived
+# from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+# COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+#
+######################################################################
+#
+#     Web:     http://www.ronsc.de/iimage/
+#
+#     List:    https://mailman.ronsc.de/listinfo/iimage
+#
+######################################################################
+
+SVN_ID="$Id: iimage 38 2009-12-15 20:30:46Z ronsc $"
+
+# old templates might still use CVS_VERSION
+CVS_VERSION="$SVN_ID"
+
+##############################################################
+# Defaults
+
+PATH=$PATH:/usr/X11R6/bin:/usr/bin
+# external commands: convert identify jpegtran metacam mplayer
+# awk basename cat cp date echo find grep mkdir mv rm uname
+
+FONT="fixed"
+COLOR="white"
+FONTSIZE="14"
+
+DATADIR=".tmp"
+
+LANG=en_US
+
+DISPLAY_GEOMETRY=640x480
+THUMBNAIL_GEOMETRY=150x150
+THUMBNAIL_QUALITY=75
+
+THUMBNAILS="$DISPLAY_GEOMETRY $THUMBNAIL_GEOMETRY"
+
+# Slide-Show Options
+SLIDE_DELAY=5
+SLIDE_LOOP=false
+
+EXCLUDE_ORGINAL=false
+RECURSIVE=false
+IIMAGE_SPECIAL=false
+
+COLUMNS=4
+
+VARIABLES="title description order date ignore iorder \
+           FONT COLOR FONTSIZE CTAG \
+           THUMBNAIL_QUALITY \
+           SLIDE_DELAY SLIDE_LOOP \
+           EXCLUDE_ORGINAL RECURSIVE COLUMNS \
+           AUDIODIR IIMAGE_SPECIAL"
+
+##############################################################
+# handlers
+
+FILE_EXTENSIONS='jpg jpeg gif png avi mov mpeg'
+function AVI_handler_prepare() {
+   # evtl ein bild aus den ersten 10 sec
+
+   if [ "$MPLAYER" ] ; then
+
+
+      DST="$DATADIR/$1.1st.jpg"
+
+      if [ "$DST" -ot "$1" ]; then
+
+         echo -n " 1st"
+         rm -f $DATADIR 00000001.jpg 00000002.jpg
+
+         mplayer -quiet -frames 1 -ao none -vo jpeg -jpeg outdir=$DATADIR $1 >/dev/null 2>/dev/null
+
+         if  [ -f "$DATADIR/00000001.jpg" ] ; then
+            convert "$DATADIR/00000001.jpg" -resize $THUMBNAIL_GEOMETRY "$DST"
+         fi
+
+         rm -f $DATADIR 00000001.jpg 00000002.jpg
+      fi
+   fi
+   true
+}
+
+function AVI_handler_index() {
+   echo -n " I"
+
+   THIS_IMAGE="$1"
+   THIS_HTML="$DATADIR/$THIS_IMAGE.html"
+   THIS_HTML_INFO="$DATADIR/$THIS_IMAGE.info.html"
+
+   if [ -f "$DATADIR/$1.1st.jpg" ] ; then
+      ITEM_ICON=$1.1st.jpg
+   else
+      ITEM_ICON=avi.jpg
+   fi
+   { . $INDEX_ICON_TEMPLATE;} >> "$INDEX_HTML"
+}
+
+function AVI_handler_html() {
+   # keine extra ansicht
+   true;
+}
+
+function MPEG_handler_prepare() {
+   AVI_handler_prepare $@
+}
+function MPEG_handler_index() {
+   AVI_handler_index $@
+}
+function MPEG_handler_html() {
+   AVI_handler_html $@
+}
+
+function MOV_handler_prepare() {
+   # evtl ein bild aus den ersten 10 sec
+   AVI_handler_prepare $1
+}
+
+function MOV_handler_index() {
+   echo -n " I"
+
+   THIS_IMAGE="$1"
+   THIS_HTML="$DATADIR/$THIS_IMAGE.html"
+   THIS_HTML_INFO="$DATADIR/$THIS_IMAGE.info.html"
+   if [ -f "$DATADIR/$1.1st.jpg" ] ; then
+      ITEM_ICON=$1.1st.jpg
+   else
+      ITEM_ICON=mov.jpg
+   fi
+   { . $INDEX_ICON_TEMPLATE ;} >> "$INDEX_HTML"
+}
+
+function MOV_handler_html() {
+   # keine extra ansicht
+   true;
+}
+
+
+function default_handler_index() {
+   echo -n " I"
+
+   THIS_IMAGE="$1"
+   THIS_HTML="$DATADIR/$THIS_IMAGE.html"
+   THIS_HTML_INFO="$DATADIR/$THIS_IMAGE.info.html"
+
+   load_image_infos $1
+
+   { . $INDEX_ITEM_TEMPLATE ; } >> "$INDEX_HTML"
+}
+
+function default_handler_html() {
+
+   FILE="$1"; THIS_IMAGE="$1";
+   load_image_infos $1
+
+   PREV_IMAGE=`( echo index ; cat $DATADIR/slideable ; echo index ; ) | grep -1 "^$THIS_IMAGE$" | head -n 1`
+   NEXT_IMAGE=`( echo index ; cat $DATADIR/slideable ; echo index ; ) | grep -1 "^$THIS_IMAGE$" | tail -n 1`
+
+   POS=$[ $POS + 1 ]
+
+   echo -n " $POS"
+
+   if [ "$NEXT_IMAGE" = "index" ] ; then
+      R_NEXT_HTML="../index.html"
+      R_NEXT_HTML_INFO="../index.html"
+      R_NEXT_HTML_SLIDE="../index.html"
+   else
+      R_NEXT_HTML="$NEXT_IMAGE.html"
+      R_NEXT_HTML_INFO="$NEXT_IMAGE.info.html"
+      R_NEXT_HTML_SLIDE="$NEXT_IMAGE.slide.html"
+   fi
+
+   if [ "$PREV_IMAGE" = "index" ] ; then
+      R_PREV_HTML="../index.html"
+      R_PREV_HTML_INFO="../index.html"
+      R_PREV_HTML_SLIDE="../index.html"
+   else
+      R_PREV_HTML="$PREV_IMAGE.html"
+      R_PREV_HTML_INFO="$PREV_IMAGE.info.html"
+      R_PREV_HTML_SLIDE="$PREV_IMAGE.slide.html"
+   fi
+
+   R_THIS_HTML="$THIS_IMAGE.html"
+   THIS_HTML="$DATADIR/$THIS_IMAGE.html"
+   THIS_HTML_INFO="$DATADIR/$THIS_IMAGE.info.html"
+   THIS_HTML_SLIDE="$DATADIR/$THIS_IMAGE.slide.html"
+
+   if [ "$FIRST_HTML" = "" ] ; then
+      FIRST_HTML="$THIS_HTML";
+   fi
+
+   echo -n " H"
+   { . $HTML_TEMPLATE ;} > "$THIS_HTML"
+
+   echo -n "+"
+   { . $HTML_INFO_TEMPLATE ;} > "$THIS_HTML_INFO"
+
+   echo -n "*"
+   { . $HTML_SLIDE_TEMPLATE ;} > "$THIS_HTML_SLIDE"
+
+}
+
+function default_handler_prepare() {
+   build_thumbnail "$1"
+   echo "$1" >> $DATADIR/slideable
+}
+
+
+##############################################################
+##############################################################
+##############################################################
+##############################################################
+# load config
+if [ -f  /etc/iimage.conf ] ; then . /etc/iimage.conf; fi
+if [ -f  ~/.iimage ] ; then . ~/.iimage; fi
+if [ -f  ~/.iimage/config ] ; then . ~/.iimage/config; fi
+
+dcount=1;
+for dir in `pwd | tr '/' ' '` ; do
+   dfile=`pwd | cut -d"/" -f-$dcount`/description
+   dcount=$[ $dcount + 1 ]
+   if [ -f $dfile ] ; then 
+      . $dfile 2>/dev/null
+   fi
+done
+unset order title description 
+
+if [ -f  ./description ] ; then . ./description 2>/dev/null ; fi
+
+
+##############################################################
+# definitions
+
+VERSION="r`echo $SVN_ID| cut -d " " -f 3`"
+
+HTML_TEMPLATE="$DATADIR/html_template.html"
+HTML_INFO_TEMPLATE="$DATADIR/html_info_template.html"
+HTML_SLIDE_TEMPLATE="$DATADIR/html_slide_template.html"
+
+if [ "$TEMPLATEDIR" = "" ] ; then
+   TEMPLATEDIR="~/.iimage"
+fi
+
+FOOTER_TEMPLATE="$DATADIR/footer_template.html"
+HEAD_TEMPLATE_START="$DATADIR/head_template_start.html"
+HEAD_TEMPLATE_END="$DATADIR/head_template_end.html"
+INDEX_HEAD_TEMPLATE="$DATADIR/index_head_template.html"
+INDEX_ITEM_TEMPLATE="$DATADIR/index_item_template.html"
+INDEX_ICON_TEMPLATE="$DATADIR/index_icon_template.html"
+INDEX_FOOT_TEMPLATE="$DATADIR/index_foot_template.html"
+INDEX_DIR_TEMPLATE="$DATADIR/index_dir_template.html"
+CSS_TEMPLATE="$DATADIR/css_template.css"
+INFO_AWK_TEMPLATE="$DATADIR/display_info_template.awk"
+TRANSP_PIXEL="$DATADIR/transp.gif"
+DIR_ICON="$DATADIR/dir.gif"
+AVI_ICON="$DATADIR/avi.jpg"
+MOV_ICON="$DATADIR/mov.jpg"
+SND_ICON="$DATADIR/snd.png"
+COUNTFILE_CURENT="$DATADIR/count.current"
+COUNTFILE_SUB="$DATADIR/count.sub"
+COUNTFILE_SUM="$DATADIR/count.summ"
+INDEX_HTML="index.html"
+
+DATA_FILES="DIR_ICON \
+TRANSP_PIXEL INFO_AWK_TEMPLATE CSS_TEMPLATE INDEX_DIR_TEMPLATE \
+INDEX_FOOT_TEMPLATE INDEX_ITEM_TEMPLATE INDEX_HEAD_TEMPLATE \
+HTML_INFO_TEMPLATE HTML_TEMPLATE \
+HTML_SLIDE_TEMPLATE AVI_ICON MOV_ICON INDEX_ICON_TEMPLATE \
+SND_ICON HEAD_TEMPLATE_START HEAD_TEMPLATE_END \
+FOOTER_TEMPLATE"
+
+######################################################################
+######################################################################
+######################################################################
+# funktions
+
+function upper() { echo $* | tr "[a-z]" "[A-Z]" ; }
+function lowerr() { echo $* | tr "[A-Z]" "[a-z]" ; }
+
+function load_image_infos() {
+
+   THIS_IMAGE=$1
+
+   TN_IMAGE=$DATADIR/$THUMBNAIL_GEOMETRY/$THIS_IMAGE
+   TN_IMAGE_SIZE=`cat $DATADIR/$THUMBNAIL_GEOMETRY/$THIS_IMAGE.size`
+
+   THIS_IMAGE_GEOMETRY=`cat $DATADIR/$THIS_IMAGE.geometry`
+   if [ "$METACAM" ]; then
+      THIS_IMAGE_DATE="`metainfo $DATADIR/$THIS_IMAGE.metacam \
+         'Image Creation Date'`"
+   elif [ "$JHEAD" ]; then
+      THIS_IMAGE_DATE="`metainfo $DATADIR/$THIS_IMAGE.metacam \
+         'Date/Time'`"
+   fi
+
+   R_IMAGE=../$THIS_IMAGE
+   R_DISPLAY_IMAGE=$DISPLAY_GEOMETRY/$THIS_IMAGE
+   TN_IMAGE=$DATADIR/$THUMBNAIL_GEOMETRY/$THIS_IMAGE
+
+   TN_IMAGE_SIZE=`cat $DATADIR/$THUMBNAIL_GEOMETRY/$THIS_IMAGE.size`
+   R_DISPLAY_IMAGE_SIZE=`cat $DATADIR/$DISPLAY_GEOMETRY/$THIS_IMAGE.size`
+
+   THIS_IMAGE_GEOMETRY=`cat $DATADIR/$THIS_IMAGE.geometry`
+   if [ "$METACAM" ]; then
+      THIS_IMAGE_DATE="`metainfo $DATADIR/$THIS_IMAGE.metacam \
+         'Image Creation Date'`"
+   elif [ "$JHEAD" ]; then
+      THIS_IMAGE_DATE="`metainfo $DATADIR/$THIS_IMAGE.metacam \
+         'Date/Time'`"
+   fi
+
+   EXTENSION=`echo $THIS_IMAGE  | awk -F"." '{print $NF}'`
+   WAV_FILE_BASE=`basename $THIS_IMAGE .$EXTENSION`
+   if [ "$AUDIODIR" != "" ] ; then AUDIODIREXT="$AUDIODIR/"; fi
+   WAV_FILE=`eval \ls "$AUDIODIREXT$WAV_FILE_BASE.[wW][aA][vV]" 2>/dev/null | head -n 1`
+
+   if [ -f "$WAV_FILE" ] ; then
+      EXTRA_SMALL_ICON="<a href=$WAV_FILE><img alt=\"Sound-Logo\" src=\"$DATADIR/snd.png\" align=\"right\" border=\"0\"></a>";
+      EXTRA_SMALL_ICON2="<a href=../$WAV_FILE><img alt=\"Sound-Logo\" src=\"snd.png\" border=\"0\"></a>";
+   else
+      EXTRA_SMALL_ICON=""
+      EXTRA_SMALL_ICON2=""
+   fi
+}
+
+# --------------------------------------------------------------------
+function require() {
+   which $1 2>/dev/null >> $DATADIR/log
+   if which $1 2>/dev/null >/dev/null ; then
+      true
+   else
+      echo "ERROR: $1 not found!"
+      exit;
+   fi
+}
+
+# --------------------------------------------------------------------
+# get filesize
+function filesize() {
+   echo -ne "`ls -L -l -d -G \"$1\" | awk '{print $4}'`"
+}
+
+# --------------------------------------------------------------------
+# read key:val from description-file
+function description() {
+
+   file="description"
+   if [ "$2" != "" ] ; then file="$2"; fi
+
+   if [ -f "$file" ] ; then
+      grep "^$1" "$file" \
+      | awk -F"=" '{for (a=2;a<=NF;a++) {if (b!="") b=b "=" ; \
+                   b=b $a}}END{printf b}' | cut -d"\"" -f 2
+   fi
+}
+
+function wrap_table() {
+   T_COUNT=$[ $T_COUNT + 1 ]
+
+   if [ $T_COUNT -gt $COLUMNS ] ; then
+      echo "</tr><tr>";
+      T_COUNT=1;
+   fi;
+
+   export T_COUNT
+
+   # alte templates meeren dadrin rum
+   [ -f .count ] && echo 0 >.count
+}
+
+# --------------------------------------------------------------------
+function metainfo() {
+   file=$1;
+   tag=$2;
+   cat "$file" | grep "$tag" \
+   | awk -F": " '{ a=$2; while (substr(a,1,1)==" ") \
+                 { a=substr(a,2);} print a}'
+}
+
+# --------------------------------------------------------------------
+function generate_info_table() {
+
+   if [ -f "$DATADIR/$THIS_IMAGE.metacam" ] ; then
+      cat "$DATADIR/$THIS_IMAGE.metacam" | awk -F": " -f "$INFO_AWK_TEMPLATE"
+   fi
+   if [ -f "$DATADIR/$THIS_IMAGE.identify" ] ; then
+      cat "$DATADIR/$THIS_IMAGE.identify" | awk -F": " -f "$INFO_AWK_TEMPLATE"
+   fi
+}
+
+# --------------------------------------------------------------------
+function rotate_image() {
+   FILE="$1"
+   if [ $METACAM ]; then
+     ORIENTATION=`metacam -v "$FILE" 2>/dev/null \
+                | grep Orientation | cut -d":" -f 2  | cut -d"," -f 1 `
+   elif [ $JHEAD ]; then
+     ORIENTATION=`jhead -v "$FILE" 2>/dev/null \
+                | grep "Orientation =" | head -1 | cut -d '=' -f 2 | cut -c 2 `
+   fi
+   ORIENTATION=`echo $ORIENTATION`
+
+   if [ "$ORIENTATION" -a "$ORIENTATION" != "1" ] ; then
+      SIZE=`identify "$FILE"| cut -d" " -f 3`
+      WIDTH=`echo $SIZE | cut -d"x" -f 1 | cut -d"+" -f 1`
+      HEIGHT=`echo $SIZE | cut -d"x" -f 2 | cut -d"+" -f 1`
+
+      if [ "$HEIGHT" -lt "$WIDTH" ] ; then
+
+         mkdir -p .backup
+         if [ ! -f .backup/$FILE ] ; then
+            echo -n " B"
+            cp $FILE .backup/$FILE
+         fi
+
+         if [ "$ORIENTATION" = "6" ] ; then
+            echo -n " /"
+            jpegtran -rotate 90 -copy all "$FILE" >"$FILE""_"
+         else
+            echo -en " \\"
+            jpegtran -rotate 270 -copy all "$FILE" >"$FILE""_"
+         fi
+         mv -f "$FILE""_" "$FILE"
+      fi
+   fi
+}
+
+##############################################################
+# generate thumbnails
+function build_thumbnail() {
+
+   IMAGE="$1"
+
+   if [ "$METACAM" ] || [ "$JHEAD" ]; then
+      if [ -a "$JPEGTRAN" ] ; then
+         rotate_image "$IMAGE"
+      fi
+   fi
+
+   if [ ! -f "$DATADIR/$IMAGE.size" -o \
+        "$DATADIR/$IMAGE.size" -ot "$IMAGE" ] ; then
+      # identify -format "%wx%h" "$IMAGE" > "$DATADIR/$IMAGE.geometry"
+
+      if [ "$IDENTIFY2" ] ; then
+         echo -n " I"
+         identify \
+            -format "  Geometry: %wx%h\n  Format: %m\n  Filesize: %b" \
+            "$IMAGE" > "$DATADIR/$IMAGE.identify"
+      else
+         echo -n " i"
+         identify -verbose "$IMAGE" > "$DATADIR/$IMAGE.identify"
+      fi
+
+      echo -n "S"
+      cat "$DATADIR/$IMAGE.identify" \
+           | grep "^ *.eometry:" \
+           | awk -F': ' '{print $2}' > "$DATADIR/$IMAGE.geometry"
+      cat "$DATADIR/$IMAGE.geometry" \
+           | awk -F"x" '{print "WIDTH=\""$1"\" HEIGHT=\""$2"\""}' > $DATADIR/$IMAGE.size
+   fi
+
+   if [ "$METACAM" ] ; then
+      if [ ! -f "$DATADIR/$IMAGE.metacam" -o \
+             "$DATADIR/$IMAGE.metacam" -ot "$IMAGE" ] ; then
+         echo -n " M"
+         metacam "$IMAGE" >"$DATADIR/$IMAGE.metacam" 2>/dev/null
+      fi
+   elif [ "$JHEAD" ] ; then
+      if [ ! -f "$DATADIR/$IMAGE.metacam" -o \
+             "$DATADIR/$IMAGE.metacam" -ot "$IMAGE" ] ; then
+         echo -n " J"
+         jhead "$IMAGE" >"$DATADIR/$IMAGE.metacam" 2>/dev/null
+      fi
+   fi
+
+   echo -n " "
+
+   LASTIMAGE="";
+
+   for GEOMETRY in $THUMBNAILS; do
+
+      mkdir -p "$DATADIR/$GEOMETRY" || exit
+
+      echo -ne "($GEOMETRY"
+      DST="$DATADIR/$GEOMETRY/$IMAGE"
+
+      if [ ! \( -L "$DST" -a -L "$IMAGE" \) ] ; then
+      if [ ! -s "$DST" -o "$DST" -ot "$IMAGE" -o "$FORCE_TN" = "true" ] ; then
+
+         if [ "$LASTIMAGE" = "" ] ; then
+            LASTIMAGE="$IMAGE";
+         fi
+
+         echo -n " T"
+         convert  -quality $THUMBNAIL_QUALITY \
+                  -resize "$GEOMETRY+0+0>" "$LASTIMAGE" \
+                  "$DST"
+#                  +profile "$LASTIMAGE" \
+
+         LASTIMAGE="$DST"
+
+         # optimize with jpegtran
+
+         JPEG=""
+
+         echo $DST | grep .jpg >/dev/null && JPEG=true
+         echo $DST | grep .JPG >/dev/null && JPEG=true
+         echo $DST | grep .jpeg >/dev/null && JPEG=true
+         echo $DST | grep .JPEG >/dev/null && JPEG=true
+
+         if [ "$JPEGTRAN" -a "$JPEG" ] ; then
+            echo -n " O"
+            jpegtran -copy all -optimize -progressive "$DST" > "$DST.tmp"
+            mv -f "$DST.tmp" "$DST"
+         fi
+
+      fi
+      fi
+
+      if [ ! -f "$DST.size" -o "$DST.size" -ot "$DST" ] ; then
+
+         # imagesite WIDTHxHEIGH
+         # identify -format "%wx%h" "$DST" > "$DST.geometry"
+
+         if [ "$IDENTIFY2" ] ; then
+            echo -n " I"
+            identify \
+               -format "  Geometry: %wx%h\n  Format: %m\n  Filesize: %b" \
+               "$DST" \
+               | grep "^ *.eometry:" \
+               | awk -F': ' '{print $2}' > "$DST.geometry"
+         else
+            echo -n " I"
+            identify -verbose "$DST" | grep "^ *.eometry:" \
+               | awk -F': ' '{print $2}' > "$DST.geometry"
+         fi
+
+         echo -n "S"
+
+         # cache image-geometry
+         cat "$DST.geometry" | awk -F"x" '{print "WIDTH=\""$1"\" HEIGHT=\""$2"\""}' \
+            > "$DST.size"
+
+         if [ "$GEOMETRY" != "$THUMBNAIL_GEOMETRY" -a "$CTAG" ] ; then
+            Y=`cat "$DST.geometry" | cut -d"x" -f2 `
+            echo -n " TG"
+            convert "$DST" -pointsize $FONTSIZE \
+               -font "$FONT" -stroke black -fill black \
+               -draw 'text 10, '"$[ $Y - 10 ]"' "'"$CTAG"'"' "$DST"_
+            mv -f "$DST"_ "$DST"
+            convert "$DST" -pointsize $FONTSIZE \
+               -font "$FONT" -stroke $COLOR -fill $COLOR \
+               -draw 'text 9, '"$[ $Y - 9 ]"' "'"$CTAG"'"' "$DST"_
+            mv -f "$DST"_ "$DST"
+         fi
+
+      fi
+
+      echo -n ") "
+
+   done
+}
+
+##############################################################
+function search_subdirs() {
+
+   ORDER=`description order`
+
+   if [ "$ORDER" = "" ] ; then ORDER="alphabetically"; fi
+
+   if [ "$ORDER" = "accesstime" ] ; then
+      RAWDIRS=`eval "find * -maxdepth 0 -type d $IIMAGE_EXCLUDE"`
+      if [ "$RAWDIRS" != "" ] ; then
+         DIRS=`ls -dt $RAWDIRS`
+      else
+         DIRS=""
+      fi
+   elif [ "$ORDER" = "alphabetically" ] ; then
+      DIRS=`eval "find * -maxdepth 0 -type d $IIMAGE_EXCLUDE"`
+   elif [ "$ORDER" = "dec" ] ; then
+      DIRS=`eval "find * -maxdepth 0 -type d $IIMAGE_EXCLUDE"`
+   else
+      DIRS=$ORDER
+   fi
+
+   COUNT_SUBDIRS=0;
+
+   for DIR in $DIRS ; do
+
+      if [ "$DIR" = "---" ] ; then
+         echo "<tr><td colspan=\"3\"><hr noshade size=\"1\"></td></tr>";
+      else
+
+         FOLDER_DESCRIPTION="";
+         SUB_IMAGE=""
+         SUB_IMAGE_size="";
+         SUB_TITLE="";
+         SUB_COUNT=0;
+
+         if [ -f "$DIR/$COUNTFILE_SUM" ] ; then
+            SUB_COUNT=`cat $DIR/$COUNTFILE_SUM`
+            if [ "$SUB_COUNT" = "" ] ; then SUB_COUNT=0; fi
+         else
+            SUB_COUNT=0;
+         fi
+
+         if [ "$SUB_COUNT" -gt 0 ] ; then
+            SUB_COUNT_STR="$SUB_COUNT";
+         else
+            SUB_COUNT_STR="";
+         fi
+
+
+         COUNT_SUBDIRS=$[ $COUNT_SUBDIRS + $SUB_COUNT ]
+
+         if [ -f "$DIR/description" ]; then
+
+            title="`description title $DIR/description`"
+            date="`description date $DIR/description`"
+            FOLDER_DESCRIPTION="`description description $DIR/description`"
+
+            if [ "$title" = "" ] ; then title=$DIR ; fi
+
+            eval `grep mainimage= $DIR/description`
+
+            SUB_IMAGE=$DIR/$DATADIR/$THUMBNAIL_GEOMETRY/$mainimage
+            SUB_IMAGE_size=$DIR/$DATADIR/$THUMBNAIL_GEOMETRY/$mainimage.size
+
+            SUB_TITLE="$title"
+            if [ "$date" != "none" ] ; then SUB_DATE="$date"; fi
+
+         else
+            SUB_TITLE=$DIR
+         fi
+
+         SUB_DST=$DIR/index.html
+
+         { . $INDEX_DIR_TEMPLATE ;}
+      fi
+
+   done
+
+   echo $COUNT_SUBDIRS > $COUNTFILE_SUB
+
+}
+
+##############################################################
+# create picture index
+
+function check_iimage() {
+   info
+
+   require convert
+   require find
+   require awk
+   require identify
+   require grep
+
+   {
+      uname
+      identify  | grep Version
+      convert  | grep Version
+   } >> $DATADIR/log
+
+   JPEGTRAN="`which jpegtran 2>/dev/null`"
+   MPLAYER="`which mplayer 2>/dev/null`"
+   METACAM="`which metacam 2>/dev/null`"
+   JHEAD="`which jhead 2>/dev/null`"
+   IDENTIFY2=`identify  | grep -- -format 2>/dev/null`
+   IIMAGE_FOLLOW_LINKS="`which iimage_follow_links 2>/dev/null`"
+
+   HOSTNAME=`hostname --fqdn 2>/dev/null || hostname`
+
+   echo -n "features: "
+
+   [ "$JPEGTRAN" ] && echo -n "jpegtran "
+   [ "$MPLAYER" ] && echo -n "mplayer "
+   [ "$METACAM"  ] && echo -n "metacam "
+   [ "$JHEAD"  ] && echo -n "jhead "
+   [ "$IDENTIFY2" ] && echo -n "identify>5.x "
+   [ "$IIMAGE_FOLLOW_LINKS" ] && echo -n "follow_links "
+
+   echo ""
+   echo "legend:   I..identify S..size M..metacam J..jhead T..thumb O..optimize"
+   echo "-----------------------------------------------------------------------------"
+
+   IIMAGE_CHECK="ok"
+   export IIMAGE_CHECK METACAM JPEGTRAN IDENTIFY2 IIMAGE_FOLLOW_LINKS
+
+   IIMAGE_TOPLEVEL=true;
+}
+
+function store_templates() {
+
+   TMPLATES=""
+
+   for file in $DATA_FILES ; do
+
+      base_file=`eval 'echo -e $'$file`
+
+      if [ ! -f $base_file -o "$FORCE_TEMPLATES" = "true" ] ; then
+
+         src_file=`basename $base_file`
+
+         if [ "$TMPLATES" = "" ] ; then
+            echo -en "TEMPLATE:\t"
+            TMPLATES=false;
+         fi
+
+         #"$FORCE_TEMPLATES" = "" -a
+         if [ "(" -f $TEMPLATEDIR/$src_file -o -L $TEMPLATEDIR/$src_file ")" ] ; then
+            cp $TEMPLATEDIR/$src_file $base_file
+            echo -n "~"
+         else
+            eval "put_$file >$base_file"
+            echo -n "o"
+         fi
+      fi
+
+   done
+
+   [ "$TMPLATES" != "" ] && echo # OK
+}
+
+function init_iimage() {
+
+   mkdir -p $DATADIR; ls -l >$DATADIR/ls-l.new; touch $DATADIR/ls-l.old
+
+   date > $DATADIR/log
+   rm -f $DATADIR/errors
+
+   [ "$IIMAGE_CHECK" = "" ] && check_iimage;
+
+
+   # -- einige Dinge ignorieren --
+   IIMAGE_EXCLUDE=""
+   IGNORE=`description ignore`
+
+   IGNORE="$IGNORE $AUDIODIR"
+
+   for file in $IGNORE ; do
+       IIMAGE_EXCLUDE="$IIMAGE_EXCLUDE ! -name \"$file\" "
+   done
+   IIMAGE_EXCLUDE="$IIMAGE_EXCLUDE ! -name $DATADIR"
+   
+   export IIMAGE_EXCLUDE
+
+}
+
+function find_all_images() {
+
+
+
+
+   FILE_EXTENSIONS_UPPER=`upper $FILE_EXTENSIONS`
+
+   ALL_IMAGES=
+   for ext in $FILE_EXTENSIONS $FILE_EXTENSIONS_UPPER ; do
+      ALL_IMAGES="$ALL_IMAGES `eval \"find *.$ext -type f -maxdepth 0 $IIMAGE_EXCLUDE 2>/dev/null \"`"
+   done
+
+   # Bilder sortieren
+
+   IORDER=`description iorder`
+
+   if [ "$IORDER" = "" ] ; then IORDER="alphabetically"; fi
+
+   if [ "$IORDER" = "digicam" ] ; then
+      ALL_IMAGES=`ls $ALL_IMAGES | sort -n -k 2 -t "_"`
+      true
+   elif [ "$IORDER" = "alphabetically" ] ; then
+      # bleibt beim alten
+      true
+   elif [ "$IORDER" = "accesstime" -o "$IORDER" = "accesstime_asc" -o "$IORDER" = "accesstime_ascending" ] ; then
+      ALL_IMAGES=`ls -dtr $ALL_IMAGES`
+      true
+   elif [ "$IORDER" = "accesstime_desc" -o "$IORDER" = "accesstime_descending" -o "$IORDER" = "dec" ] ; then
+      ALL_IMAGES=`ls -dt $ALL_IMAGES`
+      true
+   elif [ "$IORDER" = "description" ] ; then                 # 5.1.2005 hfst
+      # in der Reihenfolge wie die Beschreibungen
+      ALL_IMAGES=`for file in $ALL_IMAGES; do
+         grep -n "^$file" description | awk -F"=" '{print $1}' 
+      done | sort -nt":" | awk -F":" '{print $2}'`            # 5.1.2005 hfst ende
+   else
+      ALL_IMAGES=$IORDER
+   fi
+
+}
+
+
+function prepare_dir () {
+
+   store_templates
+
+   find_all_images
+
+#   mkdir -p $DATADIR
+#   ls -l >$DATADIR/ls-l.new
+#   touch $DATADIR/ls-l.old
+
+   GI_COUNT="`echo $ALL_IMAGES | wc -w`"
+   echo $GI_COUNT > $COUNTFILE_CURENT
+
+   TITLE="`description title`"
+   FOLDER_DESCRIPTION="`description description`"
+
+   if [ "$TITLE" = "" ] ; then
+      TITLE="`basename $PWD`"
+   fi
+
+}
+
+function iimage_recursive() {
+
+   if [ "$RECURSIVE" = "true" ] ; then
+      eval "find * -maxdepth 0 -type d $IIMAGE_EXCLUDE " | while read dir ; do
+         ( cd $dir && $0 $*; )
+      done
+   fi
+}
+
+function prepare_images() {
+
+   # evtl noch modularisieren und erweiterbar machen
+   [ $IIMAGE_FOLLOW_LINKS ] && iimage_follow_links;
+
+   rm -f $DATADIR/slideable
+
+   echo "prepare images ..."
+
+   if [ "$GI_COUNT" -gt "0" ] ; then
+      for image in $ALL_IMAGES ; do
+
+         echo -ne "$image:\t"
+
+         EXTENSION=`echo $image  | awk -F"." '{print $NF}'`
+         EXTENSION=`upper $EXTENSION`
+
+         if declare -f $EXTENSION"_handler_prepare" >/dev/null ; then
+            eval $EXTENSION"_handler_prepare $image"
+         else
+            eval default_handler_prepare $image
+         fi
+         echo #" OK"
+      done
+   fi
+}
+
+
+function build_html() {
+
+   echo "generate html ..."
+
+   T_COUNT=0;
+   export T_COUNT;
+
+   # begin index
+   { . $INDEX_HEAD_TEMPLATE ;} > $INDEX_HTML
+
+   if [ "$GI_COUNT" -gt "0" ] ; then
+
+      COUNT=`cat $DATADIR/slideable | wc -l`
+      POS=0
+
+      for THIS_IMAGE in $ALL_IMAGES ; do
+         echo -en "$THIS_IMAGE:\t"
+
+         DESCRIPTION=`description "$THIS_IMAGE"`
+         THIS_IMAGE_BYTE="$[ `filesize $THIS_IMAGE` / 1024 ]"
+
+         EXTENSION=`echo $THIS_IMAGE  | awk -F"." '{print $NF}'`
+         EXTENSION=`upper $EXTENSION`
+
+         # generate html
+         if declare -f $EXTENSION"_handler_html" >/dev/null ; then
+            eval $EXTENSION"_handler_html $THIS_IMAGE"
+         else
+            eval default_handler_html $THIS_IMAGE
+         fi
+
+         wrap_table >> $INDEX_HTML ;
+
+         # generate index
+         if declare -f $EXTENSION"_handler_html" >/dev/null ; then
+            eval $EXTENSION"_handler_index $THIS_IMAGE "
+         else
+            eval "default_handler_index $THIS_IMAGE "
+         fi
+
+         echo #" OK"
+
+      done
+   fi
+
+   echo -e "\n\n\n\
+<!--\n\
+created with iimage $VERSION \n\
+(c) Ronald Schmidt http://www.ronsc.de \n\n\
+download http://www.ronsc.de/iimage/iimage\n\n\
+$SVN_ID\n\
+-->\
+\n\n\n" >> $INDEX_HTML ;
+
+
+   { . $INDEX_FOOT_TEMPLATE ;} >> $INDEX_HTML
+
+
+   if [ -f "$COUNTFILE_CURENT" ] ; then
+      COUNT_CURRENT=`cat $COUNTFILE_CURENT`;
+      if [ "$COUNT_CURRENT" = "" ] ; then COUNT_CURRENT=0; fi
+   else
+      COUNT_CURRENT=0;
+   fi
+
+   if [ -f "$COUNTFILE_SUB" ] ; then
+      COUNT_DIR=`cat $COUNTFILE_SUB`;
+      if [ "$COUNT_DIR" = "" ] ; then COUNT_DIR=0; fi
+   else
+      COUNT_DIR=0;
+   fi
+
+   echo $[ $COUNT_CURRENT + $COUNT_DIR ] > $COUNTFILE_SUM;
+
+}
+
+
+# by Chris Huebsch
+#    www.huebsch-gemacht.de
+function cleanup() {
+
+   ALL_IMAGES=`if [ -d $DATADIR ]; then ( cd $DATADIR; set -C;find  *.geometry -maxdepth 0 2>/dev/null ;) ; fi`
+
+   for file in $ALL_IMAGES; do
+      base=`basename $file .geometry`
+      if [ ! -f $base ]; then
+         echo -n "cleanup $base:";
+
+         for tn in $THUMBNAILS ; do
+            echo -n " $tn";
+            rm -f $DATADIR/$tn/$base $DATADIR/$tn/$base.*
+         done
+         echo -n " M";
+         rm -f $DATADIR/$base.*
+         echo
+      fi;
+   done
+
+#   ls -l>$DATADIR/ls-l.old
+
+
+}
+
+
+function finish_iimage() {
+   ls -l>$DATADIR/ls-l.old
+   if [ "$IIMAGE_TOPLEVEL" ] ; then
+      echo
+      echo -e "finished!\7"
+   fi
+}
+
+function update_description_names() {
+   find_all_images
+   for i in $ALL_IMAGES ; do
+
+      if ! egrep "$i=" ./description >/dev/null ; then
+         echo "$i=`description $i`" >> ./description
+      fi
+
+   done
+}
+
+function create_description_template() {
+
+   DST="./description"
+   if [ -f description ] ; then
+      EXITS=true
+      echo "Error: descriptions-file exists, output on stdout !"
+      DST=/dev/stdout
+      echo ""
+   fi
+
+   for i in $VARIABLES ; do
+      VAL=`description $i`
+      if [ "$VAL" = "" ]; then eval "VAL=\$$i";  fi
+      echo "$i=$VAL" >> $DST
+   done
+   echo "" >> $DST
+
+
+   if [ "$DST" = "./description" ] ; then
+      echo "description generated"
+   fi
+
+}
+
+function generate_header() {
+   if [ "$2" != "" ] ; then
+      export BGCOLOR="$2"
+   else
+      export BGCOLOR="#ffffff"
+   fi
+   if [ "$3" != "" ] ; then
+      export PREFIX="$3"
+   else
+      export PREFIX="."
+   fi
+
+   case $1 in
+      "start") 
+         . $HEAD_TEMPLATE_START 
+         ;;
+      "end") 
+         . $HEAD_TEMPLATE_END 
+         ;;
+      *)
+         . $HEAD_TEMPLATE_START
+         . $HEAD_TEMPLATE_END
+         ;;
+   esac
+}
+
+
+
+######################################################################
+######################################################################
+######################################################################
+
+# --------------------------------------------------------------------
+# FOOTER_TEMPLATE
+function put_FOOTER_TEMPLATE() {
+echo '
+cat << EOF
+   <br/><br/><br/><br/>
+   
+   <span style="font-size: 8pt">
+      download iimage: <a style="font-size: 8pt" href="http://www.ronsc.de/iimage/iimage">www.ronsc.de</a>
+      | (c) by <a style="font-size: 8pt" href="http://www.ronsc.de">Ronald Schmidt</a>
+      <br/>
+      <font color="#cccccc" style="font-size: 8pt">
+         this site is generated at `date` by $USER@$HOSTNAME <br>
+         with iimage version $VERSION, template version '$VERSION' 
+      </font> 
+   </span>
+   </center>
+
+</body>
+</html>
+EOF'
+}
+
+# --------------------------------------------------------------------
+# HEAD_TEMPLATE
+function put_HEAD_TEMPLATE_START() {
+echo '
+cat << EOF
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15">
+      <link rel="stylesheet" type="text/css" href="$PREFIX/css_template.css">
+      <title>$TITLE</title>
+   </head>
+   
+<body bgcolor="$BGCOLOR">
+
+<div style="
+   border-left:1pt #ffffff solid;
+   border-top:1pt #ffffff solid;
+   border-bottom:1pt #000000 solid;
+   margin:0pt;
+   padding:0pt;
+   "><div style="
+      border-right:1pt #000000 solid;
+      border-bottom:1pt #8c8ea5 solid;
+      background: #d6d3de;
+      margin:0pt;
+      padding:0pt;
+      ">
+<table cellspacing="0" cellpadding="1" width="100%" border="0">
+   <tr valign="middle" bgcolor="#d6d3de">
+
+      <td align="left" width="10%"> 
+         <a href="http://www.ronsc.de/iimage/iimage">iimage</a> $VERSION
+      </td>
+      <td width="40%">
+         <b>$TITLE </b> $THIS_IMAGE
+      </td>
+      <td align=right>
+EOF
+'
+}
+
+
+# --------------------------------------------------------------------
+# HEAD_TEMPLATE
+function put_HEAD_TEMPLATE_END() {
+echo '
+cat << EOF
+    &nbsp;
+    </td>
+
+  </tr>
+</table>
+
+</div>
+</div>
+
+<!--
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+<tr valign="middle" bgcolor="#6f6f6f">
+<td><img src="$DATADIR/transp.gif" width="1" height="1" alt=""></td>
+</tr> <tr bgcolor="#e7e7e7"> <td>
+<img src="$DATADIR/transp.gif" width="1" height="1" alt=""></td> </tr> </table>
+-->
+
+EOF
+'
+}
+
+
+# --------------------------------------------------------------------
+# HTML_TEMPLATE
+function put_HTML_TEMPLATE() {
+echo '
+cat << EOF
+`generate_header start`
+<a href="../$THIS_HTML_SLIDE">Slideshow</a> &nbsp;&nbsp;&nbsp;&nbsp;
+<a href="../index.html">Index</a> &nbsp;&nbsp;&nbsp;&nbsp;
+<a href="$R_PREV_HTML"><b>&lt;&lt;&lt;</b></a>
+$POS/$COUNT
+<a href="$R_NEXT_HTML"><b>&gt;&gt;&gt;</b></a>
+`generate_header end`
+
+   <br>
+   <center>
+   <font size="-1">&nbsp;$DESCRIPTION&nbsp;</font>
+
+   <table cellspacing="0" cellpadding="0" border="0">
+   <tr>
+
+      <td width="640" height="480" valign="bottom" align="center" >
+`
+if [ "$EXCLUDE_ORGINAL" = "true" ] ; then
+   echo -e "<img alt=\"$R_DISPLAY_IMAGE\" src=\"$R_DISPLAY_IMAGE\" $R_DISPLAY_IMAGE_SIZE border="1">"
+else
+   echo -e "<a href=\"$R_IMAGE\"><img alt=\"$R_DISPLAY_IMAGE\" src=\"$R_DISPLAY_IMAGE\" $R_DISPLAY_IMAGE_SIZE ></a>"
+fi
+`
+      </td>
+   </tr>
+   <tr>
+   <td align="center"><font color="#999999" size="-2">
+   ($THIS_IMAGE_DATE $THIS_IMAGE_GEOMETRY $THIS_IMAGE_BYTE kb )
+
+`
+if [ "$IIMAGE_SPECIAL" = "true" ] ; then
+   echo -e "<?  if (IIMAGE_WRAPPER==1) isort_wrapper_ref(\"$THIS_IMAGE\"); ?>"
+fi
+`
+
+   <a href="../$THIS_HTML_INFO"><font color="#999999">more ...</font></a>
+   $EXTRA_SMALL_ICON2
+   </font></td>
+   </tr>
+   </table>
+
+
+`. $FOOTER_TEMPLATE`
+EOF
+'
+
+}
+
+
+# --------------------------------------------------------------------
+# HTML_SLIDE_TEMPLATE
+function put_HTML_SLIDE_TEMPLATE() {
+echo '
+cat << EOF
+`generate_header start "#888888"`
+
+<meta http-equiv="refresh" content="$SLIDE_DELAY; URL=` if [ \"$SLIDE_LOOP\" = \"true\" ] ; then echo $FIRST_HTML ; else echo $R_NEXT_HTML_SLIDE; fi` ">
+ 
+      <font color="#888888">Slideshow</font>
+      <a href="../$THIS_HTML">Stop</a> &nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="../index.html">Index</a> &nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="$R_PREV_HTML_SLIDE"><b>&lt;&lt;&lt;</b></a>
+      $POS/$COUNT
+      <a href="$R_NEXT_HTML_SLIDE"><b>&gt;&gt;&gt;</b></a>
+`generate_header end`
+
+   <br>
+   <center>
+
+   <table border="0" cellpadding="5" width="100%">
+
+   <tr><td width="100%" align="center" valign="top">
+
+      <font size="-1" color="#777777">&nbsp;$DESCRIPTION&nbsp;</font>
+
+      <table width="640" cellspacing="0" cellpadding="0" border="0">
+      <tr>
+
+         <td width="640" height="640" valign="middle" align="center" >
+         <img alt="$R_DISPLAY_IMAGE" src="$R_DISPLAY_IMAGE" $R_DISPLAY_IMAGE_SIZE border="1">
+         </td>
+      </tr>
+      </table>
+
+   </td></tr></table>
+
+`. $FOOTER_TEMPLATE`
+EOF
+'
+}
+
+
+
+# --------------------------------------------------------------------
+# HTML_INFO_TEMPLATE
+function put_HTML_INFO_TEMPLATE() {
+echo '
+cat << EOF
+`generate_header start`
+	   <a href="../$THIS_HTML_SLIDE">Slideshow</a> &nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="../index.html">Index</a> &nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="$R_PREV_HTML_INFO"><b>&lt;&lt;&lt;</b></a>
+      $POS/$COUNT
+      <a href="$R_NEXT_HTML_INFO"><b>&gt;&gt;&gt;</b></a>
+`generate_header end`
+
+
+   <br>
+
+   <center>
+
+   <table border="0" cellpadding="5">
+
+   <tr><td width="640" valign="top">
+
+      <font size="-1">&nbsp;$DESCRIPTION&nbsp;</font>
+
+      <table width="640" cellspacing="0" cellpadding="0" border="0">
+      <tr>
+
+         <td width="640" height="480" valign="top" align="center" >
+
+`
+if [ "$EXCLUDE_ORGINAL" = "true" ] ; then
+   echo -e "<img src=\"$R_DISPLAY_IMAGE\" alt=\"$R_DISPLAY_IMAGE\" $R_DISPLAY_IMAGE_SIZE border=\"1\">"
+else
+   echo -e "<a href=\"$R_IMAGE\"><img src=\"$R_DISPLAY_IMAGE\" alt=\"$R_DISPLAY_IMAGE\" $R_DISPLAY_IMAGE_SIZE ></a>"
+fi
+`
+         <br>
+         ($THIS_IMAGE_DATE $THIS_IMAGE_GEOMETRY
+         $THIS_IMAGE_BYTE kb )
+`
+if [ "$IIMAGE_SPECIAL" = "true" ] ; then
+   echo -e "<?  if (IIMAGE_WRAPPER==1) isort_wrapper_ref(\"$THIS_IMAGE\"); ?>"
+fi
+`
+
+   $EXTRA_SMALL_ICON2
+         </td>
+      </tr>
+      </table>
+   </td><td valign="top">
+
+   `generate_info_table`
+   <a href="../$THIS_HTML"><font color="#999999">close ...</font></a>
+
+   </td></tr></table>
+
+`. $FOOTER_TEMPLATE`
+EOF
+'
+}
+
+# --------------------------------------------------------------------
+# INDEX_HEAD_TEMPLATE
+function put_INDEX_HEAD_TEMPLATE() {
+echo '
+cat << EOF
+`generate_header start "" "$DATADIR"`
+<a href="../index.html">zur&uuml;ck</a>
+`generate_header end`
+
+<p>
+
+<center>
+<table width="80%" border="0"  cellspacing="20" ><tr>
+<td width="50%" valign="top" align="center">
+<h1>$TITLE</h1>
+
+`
+if [ "$IIMAGE_SPECIAL" = "true" ] ; then
+   echo -e "<? if (IIMAGE_WRAPPER==1) { iimage_description(\"$DIR\",\"$SUB_DST\",\"$SUB_TITLE\",2); } else { ?> $FOLDER_DESCRIPTION <? } ?>"
+else
+   echo -e "$FOLDER_DESCRIPTION "
+fi
+`
+
+
+</td>
+
+
+<td width="50%" valign="top">
+
+<table border="0" >
+<tr>
+<td align="center" valign="top">
+<img src="$DIR_ICON" alt="Directory icon">
+</td>
+<td  valign="top">
+<!-- index.html ist wichtig, da es sonst nicht ohne browser geht -->
+<b><a href="../index.html">..</a></b>
+</td>
+</tr>
+`search_subdirs`
+</table>
+
+
+</td></tr></table>
+</center>
+
+<p>
+
+<center>
+<table border="0"><tr>
+
+EOF
+'
+}
+
+# --------------------------------------------------------------------
+# INDEX_ITEM_TEMPLATE
+function put_INDEX_ITEM_TEMPLATE() {
+echo '
+cat << EOF
+
+<td align="center" valign="bottom" width="200" height="220" >
+<br>
+<span class="small">
+   $DESCRIPTION
+</span>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr>
+   <td width="170" height="170" bgcolor="#dddddd" align="center" valign="middle">
+   <a href="$THIS_HTML"><img alt="Thumbnail" src="$TN_IMAGE" $TN_IMAGE_SIZE ></a>
+   </td>
+</tr>
+<tr>
+   <td bgcolor="#dddddd" align="center" valign="middle">
+   $EXTRA_SMALL_ICON
+   <font size="-2" color="#bbbbbb">$THIS_IMAGE_DATE</font></td>
+</tr>
+<tr>
+   <td align="center" bgcolor="#F7F7F7" class="smallgray">
+   $THIS_IMAGE<br>
+   <a href="$THIS_HTML_INFO">($THIS_IMAGE_GEOMETRY $THIS_IMAGE_BYTE kb)</a>
+`
+if [ "$IIMAGE_SPECIAL" = "true" ] ; then
+   echo -e "<?  if (IIMAGE_WRAPPER==1) isort_wrapper_ref(\"$THIS_IMAGE\"); ?>"
+fi
+`
+   </td>
+</tr></table>
+
+
+</td>
+
+EOF
+'
+}
+
+# --------------------------------------------------------------------
+# INDEX_ICON_TEMPLATE
+function put_INDEX_ICON_TEMPLATE() {
+echo '
+cat << EOF
+
+<td valign="bottom" align="center" width="200" height="220">
+
+<br>
+<span class="small">$DESCRIPTION</font>
+
+<table border="0" cellpadding="0" cellspacing="0">
+<tr>
+   <td width="170" height="170" bgcolor="#dddddd" align="center" valign="middle">
+   <a href="$THIS_IMAGE"><img alt="Icon" src="$DATADIR/$ITEM_ICON" ></a>
+   </td>
+</tr>
+<tr>
+   <td bgcolor="#dddddd" align="center" valign="middle">
+   $EXTRA_SMALL_ICON
+   <font size="-2" color="#bbbbbb">$THIS_IMAGE_DATE</font></td>
+</tr>
+<tr>
+   <td align="center" bgcolor="#F7F7F7" class="smallgray">
+   $THIS_IMAGE<br>
+   ($THIS_IMAGE_BYTE kb)
+
+`
+if [ "$IIMAGE_SPECIAL" = "true" ] ; then
+   echo -e "<?  if (IIMAGE_WRAPPER==1) isort_wrapper_ref(\"$THIS_IMAGE\"); ?>"
+fi
+`
+
+   </td>
+</tr></table>
+
+</td>
+
+EOF
+'
+}
+
+# --------------------------------------------------------------------
+# INDEX_FOOT_TEMPLATE
+function put_INDEX_FOOT_TEMPLATE() {
+echo '
+cat << EOF
+</table>
+
+`. $FOOTER_TEMPLATE`
+EOF
+'
+}
+
+# --------------------------------------------------------------------
+# INDEX_DIR_TEMPLATE
+function put_INDEX_DIR_TEMPLATE() {
+echo '
+cat << EOF
+
+<tr>
+<td align="center" valign="top">
+   <img src="$DIR_ICON" alt="Directory icon">
+</td>
+
+`
+if [ "$IIMAGE_SPECIAL" = "true" ] ; then
+   echo -e " <? if (IIMAGE_WRAPPER==1) { iimage_description(\"$DIR\",\"$SUB_DST\",\"$SUB_TITLE\"); } else { ?>"
+fi
+`
+
+
+<td  valign="top">
+   <b><a href="$SUB_DST">$SUB_TITLE</a></b>
+   <br> <font size="-2"><em>$SUB_DATE</em></font>
+</td></tr><tr>
+<td></td>
+<td><font size="-1">$FOLDER_DESCRIPTION</font>
+</td>
+
+`
+if [ "$IIMAGE_SPECIAL" = "true" ] ; then
+   echo "<? } ?>"
+fi
+`
+
+</tr>
+
+EOF
+'
+}
+
+# --------------------------------------------------------------------
+# INFO_AWK_TEMPLATE
+function put_INFO_AWK_TEMPLATE() {
+echo '
+BEGIN{
+   print "<br><table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">"
+   a=1;
+}
+(!/---------------/){
+
+   if (a==1) bgcolor="#eeeeee"
+   else bgcolor="#cccccc"
+
+   a=1-a;
+   print "<tr>"
+   print "<td bgcolor=\""bgcolor"\"><font size=\"-2\" >" $1 "</font></td>"
+   print "<td bgcolor=\""bgcolor"\"><font size=\"-2\" >" $2 "</font></td>"
+
+   print "</tr>"
+}
+END{
+   print "</table>"
+}
+'
+}
+
+# --------------------------------------------------------------------
+# CSS_TEMPLATE
+function put_CSS_TEMPLATE() {
+echo '
+body {
+   margin:0pt;
+   padding:0pt;
+}
+* {
+   font-family: verdana,helvetica,sans-serif;
+   font-size: 10pt;
+}
+tt,pre { 
+   font-family:monospace;
+}
+a {
+   text-decoration: none;
+}
+.small, .small * {
+   font-size: 8pt;
+}
+.smallgray, .smallgray * {
+   color: #999999;
+   font-size: 8pt;
+}
+'
+}
+
+# --------------------------------------------------------------------
+function put_TRANSP_PIXEL () {
+echo -ne \
+"\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\xff\xff\
+\xff\xff\xff\xff\x21\xf9\x04\x01\x0a\x00\x01\x00\x2c\x00\x00\
+\x00\x00\x01\x00\x01\x00\x00\x02\x02\x4c\x01\x00\x3b"
+}
+
+# --------------------------------------------------------------------
+function put_DIR_ICON() {
+echo -ne \
+"\x47\x49\x46\x38\x39\x61\x14\x00\x16\x00\xc2\x00\x00\xff\xff\
+\xff\xff\xcc\x99\xcc\xff\xff\x99\x66\x33\x33\x33\x33\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\x21\xfe\x4e\x54\x68\x69\x73\x20\
+\x61\x72\x74\x20\x69\x73\x20\x69\x6e\x20\x74\x68\x65\x20\x70\
+\x75\x62\x6c\x69\x63\x20\x64\x6f\x6d\x61\x69\x6e\x2e\x20\x4b\
+\x65\x76\x69\x6e\x20\x48\x75\x67\x68\x65\x73\x2c\x20\x6b\x65\
+\x76\x69\x6e\x68\x40\x65\x69\x74\x2e\x63\x6f\x6d\x2c\x20\x53\
+\x65\x70\x74\x65\x6d\x62\x65\x72\x20\x31\x39\x39\x35\x00\x21\
+\xf9\x04\x01\x00\x00\x02\x00\x2c\x00\x00\x00\x00\x14\x00\x16\
+\x00\x00\x03\x54\x28\xba\xdc\xfe\x30\xca\x49\x59\xb9\xf8\xce\
+\x12\xba\xef\x45\xc4\x7d\x64\xa6\x29\xc5\x40\x7a\x6a\x89\x06\
+\x43\x2c\xc7\x2b\x1c\x8e\xf5\x1a\x13\x57\x9e\x0f\x3c\x9c\x8f\
+\x05\xec\x0d\x49\x45\xe1\x71\x67\x3c\xb2\x82\x4e\x22\x34\xda\
+\x49\x52\x61\x56\x98\x56\xc5\xdd\xc2\x78\x82\xd4\x6c\x3c\x26\
+\x80\xc3\xe6\xb4\x7a\xcd\x23\x2c\x4c\xf0\x8c\x3b\x01\x00\x3b\
+"
+}
+
+# --------------------------------------------------------------------
+function put_AVI_ICON() {
+echo -ne \
+"\xff\xd8\xff\xe0\x00\x10\x4a\x46\x49\x46\x00\x01\x01\x01\x00\
+\x48\x00\x48\x00\x00\xff\xfe\x00\x17\x43\x72\x65\x61\x74\x65\
+\x64\x20\x77\x69\x74\x68\x20\x54\x68\x65\x20\x47\x49\x4d\x50\
+\xff\xdb\x00\x43\x00\x08\x06\x06\x07\x06\x05\x08\x07\x07\x07\
+\x09\x09\x08\x0a\x0c\x14\x0d\x0c\x0b\x0b\x0c\x19\x12\x13\x0f\
+\x14\x1d\x1a\x1f\x1e\x1d\x1a\x1c\x1c\x20\x24\x2e\x27\x20\x22\
+\x2c\x23\x1c\x1c\x28\x37\x29\x2c\x30\x31\x34\x34\x34\x1f\x27\
+\x39\x3d\x38\x32\x3c\x2e\x33\x34\x32\xff\xdb\x00\x43\x01\x09\
+\x09\x09\x0c\x0b\x0c\x18\x0d\x0d\x18\x32\x21\x1c\x21\x32\x32\
+\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\
+\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\
+\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\
+\x32\x32\x32\xff\xc0\x00\x11\x08\x00\x3b\x00\x3a\x03\x01\x22\
+\x00\x02\x11\x01\x03\x11\x01\xff\xc4\x00\x1b\x00\x00\x02\x03\
+\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x06\x07\
+\x00\x03\x05\x04\x02\x01\xff\xc4\x00\x43\x10\x00\x01\x03\x02\
+\x04\x02\x05\x04\x0d\x0d\x01\x00\x00\x00\x00\x00\x01\x02\x03\
+\x04\x05\x11\x00\x06\x12\x21\x31\x41\x13\x22\x32\x51\x61\x14\
+\x35\x75\xb4\x07\x15\x16\x23\x36\x56\x71\x81\x95\xb1\xb3\xd3\
+\xd4\x24\x33\x42\x43\x53\x55\x63\x72\x82\x91\x93\xa1\xc1\xf0\
+\xff\xc4\x00\x19\x01\x01\x01\x00\x03\x01\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x01\x00\x02\x03\x04\x05\xff\xc4\x00\
+\x20\x11\x00\x02\x02\x02\x01\x05\x01\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x01\x02\x11\x03\x31\x13\x14\x15\x21\x51\x91\
+\x52\xff\xda\x00\x0c\x03\x01\x00\x02\x11\x03\x11\x00\x3f\x00\
+\x77\xd5\xea\x8d\x51\xa9\xab\x9a\xf3\x4f\x3c\x02\xdb\x69\x0d\
+\x32\x01\x5b\x8b\x5a\xd2\x84\x24\x5c\x81\x72\xa5\x24\x6e\x40\
+\xdf\x72\x31\x9a\x73\x1d\x49\x36\xbe\x4e\xad\x8b\xf0\xf7\xe8\
+\x5f\x88\xc7\xdc\xe3\xe6\x48\xde\x95\xa7\x7a\xeb\x38\xec\xac\
+\xd4\x1a\xa6\xc7\x4c\x87\x96\x50\x84\xf7\x0b\x92\x6e\x2c\x00\
+\xe6\x7c\x37\xc0\x07\x12\xb3\x1d\x49\x20\x95\x64\xea\xe0\x03\
+\xf8\xd0\xbf\x11\x88\x9c\xc7\x52\x50\xba\x72\x75\x6c\x8e\xf0\
+\xf4\x2f\xc4\x60\x7e\x97\x5f\x6f\x34\xb5\x51\x91\x22\xb2\xf4\
+\x68\xb0\x81\x5b\x8c\x45\x46\x92\x10\x2f\x7d\x4e\xd8\xea\x3b\
+\x6e\x11\xb0\x3b\x5c\xe3\x8e\x8d\x5b\xf2\xea\x94\x98\xb9\x76\
+\xa5\x39\x52\xa3\x30\x64\xf9\x3c\xe7\x56\xfb\x2e\xa7\x55\xb4\
+\xa9\x6a\xb9\x49\x24\xec\x41\xdb\xb8\x8d\x8a\x21\x6f\xba\x1a\
+\x9f\xc4\xda\xe7\xf9\xa1\x7e\x23\x17\xc6\xcc\x4c\x39\x35\x88\
+\x53\x62\x4b\xa6\xcb\x7c\x12\xd3\x52\xd2\x9f\x7c\x20\x5c\x80\
+\xb4\x29\x48\x2a\xb5\xce\x9d\x57\xb0\x26\xd6\x06\xd6\x50\x6b\
+\x8c\x57\xe9\x2d\x4e\x61\x2a\x46\xae\xab\x8d\x2b\xb4\xda\xc6\
+\xc5\x27\xe4\x3c\xf9\x8d\xf8\x11\x8c\x1c\xd7\x28\x88\xd2\xa1\
+\x49\xa1\x4f\x9b\x1d\xd5\x25\xc6\xdf\x8c\x52\x3a\x35\x0d\x3a\
+\x4a\x4e\xa0\xa0\xa0\xa4\xdc\x11\x62\x0d\xac\x7b\xa2\x0c\xb1\
+\x30\x29\x91\x73\x1b\x95\xd8\x12\xe3\xc9\x53\x8e\x49\x80\xff\
+\x00\x93\xad\xd7\x1b\x0d\xa9\xce\xaa\x54\x0a\x92\x36\x0a\xb2\
+\xc0\x36\xd8\x90\x48\x00\x10\x01\x5e\x00\x30\x33\x8f\x99\x23\
+\x7a\x56\x9d\xeb\xac\xe2\xaa\xc2\xa2\xbf\x5b\x48\x9c\x7f\x24\
+\x85\x11\x4f\x29\x22\xfd\x65\x38\x74\x27\xe5\x3d\x55\x5b\xc4\
+\x8c\x5b\x9c\x7c\xc9\x1b\xd2\xb4\xef\x5d\x67\x18\xf9\xc1\xc6\
+\x63\xce\x8c\xfb\xa9\x71\x4c\xba\xd2\x98\x7f\xa2\x3d\x70\x35\
+\x0d\x2a\x48\x3c\x4a\x4a\x8e\xdd\xc4\xe1\x13\x9e\x85\x2f\x2c\
+\x52\x72\x9c\xe9\xd4\xfa\x7b\xc9\x8d\xac\xc7\x71\xb7\xc0\x2a\
+\x72\xc0\x59\x1c\x48\xd3\x65\x7d\x78\xab\x2d\x66\x7a\x60\x87\
+\x51\xe8\xe9\xcc\xc0\x4c\x44\x09\x0e\x06\x40\xb2\x93\xc0\x6a\
+\x36\xb9\x56\xdb\x5f\x8f\x2e\x18\xaa\x34\xbc\xa9\x13\x2b\xb5\
+\x4c\x8c\xea\xe5\x42\x48\xd4\x7b\x4b\x75\x4a\xe6\xa5\x90\x2f\
+\xab\x6f\x0e\x18\x09\xab\xd5\xcc\xa8\xa8\x8d\x44\x8e\xd4\x4a\
+\x7a\x1c\xd6\x5b\x01\x4a\x53\x8e\x0e\x0b\x75\x43\x57\x0d\xac\
+\x9f\x0e\x23\x11\x07\xbe\xc6\xcf\x07\x1a\xac\x14\x24\x25\x02\
+\x43\x41\x40\x0f\xd6\x74\x28\xd7\xff\x00\x07\xcd\x83\x75\x2f\
+\x0b\x4c\xb7\x5a\x95\x43\xcb\x8c\x47\x8b\x0e\x9a\xfa\x13\x75\
+\x29\x4b\xa9\xe8\x5b\x8a\x26\xe5\x56\x2d\xf3\x37\x3c\x79\xe0\
+\xaa\x85\x99\xe2\xd7\x52\xe2\x12\xdb\x91\xe5\x35\x62\xe3\x0e\
+\x10\x48\x07\x82\x81\x17\x04\x1e\xf1\xf3\xdb\x11\x1c\xb9\x2b\
+\xe1\x46\x70\xb7\xef\x21\xf6\x0c\xe0\xdb\x01\x39\x27\xe1\x3e\
+\x6f\xf4\x8a\x7e\xc1\x9c\x1b\x60\x03\x03\x38\xf9\x92\x37\xa5\
+\x69\xde\xba\xce\x38\x33\x14\x53\x25\xf8\xa1\x0b\xd0\xa5\x12\
+\x02\xbb\xba\xc8\xe5\x71\x7f\xf7\xff\x00\x47\x7e\x71\xf3\x24\
+\x6f\x4a\xd3\xbd\x75\x9c\x55\x51\xd4\xb7\xe3\x84\xab\x4a\xaf\
+\x60\x7b\xba\xc9\xf1\xdf\x87\xfe\xe4\x88\x1f\x55\xc9\x4d\x3e\
+\x97\x1f\x96\xa6\xde\x50\x1c\x14\xc8\xeb\x5b\x96\x34\xa9\x94\
+\x54\x45\xa6\x21\x0c\xb6\x86\xda\x41\x5d\x92\x81\x60\x06\xa3\
+\xc8\x5f\x1b\x12\xe2\xbe\xa6\x54\xa7\x65\xea\x01\x27\x6e\x8c\
+\x0b\xf8\x62\xf6\x36\x80\xa1\xfc\xff\x00\x59\xf1\x38\x24\xe9\
+\x59\x2d\x8b\x1a\x34\xba\xcd\x39\x72\xfc\x9e\x81\x3d\xf4\xba\
+\xf2\xd4\x92\xb1\xd1\x58\x74\x8b\x3f\xa5\x6e\x4a\xc5\xf1\x24\
+\xd7\xdb\xce\x14\xc9\xce\xd0\x9f\x8a\x85\xac\xb0\xfa\xc2\x83\
+\x83\x42\x87\x3d\x37\xd2\x01\x4a\x4d\xcf\x76\x09\x61\x53\x29\
+\x86\x84\x8a\x73\xcb\x8c\x2a\x72\xda\x53\xe8\x52\xbb\x68\x3c\
+\x52\x9d\x56\xb0\x04\x03\x7b\x91\xc7\x86\x3c\x16\xe0\x0c\xaf\
+\xed\xb1\x8f\x1c\x3e\x23\xf9\x17\x47\xd1\x8f\xce\xea\xed\xda\
+\xdd\xad\x3b\xdf\x1e\x57\x70\x9d\x5b\x8a\xd5\xef\xea\xd6\xf4\
+\x76\x74\xd1\xba\xb7\xba\xd1\xa5\x93\x52\xa6\x33\x1e\x66\x53\
+\xe9\x2d\x09\x33\xd2\xa6\x35\x8d\x3d\x28\x0c\x35\x72\x9b\xf6\
+\xbb\x2a\xe1\xdc\x7b\xb0\x6d\x85\xf2\xa3\xa9\x8c\xe9\x94\x2f\
+\x11\x0c\x74\x8c\xa9\x6b\xd0\xc2\x5b\xd4\xe9\x8e\xee\xbb\xd8\
+\x0d\xf8\x6d\xca\xfc\xaf\x86\x0e\x3b\xb0\x65\x79\x53\x6d\x55\
+\x33\x9b\x2c\x14\x1a\xa6\x61\xe6\xd8\xb2\xe5\x65\xf5\x08\x4c\
+\x17\xe4\x31\x2a\x2c\xa0\xd0\x50\x05\x61\xa7\xdb\x75\x49\x04\
+\x90\x2e\x42\x08\x17\x20\x5e\xdb\x8c\x0b\x3d\x98\xea\xee\x14\
+\x9f\x71\xb5\x90\x53\xc3\xdf\x23\x9e\x60\xfe\xd7\xc3\x0c\x5c\
+\x4c\x6f\x35\x8b\x75\xe6\x1a\xca\xfb\x59\x42\xb4\x7f\xae\x37\
+\xde\xe3\xd9\xcc\x75\x55\x32\xa6\x95\x93\x2b\x5a\x54\x08\x36\
+\x79\x80\x77\xf1\xe9\x6e\x30\xc5\xc4\xc4\x36\x25\x3d\xa7\x4f\
+\xc5\x0c\xd3\xf4\x83\x5f\x7d\x89\xed\x3a\x7e\x28\xe6\x9f\xa4\
+\x5a\xfb\xdc\x3a\xf1\x31\xab\x83\x17\xe5\x7c\x33\xe4\x9f\xb6\
+\x2d\x7d\x8f\x72\xb3\x8d\x54\xe5\x55\xea\x50\xa6\xc6\x71\xb7\
+\xc9\x82\xcc\x99\x25\x65\xa4\x16\xc2\x4d\xec\xa2\x92\x6e\x5c\
+\xef\xd9\x5f\xd9\x95\x89\x89\x8c\xe3\x08\xc5\x54\x55\x18\x39\
+\x39\x79\x67\xff\xd9"
+}
+
+# --------------------------------------------------------------------
+function put_MOV_ICON() {
+echo -ne \
+"\xff\xd8\xff\xe0\x00\x10\x4a\x46\x49\x46\x00\x01\x01\x01\x00\
+\x48\x00\x48\x00\x00\xff\xfe\x00\x17\x43\x72\x65\x61\x74\x65\
+\x64\x20\x77\x69\x74\x68\x20\x54\x68\x65\x20\x47\x49\x4d\x50\
+\xff\xdb\x00\x43\x00\x08\x06\x06\x07\x06\x05\x08\x07\x07\x07\
+\x09\x09\x08\x0a\x0c\x14\x0d\x0c\x0b\x0b\x0c\x19\x12\x13\x0f\
+\x14\x1d\x1a\x1f\x1e\x1d\x1a\x1c\x1c\x20\x24\x2e\x27\x20\x22\
+\x2c\x23\x1c\x1c\x28\x37\x29\x2c\x30\x31\x34\x34\x34\x1f\x27\
+\x39\x3d\x38\x32\x3c\x2e\x33\x34\x32\xff\xdb\x00\x43\x01\x09\
+\x09\x09\x0c\x0b\x0c\x18\x0d\x0d\x18\x32\x21\x1c\x21\x32\x32\
+\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\
+\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\
+\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\x32\
+\x32\x32\x32\xff\xc0\x00\x11\x08\x00\x3b\x00\x3a\x03\x01\x22\
+\x00\x02\x11\x01\x03\x11\x01\xff\xc4\x00\x1b\x00\x00\x02\x03\
+\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x06\x07\
+\x00\x04\x05\x03\x01\x02\xff\xc4\x00\x3e\x10\x00\x01\x03\x03\
+\x03\x01\x03\x07\x0a\x03\x09\x00\x00\x00\x00\x00\x01\x02\x03\
+\x04\x00\x05\x11\x06\x12\x21\x41\x13\x31\x51\x22\x32\x35\x61\
+\x75\x81\xb4\x07\x14\x15\x16\x23\x52\x56\xc1\xd3\xd4\x82\x95\
+\xa1\x36\x53\x55\x63\x73\x91\x93\xb1\xb3\xff\xc4\x00\x18\x01\
+\x01\x00\x03\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x02\x03\x04\x01\xff\xc4\x00\x24\x11\x00\x02\x02\x01\
+\x03\x02\x07\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x02\
+\x11\x03\x04\x14\x21\x13\x61\x12\x41\x51\x52\x71\x81\x91\xff\
+\xda\x00\x0c\x03\x01\x00\x02\x11\x03\x11\x00\x3f\x00\x78\xde\
+\x2e\xad\x59\xad\xab\x9a\xf3\x4f\x3c\x02\xdb\x69\x0d\x32\x01\
+\x5b\x8b\x71\x69\x42\x12\x32\x40\xc9\x52\x92\x39\x20\x73\xc9\
+\x15\x98\x75\x25\xc8\x10\x0e\x8d\xbe\x0c\xf7\x7d\xb4\x2f\xdc\
+\x57\xba\xcb\xd0\x71\xbd\xab\x6d\xf8\xd6\x6b\xae\xa3\xbc\x33\
+\x65\x88\x99\x2e\x95\x13\xce\xd4\x23\x1b\x94\x41\x1d\xd9\x20\
+\x7a\xc9\x3c\x00\x09\x38\x1c\x80\x38\xab\x52\x5c\x92\x32\xad\
+\x1b\x7c\x03\xfd\x68\x5f\xb8\xa8\x9d\x49\x72\x50\xca\x74\x75\
+\xf0\x8f\x1e\xda\x17\xee\x28\x72\x1d\xed\x8b\xee\x9e\x95\x7a\
+\xb8\x5f\x24\xfc\xd5\x95\x6d\x53\x10\x42\x98\x48\xce\x36\x80\
+\xbc\x05\xaf\xbf\xce\x1b\x41\xf0\xc5\x56\xb3\x6a\x17\x55\x1e\
+\xe5\x32\xc7\x2e\x64\xc6\xad\x85\x3f\x39\x87\x31\xc5\x38\x1c\
+\x49\x04\x9e\xcd\xd5\x79\x5b\xc0\x04\xf2\x48\x3d\xc7\x19\xc8\
+\x00\xb7\xeb\x15\xcf\xf0\x6d\xf3\xfe\x68\x5f\xb8\xae\xf1\xb5\
+\x1b\x0e\x4d\x62\x14\xd8\x92\xed\xb2\xdf\x04\xb4\xd4\xb4\xa7\
+\x0b\x20\x64\xa4\x2d\x0a\x52\x0a\xb1\x93\xb7\x76\x70\x09\xc6\
+\x01\xc5\xcb\x75\xc6\x3d\xd6\xdc\xc4\xe8\x8b\xdc\xc3\xe8\x0b\
+\x41\x23\x07\x07\xa1\x1d\x0f\xab\xa5\x0c\x6a\xb9\x44\x46\x95\
+\x0a\x55\x8a\x7c\xd8\xee\xa8\x38\x87\xe3\x14\x8e\xcd\x40\x27\
+\x69\x49\xdc\x14\x14\x14\x9c\x82\x30\x47\x04\x1f\x00\x0d\x2a\
+\x50\x96\x84\xd4\x8e\xdf\x60\x4b\x8f\x25\x4e\x39\x26\xde\xff\
+\x00\xcd\xd6\xeb\x8d\x76\x6a\x73\xc9\x4a\x81\x52\x47\x01\x58\
+\x58\x07\x1c\x12\x09\x00\x02\x05\x16\xd0\x03\xfa\xcb\xd0\x71\
+\xbd\xab\x6d\xf8\xd6\x6b\x3a\xfa\xab\x6c\xb7\xaf\x0b\xbc\x36\
+\xb7\x62\x46\x64\x45\x4b\x48\xf3\x94\x56\x90\xb5\xe3\xd7\x8d\
+\xbe\xe0\x6b\x47\x59\x7a\x0e\x37\xb5\x6d\xbf\x1a\xcd\x0e\x6b\
+\x26\xa0\x37\x29\xd1\x70\x72\x43\x70\x6e\x0d\x6c\x79\xd8\xea\
+\xc2\xd9\x52\x40\x4e\xe1\xc1\xef\x04\x03\x8c\xe3\x03\x8e\xfa\
+\x03\xec\x5c\x74\xf5\xab\x42\xb6\xec\x5b\x6a\x9c\x8b\x35\x44\
+\x25\x87\xf1\xb9\xc5\x02\x46\x54\x79\xee\xdb\xff\x00\x55\x56\
+\x2e\xa4\x84\xf6\x8a\xb8\x98\xf0\x9a\x87\xd9\x6e\x8d\xd8\xb2\
+\x90\x10\xa7\x1c\x4f\x18\xe3\xbf\x91\x9e\xf3\xd7\xad\x4b\x8d\
+\xcb\x4b\x7d\x06\xc4\x54\xa0\xc9\x87\x1d\x19\x69\x2c\x6e\x24\
+\x7f\x10\xea\x7a\xe4\xf5\xa0\x1b\xcd\xce\x45\xd0\x32\xd5\xbc\
+\x31\x0a\xdc\x80\xa4\xc7\x6d\xad\xdb\x1a\xcf\x0a\x5a\x94\x01\
+\x05\x67\x9e\x7a\x67\xbc\xd0\x0d\x3f\x93\xe7\x90\xe6\x9a\x75\
+\x6c\x80\x23\xaa\x6c\x92\xce\x3e\xef\x6a\xaf\xcf\x26\x8a\x0a\
+\xe9\x7d\x6f\xd4\xb2\xac\xf6\x68\xac\x47\xb6\x5b\x95\x19\x96\
+\xd2\x94\xa1\x17\x30\x1c\x09\xc7\xdd\x52\x07\x3e\xfa\x27\xb2\
+\xdf\xe2\x5f\x62\x29\xf8\xdb\xd0\xb4\x1d\xae\xb2\xe0\xc2\xdb\
+\x57\x7e\x0e\x38\xf7\x8c\x8a\xe0\x33\xb4\x4e\x3e\xb4\xeb\x0c\
+\x7f\x89\x0f\xfc\x19\xa3\x8a\x06\xd1\x1f\xda\x8d\x5f\xed\x24\
+\xfc\x3b\x34\x73\x5d\x00\xfe\xb2\xf4\x1c\x6f\x6a\xdb\x7e\x35\
+\x9a\xcf\xd4\x71\x0c\xa7\xe2\xa5\x2b\xda\xa5\x12\x01\xf5\xee\
+\x47\x4c\xf3\xfd\x7f\x31\xa1\xac\xbd\x07\x1b\xda\xb6\xdf\x8d\
+\x66\xb8\xdc\x42\x96\xf4\x70\x95\x6d\x56\x70\x0f\x87\x94\x9e\
+\x99\xe7\xfa\xfe\x74\x00\x6d\xcf\x43\x47\x71\x2e\x3f\x24\x32\
+\xf1\xc1\x38\x53\x03\x93\x57\xd9\xb7\x26\x2d\x95\x44\x23\xc9\
+\x42\x5c\x29\x6d\xb1\x92\x46\x4f\x00\x0c\xe7\xdd\x9a\xde\x97\
+\x11\xe5\x32\xa5\x3b\x2f\x78\x00\xf1\xd9\x81\x9a\xce\x98\xa8\
+\x6d\x28\x3b\x3a\x3a\x64\x30\x88\xce\x6e\x49\x19\x23\x73\xcd\
+\xa4\xa8\x1e\x79\x01\x47\x9c\xfb\xea\x8d\x46\x5e\x94\x1c\xc9\
+\xe3\x87\x8e\x54\x04\x69\xf9\xb7\xdb\x75\xa1\xb8\xad\x69\xd9\
+\xaf\x79\x29\xf2\x9d\x50\x6b\x1e\x48\x18\xc2\xb9\xe9\x57\xb4\
+\xdc\x8b\xd4\x7d\x69\xda\x4a\xb3\xbf\x0e\x3c\xb6\x14\x1e\x51\
+\x21\x68\xdc\x93\x94\x92\xa4\xf0\x3b\xd5\xc1\xef\xcd\x14\x5b\
+\x21\xd8\xe4\x42\x84\x1b\x61\x0b\x8e\x9b\x89\x68\xbe\xf2\x40\
+\x5b\xbf\x64\xa5\x00\x7d\x5b\x88\x18\xf5\x0a\xaa\xd2\x58\x89\
+\x12\x0c\x9b\xb5\xbe\x33\x6f\x99\xe5\xb5\x36\xa8\xe9\x46\xe6\
+\x4a\x70\x49\x4e\x06\x70\x4f\x06\xb1\x6f\xe7\x49\xb4\xab\xe7\
+\x8f\x2e\xdd\xfe\xcd\x1b\x75\x75\x65\xfd\x18\x95\x31\xa9\x35\
+\x32\x9f\x49\x68\x49\xb8\x05\x30\x56\x36\xf6\xa0\x30\xd6\x4a\
+\x73\xe7\x79\xaa\xee\xf0\x3e\x14\x71\x4b\x91\x16\x35\xb3\x5d\
+\xe9\xab\x5b\x08\x6c\xad\x87\x1e\x53\xae\x84\x8d\xca\x2a\x65\
+\xd2\x01\x3d\xe7\x03\x1f\xef\x4c\x6a\xd9\xa7\xcc\xf2\xc5\xb9\
+\x2a\x69\xd1\x46\x48\x28\x3e\x0c\x3d\x5d\x16\x5c\xad\x3c\xa1\
+\x05\x83\x22\x43\x12\xa2\xca\x4b\x21\x40\x17\x03\x32\x1b\x75\
+\x49\x04\x90\x32\x42\x08\x19\x20\x67\x1c\x8a\x14\x7b\x51\xde\
+\x1c\x52\x48\xd1\xb7\x94\x94\xff\x00\x99\x1c\xf5\x07\xfb\xdf\
+\x55\x31\xea\x60\x78\x56\x82\xb1\x68\xbd\x43\x7a\x5f\x9f\xa4\
+\x2f\x47\xf8\xe3\x7e\xad\x67\x5d\x57\x26\xf2\xa6\x95\x2f\x47\
+\x6a\x20\xa6\x81\x09\xec\x66\x32\xd8\xe4\xe7\x90\x1e\xa6\xe6\
+\x07\x85\x4c\x0f\x0a\x8c\xa1\x19\x2a\x92\xb4\x75\x36\x9d\xa1\
+\x25\xf4\x3a\x7f\x07\xea\x9f\xe6\x2d\x7e\xb5\x4f\xa1\xd3\xf8\
+\x43\x54\xff\x00\x31\x6b\xf5\xa9\xdb\x81\xe1\x53\x03\xc2\xab\
+\xdb\xe1\xf6\x2f\xc4\x4b\xa9\x3f\x56\x2c\xfe\x4f\x34\xaa\xd9\
+\xba\x4a\xbb\xdc\x60\xcd\x8c\xe3\x6f\x93\x05\x99\x32\x4a\xcb\
+\x48\x2d\x84\x9c\xe1\x45\x24\xe4\xb9\xd4\xf0\xae\x9d\x19\x95\
+\x2a\x55\x91\x84\x60\xaa\x2a\x88\xb9\x37\xcb\x3f\xff\xd9"
+}
+
+# --------------------------------------------------------------------
+function put_SND_ICON() {
+echo -ne \
+"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a\x00\x00\x00\x0d\x49\x48\x44\
+\x52\x00\x00\x00\x0b\x00\x00\x00\x0b\x08\x06\x00\x00\x00\xa9\
+\xac\x77\x26\x00\x00\x00\x06\x62\x4b\x47\x44\x00\xff\x00\xff\
+\x00\xff\xa0\xbd\xa7\x93\x00\x00\x00\x09\x70\x48\x59\x73\x00\
+\x00\x0b\x11\x00\x00\x0b\x11\x01\x7f\x64\x5f\x91\x00\x00\x00\
+\x07\x74\x49\x4d\x45\x07\xd3\x04\x19\x0b\x3a\x3b\x18\x18\xa2\
+\x48\x00\x00\x01\x86\x49\x44\x41\x54\x78\x9c\x63\x36\x36\x37\
+\x62\x10\x11\xe4\x63\x60\xf8\xf7\x9f\xe1\xeb\xb7\xef\x0c\xe8\
+\x20\x35\xda\x2b\xd2\xd1\x58\x5d\xf4\xf8\x85\x5b\x0f\x18\x67\
+\xe7\x87\x70\x32\x32\xfc\xff\xfe\x9f\x81\x81\xe1\x3f\x23\x03\
+\x53\xda\x84\xb5\xff\x60\x0a\x5b\x92\xbd\x95\x8f\xbc\xfc\x7e\
+\x8a\x9b\x83\xf5\xad\x87\x0c\x8f\x36\x23\x86\x51\x50\x30\x21\
+\x2b\x80\x67\xe7\xd3\xcf\x97\x7f\xfd\xff\x27\xc3\xf9\xff\xdf\
+\x77\x2d\x0e\x26\x1f\x26\x6c\x0a\x67\xe7\x07\x33\xed\x7e\xfe\
+\xa5\x8b\x4b\x86\x5b\xfa\xfb\xdf\x5f\x8c\xff\x38\x38\x78\x6f\
+\x73\xb0\x6f\x62\x42\x52\xc0\xc8\xc0\xc0\xc0\x30\x27\x3f\x84\
+\x69\xdb\xc3\x8f\x26\x3c\xb2\xbc\x19\x0f\xef\xdc\x7b\xab\xc8\
+\xce\xcd\x76\x64\xe7\xf1\x33\x7b\x37\x1e\x3b\xca\x38\x3d\x27\
+\x48\x70\xdf\xab\xaf\xdd\xbf\xfe\x33\xea\x2b\x73\x30\xc5\xab\
+\x0b\x72\x3e\x5a\xf5\xf0\xdd\x53\x76\x09\x66\x9e\x63\x2b\x4e\
+\x5b\x7c\xf8\xf8\xf1\x34\x1f\x1f\x9f\x16\x03\x03\x43\x33\x83\
+\xb7\xaf\x73\xcf\xb1\x53\xc7\xfe\xf5\x4d\xef\xfb\xe7\x12\xe8\
+\xf6\xc3\xc6\xc3\x3e\x2e\xb6\x24\xe2\xbf\x84\xa6\xe8\xa3\x39\
+\x50\xdb\x60\x80\xe5\xf3\xdf\xff\x5e\xaf\xde\xbf\x64\xbc\x7a\
+\xeb\x0a\xc3\xbf\x7f\x7f\xd9\xa5\xe5\xc5\xe6\xde\x7d\x74\x8f\
+\x41\xf8\x27\x47\x65\xca\xc4\xb5\xff\x91\x15\x33\x31\xb3\x30\
+\xcc\x6a\x6c\x6c\xfe\x77\xe9\xf4\x65\x86\x67\x0f\x9f\x30\xfc\
+\xfa\xf1\x93\xe5\xf3\xb3\x9f\x5f\x3c\x1d\x0d\x0f\xa2\x7b\x9c\
+\xf9\xc1\xcd\xfb\x27\x84\x05\xf8\xcf\x72\xf2\x70\x8a\xf3\xf3\
+\x70\xff\xfe\xf7\xe9\xeb\x5a\x27\x79\xb1\x72\x55\x7e\xf6\x6b\
+\x9b\x4e\x5e\x47\x31\x19\x12\x02\x05\x21\x1c\x0c\x0c\x0c\x9c\
+\x0c\xff\x19\x58\x18\x18\xfe\x7f\x61\x60\x60\xf8\x81\xee\x04\
+\x06\x06\x06\x06\x00\xb1\xb5\x9b\x5c\xc8\xf8\x64\x33\x00\x00\
+\x00\x00\x49\x45\x4e\x44\xae\x42\x60\x82"
+}
+
+
+######################################################################
+######################################################################
+######################################################################
+
+# --------------------------------------------------------------------
+# print program info
+function info() {
+   echo "_____________________________________________________________________________"
+   echo "IIMAGE $VERSION (c) Ronald Schmidt http://www.ronsc.de"
+   echo ""
+}
+
+# --------------------------------------------------------------------
+# print out version
+function version() {
+   echo "Version$SVN_ID"
+}
+
+# Help by Holm Sieber
+#         sieber@prudsys.com
+# --------------------------------------------------------------------
+# syntax help
+function help() {
+cat << EOF
+SYNTAX:
+   iimage [options]
+
+OPTIONS:
+   -v/-V print CVS version
+   -h    print this syntax help
+   -H    print variables description of description file
+   -R    go recursively through subdirectories
+   -U    get current version of iimage from iimage WWW server
+   -D    get developer version of iimage from iimage WWW server
+   -f    force creation of HTML-Files
+   -T    use new templates from iimage (impl. -f)
+   -F    force rebuild of thumbnails (impl. -f)
+   -d    generate sample desciption-file (impl. -u)
+   -u    update image-names in description-file
+   -a    create AUTORUN.INF
+   -s    include iimage-special-php-tags
+
+DESCRIPTION:
+   IImage generates a set of HTML files as index of all images
+   at current directory. The following image types are recognized:
+EOF
+echo "      $FILE_EXTENSIONS"
+cat << EOF
+   IImage creates a directory ".tmp" in which tumbnails and a lot
+   of html files will be created. At current directory index.html
+   will be a start point for viewing the images.
+      IImage uses a file named "description" which contains some
+   options about the images in the same directory. Use "iimage -H"
+   to get a description of the syntax of this file.
+EOF
+}
+
+# --------------------------------------------------------------------
+# syntax description file
+function help_description() {
+cat << EOF
+VARIABLES in FILE "description"
+   order=       order of appearance of subfolders, "accesstime", 
+                "alphabetically" (default) or "dec" or explicit 
+                order, e.g. "folder1 folderb folder7"
+   iorder=      order of appearance of images, "alphabetically" (default), 
+                "accesstime" (oldest picture first), 
+                "dec" (accesstime, newest picture first), 
+                "digicam" (sorts alphabetically but ignores leading 
+                characters), "description" (order as descriptions)" 
+                or explicit order, e.g. "dscn0002.jpg dscn0232.jpg"
+   title=       title of folder (default: dir-name)
+   date=        folder date
+   description= folder description
+   <filename>=  image "filename" title
+   ignore=      files and directories to ignore
+   AUDIODIR=    optional dir for wav-files
+   EXCLUDE_ORGINAL=
+   DISABLED=
+EOF
+}
+
+######################################################################
+######################################################################
+######################################################################
+
+# parse arguments ####################################################
+
+while getopts ":hHvVRUDTfFduas" OPT ; do
+
+   case $OPT in
+      v|V)  # print version
+         version
+         exit
+         ;;
+      f)
+         FORCE=true
+         ;;
+      a)
+         echo -e "[autorun]\nshellexecute=index.html\n" >AUTORUN.INF
+         ;;
+      F)
+         FORCE_TN=true
+         ;;
+      h)    # print syntax help
+         info
+         help
+         exit
+         ;;
+      H)    # print syntax description file
+         info
+         help_description
+         exit
+         ;;
+      R)    # run recursively
+         RECURSIVE=true
+         ;;
+      U)    # update iimage
+         echo "update $0 from http://www.ronsc.de/iimage/iimage"
+         echo OLD `$0 -v`
+         wget http://www.ronsc.de/iimage/iimage -q --cache=off -O $0
+         echo NEW `$0 -v`
+         exit
+         ;;
+      D)    # update iimage
+         echo "update $0 from http://www.ronsc.de/iimage/devel/iimage"
+         echo OLD `$0 -v`
+         wget http://www.ronsc.de/iimage/devel/iimage.gz -q --cache=off -O $0.gz
+         gunzip -f $0.gz
+         chmod 755 $0
+         echo NEW `$0 -v`
+         exit
+         ;;
+      T)
+         FORCE_TEMPLATES=true
+         ;;
+      d)
+         create_description_template
+         update_description_names
+         exit
+         ;;
+      u)
+         update_description_names
+         exit
+         ;;
+      s)
+         IIMAGE_SPECIAL=true
+         ;;
+      ":")    # wrong argument
+         echo -n "ERROR: Missing argument for option \"$OPTARG\". "
+         echo "Use \"iimage -h\" to get more help."
+         exit 1
+         ;;
+      "*")    # wrong option
+         echo -n "ERROR: Unknown option \"$OPTARG\". "
+         echo "Use \"iimage -h\" to get more help."
+         exit 1
+         ;;
+   esac
+
+done
+
+##############################################################
+
+if [ "$DISABLED" != "" ] ; then
+   echo "directory disabled -> exit"
+   exit
+fi
+
+# check for programms ################################################
+
+init_iimage
+
+[ "$RECURSIVE" = "true" ] && iimage_recursive $*
+
+pwd
+
+NEED_UPDATE=false
+diff --brief $DATADIR/ls-l.new $DATADIR/ls-l.old >/dev/null || NEED_UPDATE=true
+[ "$FORCE" = "true" -o \
+  "$FORCE_TN" = "true" -o \
+  "$FORCE_TEMPLATES" = "true" ] && NEED_UPDATE=true
+
+if [ "$NEED_UPDATE" = "true" ] ; then
+   {
+      prepare_dir;
+
+      prepare_images;
+      build_html;
+
+      cleanup;
+
+   } 2>>$DATADIR/errors | tee -a $DATADIR/log
+fi
+
+finish_iimage;
+
+[ -s $DATADIR/errors ] && echo -e "\nWARNING: there were errors. see $DATADIR/errors"
+
+# vim:ai:expandtab:sw=3:ts=3:tw=200

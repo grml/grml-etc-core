@@ -1,0 +1,72 @@
+#!/bin/sh
+# Filename:      grml-config-root
+# Purpose:       interface for configuring your grml system
+# Authors:       grml-team (grml.org), (c) Nico Golde <nico@grml.org>, (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+PATH=${PATH:-'/bin/:/sbin/:/usr/bin:/usr/sbin'}
+
+# set up some variables
+DIALOG=`which dialog`
+PN=$(basename $0)
+
+if [ "$(id -ru)" != "0" ] ; then
+        $DIALOG --msgbox "Error: $0 requires root permissions. Exiting." 0 0
+        exit 100
+fi
+
+allover() {
+MENU=$($DIALOG --stdout --clear --title "$PN" --menu \
+"Configure your grml system.
+
+" 0 0 0 \
+"grml-hostname" "Set hostname" \
+"grml-setlang" "Configure system wide language settings" \
+"grml-setkeyboard" "Configure system wide keyboard settings" \
+"grml-network" "Configure network settings/setup" \
+"grml-postfix" "Configure some basic settings of the postfix MTA" \
+"grml-terminalserver" "Configure and start terminalserver for booting via network" \
+"suspenduser" "Suspend a user account for indefinite time" \
+"exit" "Exit this program")
+
+retval=$?
+
+case $retval in
+  0)
+        if [ "$MENU" = "grml-hostname" ]; then
+          exec grml-hostname
+        fi
+        if [ "$MENU" = "grml-setlang" ]; then
+          exec grml-setlang
+        fi
+        if [ "$MENU" = "grml-setkeyboard" ]; then
+          exec grml-setkeyboard
+        fi
+        if [ "$MENU" = "grml-network" ]; then
+          exec grml-network
+        fi
+        if [ "$MENU" = "grml-postfix" ]; then
+          exec grml-postfix
+        fi
+        if [ "$MENU" = "grml-terminalserver" ]; then
+          exec grml-terminalserver
+        fi
+        if [ "$MENU" = "suspenduser" ]; then
+          exec suspenduser_gui.sh
+        fi
+        if [ "$MENU" = "exit" ]; then
+          exit
+        fi
+        ;;
+  1)
+        echo "Cancel pressed.";;
+  255)
+        echo "ESC pressed.";;
+esac
+}
+
+allover
+
+## END OF FILE #################################################################

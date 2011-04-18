@@ -1,0 +1,24 @@
+.TH grml-iptstate 8
+.SH "NAME"
+grml-iptstate \- startup wrapper script around iptstate
+.SH SYNOPSIS
+.B grml-iptstate
+.SH DESCRIPTION
+This manual page documents briefly the
+.B grml-iptstate
+command.
+.SH OPTIONS
+grml-iptstate does not support any options.
+.SH PURPOSE OF grml-iptstate
+iptstate (a top-like display of IP Tables state table entries) requires
+a present kernel module named ip_conntrack, otherwise it does not start.
+To be able to autostart iptstate on grml (especially in live-cd mode) this
+wrapper prompts for loading ip_conntrack and starting iptstate afterwards.
+If the ip_conntrack is present already grml-iptstate automatically invokes
+iptstate, if the module is not yet ready you will be asked whether you want
+to load it (just answer with yes or no, by default yes will be assumed).
+.SH AUTHOR
+grml-iptstate was written by Michael Prokop <mika@grml.org>.
+.PP
+This manual page was written by Michael Prokop
+<mika@grml.org> for the grml project (but may be used by others).

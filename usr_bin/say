@@ -1,0 +1,20 @@
+#!/bin/sh
+# Filename:      say
+# Purpose:       output text via flite or festival (general multi-lingual speech synthesis system)
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+if [ $# -eq 0 ] ; then
+  echo "Usage: $0 <text_to_say>"
+  exit 1
+fi
+
+if [ -x /usr/bin/flite ] ; then
+  flite -o play -t "$*"
+elif [ -x /usr/bin/festival ] ; then
+  echo $* | festival --tts
+fi
+
+## END OF FILE #################################################################

@@ -1,0 +1,23 @@
+#!/bin/sh
+# Filename:      xsay
+# Purpose:       output X clipboard text via flite
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+if [ -x /usr/bin/sselp ] ; then       # package dwm-tools
+   flite -o play -t "$(sselp)"
+elif [ -x /usr/bin/xclip ] ; then     # package xclip
+   flite -o play -t "$(xclip -o)"
+elif [ -x /usr/bin/wmiipsel ] ; then  # old wmii package
+   flite -o play -t "$(wmiipsel)"
+elif [ -x /usr/bin/wmiiplumb ] ; then # old wmii package
+   flite -o play -t "$(wmiiplumb)"
+elif [ -x /usr/bin/wmiplumb ] ; then  # deprecated wmi package
+   flite -o play -t "$(wmiplumb)"
+else
+  echo "error, no program for reading X selection found" | flite
+fi
+
+## END OF FILE #################################################################

@@ -1,0 +1,439 @@
+#!/bin/bash
+# Filename:      twebgal
+# Purpose:       create a tiny webgallery using CSS-features
+# Authors:       Wolfgang Scheicher <worf@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+# Defaults
+DISPLAY_GEOMETRY=640x480
+THUMBNAIL_GEOMETRY=150x150
+PREVIEW_GEOMETRY=250x250
+THUMBNAIL_QUALITY=75
+
+PARENT_DIR="Übergeordnetes Verzeichnis"
+
+PATH=$PATH:/usr/X11R6/bin:/usr/bin
+DATADIR=".tmp"
+LOG=".tmp/log"
+VERBOSE="/dev/null"
+OPTS=$*
+OLDIFS=$IFS
+IFS="
+"
+
+THUMBNAILS=("$DISPLAY_GEOMETRY" "$THUMBNAIL_GEOMETRY")
+FILE_EXTENSIONS=("jpg" "png" "gif")
+REQUIRED=("jpegtran" "convert" "identify" "find" "tr" "sed" "awk" "grep")
+
+##############################################################
+
+create_sample_config () {
+# sample config with some default values
+#
+if [ -f description ] ; then
+  DST=/dev/stdout
+  echo "description file allready exists!"
+else
+  echo "creating example description file"
+  DST="./description"
+fi
+echo -e "# Gallery Config File\n#
+# Title for this Directory
+TITLE=\"${PWD##*/}\"\n
+# Optional Comment
+COMMENT=\"\"\n
+# this parameters affect the dir list in the parent directory:
+# thumbnail to show
+THUMB=\"$(find_all_images | head -n 1 )\"\n
+# Index to sort dirs by.
+# You might want to use some date for chronological order
+INDEX=\"$(date +%F)\"\n" > $DST
+if [[ -z $STYLESHEET ]] ; then
+echo -e "# Stylesheet
+# This will be used for all subdirs as well
+STYLESHEET=\"stylesheet.css\"" >> $DST
+fi
+}
+
+##############################################################
+
+init_gallery () {
+# create datadir and check for required apps
+#
+  mkdir -p ${DATADIR}
+  echo -n "" > ${LOG}
+  for app in "${REQUIRED[@]}" ; do
+    if which $app 2>/dev/null >/dev/null ; then
+      true
+    else
+      echo "ERROR: $app not found!"
+      exit;
+    fi
+  done
+  if [[ -f description ]] ; then source "description"; fi
+  STYLESHEET=$( find_stylesheet )
+}
+
+parent_dir () {
+# adds a "../ if it is not a absolute path or a url"
+# otherwise returns the same string again
+  if [[ "${1::1}" == "/" ]] ; then
+    echo "$1"
+  elif [[ "${1::7}" == "http://" ]] ; then
+    echo "$1"
+  elif [[ ! -z $1 ]] ; then
+    echo "../${1}"
+  fi
+}
+
+find_stylesheet () {
+# searches parent dirs recursively for a stylesheet
+# until it reaches the root dir
+  if [[ -f description ]] ; then source "description"; fi
+  if [[ -z $STYLESHEET ]] ; then
+    if [[ ! "$PWD" == "/" ]] ; then
+      cd ..
+      parent_dir $( find_stylesheet )
+    fi
+  else
+    echo $STYLESHEET
+  fi
+}
+
+##############################################################
+
+find_all_images() {
+# returns a list of all (supported) Images in the current dir
+#
+  for ext in "${FILE_EXTENSIONS[@]}" ; do
+    find *.${ext} -maxdepth 0 2> /dev/null
+  done
+}
+
+find_all_dirs() {
+# Searches all dirs and lists them,
+# sorted by the INDEX field in the description file
+#
+  DIRS="$(find * -maxdepth 0 -type d)"
+  for DIR in $DIRS ; do
+    ( INDEX="_"
+    if [[ -f ${DIR}/description ]] ; then source "${DIR}/description"; fi
+    echo "${INDEX} ${DIR}" )
+  done | sort | sed -e "s/^\S*\s//"
+}
+
+##############################################################
+
+prune() {
+# deletes old thumbnails and html files
+# temporarily creates a filelist
+#
+  if [[ "$RECURSIVE" == "true" ]] ; then
+    ALL_DIRS=( $(find_all_dirs) )
+    for DIR in "${ALL_DIRS[@]}"; do
+      ( IFS=$OLDIFS && cd "$DIR" && $0 $OPTS ; )
+    done
+  fi
+  echo "->  ${PWD}"
+  if [[ -d "${DATADIR}" ]] ; then
+    find_all_images > "${DATADIR}/filelist"
+    for GEOMETRY in "${THUMBNAILS[@]}"; do
+      (
+      [[ -d "${DATADIR}/${GEOMETRY}" ]] &&
+      cd "${DATADIR}/${GEOMETRY}" &&
+      find_all_images |
+      awk 'NR==FNR {a[$0];next}
+           !($0 in a)' ../filelist - |
+      while read line ; do
+        echo "rm ${DATADIR}/${GEOMETRY}/${line}"
+        rm "${line}"
+      done
+      )
+    done
+    (
+    cd "${DATADIR}/" &&
+    find *.html -maxdepth 0 2> /dev/null |
+    awk 'NR==FNR {a[$0];next}
+         {sub(/\.html$/,"",$0)}
+         !($0 in a)' filelist - |
+    while read line ; do
+      echo "rm ${DATADIR}/${line}.html"
+      rm "${line}.html"
+    done
+    )
+    rm "${DATADIR}/filelist"
+  fi
+}
+
+##############################################################
+
+build_thumbnail() {
+# generates thumbnails
+# time of modification is set to that of the original and used
+# to check if existing thumbs need updating
+# orientation in the exif-header is used to rotate generated images
+#
+  for GEOMETRY in "${THUMBNAILS[@]}"; do
+    mkdir -p "$DATADIR/$GEOMETRY" || exit
+    echo -ne "($GEOMETRY"
+    DST="$DATADIR/$GEOMETRY/$FILE"
+    SKIP=false
+     if [[ -e $DST ]]; then
+      if [[ $(stat -c "%Y" $FILE) == $(stat -c "%Y" $DST) ]]; then
+        SKIP=true
+        echo -n " skip"
+      else
+        echo -n " D"
+        rm $DST
+      fi
+    else
+      echo -n "  "
+    fi
+
+    if [[ $SKIP == "false" ]]; then
+      ORIENTATION=""
+      ORIENTATION=$(identify -format "%[EXIF:Orientation]" "$FILE")
+      if [[ "$ORIENTATION" == "6" ]]; then
+        echo -n "TR"
+        convert -quality $THUMBNAIL_QUALITY -rotate 90 -geometry "$GEOMETRY+0+0>" "$FILE" "$DST"
+      elif [[ "$ORIENTATION" == "8" ]]; then
+        echo -n "TL"
+        convert -quality $THUMBNAIL_QUALITY -rotate 270 -geometry "$GEOMETRY+0+0>" "$FILE" "$DST"
+      else
+        echo -n "T "
+        convert -quality $THUMBNAIL_QUALITY -geometry "$GEOMETRY+0+0>" "$FILE" "$DST"
+      fi
+      if [[ "${FILE##*.}" == "jpg" ]]; then
+        echo -n "O"
+        jpegtran -copy none -optimize -progressive "$DST" > "$DST.tmp"
+        mv -f "$DST.tmp" "$DST"
+      else
+        echo -n " "
+      fi
+      touch -m --reference=$FILE $DST
+    fi
+    echo -n ") "
+  done
+}
+
+build_html() {
+# generates the HTML
+
+  echo -n "(html"
+
+  THUMBGEOMETRY=$(identify -format "%wx%h" "$DATADIR/$THUMBNAIL_GEOMETRY/${FILE}")
+  THUMBWIDTH=${THUMBGEOMETRY%x*}
+  THUMBHEIGHT=${THUMBGEOMETRY#*x}
+
+  THUMBT=$(((156 - $THUMBHEIGHT )/2 ))
+  THUMBB=$(((157 - $THUMBHEIGHT )/2 ))
+  THUMBL=$(((156 - $THUMBWIDTH  )/2 ))
+  THUMBR=$(((157 - $THUMBWIDTH  )/2 ))
+
+  TITLE=$FILE
+  COMMENT=$(identify -format "%c" "${FILE}" | tr '\n' ' ')
+  THUMBNAIL=$DATADIR/$THUMBNAIL_GEOMETRY/${FILE}
+  THIS_HTML=$DATADIR/${FILE}.html
+
+  html_header > ${THIS_HTML}
+
+echo "<div class=\"gallerynav\">
+${FILE}&nbsp;&nbsp;&nbsp;&nbsp;
+<a href=\"../index.html\">Index</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"${LAST}.html\">&lt;&lt;&lt;</a>&nbsp;${CURRENT}/${IMAGE_COUNT}&nbsp;<a href=\"${NEXT}.html\">&gt;&gt;&gt;</a>
+</div>
+
+<div class=\"cont\">
+<center>
+<a href=\"../${FILE}\"><img alt=\"${DISPLAY_GEOMETRY}/${FILE}\" src=\"${DISPLAY_GEOMETRY}/${FILE}\" /></a>
+</center><br />
+" >> $THIS_HTML
+
+identify -format "<table>
+<tr><td>Auflösung:</td><td>%wx%h</td></tr>
+<tr><td>Dateigröße:</td><td>%b</td></tr>
+<tr><td>Camera:</td><td>%[EXIF:Model]</td></tr>
+<tr><td>Datum/Zeit:</td><td>%[EXIF:DateTime]</td></tr>
+<tr><td>Kommentar:</td><td>%c</td></tr>
+</table>" ${FILE} >> $THIS_HTML
+
+echo "</div>" >> $THIS_HTML
+html_foot >> $THIS_HTML
+
+echo "<a href=\"$THIS_HTML\"><img alt=\"Thumbnail\" src=\"$THUMBNAIL\" style=\"width:${THUMBWIDTH}px; height:${THUMBHEIGHT}px; margin: ${THUMBT}px ${THUMBR}px ${THUMBB}px ${THUMBL}px;\" title=\"${COMMENT}\" /><br />$FILE</a>" >> index.html
+
+echo -en ")"
+}
+
+##############################################################
+
+start_index () {
+# generates the upper part of the index page
+# containing the list of subdirs
+# which are recursively processed from here too
+#
+  TITLE="${TITLE=${PWD##*/}}"
+  html_header > index.html
+  echo "<div class=\"cont\">" >> index.html
+  echo "<h1>${TITLE}</h1>" >> index.html
+  echo "<ul>" >> index.html
+  echo "<li class=\"back\"><b><a href=\"../index.html\">${PARENT_DIR}</a></b></li>" >> index.html
+  ALL_DIRS=( $(find_all_dirs) )
+  for DIR in "${ALL_DIRS[@]}"; do
+  ( TITLE="${DIR}"; THUMB=""; INDEX=""; COMMENT=""
+    if [[ -f ${DIR}/description ]] ; then source "${DIR}/description"; fi
+    echo "<li class=\"dir\"><a class=\"tooltip\" href=\"${DIR}/index.html\"><b>${TITLE}</b>" >> index.html
+
+    if [[ ! "${THUMB}${COMMENT}" == "" ]]; then
+      if [[ "${COMMENT}" == "" ]]; then
+        echo "<span><table><tr><td><img alt=\"Thumbnail\" src=\"${DIR}/${DATADIR}/thumb.${THUMB##*.}\" /></tr></table></span>" >> index.html
+      elif [[ "${THUMB}" == "" ]]; then
+        echo "<span><table><tr><td>${COMMENT}</td></tr></table></span>" >> index.html
+      else
+        echo "<span><table><tr><td><img alt=\"Thumbnail\" src=\"${DIR}/${DATADIR}/thumb.${THUMB##*.}\" /></td><td></td><td></td><td>${COMMENT}</td></tr></table></span>" >> index.html
+      fi
+    fi
+    echo "</a></li>" >> index.html
+    if [[ "$RECURSIVE" == "true" ]] ; then
+      ( STYLESHEET="$(parent_dir ${STYLESHEET})"
+        IFS=$OLDIFS && cd "$DIR" && $0 $OPTS ; )
+    fi
+  )
+  done
+echo "
+</ul>
+${COMMENT}
+<div class=\"gallery\">
+<div class=\"spacer\"></div>
+" >> index.html
+}
+
+finish_index () {
+echo "
+<div class=\"spacer\"></div>
+</div>
+</div>
+" >> index.html
+html_foot >> index.html
+}
+
+##############################################################
+
+create_sample_stylesheet () {
+if [ -f stylesheet.css ] ; then
+  echo "stylesheet.css allready exists!"
+  exit 1
+fi
+cat << EOF > stylesheet.css
+a {text-decoration:none;}
+
+div.gallery img {border: 2px inset #aaa; margin:3px;}
+div.gallery a {color:#000; border: 2px outset #aaa; text-decoration:none; text-align:center; float:left; padding:3px; margin:4px; background-color:#ddd;}
+div.gallery a:hover {color:#333; border: 2px outset #ccc; background-color:#eee;}
+div.spacer {clear: both;}
+div.gallerynav {text-align: center; margin: 0px; padding:0em 0.3em 0em 0.3em;}
+
+a.tooltip, a.tooltip:link, a.tooltip:visited, a.tooltip:active  { position: relative; }
+a.tooltip span {display: none}
+a:hover.tooltip span {display: block; position: absolute; top: 2.5em; left: 1.5em; z-index: 100; color: #000; padding: 3px; border:1px solid #000; background: #ffc; }
+EOF
+}
+
+##############################################################
+
+html_header () {
+echo "<html>
+<head>
+<title>${TITLE}</title>
+<link rel=\"stylesheet\" type=\"text/css\" href=\"${STYLESHEET}\" />
+</head>
+<body>
+"
+}
+
+html_foot () {
+echo "</body>
+</html>
+"
+}
+
+
+##############################################################
+
+build_gallery() {
+# generates the whole thing, puts everything together
+# 
+  ALL_IMAGES=( $(find_all_images) )
+  IMAGE_COUNT=${#ALL_IMAGES[@]}
+  start_index
+  (
+  STYLESHEET="$(parent_dir ${STYLESHEET})"
+  echo "-> ${TITLE}"
+  CURRENT="0"
+  FILE="../index"
+  for file in "${ALL_IMAGES[@]}" "../index" ; do
+    NEXT="$file"
+    if [[ "$FILE" != "../index" ]]; then
+      echo -ne "$FILE\t"
+      build_thumbnail
+      build_html
+      echo ""
+    fi
+    CURRENT="$(( ${CURRENT} + 1 ))"
+    LAST="$FILE"
+    FILE="$file"
+  done
+  if [[ ! -z "${THUMB}" ]] ; then
+    echo -ne "preview thumbnail from ${THUMB}\t"
+    THUMBNAILS=("$PREVIEW_GEOMETRY")
+    FILE="${THUMB}"
+    [ -e "${DATADIR}/thumb.${THUMB##*.}" ] && mv "${DATADIR}/thumb.${THUMB##*.}" "${DATADIR}/${PREVIEW_GEOMETRY}/${THUMB}"
+    build_thumbnail &&
+    mv "${DATADIR}/${PREVIEW_GEOMETRY}/${THUMB}" "${DATADIR}/thumb.${THUMB##*.}"
+    echo
+  fi
+  ) | tee -a $LOG >> $VERBOSE
+  finish_index
+  echo " $IMAGE_COUNT Image(s) in ${TITLE}"
+}
+
+##############################################################
+
+init_gallery
+
+while getopts "vdsrp-:" OPT ; do
+  case $OPT in
+    v) VERBOSE=/dev/stdout
+       ;;
+    d) create_sample_config
+       exit 0
+       ;;
+    s) create_sample_stylesheet
+       exit 0
+       ;;
+    r) RECURSIVE="true"
+       ;;
+    p) prune
+       exit 0
+       ;;
+    ?) # wrong argument
+       echo -n "ERROR: Missing argument for option \"$OPTARG\". "
+       exit 1
+       ;;
+    *) # wrong option
+       echo -n "ERROR: Unknown option \"$OPTARG\". "
+       exit 1
+       ;;
+  esac
+done
+shift $(($OPTIND -1))
+
+build_gallery 2>${DATADIR}/errors
+if [ -s ${DATADIR}/errors ]; then
+  echo -e "\nWARNING: there were errors. see .tmp/errors"
+else
+  rm .tmp/errors
+fi
+
+## END OF FILE #################################################################

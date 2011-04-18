@@ -1,0 +1,117 @@
+#!/bin/sh
+# Filename:      bt-hid
+# Purpose:       connect human input device via bluetooth to local system
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+. /etc/grml/lsb-functions
+
+if [ "$(id -ru)" != "0" ] ; then
+   eerror "Need root privileges. Please run $0 as user root." ; eend 1
+   exit 1
+fi
+
+case "$1" in
+  start)
+   einfo "Starting bluetooth support."
+    eindent
+
+    if pgrep dbus-daemon 1>/dev/null; then
+      einfo "dbus already running." ; eend 0
+    else
+      einfo "Starting dbus."
+      /etc/init.d/dbus start 1>/dev/null ; eend $?
+    fi
+
+    if pgrep sdpd 1>/dev/null; then
+      einfo "Main bluetooth daemons seem to be already running." ; eend 0
+    else
+      einfo "Starting main bluetooth support."
+      /etc/init.d/bluetooth start 1>/dev/null ; eend $?
+    fi
+
+    if pgrep hcid 1>/dev/null; then
+      einfo "hcid already running."
+    else
+      einfo "Starting hcid."
+       HCIINFO=$(mktemp)
+       if start-stop-daemon --start --exec /usr/sbin/hcid 1>$HCIINFO 2>&1 ; then
+         rm -f $HCIINFO
+         eend 0
+       else
+         eerror "hcid could not be started: `cat $HCIINFO`. Exiting."
+         rm -f $HCIINFO
+         eend 1
+         exit 1
+       fi
+    fi
+     einfo "Loading bluetooth modules:"
+     for module in bluetooth ohci1394 hci_usb ; do
+       eindent
+       einfo "$module" ; modprobe $module ; eend $?
+       eoutdent
+     done
+
+     einfo "Scanning for human input device(s). Press the 'connect' button on the device!"
+     einfo "Scanning might take a while. Searching..."
+     SUCCESS=$(mktemp)
+     ERROR=$(mktemp)
+     if hidd --search 1>${SUCCESS} 2>${ERROR} ; then
+      if ! grep -q 'Connecting to device' $SUCCESS ; then
+         eerror "Could not find any devices. Exiting." ; eend 1
+         exit 1
+      else
+       ID=$(awk '/Connecting to device/ {print $4}' $SUCCESS)
+       if [ -n "$ID" ] ; then
+        einfo "Success: connected device ${ID}." ; eend 0
+        logger -t "bluez-connect" "connected human input device ${ID}"
+       else
+        ewarn "Warning: searching for device succeded but no connection could be established."
+       fi
+      fi
+     else
+       eerror "Error: `cat $ERROR`" ; eend 1
+     fi
+     rm -f $SUCCESS $ERROR
+    ;;
+  stop)
+    einfo "Stopping hcid."
+    killall hcid ; eend $? # workaround because start-stop-daemon does not work :-/
+    einfo "Disconnecting all human input devices."
+    logger -t "bluez-connect" "disconnected all human input devices"
+    hidd --killall ; eend $?
+    ;;
+  restart|force-reload)
+    $0 stop
+    sleep 1
+    $0 start
+    ;;
+  status)
+    local INFO="$(hidd --show)"
+    einfo "$0 - checking status:"
+    eindent
+    if pgrep hcid 1>/dev/null ; then
+      einfo "hcid running." ; eend 0
+    else
+      eerror "hcid not running." ; eend 1
+    fi
+    if [ -n "$INFO" ] ; then
+      einfo "$INFO" ; eend 0
+    else
+      eerror "No devices connected." ; eend 1
+    fi
+    eoutdent
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|status|restart|force-reload}"
+    exit 1
+    ;;
+esac
+
+eoutdent
+
+exit 0
+
+## END OF FILE #################################################################

@@ -1,0 +1,227 @@
+%!PS-Adobe-3.0
+%%Pages: 1
+%%Title: Alignment testpage for Ghostscript
+%%Creator: Dieter Stueken (<EMAIL: PROTECTED>)
+%%BeginProlog
+% Source: http://www.geocrawler.com/archives/3/378/1997/1/50/2064509/
+
+/rectdraw		% <x0> <y0> <x1> <y1> rectdraw -
+ { exch 4 -1 roll exch 2 array astore {0 moveto 0 PH rlineto stroke} forall
+   2 array astore {0 exch moveto PW 0 rlineto stroke} forall
+ } bind def
+
+/arrow		% <ang> <x0> <y0> arrow 
+  { gsave translate rotate
+    0 0 moveto 20 60 lineto -20 60 lineto closepath stroke
+    0 0 moveto 0 80 lineto stroke
+    grestore
+  } bind def
+
+/triangle {	% len ang x y
+	gsave translate dup rotate exch
+	0 setlinewidth
+	0 0 moveto
+	dup 0 lineto
+	dup 0.98 mul dup 10 div lineto
+	closepath
+	gsave 0.65 setgray fill grestore stroke
+	100 10 moveto
+	100 100 2 index {
+		gsave 0 -12 rmoveto 0 24 rlineto stroke grestore
+		gsave 0 24 rmoveto 10 div 2 index neg rotate
+		cvi =string cvs -6 -4 rmoveto show grestore
+		100 10 rmoveto
+	} for
+	0 0 moveto
+	0 10 2 index {
+		pop
+		gsave 0 -6 rmoveto 0 12 rlineto stroke grestore
+		10 1 rmoveto
+	} for
+	pop pop
+	grestore
+} bind def
+
+/round {dup 3 1 roll mul cvi exch div} def
+
+/Show {  % print value or unfold array
+	dup type /realtype eq {100 round} if
+	dup type /nulltype eq
+	 { pop (-NULL-) show}
+	 {dup type /arraytype eq
+          { ([ ) show {Show} forall ( ]) show}
+	  {=string cvs show ( ) show}
+	 ifelse }
+        ifelse
+} bind def
+
+/Pval { 	% key val, move down 1 line
+	gsave exch
+	gsave Show (:) show grestore
+	150 0 rmoveto Show
+	grestore
+	0 -12 rmoveto
+} bind def
+
+/showtext {
+ /S 80 string def
+ { currentfile S readline pop dup (%END) eq { pop exit } if
+   gsave show grestore 0 -12 rmoveto
+ } loop
+} bind def
+
+/.knownget { 2 copy known { get true } { pop pop false } ifelse } bind def
+
+%%EndProlog
+%%BeginSetup
+
+% you may try different settings here, but start with default settings first
+%<<
+%  /.HWMargins [8.5 38.0 10.5 12.5]
+%  /Margins [-35 -51]
+%>> setpagedevice
+%
+
+%%EndSetup
+%%Page: 1
+
+% printout all values
+
+/Helvetica findfont
+12 scalefont setfont
+120 756 moveto
+
+showtext
+Current settings:
+
+%END
+
+[/OutputDevice
+ /Margins
+ /.HWMargins
+ /.MarginsHWResolution
+ /HWResolution
+ /PageOffset
+ /PageSize
+] { currentpagedevice 1 index
+    .knownget not {(-undefined-)} if Pval
+} forall
+
+showtext
+
+Graphics alignment:
+
+Let the distance in inches from the left edge of the page to the
+vertical line be H, and from the bottom edge to the horizontal line
+be V. You may define the alignment of your page to the paper by
+
+        << /Margins [x y] >> setpagedevice
+with
+%END
+
+gsave
+/res currentpagedevice /.MarginsHWResolution .knownget not {600} if def
+(        x = (1 - H) * ) show res 0 get =string cvs show
+(, y = (V - 1) * ) show res 1 get =string cvs show
+grestore 0 -12 rmoveto
+
+showtext
+
+If set correctly the drawn arrows should extend into the
+papers corners (not the clipping corners). After archieving
+that, you may continue with the clipping edges.
+
+The clipping edges may be set by
+
+        << /.HWMargins [ml mb mr mt] >> setpagedevice
+
+where [ml mb mr mt] are the distances of the clipped edges of
+your graphics relative to the papers edges (left bottom right top)
+measured in 1/72 inches. The wedge shaped rules may be used to
+define these values very accurately as its intersections are in
+1/72 inches. Take the value at the cutoff point from the scale to
+the next clockwise edge. 
+
+Start setting the margin values to all zero to see the natural hardware
+clipping of your printer. You should then define the margins just as big
+enough to keep the defined margins within your printers real hardware
+clipping. This is archieved if you can see the thin line drawn all around
+your defined margin. In addition the thin drawn arrows are just touching
+the margin and should be totally visible.
+
+When you put this settings into your inititializing file "gs_init.ps"
+you may want to apply this setting to a specific printer device only.
+Here is an example of a printer specific setup:
+
+<<
+  /ljet4 <<                   % make entries for some device
+    /.HWMargins [16.0 13.2 13.0 11.1]
+    /Margins [-132 -92]
+  >>
+  /ljet2p <<                  % and for an other devices, too
+    /.HWMargins [14.4  6.8 14.5 17.5]
+    /Margins [-60 -23]
+  >>
+>> currentpagedevice /OutputDevice get
+.knownget {setpagedevice} if
+%END
+
+% get page size
+currentpagedevice /PageSize get aload pop
+/PH exch def
+/PW exch def
+
+1 setlinewidth
+PW   0  0  0 triangle
+PH  90 PW  0 triangle
+PW 180 PW PH triangle
+PH 270  0 PH triangle
+
+% get clipping values
+clippath pathbbox newpath
+
+% show clipping box
+gsave
+1 setlinewidth % 0.65 setgray
+4 copy rectdraw
+grestore
+
+/CT exch def
+/CR exch def
+/CB exch def
+/CL exch def
+
+% draw the alignment lines
+0 setlinewidth
+72 0 moveto 0 CT rlineto stroke
+0 72 moveto CR 0 rlineto stroke
+
+2 setlinewidth
+1 setlinejoin
+1 setlinecap
+
+0 200 moveto 71 0 rlineto -24 -12 rlineto 0 24 rlineto 24 -12 rlineto stroke
+34 206 moveto (H) show
+
+144 0 moveto 0 71 rlineto -12 -24 rlineto 24 0 rlineto -12 24 rlineto stroke
+150 34 moveto (V) show
+
+
+% draw arrows into to the papers corners
+1 setlinewidth
+45
+90 sub dup  0  0 arrow
+90 sub dup  0 PH arrow
+90 sub dup PW PH arrow
+90 sub dup PW  0 arrow
+pop %45
+
+% draw arrows touching the clipping edges
+0 setlinewidth
+  0 PW 2 div CB arrow
+180 PW 2 div CT arrow
+-90 CL PH 2 div arrow
+ 90 CR PH 2 div arrow
+
+showpage
+%%EOF

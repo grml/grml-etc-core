@@ -1,0 +1,26 @@
+.TH reread_partition_table 8
+.SH "NAME"
+reread_partition_table \- re-read partition table on Linux
+.SH SYNOPSIS
+.B reread_partition_table
+.RI " <partition> "
+.SH DESCRIPTION
+This manual page documents briefly the
+.B reread_partition_table
+command. reread_partition_table uses the BLKRRPART ioctl()
+to re-read a partition table on Linux. It is the same as
+running 'blockdev \-\-rereadpt <device>' or 'partprobe'.
+.SH OPTIONS
+This program does not support any options.
+.SH USAGE EXAMPLE
+.TP
+.B reread_partition_table /dev/hda
+Reread partition table for disk /dev/hda.
+.SH SEE ALSO
+.BR cfdisk (8).
+.SH AUTHOR
+reread_partition_table was written by Michael Prokop
+<mika@grml.org>.
+.PP
+This manual page was written by Michael Prokop <mika@grml.org>
+for the grml project (but may be used by others).

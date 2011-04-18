@@ -1,0 +1,17 @@
+This package was debianized by Michael Prokop <mika@grml.org> on
+Fri, 17 Sep 2004 20:28:21 +0200.
+
+It was downloaded from http://grml.org/
+
+Upstream Author: Michael Prokop <mika@grml.org>
+
+Copyright:
+
+   Copyright (c) 2003+ by the grml team and others.
+
+   This package contains several scripts from several people.
+   Please see the copyright information in the scripts for more details.
+   Scripts by the grml-team are licensed under GPL v2.
+
+On Debian GNU/Linux systems, the complete text of the GNU General
+Public License can be found in `/usr/share/common-licenses/GPL-2'.

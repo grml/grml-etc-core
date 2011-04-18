@@ -1,0 +1,78 @@
+#!/bin/zsh
+# Filename:      caps-ctrl
+# Purpose:       switch caps to control key and vice versa for linux console and X
+# Authors:       grml-team (grml.org),  (c) Matthias Kopfermann <maddi@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+if [[ -f /etc/grml/script-functions ]] ; then
+	source /etc/grml/script-functions && \
+   	check4progs xmodmap loadkeys dumpkeys || exit 1
+fi
+if [[ -f /etc/grml/lsb-functions ]] ; then
+	source /etc/grml/lsb-functions
+else
+	einfo() { echo  "$*" ; }
+	eerror() { echo "$*" ; }
+	eend() { echo "$*" ; }
+fi
+
+emulate zsh
+
+if [[ -z $DISPLAY  ]] ; then # test if X is not running when calling us
+         if [ $(id -u) != 0 ] ; then # test if user root did invoke this command
+            eerror "As of Linux 2.6.15 you need root permissions for changing"
+            eerror "the keyboard on console using loadkeys for security reasons."
+            eerror "Run this program with root permissions. Exiting." ; eend 1
+            exit 1
+         fi
+         dumpkeys | grep -q '^keycode  58 = Caps_Lock' && \
+         ( einfo "caps-ctrl - switching caps lock and control key."
+
+           loadkeys <<- EOT
+           keycode 58 = $(repeat 15 echo -n 'Control ')
+           keycode 29 = $(repeat 7 echo -n 'Caps_Lock ')
+		EOT
+           eend $?
+
+        ) || (
+          einfo "caps-ctrl - switching caps lock and control key."
+
+           loadkeys <<- EOT
+           keycode 58 = $(repeat 15 echo -n 'Caps_Lock ')
+           keycode 29 = $(repeat 7 echo -n 'Control ')
+		EOT
+           eend $?
+         )
+
+else     # running under X
+        (
+        einfo "caps-ctrl - switching caps lock and control key."
+        einfo "If you notice errors, please make sure the xmodmap you have is right"
+        einfo "or use e.g. \"setxkbmap us\" beforehand."
+        xmodmap -pke | grep 'Caps_Lock' > /dev/null || (
+        xmodmap - <<- EOT
+        keycode 66 = Caps_Lock
+		EOT
+        )
+
+        xmodmap - <<- EOT
+        remove Lock = Caps_Lock
+        remove Control = Control_L
+        !remove Control = Control_R
+
+        keysym Control_L = Caps_Lock
+        keysym Caps_Lock = Control_L
+        !keysym Control_R = Caps_Lock
+        !keysym Caps_Lock = Control_R
+
+        add lock = Caps_Lock
+        add Control = Control_L
+        !add Control = Control_R
+		EOT
+        eend $?
+        )
+fi # end of test if X or console is used
+
+## END OF FILE #################################################################

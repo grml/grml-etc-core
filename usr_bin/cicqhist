@@ -1,0 +1,174 @@
+#!/usr/bin/perl -w
+
+# Julius Plenz <jp@cvmx.de>
+# http://www.plenz.com/
+#
+# $Id: cicqhist,v 0.4 2004/07/20 18:33:36 plenz Exp $
+#
+# This script has just been written because of a simple purpose:
+# To learn Perl. Or at least to make first few steps with perl.
+# It just aims to be like http://centericq.de/misc/cicq-history.sh -
+# and maybe it's even a bit more powerful... ;-)
+#
+# Released under the GNU GPL.
+
+use strict;
+use Getopt::Std;
+
+my %options = ();
+getopts ('d:hisv', \%options);
+
+$\ = "\n";
+$0 =~ s/^.*\///;
+
+my ($VER, $DATE);
+$VER =  '$Revision: 0.4 $';
+$VER =~ s/^.*: ([0-9\.,]+)\s*\$$/$1/;
+$DATE = '$Date: 2004/07/20 18:33:36 $';
+$DATE =~ s/^.*: ([0-9\/]{10})[0-9: ]*\$$/$1/;
+$DATE =~ s/\//-/g;
+
+if ($options{"v"}) {
+    print $0, ' ', $VER, ' ', $DATE;
+    exit;
+}
+
+if (!$ARGV[0]     ||
+    $options{"h"} ||
+    $ARGV[0] eq "") {
+
+    # print help
+    print $0, ' ', $VER, ' ', $DATE;
+    print 'by Julius Plenz <jp@cvmx.de>';
+    print 'http://www.plenz.com/';
+    print '(just to learn Perl :-)';
+    print '';
+    print 'Usage:   ' . $0 . ' [-d <dir>] [-h] [-i] [-s] <number>';
+    print '-d ...   Use ... as cicq-directory (default: ~/.centericq)';
+    print '-h       Display this message';
+    print '-i       Display initials rather than full nicknames';
+    print '-s       Display shortened date (yymmdd hh:mm)';
+    print '-v       Display program version';
+    exit;
+}
+
+
+# Change this, if you want!
+my $mynick = $ENV{"USER"};
+# my $mynick = "Goofy";
+
+
+# The main directory
+my $cicqdir;
+if ($options{"d"}) {
+    $cicqdir = $options{"d"};
+} else {
+    $cicqdir  = $ENV{"HOME"} . '/.centericq';
+}
+
+# Three basic settings
+my $number   = $ARGV[0];
+my $infofile = "$cicqdir/$number/info";
+my $histfile = "$cicqdir/$number/history";
+
+# Getting the nickname
+open (INFO, $infofile) || die ("Couldn't open file $infofile");
+my @lines = <INFO>;
+
+my $i = $#lines;
+$i++;
+
+my $nickname;
+foreach (@lines) {
+    $i--;
+    if ($i == 6) {
+        chomp;
+        $nickname = $_;
+    }
+}
+
+close (INFO);
+
+
+# Opening History
+print "--- Displaying conversation with $nickname ---\n";
+
+open (HIST, $histfile) || die ("Couldn't open file $histfile");
+
+my $linenumber = 0;
+my $nick = '';
+my $displaytime;
+
+while (<HIST>) {
+    chomp;
+    my $line = $_;
+
+    if ($line eq "") {
+        $linenumber = 0;
+        next;
+    }
+
+    if ($linenumber < 4) {
+        if ($line =~ /^IN$/) {
+            $nick = sprintf ('%-13s', $nickname);
+        }
+
+        if ($line =~ /^OUT$/) {
+            $nick = sprintf ('%-13s', $mynick);
+        }
+
+        if (/^[0-9]+$/) {
+            my $tstamp = $_;
+            chomp ($tstamp);
+
+            if ($tstamp < 3) {
+                next;
+            }
+
+            my ($sec, $min, $hour, $mday, $mon, $year) =
+                localtime ($tstamp);
+
+            if ($options{"s"}) {
+                $year += 1900;
+                $displaytime = sprintf ('%02d%02d%02d %02d:%02d  ',
+                    substr ($year, 2, 2), $mon, $mday, $hour, $min);
+            } else {
+                $displaytime =
+                    sprintf ('[%02d.%02d.%02d, %02d:%02d:%02d] ',
+                    $mday, $mon, (1900+$year), $hour, $min, $sec);
+            }
+        }
+
+        $linenumber++;
+        if ($linenumber == 4) {
+
+            $\ = "";
+
+            if ($options{"i"}) {
+                    print $displaytime . substr ($nick, 0, 1) . ':  ';
+                } else {
+                    print $displaytime . $nick . ':  ';
+                }
+
+            $\ = "\n";
+        }
+
+    } else {
+        print $line;
+    }
+
+}
+
+close (HIST);
+
+if ($options{"i"}) {
+    print '';
+    print '';
+    print ' 'x8 . $number .' = '. substr ($nickname, 0, 1) .
+        ' = ' . $nickname;
+    print ' 'x8 . substr ($mynick, 0, 1) . ' = ' . $mynick;
+}
+
+print "\n--- End of conversation with $nickname ---";
+
+# EOF  vim: set et sm nu ft=perl

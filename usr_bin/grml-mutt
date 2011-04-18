@@ -1,0 +1,428 @@
+#!/bin/sh
+# Filename:      grml-mutt
+# Purpose:       configuration script for mutt
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+PATH=${PATH:-'/bin/:/sbin/:/usr/local/bin:/usr/bin:/usr/sbin'}
+PN=$(basename "$0")
+
+if [ -r /etc/grml/script-functions ] ; then
+   . /etc/grml/script-functions
+   check4progs dialog mutt || echo "Warning - mutt is not available. Continuing anyway.">&2
+fi
+
+writemuttrc() {
+cat > $MUTTRC << EOF
+# Filename:      .muttrc
+# Purpose:       configuration for mailclient mutt, created by 'grml-mutt'
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+# important variables - adjust them if necessary
+  set realname="$REALNAME"
+  set from="$MAILADDR"
+
+# mailboxes
+  set pop_host="$POP3"
+$POPDATA
+  mailboxes $IMAP
+$IMAPDATA
+# some default options:
+    set allow_8bit           # send data as it is.  no conversion.
+  unset arrow_cursor         #  Show current mail with an inverse bar.
+    set ascii_chars          # set: use ASCII characters to build the thread tree
+  unset autoedit             # call editor without prompting for To: and Subject:?
+    set auto_tag=yes         # the next operation applies to the tagged messages automatically
+  unset confirmappend        # set: prompt for confirmation on appending mail to folder
+    set confirmcreate        # set: prompt for confirmation on creation of folders
+    set copy                 # Always keep a copy of my mails!
+    set delete=ask-yes       # ask before deleting any messages
+    set edit_headers         # edit all headers lines in the editor
+    set editor=vim           # use Vim as the editor (Vi IMproved www.vim.org)
+    set folder=~/Mail        # directory with all mail folders
+  unset followup_to          # do not generate a Followup-To header
+#    set force_name           # set: save outbound mail by username
+    set hidden_host          # do not use a hostname in the address - PROBLEMATIC!
+    set history=100          # number of input lines for prompts to remember
+    set include              # set: include mail as quoted text in replies
+  unset mark_old             # set: make distinction between New mail and Old mail.
+    set mime_forward=ask-yes # ask: attach message - or just quote it?
+  unset move                 # do not move read mails from mailbox to $mbox (was: "set hold")
+    set pager_context=1      # number of lines that overlap on paging
+#   set pager_index_lines=0   # number of lines to see from the index
+    set pager_stop           # "next_page" won't jump to next message at end of messages
+    set postponed=+postponed # where save postponed messages?
+#   set print_command="mp|lpr" # pipe message to "mp" for formattting - then on to "lpr"
+  unset prompt_after         # set: gives you a prompt when pager exits
+    set quit=ask-yes         # ask before exiting
+    set quote_regexp="^>"    # some people just use '>' - *sigh*
+    set read_inc=10          # '10': show count number for every tenth mail
+    set record=+outbox       # outbox / where to save outgoing mails
+    set recall=ask-yes       # do not prompt for recalling postponed mails with 'm'
+    set reply_to=ask-yes     # "reply":          set:  Use address in Reply-To?
+    set reverse_alias        # show the name of sender as set with my alias for him
+    set reverse_name         # reply as the user to whom the mail was sent to
+#   set save_name             # save outbound mail to =username if it exists
+#   set shell=zsh             # use the zsh for shell commands
+    set sort=threads         # sorting method - I definitely like "threads" best
+    set status_on_top        # set: present the status bar at top, ie before the index
+    set strict_threads       # set: use references: for threading only, ie do not
+                             # thread by subject or in-reply-to
+    set tilde                # show non-existant lines of text with a tilde at begin-of-line
+    set tmpdir="/tmp"        # directory where temporary files are to be placed
+    set to_chars="X+TCF"     # message flags: non-personal,personal,To:,Cc:,From:
+    set use_from             # 'set from=' requires a 'set use_from'!
+#    set use_envelope_from    # when set, mutt will use $envelope_from_address as the envelope sender
+    set write_inc=10         # update number after each tenth read mail
+
+# Sending mail:
+#   set sendmail="/usr/bin/msmtp" # which sendmail program should be used?
+#   set smtp_url="smtp://yourusername@smtp.example.org:port/" # versions >=1.5...
+                             # ... of Mutt have built-in SMTP support
+#   set smtp_pass="password" # password for smtp_url option
+
+# Options with a long value:
+#   set alternates=...
+    set attribution="* %n <%a> [%(%y%m%d %H:%M)]:"              # how to cite the author
+    set reply_regexp="^((aw|antw.?|antwort|re|r e|r?f|sv):[ \t]*)*"
+
+# Format Options
+    set forw_format="(forw) %s"
+    set index_format="%4C %Z %[!%y%m%d] %-17.17F (%3l) %s"
+    set pager_format="%S [%C/%T] %n (%l) %s"
+    set status_format="%v: %f (%s) [%M/%m] [N=%n,*=%t,new=%b]"
+
+# Show the "text/plain" part *before* the "text/html" part:
+  alternative_order text/plain text/html
+  auto_view text/html
+
+# KEY BINDINGS
+  bind index zt current-top
+  bind index zz current-middle
+  bind index zb current-bottom
+
+# HEADER DISPLAY
+  ignore *
+  unignore from: date: subject: to: cc: reply-to:
+  unignore sender:
+  unignore priority: importance:
+  unignore organization organisation
+  unignore mail-followup-to:
+  unignore resent- x-resent
+# unignore user-agent: x-agent: x-mailer: x-newsreader: x-mailing-list:
+# unignore x-editor
+# unignore message-id: newsgroups: posted-to: posted-and-mailed:
+# unignore x-also-posted-to: x-newsgroups:
+# unignore delivered-to x-envelope-to:
+# unignore x-accept-language
+  unhdr_order *
+  hdr_order Sender: From From: Reply-To: Subject: Organization: Date: Message-Id: User-Agent: X-Editor: X-Mailer: X-Newsreader: X-Agent: To: Cc: Newsgroups: X-Resent Followup-To: Mail-Followup-To:
+EOF
+}
+
+lightcolors() {
+cat >> $MUTTRC << EOF
+
+## color setup
+
+## some misc stuff:
+  color normal     black      white
+  color error      red        white
+  color indicator  blue       green
+  color status     white      blue
+  color tree       blue       white
+  color hdrdefault red        white
+  color quoted     blue       white
+  color quoted1    green     white
+  color quoted2    magenta    white
+  color quoted3    cyan       white
+  color tilde      yellow     black
+  color signature  blue       white
+  color search     white      blue   # "search" - matches found with search within the internal pager.
+  color markers    red        black  # "markers" indicate a wrapped line when showing messages with looong lines.
+  color bold       green      black
+  color underline  yellow     black
+
+## index-colors:
+  uncolor index *
+
+# mail from myself *and* to myself (TODO items):
+#  color index black  brightyellow  '~p ~f prokop'
+
+# Flagged Messages are important!
+  color index blue white ~N      # New
+  color index magenta default ~T # Tagged
+  color index blue black ~D      # Deleted Mails - use dark color as these are already "dealt with".
+  color index red default ~O     # old messages
+
+# mail from important people (like myself ;-):
+# color index white  red '~f prokop'
+
+# Mails with no obvious addresses (empty To: and Cc: lines)
+   color index cyan white "! ~C ."
+
+# "DONE mails" ie those I have already replied to.
+   color index blue white  '~Q'
+
+# non-multipart mails which are tex/html almost always are spam:
+  color index brightmagenta white "~h 'Content-Type: text/html'"
+
+# Sent to "Undisclosed Recipients":
+  color index white      magenta  '~C Undisclosed.*Recipients'
+
+# When the Subject indicates a reply (with ":re" but without "Fwd"!)
+# then there *must* be a reference to the previous message!
+# So if there is neither an In-Reply-To nor a References line
+# then it must have been sent with a crappy mailer....
+  color index yellow white "~s re: ! ~s fwd: ! ~x . ! ~h 'in-reply-to: '"
+
+# No characters in body -> SPAM!
+  color index white white   "! ~b ."
+
+  color index brightred black ~F # Flagged
+
+## body-colors:
+
+# highlight important keywords
+  color body  brightyellow black  "grml"
+
+# URLs (General Internet addresses):
+  color body yellow red "(finger|ftp|http|news|telnet)://[^ >]*"
+  color body yellow red "<URL:[^ ]*>"
+# web address without "http":
+  color body yellow red "www\\.[-.a-z0-9]+\\.[a-z][a-z][a-z]?([-_./~a-z0-9]+)?"
+
+# HTTPS addresses:
+  color body yellow red "https://[^ >]*"
+
+# FTP addresses:
+  color body yellow red "ftp://[^ ]*"
+
+# HTTP addresses:
+  color body yellow red "[[:alnum:]][-+.#_[:alnum:]]*@[-+.[:alnum:]]*[[:alnum:]]"
+
+# File names ("/path/file")
+#  color body brightgreen white "\\~?\(/[-_.,a-zA-Z0-9{}äöüß]+\)+"
+  color body blue white "\\~?\(/[-_.,a-zA-Z0-9{}äöüß]+\)+"
+
+# Path names ("/path/")
+  color body brightred   white "\(/[-_.a-zA-Z0-9]+\)+/"
+
+# Variables  ("$HOME")
+  color body brightmagenta white "\\$[a-zA-Z][-_a-zA-Z]+"
+
+# Attribution line:
+# color body red white "^[*] .*:$"
+
+## abbreviations and "SCREAMING IN CAPS" in body:
+# The following includes umlauts - but that's quite clunky.
+# color body brightyellow  red "[A-ZÄÖÜ][-A-ZÄÖÜ]+[A-ZÄÖÜ][ .!?]?"
+
+# "+USE_GNU_REGEX":
+# When you use "+USE_GNU_REGEX" then you can also make use
+# of "start of word" ("\<") and "end of word" ("\>"):
+  color body red  white    "\\<[-A-Z']{3,}\\>"
+
+# *Emphasized*, /emphasized/, and _emphasized_ words:
+# color body brightred      black   "[*/_]+ *[- &[:alnum:]]+ *[*/_]+"
+# this would catch false positives of the kind _foo* and /bar_
+# so we should choose matching pairs only:
+  color body brightred  white   "[*][-[:alnum:]]+[*]"
+  color body brightred  white     "/[-[:alnum:]]+/"
+  color body brightred  white     "_[-[:alnum:]]+_"
+
+# Smileys:  :-)  ;-)  :-|  :-/  :-(
+  color body brightyellow white    "[;:]-[)/(|]"
+# Grinning:  "grin" ([g]) and "big grin" ([bg]):
+  color body blue   red      "<[Gg]>"
+  color body blue   red      "<[Bb][Gg]>"
+
+# Border Lines of length three or more.
+# (Several Newsletters use border lines..)
+  color body green  white    "[-_=+~/\*]{3,}"
+
+# Extensive use of exclamation and question marks:
+# "!!!"  "???"
+  color body red    white    "[!?]{3,}"
+
+# Percentages ("Save xx.x %!")
+  color body brightgreen white "[.0-9]+ ?%"
+
+# Copyright (C) and Registered Trademark (r)
+  color body red white "[(][cr][)]"
+  color body red white "\\(c\\)"
+
+# Year Numbers 1980-2002
+  color body blue white "19[89][0-9]"
+  color body blue white "200[012]"
+
+# Phone Numbers:
+  color body blue white "1-[0-9]{3}[- ][-0-9]+ +ext.? [0-9]+"
+  color body blue white \
+"(tele)?(cell|fax|fon|phone|tel)[.: ]+[+]?[- 0-9/()]{4,}[0-9]"
+
+# RTFM!
+# " man word"
+  color body white red "^ +[$]? *man \\w+"
+
+# Lists
+# bulleted list:
+# * one
+# * two
+# * three
+# dashed list:
+# - one
+# - two
+# - three
+# color body red          black "^ *[-*] +"
+# this pattern yields many false positives as it
+# spans lines for which there is no syntax language.
+# this is easier with Vim's syntax coloring.
+  color body red white "^ *[-*] +"
+
+# special IP host addresses:
+# 192.x.x.x
+  color body white blue  "129.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}"
+  color body white blue  "193.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}"
+
+# HTML tags
+  color body yellow       black "</?\w+>"
+
+# Emphasis by interspersed spaces
+# Example: E M P H A S I S
+  color body red white '\<\w( +\w\>)+'
+
+# verbatim marks (#v+ till #v-)
+  color body yellow red  ^\#v[-+]
+
+  color attachment black white
+EOF
+}
+
+dialog --stdout --title "$PN" --msgbox "Welcome to $PN!
+
+This script will create a simple base
+configuration for the mailclient mutt.
+
+Report bugs, send wishes and feedback to the grml team:
+http://www.grml.org/ - contact (at) grml.org
+" 13 65
+
+GETREALNAME=$(dialog --stdout --title "$PN" --inputbox "Your real name (eg 'John GRML User'):" 0 56) || exit 0
+REALNAME=${GETREALNAME%/*}
+
+GETMAILADDR=$(dialog --stdout --title "$PN" --inputbox "Your main mail address (eg 'joedoe@grml.org'):" 0 56) || exit 0
+MAILADDR=${GETMAILADDR%/*}
+
+askpop(){
+  GETPOPUSER=$(dialog --stdout --title "$PN" --inputbox "Enter username for POP3 account" 0 0)
+  POPUSER=${GETPOPUSER}
+
+  GETPOPPWD=$(dialog --stdout --title "$PN" --passwordbox "Enter password for POP3 account (typing hidden)" 0 0)
+  POPPWD=${GETPOPPWD}
+}
+
+ASKPOP=$(dialog --stdout --title "$PN" --yesno "Configure POP3?" 0 0)
+retval=$?
+
+case $retval in
+  0)
+     GETPOP3=$(dialog --stdout --title "$PN" --inputbox  "Your POP3 account (pop[s]://[user]@hostname[:port]):" 0 56 "pop://") || exit 0
+     POP3=${GETPOP3}
+     askpop && \
+POPDATA="  set pop_user=\"$POPUSER\"
+  set pop_pass=\"$POPPWD\"
+"
+     ;;
+esac
+
+askimap(){
+  GETIMAPUSER=$(dialog --stdout --title "$PN" --inputbox "Enter username for IMAP account" 0 0)
+  IMAPUSER=${GETIMAPUSER}
+
+  GETIMAPPWD=$(dialog --stdout --title "$PN" --passwordbox "Enter password for IMAP account (typing hidden)" 0 0)
+  IMAPPWD=${GETIMAPPWD}
+}
+
+ASKIMAP=$(dialog --stdout --title "$PN" --yesno "Configure IMAP?" 0 0)
+retval=$?
+
+case $retval in
+  0)
+     GETIMAP=$(dialog --stdout --title "$PN" --inputbox  "Your IMAP account (imap[s]://[user@]hostname[:port]/mailbox):" 0 65 "imap://") || exit 0
+     IMAP=${GETIMAP}
+     askimap && \
+IMAPDATA="  set imap_user=\"$IMAPUSER\"
+  set imap_pass=\"$IMAPPWD\"
+"
+     ;;
+esac
+
+GETCOLOR=$(dialog --stdout --title "$PN" \
+        --radiolist "Which color setup do you want to use?" 10 65 2 \
+          dark   "dark color setup (default)" on \
+          light  "light color setup" off)
+retval=$?
+
+case $retval in
+  0) COLOR=$GETCOLOR ;;
+  *) exit 1 ;;
+esac
+
+writecolors() {
+  if [ "$COLOR" = 'light' ] ; then
+    lightcolors
+  fi
+}
+
+GETMUTTRC=$(dialog --stdout --title "$PN" --inputbox "Choose a filename for this configuration:" 0 56 "$HOME/.muttrc") || exit 0
+MUTTRC=${GETMUTTRC}
+
+WRITEMUTTRC=$(dialog --stdout --title "$PN" --yesno "Write $MUTTRC?" 5 65)
+retval=$?
+
+case $retval in
+  0)
+    if [ -f "$MUTTRC" ] ; then
+      dialog --stdout --title "$PN" --yesno "$MUTTRC exists. Overwrite?" 5 65
+      retval=$?
+      case $retval in
+        0)
+          writemuttrc && writecolors && \
+          dialog --stdout --title "$PN" --msgbox "Writing $MUTTRC was successful." 7 65 || \
+          { dialog --stdout --title "$PN" --msgbox "Error $?: writing $MUTTRC failed." 7 65 ; exit 1 ; }
+          ;;
+      esac
+    else
+       writemuttrc && writecolors && \
+       dialog --stdout --title "$PN" --msgbox "Writing $MUTTRC was successfull." 7 65 || \
+       { dialog --stdout --title "$PN" --msgbox "Error $?: writing $MUTTRC failed." 7 65 ; exit 1 ; }
+    fi
+    ;;
+esac
+
+dialog --stdout --title "$PN" --msgbox "Thanks for using $PN!
+
+More information on mutt:
+
+Manuals: man 1 mutt
+         man 5 muttrc
+
+Webpages:
+www.mutt.org
+wiki.mutt.org
+www.spinnaker.de/mutt/
+www.michael-prokop.at/mutt/
+
+#######################################################
+
+Report bugs, send wishes and feedback to the grml team:
+http://www.grml.org/ - contact (at) grml.org
+" 24 65
+
+## END OF FILE #################################################################

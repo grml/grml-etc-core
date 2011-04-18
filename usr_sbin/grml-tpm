@@ -1,0 +1,113 @@
+#!/bin/zsh
+# Filename:      grml-tpm
+# Purpose:       set up a system for use with TPM technology
+# Authors:       (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+. /etc/grml/lsb-functions
+
+if [ $(id -u) != 0 ] ; then
+   eerror Error: become root before starting $0 >& 2 ; eend 1
+   exit 100
+fi
+
+PN=$(basename "$0")
+TPM_MODULES=$(awk '/tpm/ {print $1}' /proc/modules | xargs echo -n)
+
+case "$1" in
+   start)
+      # tpm_emulator registers as /sys/class/misc/tpm while
+      # real tpm modules should provide /sys/class/misc/tpm0
+      if [ -d /sys/class/misc/tpm0 ] ; then
+        ewarn "TPM kernel modules $TPM_MODULES seem to be loaded already." ; eend 0
+      else
+        if ! modinfo tpm_emulator &>/dev/null ; then
+          eerror "Error: kernel module tpm_emulator not found." >& 2
+          eerror "Check for an existing debian package or get it from http://tpm-emulator.berlios.de/" >& 2
+          exit 1
+        fi
+
+        if grep -q tpm_emulator /proc/modules ; then
+          ewarn "Kernel driver tpm_emulator already loaded." ; eend 0
+        else
+          einfo "Loading kernel driver tpm_emulator."
+          modprobe tpm_emulator startup=clear ; eend $?
+        fi
+      fi
+
+      if [ -x /usr/sbin/tcsd ] ; then
+        if pidof tcsd &>/dev/null ; then
+          ewarn "trousers daemon already running." ; eend 0
+        else
+          einfo "Starting trousers daemon."
+          /usr/sbin/tcsd ; eend $?
+          [ $? != 0 ] && exit 1
+        fi
+      else
+        eerror "trousers daemon not available. Exiting." ; eend 1
+        exit 1
+      fi
+
+      einfo "Startup of $PN finished." ; eend 0
+     ;;
+  stop)
+      if pidof tcsd &>/dev/null ; then
+        einfo "Stopping trousers daemon."
+        kill `pidof tcsd` ; eend $?
+      else
+        ewarn "No running trousers daemon found. Nothing to be done." ; eend 0
+      fi
+
+      if grep -q tpm_emulator /proc/modules ; then
+        einfo "Unloading kernel driver tpm_emulator."
+        rmmod tpm_emulator ; eend $?
+      elif grep -q tpm /proc/modules ; then
+          einfo "Unloading TPM kernel drivers $(awk '/tpm/ {print $1}' /proc/modules | xargs echo -n)."
+          while grep -q tpm /proc/modules ; do
+            for module in $(cd /lib/modules/$(uname -r)/kernel/drivers/char/tpm/ ; ls *.ko) ; do
+              rmmod ${module%%.ko} &>/dev/null
+            done
+            eend 0
+          done
+      else
+        ewarn "No TPM kernel driver found. Nothing to be done." ; eend 0
+      fi
+     ;;
+  status)
+      if [ -r /sys/class/misc/tpm ] ; then
+        einfo "Seems to be running with tpm_emulator." ; eend 0
+      fi
+
+      if [ -r /sys/class/misc/tpm0 ] ; then
+        einfo "Seems to be running with real TPM hardware." ; eend 0
+      fi
+
+      if pidof tcsd &>/dev/null ; then
+        einfo "trousers daemon running." ; eend 0
+        if [ -x /usr/sbin/tpm_version ] ; then
+          einfo "tpm-version: "
+          tpm_version ; eend $?
+        else
+          eerror "tpm_version not found." ; eend 1
+        fi
+      else
+        ewarn "trousers daemon not running." ; eend 0
+      fi
+
+      if [ -r /sys/class/misc/tpm0/device/pcrs ] ; then
+        einfo "Dumping PCRS..."
+        cat /sys/class/misc/tpm0/device/pcrs ; RC=$?
+        einfo "... finished dumping of PCRS." ; eend $RC
+      fi
+     ;;
+  restart)
+     $0 stop ; sleep 1 ; $0 start
+     ;;
+  *)
+     eerror "Usage: $PN [start|stop|restart|status]"
+     ;;
+esac
+
+## END OF FILE #################################################################

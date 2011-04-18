@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+# Filename:      logview
+# Purpose:       Log viewer program. Pass it parameters of the logs to view, or it will automatically view some.
+# Authors:       Joey Hess <joey@kitenet.net>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       Unknown (origin: see http://svn.kitenet.net/trunk/bin/logview)
+################################################################################
+
+$|=1;
+
+$logdir='/var/log';
+@logfiles=@ARGV;
+
+# If I am root, look at all logs, otherwise only those that are
+# world-readable.
+my $perm='';
+$perm='-perm +6' if $? != 0;
+if (! @logfiles) {
+	@logfiles=split /\n/, `find $logdir -type f -regex '.*.log' ! -name faillog ! -name lastlog $perm`;
+	push @logfiles, "$logdir/mail.err", "$logdir/mail.warn";
+}
+
+if (-e $ENV{HOME}."/.xsession-errors") {
+	push @logfiles, $ENV{HOME}."/.xsession-errors";
+}
+
+# Tail without wasting the last line of the screen.
+open(TAIL, "tail -q --follow=name --retry -n 2 @logfiles|");
+while (<TAIL>) {
+	print "\n";
+	chomp;
+	print $_;
+}
+
+## END OF FILE #################################################################

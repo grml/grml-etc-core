@@ -1,0 +1,350 @@
+#!/bin/sh
+# Filename:      grml-slrn
+# Purpose:       configuration script for slrn
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+PATH=${PATH:-'/bin/:/sbin/:/usr/local/bin:/usr/bin:/usr/sbin'}
+PN=$(basename "$0")
+USER=$(grep \`whoami\` /etc/passwd | cut -d: -f5 | cut -d, -f1)
+HOST=$(hostname -f)
+
+if [ -r /etc/grml/script-functions ] ; then
+   . /etc/grml/script-functions
+   check4progs dialog slrn || { echo "Sorry, can't continue. Exiting.">&2 ; exit 1 ; }
+fi
+
+[ -z "$EDITOR" ] && EDITOR='vim'
+[ -z "$NNTPSERVER" ] && NNTPSERVER="news.`hostname`"
+
+# some functions used in the interactive part
+testfiles() {
+  [ -d $HOME/News ] || mkdir $HOME/News
+  [ -f $HOME/.slrn_scoring ] || touch $HOME/.slrn_scoring
+}
+
+writeslrnrc() {
+cat > $SLRNRC << EOF
+% Filename:      .slrnrc
+% Purpose:       configuration for newsreader slrn, created by 'grml-slrn'
+% Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+% Bug-Reports:   see http://grml.org/bugs/
+% License:       This file is licensed under the GPL v2.
+%###############################################################################
+
+%###############################################################################
+% Ressources:
+% TFM:                         http://slrn.sourceforge.net/manual/slrn-manual.html
+% Andrew Preater's .slrnrc:    http://www.preater.f9.co.uk/slrn/slrnrc.gz
+% Jurriaan's page:             http://www.xs4all.nl/~thunder7/
+% Emmanuele's page:            http://digilander.libero.it/ebassi/slrn.html
+% Sven's site:                 http://www.guckes.net/slrn/
+% tsca's s-lang macros:        http://www.geocities.com/tsca.geo/slang.html
+% Tomasz K³oczko's slrn-stuff: http://cvs.pld.org.pl/slrn-pl/
+% Tomasz K³oczko's macros:     http://cvs.pld.org.pl/slrn-pl/macros
+% jbn's S-Lang code:           http://forestfield.org/slrn/
+% S-lang regexps:              http://www.s-lang.org/doc/html/slang-18.html
+%###############################################################################
+
+% important variables - adjust them if necessary
+  set username "$USERNAME_SLRN"
+  set hostname "$HOSTNAME_SLRN"
+  set realname "$REALNAME_SLRN"
+  set organization "www.grml.org"
+% set replyto  "devnull@grml.org"
+
+% set signature "signature_ng"
+% set signoff_string "-mika-"
+
+  server "$NEWSSERVER"  ".newsrc_$NEWSSERVER"
+
+% If a server requires authentication, add a nnrpaccess line for it.
+% If you leave username and/or password empty, slrn will prompt for it.
+% nnrpaccess "news.isp.tld" "username" "password"
+
+  set write_newsrc_flags 0
+
+  set generate_message_id 0
+  set generate_date_header 1
+  set read_active 1
+
+  set editor_command "$EDITOR -f +%d '%s'"
+  set mail_editor_command "mutt -H '%s'"
+  set score_editor_command "$EDITOR '%s'" % $HOME/.slrn_scoring"
+  set abort_unmodified_edits 1
+  set metamail_command "metamail"
+  set non_Xbrowser "screen -t 'url' $BROWSER %s"
+  set Xbrowser "screen -t 'url' $BROWSER %s"
+
+% Command to use for printing
+#ifdef UNIX
+        set printer_name "muttprint"
+#elifdef WIN32
+        % set printer_name "MyPrinter"
+#endif
+
+  set save_posts "News/My_Posts"
+  set save_replies "News/My_Replies"
+  set failed_posts_file "~/dead.letter"
+
+  set scorefile "$HOME/.slrn_scoring"
+  set decode_directory "News"
+  set save_directory "News"
+  set postpone_directory "News/postponed"
+  set followup_string "* %r <%f> wrote:"
+  set followup_strip_signature 0
+  ignore_quotes "^ *[a-zA-Z-]*>" "^ *[\]|)]" "^ *:[^-()^]"
+  set reply_string "* %r <%f> [%n]:
+  set cc_followup 1
+  set cc_post_string "[This message has also been posted to %n.]"
+
+  header_display_format 0 "%F%-5S%-5l: [%20r] %t %70s %-12g[%10d]"
+  header_display_format 1 "%F%G%-5l:[%12r]%t%s"
+  header_display_format 2 "%F%-5l:%t%s"
+  header_display_format 3 "%F%-5S%-5l:%t%50s %r"
+  header_display_format 4 "%F%-5S [%10r]:%t%49s %-19g[%17d]"
+
+% How to display the groups index
+  group_display_format 0 "  %F%-5u  %n%45g%d"
+  group_display_format 1 "  %F%-5u [%-6t]  %n"
+  group_display_format 2 "  %F [%-5u|%-6t] %n%45g%d"
+  group_display_format 3 "  %F%-5u  %n%50g%-8l-%h"
+
+  set spoiler_display_mode 1
+
+  set use_mime 1
+%  set charset isolatin
+%  set mime_charset "iso-8859-15"
+
+  set sorting_method 5
+  set check_new_groups 1         % let slrn check for new newsgroups
+  set unsubscribe_new_groups 1   % new groups are unsubscribed by default
+
+  set beep 2
+  set new_subject_breaks_threads 0 % No, no!
+
+  visible_headers "Subject:,From:,Organization:,Newsgroups:,Date:,Followup-To:,Mail-Copies-To:,Reply-To:,Message-ID:,Supersedes:,User-Agent,Approved,X-Mailer,X-Newsreader:,X-Posting-Agent:,X-Http-User-Agent:,X-,!X-Trace:,!X-Complaints-To:,!X-Face:,!X-MSMail-Priority:,!X-MimeOLE:,!X-Priority:,!X-Accept-Language:"
+
+  set process_verbatim_marks 1
+  set simulate_graphic_chars 1
+  set display_cursor_bar 0
+  set scroll_by_page 0
+  set color_by_score 3
+  set highlight_unread_subjects 2
+  set highlight_urls 1
+  set confirm_actions 31   % 1 & 2 & 4 & 8 & 16
+  set warn_followup_to 2
+  set emphasized_text_mask 1 % message only
+  set emphasized_text_mode 3 % Display text as text!
+  set query_next_article 0 % Very annoying until I turned it off.
+  set wrap_flags 7  % _Automatically_ wrap quoted material and body
+  set wrap_method 2
+EOF
+}
+
+lightcolors() {
+cat >> $SLRNRC << EOF
+
+% color setup
+color article              "blue"         "white"
+color author               "red"          "white"
+color boldtext             "black"        "white"
+color box                  "black"        "white"
+color cursor               "yellow"       "red"
+color date                 "brightblue"   "black"
+color description          "black"        "white"
+color error                "red"          "white"
+color frame                "yellow"       "blue"
+color from_myself          "brightred"    "black"
+color group                "blue"         "white"
+color grouplens_display    "yellow"       "red"
+color header_name          "green"        "white"
+color header_number        "green"        "white"
+color headers              "blue"         "white"
+color high_score           "brightred"    "white"
+color italicstext          "magenta"      "white"
+color menu                 "yellow"       "red"
+color menu_press           "blue"         "yellow"
+color message              "black"        "white"
+color neg_score            "magenta"      "white"
+color normal               "black"        "white"
+color pgpsignature         "brown"        "white"
+color pos_score            "blue"         "white"
+color quotes               "red"          "white"
+color quotes1              "magenta"      "white"
+color quotes2              "brown"        "white"
+color quotes3              "red"          "white"
+color quotes4              "brown"        "white"
+color quotes5              "blue"         "white"
+color quotes6              "black"        "white"
+color quotes7              "brown"        "white"
+color response_char        "green"        "white"
+color selection            "yellow"       "white"
+color signature            "black"        "white"
+color status               "yellow"       "red"
+color subject              "black"        "white"
+color thread_number        "blue"         "white"
+color tilde                "green"        "white"
+color tree                 "red"          "white"
+color underlinetext        "cyan"         "white"
+color verbatim             "red"          "white"
+
+% This color object is only used when highlight_unread_subjects is set to 2
+% (see the reference manual for details)
+color unread_subject	"red"        "white"
+mono  unread_subject	"bold"
+
+% These attributes are for terminals that cannot display color:
+mono article		"none"
+mono author		"none"
+mono boldtext		"bold"
+mono cursor		"bold"	"reverse"
+mono date		"none"
+mono description	"none"
+mono error		"blink" "bold"
+mono frame		"reverse"
+mono from_myself	"bold"
+mono group		"bold"
+mono grouplens_display	"none"
+mono header_number	"none"
+mono headers		"bold"
+mono high_score		"bold"
+mono italicstext	"bold"
+mono menu		"reverse"
+mono menu_press		"none"
+mono normal		"none"
+mono pgpsignature	"none"
+mono quotes		"underline"
+mono quotes1		"underline"
+mono quotes2		"underline"
+mono quotes3		"underline"
+mono quotes4		"underline"
+mono quotes5		"underline"
+mono quotes6		"underline"
+mono quotes7		"underline"
+mono response_char	"bold"
+mono selection		"bold"
+mono signature		"none"
+mono status		"reverse"
+mono subject		"none"
+mono thread_number	"bold"
+mono tree		"bold"
+mono underlinetext	"underline"
+mono url		"bold"
+mono verbatim	        "none"
+EOF
+}
+
+# FIXME TODO
+darkcolors() {
+cat >> $SLRNRC << EOF
+% dark color setup
+% ....
+EOF
+}
+
+infoscreen() {
+dialog --stdout --title "$PN" --msgbox "Thanks for using $PN!
+
+More information on slrn:
+
+Manual: man 1 slrn
+
+Webpages:
+www.slrn.org
+www.michael-prokop.at/slrn/
+
+#######################################################
+
+Report bugs, send wishes and feedback to the grml team:
+http://www.grml.org/ - contact (at) grml.org
+" 20 65
+}
+
+# interactive part
+dialog --stdout --title "$PN" --msgbox "Welcome to $PN!
+
+This script will create a simple base
+configuration for the newsreader slrn.
+
+Report bugs, send wishes and feedback to the grml team:
+http://www.grml.org/ - contact (at) grml.org
+" 13 65
+
+GETREALNAME_SLRN=$(dialog --stdout --title "$PN" --inputbox "Your real name (eg 'John GRML User'):" 0 65 "$USER" ) || exit 0
+REALNAME_SLRN=${GETREALNAME_SLRN%/*}
+
+GETMAILADDR=$(dialog --stdout --title "$PN" --inputbox "Your main mail address (eg 'joedoe@grml.org'):" 0 65 `whoami`@$HOST ) || exit 0
+MAILADDR=${GETMAILADDR}
+USERNAME_SLRN=$(echo "$MAILADDR" | sed "s/@.*//")
+HOSTNAME_SLRN=$(echo "$MAILADDR" | sed "s/.*@//")
+
+GETNEWSSERVER=$(dialog --stdout --title "$PN" --inputbox "What's the newsserver you want to use?
+(eg 'news."$HOSTNAME_SLRN"'):" 8 65 "$HOST" ) || exit 0
+NEWSSERVER=${GETNEWSSERVER}
+
+GETCOLOR=$(dialog --stdout --title "$PN" \
+          --radiolist "Which color setup do you want to use?" 10 65 2 \
+          dark   "dark color setup (default)" on \
+          light  "light color setup" off)
+retval=$?
+case $retval in
+  0) COLOR=$GETCOLOR ;;
+  *) exit 1 ;;
+esac
+
+writecolors() {
+  if [ "$COLOR" = 'light' ] ; then
+    lightcolors
+  fi
+  if [ "$COLOR" = 'dark' ] ; then
+    darkcolors
+  fi
+}
+
+GETSLRNRC=$(dialog --stdout --title "$PN" --inputbox "Choose a filename for this configuration:" 0 65 "$HOME/.slrnrc") || exit 0
+SLRNRC=${GETSLRNRC}
+
+WRITESLRNRC=$(dialog --stdout --title "$PN" --yesno "Write $SLRNRC?" 5 65)
+retval=$?
+
+case $retval in
+  0)
+    if [ -f "$SLRNRC" ] ; then
+      dialog --stdout --title "$PN" --yesno "$SLRNRC exists. Overwrite?" 5 65
+      retval=$?
+      case $retval in
+        0)
+          writeslrnrc && writecolors && \
+          dialog --stdout --title "$PN" --msgbox "Writing $SLRNRC was successful." 7 65 || \
+	  { dialog --stdout --title "$PN" --msgbox "Error $?: writing $SLRNRC failed." 7 65 ; exit 1 ; }
+          ;;
+      esac
+    else
+       writeslrnrc && writecolors && \
+       dialog --stdout --title "$PN" --msgbox "Writing $SLRNRC was successfull." 7 65 || \
+       { dialog --stdout --title "$PN" --msgbox "Error $?: writing $SLRNRC failed." 7 65 ; exit 1 ; }
+    fi
+    ;;
+esac
+
+infoscreen
+
+ASKRUN=$(dialog --stdout --title "$PN" --yesno "Run slrn now?" 0 0)
+retval=$?
+
+case $retval in
+  0)
+     slrn -create -h $NEWSSERVER -f $HOME/.newsrc_$NEWSSERVER -i $SLRNRC && \
+     echo "
+Start slrn with taken settings via:
+% slrn -h $NEWSSERVER -f $HOME/.newsrc_$NEWSSERVER -i $SLRNRC
+
+Thanks for using $PN and have fun with slrn!"
+     ;;
+esac
+
+
+## END OF FILE #################################################################

@@ -1,0 +1,92 @@
+#!/usr/bin/perl
+
+# Rebuild the Debian '/var/lib/dpkg/status' file from information in
+# '/var/lib/dpkg/available' and '/var/lib/dpkg/info/*.list'.  This is
+# useful if your 'status' file got corrupted if the system crashed during
+# package maintenance, for example.
+#
+# Copyright 2002 by Patrick Reynolds <reynolds@cs.duke.edu>
+# Distributed under the terms of the GNU General Public License (GPL).
+#
+# Usage:
+#   dpkg-rebuild
+# It takes no arguments and generates output in /tmp/status.
+# Move /tmp/status to /var/lib/dpkg if it looks acceptable.
+#
+# Limitations:
+#   1) Packages that are no longer available will not show up in the
+#   rebuilt 'status' file.  This means installed-but-obsolete packages
+#   can't be managed after a rebuild.
+#
+#   2) The 'Conffiles:' keys in the 'status' file are not rebuilt.
+#   Configuration files may not be completely removed when you purge
+#   packages, and package upgrades may clobber existing configuration
+#   files without asking.
+#
+#   3) The 'Essential:' keys in the 'status' file now appear after, not
+#   before, the 'Status:' keys.  I believe this is harmless.
+#
+#   4) Packages in the 'deinstall' state will appear to be in the 'purge'
+#   state.  Their configuration files will remain, but dpkg won't know
+#   about them.
+#
+#   5) Packages in transitional or error states will be misreported.
+
+$available = "/var/lib/dpkg/available";
+$status = "/tmp/status";
+$info_dir = "/var/lib/dpkg/info";
+
+foreach (<$info_dir/*.list>) {
+	s#.*/([^/]+)\.list$#$1#;
+	$installed{$_} = 1;
+}
+
+$state = 0;   # 0=between, 1=copying-installed, 2=copying-not-installed
+open(AVAILABLE, "<$available") || die "no $available";
+open(STATUS, ">$status") || die "no $status";
+while (<AVAILABLE>) {
+	chomp;
+	if ($state == 0) {
+		if (/^Package: (\S+)$/) {
+			print STATUS "$_\n";
+			if ($installed{$1}) {
+				$state = 1;
+				print STATUS "Status: install ok installed\n";
+				delete $installed{$1};
+			}
+			else {
+				$state = 2;
+				print STATUS "Status: purge ok not-installed\n";
+			}
+		}
+		else {
+			die "Expected 'Package:' at $.";
+		}
+	}
+	elsif ($state == 1) {
+		if ($_ eq "") {
+			print STATUS "\n";
+			$state = 0;
+		}
+		elsif (!/^Architecture: / && !/^Filename: / && !/^Size: / && !/^MD5sum: /) {
+			print STATUS "$_\n";
+		}
+	}
+	elsif ($state == 2) {
+		if ($_ eq "") {
+			print STATUS "\n";
+			$state = 0;
+		}
+		elsif (/^Priority: / || /^Section: /) {
+			print STATUS "$_\n";
+		}
+	}
+	else {
+		die "Invalid state $state";
+	}
+}
+
+printf "Installed packages not found in $available:\n";
+foreach (sort keys %installed) {
+	print "  $_\n";
+}

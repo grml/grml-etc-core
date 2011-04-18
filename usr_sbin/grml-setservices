@@ -1,0 +1,151 @@
+#!/bin/bash
+# Filename:      grml-setservices
+# Purpose:       interface for basic configuration of system startup
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+PN="$(basename $0)"
+TMP=$(mktemp)
+DIALOG=dialog
+CONFFILE='/etc/runlevel.conf'
+
+. /etc/grml/script-functions
+. /etc/grml/lsb-functions
+
+check4root || exit 100
+
+bailout(){
+  rm -f "$TMP"
+  exit 0
+}
+
+trap bailout HUP INT QUIT TERM
+
+is_value_set(){
+ [ -n "$1" ] || return 2
+ [ -r "$TMP" ] || return 3
+ grep -q "$1" $TMP && return 0 || return 1
+}
+
+INFO="Which services would you like to have enabled on your system?
+
+Notice: this script will adjust your ${CONFFILE}, the
+file which provides the startup configuration for your
+system. You can edit the file manually as well.
+
+If you do not know what to choose just take the defaults
+or choose cancel.
+"
+
+# enable checks only if the according init script is present
+[ -r /etc/init.d/lvm2 ]   && LVM='lvm!logical volume management!on'
+[ -r /etc/init.d/mdadm ]  && SRAID='mdadm!software-raid via mdadm!on'
+[ -r /etc/init.d/dmraid ] && MRAID='dmraid!software-raid via dmraid!off'
+[ -r /etc/init.d/dbus -o -r /etc/init.d/dbus-1 ] && DBUS='dbus!hal/dbus (important for KDE e.g.)!off'
+[ -r /etc/init.d/hal ]    && HAL='hal!Hardware Abstraction Layer daemon (important for KDE e.g.)!off'
+[ -r /etc/init.d/nfs-common ] && NFS='nfs!Network File System (client setup)!off'
+
+## adjust setup
+# logic:
+# if is_value_set
+#    remove_from_runlevel.conf
+#    set_up_defaults_as_intented_in_/var/lib/dpkg/info/$PACKAGE.postinst
+# else
+#    remove_from_runlevel.conf
+#    set_up_only_for_stop_to_prevent_reactivation_via_maintainer_scripts_on_upgrade
+set_values(){
+  if [ -n "$LVM" ] ; then
+     if is_value_set "lvm" ; then
+        update-rc.d -f lvm2 remove >/dev/null 2>&1
+        update-rc.d lvm2 start 26 S . start 50 0 6 .
+     else
+        update-rc.d -f lvm2 remove >/dev/null 2>&1
+        update-rc.d lvm2 stop 20 0 1 6 . >/dev/null 2>&1
+     fi
+  fi
+
+  if [ -n "$SRAID" ] ; then
+     if is_value_set "mdadm"  ; then
+        update-rc.d -f mdadm remove >/dev/null 2>&1
+        update-rc.d mdadm-raid start 25 S . start 50 0 6 . >/dev/null 2>&1
+        update-rc.d mdadm defaults 25 >/dev/null 2>&1
+     else
+        update-rc.d -f mdadm remove >/dev/null 2>&1
+        update-rc.d mdadm stop 20 0 1 6 . >/dev/null 2>&1
+        update-rc.d -f mdadm-raid remove >/dev/null 2>&1
+        update-rc.d mdadm-raid stop 20 0 1 6 . >/dev/null 2>&1
+     fi
+  fi
+
+  if [ -n "$MRAID" ] ; then
+     if is_value_set "dmraid" ; then
+        update-rc.d -f dmraid remove >/dev/null 2>&1
+        update-rc.d dmraid start 04 S . start 51 0 6 . >/dev/null
+     else
+        update-rc.d -f dmraid remove >/dev/null 2>&1
+        update-rc.d dmraid stop 20 0 1 6 . >/dev/null 2>&1
+     fi
+  fi
+
+  if [ -n "$DBUS" ] ; then
+     if is_value_set "dbus" ; then
+        update-rc.d -f dbus remove >/dev/null 2>&1
+        update-rc.d dbus defaults >/dev/null 2>&1
+     else
+        update-rc.d -f dbus remove >/dev/null 2>&1
+        update-rc.d dbus stop 20 0 1 6 . >/dev/null 2>&1
+     fi
+  fi
+
+  if [ -n "$HAL" ] ; then
+     if is_value_set "hal" ; then
+        update-rc.d -f hal remove >/dev/null 2>&1
+        update-rc.d hal start 24 2 3 4 5. stop 16 0 1 6 . >/dev/null 2>&1
+     else
+        update-rc.d -f hal remove >/dev/null 2>&1
+        update-rc.d hal stop 20 0 1 6 . >/dev/null 2>&1
+     fi
+  fi
+
+  if [ -n "$NFS" ] ; then
+     if is_value_set "nfs" ; then
+        update-rc.d -f nfs-common remove >/dev/null 2>&1
+        update-rc.d nfs-common start 20 2 3 4 5 . stop 20 0 1 6 . start 44 S . >/dev/null 2>&1
+     else
+        update-rc.d -f nfs-common remove >/dev/null 2>&1
+        update-rc.d nfs-common stop 20 0 1 6 . >/dev/null 2>&1
+     fi
+  fi
+}
+
+# the interface itself
+oifs="$IFS"
+IFS='!'
+$DIALOG --title "$PN" --checklist "$INFO" 30 65 8 $LVM $SRAID $MRAID $DBUS $HAL $NFS 2>$TMP
+
+retval="$?"
+case $retval in
+    (0)   set_values ;;
+    (1)   echo "Cancel pressed." ; exit 1 ;;
+    (255) echo "ESC pressed."    ; exit 1 ;;
+esac
+
+retval=$?
+case $retval in
+    (0)
+          $DIALOG --title "$PN" --stdout --msgbox "Adjusting system runlevel configuration via $CONFFILE was successful." 0 0
+          esyslog user.notice "$PN" "Writing language settings ($LANGUAGE) to $CONFFILE was successful."
+          ;;
+    *)
+          $DIALOG --title "$PN" --stdout --msgbox "Error writing settings to ${CONFFILE}." 0 0
+          esyslog user.notice "$PN" "Error writing settings to ${CONFFILE}."
+          ;;
+esac
+
+rm -f $TMP
+IFS="$oifs"
+
+## END OF FILE #################################################################
+# vim: ai tw=80 expandtab

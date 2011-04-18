@@ -1,0 +1,96 @@
+#!/usr/bin/perl -w
+
+# This script finds good directories for archiving based on the
+# average age of files (access time) in the directory and the
+# directory size.
+
+# Directories whose size (in megabytes) is less than this value will
+# not be displayed
+my $size_minimum = 5;
+
+# Directories whose average file age (in days) is less than this value
+# will not be displayed
+my $average_age_minimum = 30;
+
+use strict;
+
+die "Usage: $0 [directory1, directory2, ...]\n" unless @ARGV;
+
+use File::Find;
+
+# ---------------------------------------------------------------------------
+
+# Global so that the callback can see them
+my $total_files;
+my $total_size;
+my $total_age;
+
+sub compute_age_callback
+{
+  my $file_location = $File::Find::name;
+  my $filename = $_;
+
+  # Return if it's the '.' or '..' files;
+  return if $filename eq '.' || $filename eq '..';
+  # Return if it's a directory
+  return if -d $filename; 
+  # Ignore links
+  return if -l $filename; 
+
+  my @stats = stat $filename or die "Couldn't stat $filename: $!";
+  my $access_time = $stats[8];
+  my $size = $stats[7];
+
+  my $current_time = time;
+
+#  print "# $file_location\n# Current: $current_time, Access time: $access_time\n";
+  my $age = $current_time - $access_time;
+  $total_age += $age;
+  $total_files++;
+
+  $total_size += $size;
+}
+
+sub compute_directory_stats
+{
+  my $starting_directory = shift;
+
+  $total_age = 0;
+  $total_size = 0;
+  $total_files = 0;
+
+  find(\&compute_age_callback, $starting_directory);
+
+  return (0,0) if $total_files == 0;
+
+  return ($total_age / $total_files / 60 / 60 / 24,
+    $total_size / 1024 / 1024);
+}
+
+# ---------------------------------------------------------------------------
+
+@ARGV = ('.') unless @ARGV;
+
+my @directory_stats;
+
+foreach my $directory (@ARGV)
+{
+  next unless -d $directory;
+
+  my ($average_age, $size) = compute_directory_stats($directory);
+  push @directory_stats, [$directory, $average_age, $size];
+}
+
+@directory_stats = sort { $b->[2] <=> $a->[2] } @directory_stats;
+
+@directory_stats = grep { $_->[2] > $size_minimum } @directory_stats;
+@directory_stats = grep { $_->[1] > $average_age_minimum } @directory_stats;
+
+foreach my $directory_stat (@directory_stats)
+{
+  print "$directory_stat->[0]:\n";
+  my $size_string = sprintf 'Size: %6.2f megabytes', $directory_stat->[2];
+  my $age_string = sprintf 'Average age: %6.2f days', $directory_stat->[1];
+  printf '  %-38s%s', $size_string, $age_string;
+  printf "\n";
+}

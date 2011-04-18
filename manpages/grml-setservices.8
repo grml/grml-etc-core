@@ -1,0 +1,30 @@
+.TH grml-setservices 8
+.SH "NAME"
+grml-setservices \- interface for basic configuration of system startup
+.SH SYNOPSIS
+.B grml-setservices
+.SH DESCRIPTION
+This manual page documents briefly the
+.B grml-setservices
+command.
+.SH OPTIONS
+grml-setservices does not support any options.
+.SH NOTES
+grml-setservices is a simple script for configuring some core
+settings of system startup. The script uses the interface update-rc.d
+for adjusting the file /etc/runlevel.conf. /etc/runlevel.conf is the
+configuration file for startup (and shutdown) used by file-rc (which
+is the default init system on grml). You neither have to use grml-setservices
+nor update-rc.d to edit /etc/runlevel.conf, you can edit it manually
+(using your favourite editor) as well of course.
+.SH USAGE EXAMPLES
+.TP
+.B grml-setservices
+Invoke the interface.
+.SH SEE ALSO
+.BR runlevel.conf (5).
+.SH AUTHOR
+grml-setservices was written by Michael Prokop <mika@grml.org>.
+.PP
+This manual page was written by Michael Prokop
+<mika@grml.org> for the grml project (but may be used by others).
