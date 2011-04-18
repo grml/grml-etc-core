@@ -10,7 +10,7 @@ Vcs-Browser: http://git.grml.org/?p=grml-etc-core.git
 
 Package: grml-etc-core
 Architecture: all
-Conflicts: grml-etc (<< 0.8-11), grml-autoconfig (<< 0.5-7), grml-scripts-core (<< 0.8-27)
+Conflicts: grml-etc (<< 0.8-11), grml-autoconfig (<< 0.5-7), grml-scripts (<< 0.8-27)
 Depends: vim | nvi | editor
 Pre-Depends: zsh
 Description: core ecetera files for the grml system
