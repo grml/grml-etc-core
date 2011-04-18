@@ -1,3 +1,9 @@
+grml-scripts-core (1.4.1+nmu1) UNRELEASED; urgency=low
+
+  * Split grml-scripts into grml-scripts and grml-scripts-core (NMU).
+
+ -- Sebastian Boehm <sebastian@sometimesfood.org>  Mon, 20 Dec 2010 23:49:48 +0100
+
 grml-scripts (1.4.2) unstable; urgency=low
 
   * [68e8f65] grml-screen/grml-init-screen: no longer use vt-is-UTF8 but
