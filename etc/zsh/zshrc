@@ -2052,9 +2052,7 @@ function info_print () {
     esc_end="$2"
     shift 2
     printf '%s' ${esc_begin}
-    for item in "$@" ; do
-        printf '%s ' "$item"
-    done
+    printf '%s' "$*"
     printf '%s' "${esc_end}"
 }
 
