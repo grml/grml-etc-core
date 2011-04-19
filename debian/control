@@ -13,16 +13,14 @@ Package: grml-scripts-core
 Architecture: any
 Depends: ${misc:Depends}, less, dash, perl, screen, grml-etc-core, lockfile-progs
 Conflicts: grml-scripts (<< 1.4.3)
-Description: core scripts for the grml system
- This package includes some scripts for the grml system.
- .
- Whereas the main grml-scripts package is meant for use on grml
- systems only, this package can be used on plain Debian
- (stable/testing/unstable) systems as well. It is intended as a
- complement to grml-etc-core.
+Description: reusable core scripts for the Grml system
+ This package includes some core scripts for the Grml system.
  .
  Currently, this package includes code2color, cpu-screen, ip-screen
  and lesspipe.sh, a more full-featured replacement for the standard
  Debian lesspipe.
+ .
+ This package can be used on plain Debian systems as well. It is
+ intended as a complement to grml-etc-core.
  .
  For more details take a look at the grml-scripts-core manpage.
