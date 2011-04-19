@@ -938,7 +938,10 @@ bindkey '^z' grml-zsh-fg
 # run command line as user root via sudo:
 sudo-command-line() {
     [[ -z $BUFFER ]] && zle up-history
-    [[ $BUFFER != sudo\ * ]] && BUFFER="sudo $BUFFER"
+    if [[ $BUFFER != sudo\ * ]]; then
+        BUFFER="sudo $BUFFER"
+        CURSOR=$(( CURSOR+5 ))
+    fi
 }
 zle -N sudo-command-line
 
