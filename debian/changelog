@@ -1,3 +1,26 @@
+grml-etc-core (0.3.89) unstable; urgency=low
+
+  [ Frank Terbeck ]
+  * [a3a39fe] zshrc: Removing d()
+  * [e193e4a] zshrc: activate zsh lookup for all users
+  * [dc4eb5b] Fixing ssl-cert-{sha512,sha256,sha1,md5}()
+  * [42b4b5f] Add *.substvars to gitignore
+  * [690a5be] Waste less space in window titles [Closes: issue979]
+  * [204f0ba] Preserve cursor position with `sudo-command-line' [Closes: issue980]
+
+  [ Michael Prokop ]
+  * [d3a3ea5] /etc/skel/.zshrc: provide improved rationalise-dot version by Mikael Magnusson
+
+  [ Ulrich Dangel ]
+  * [72b956d] Depend on grml-scripts-core instead of grml-scripts.
+  * [6ab1014] Revert "Depend on grml-scripts-core instead of grml-scripts."
+  * [8670ff0] Recommend grml-scripts-core
+
+  [ Christian Hofstaedtler ]
+  * [ed29215] Bump Standards-Version to 3.9.2 (no changes)
+
+ -- Christian Hofstaedtler <ch@grml.org>  Wed, 11 May 2011 21:06:10 +0200
+
 grml-etc-core (0.3.88) unstable; urgency=low
 
   [ Ulrich Dangel ]
