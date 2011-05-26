@@ -3711,7 +3711,11 @@ show-archive() {
 #f5# Use \kbd{vim} as your manpage reader
 vman() {
     emulate -L zsh
-    man $* | col -b | view -c 'set ft=man nomod nolist' -
+    if (( ${#argv} == 0 )); then
+        printf 'usage: vman <topic>\n'
+        return 1
+    fi
+    man "$@" | col -b | view -c 'set ft=man nomod nolist' -
 }
 
 # function readme() { $PAGER -- (#ia3)readme* }
