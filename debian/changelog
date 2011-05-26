@@ -1,3 +1,12 @@
+grml-etc-core (0.3.90) unstable; urgency=low
+
+  [ Frank Terbeck ]
+  * [42cc9b0] Fix `lsold' globbing flags [Closes: issue991]
+  * [e07e9a2] Use the same options in lnew as in lsnew
+  * [748acc6] zshrc: vman: Handle zero arguments [Closes: issue993]
+
+ -- Christian Hofstaedtler <ch@grml.org>  Thu, 26 May 2011 21:24:25 +0200
+
 grml-etc-core (0.3.89) unstable; urgency=low
 
   [ Frank Terbeck ]
