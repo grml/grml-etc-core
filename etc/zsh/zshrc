@@ -3212,7 +3212,7 @@ alias lse='ls -d *(/^F)'               # only show empty directories
 #a2# Display the ten newest files
 alias lsnew="ls -rl *(D.om[1,10])"     # display the newest files
 #a2# Display the ten oldest files
-alias lsold="ls -rtlh *(D.om[1,10])"   # display the oldest files
+alias lsold="ls -rtlh *(D.Om[1,10])"   # display the oldest files
 #a2# Display the ten smallest files
 alias lssmall="ls -Srl *(.oL[1,10])"   # display the smallest files
 
