@@ -34,7 +34,7 @@
 # fix the "screen.linux" terminal problem (see Debian BTS #238355 + #239776)
 #  term linux
 
-  shell                 /bin/zsh
+# shell                 /bin/zsh
 
 # "sorendition": set the colors for
 # the "messages" and "text marking"
