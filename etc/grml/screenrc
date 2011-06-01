@@ -147,4 +147,5 @@
 # Welcome the user:
   echo "welcome BoFH!"
 
+# vim: ft=screen
 ## END OF FILE #################################################################
