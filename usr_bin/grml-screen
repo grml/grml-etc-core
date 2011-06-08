@@ -14,48 +14,13 @@
   sudo chmod 660       $TTY
   sudo chown $USER.tty $TTY
 
-# FIXME: fix for screen race-conditions
-PID_FILE_="/var/lock/grml-screen"
-PID_FILE_CREATED_="false"
-MY_PID_="$$"
-if [ ! -d "/var/run/screen/S-$USER" ]; then
-    # no /var/run/screen/S-$USER and possible no /var/run/screen either -> locking
-    for i in `seq 40`; do   # 40*0.25 = 10 seconds
-        if lockfile-create --retry 0 $PID_FILE_; then
-            echo $MY_PID_ >$PID_FILE_
-            PID_FILE_CREATED_="true"
-            break
-        else
-            PID_FILE_CREATED_="error"
-        fi
-        sleep 0.25
-    done
+# try to mitigate raceconditions from screen
+SCREENDIR_="/var/run/screen"
+if [ `id -u` = 0 ] ; then
+    mkdir -m 755 $SCREENDIR_
+    chgrp utmp $SCREENDIR_
 fi
-if [ $PID_FILE_CREATED_ = "true" ]; then
-    # FORK BEGIN
-    (
-        for i in `seq 40`; do   # 40*0.25 = 10 seconds
-            if [ ! -d "/var/run/screen/S-$USER" ]; then
-                sleep 0.25  # educated guess
-            else
-                break
-            fi
-        done
-        if [ `cat $PID_FILE_` = $MY_PID_ ]; then
-            rm $PID_FILE_
-            lockfile-remove $PID_FILE_
-        fi
-    )&
-    # FORK END
-elif [ $PID_FILE_CREATED_ = "error" ]; then
-    SLEEP_TIME_="$(( $$ % 5 * 5 + 5 ))"
-    echo "grml-screen: Error could not create lockfile! (sleeping for $SLEEP_TIME_)" >&2
-    sleep $SLEEP_TIME_
-elif [ $PID_FILE_CREATED_ = "false" ]; then
-    echo "nothing to do" &>/dev/null
-else
-    echo "grml-screen: internal error - PID_FILE_CREATED_ == \"$PID_FILE_CREATED_\"" >&2
-fi
+mkdir -m 700 "${SCREENDIR_}/S-$USER" &>/dev/null
 
 # now run screen with config
   cd $HOME     # important for e.g. hardcopy-feature
