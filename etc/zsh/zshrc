@@ -256,17 +256,6 @@ zrcautoload is-at-least || is-at-least() { return 1 }
 # }}}
 
 # {{{ set some important options (as early as possible)
-# Please update these tags, if you change the umask settings below.
-#o# r_umask     002
-#o# r_umaskstr  rwxrwxr-x
-#o# umask       022
-#o# umaskstr    rwxr-xr-x
-if (( EUID == 0 )); then
-    umask 002
-else
-    umask 022
-fi
-
 setopt append_history       # append history list to the history file (important for multiple parallel zsh sessions!)
 is4 && setopt SHARE_HISTORY # import new commands from the history file also in other zsh-session
 setopt extended_history     # save each command's beginning timestamp and the duration to the history file

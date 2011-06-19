@@ -30,6 +30,13 @@ if [ -r ~/.zshrc -a -r ~/.zshrc.global -a ! -r ~/.zshrc.local ] ; then
     printf '-!-\n'
 fi
 
+## Settings for umask
+#if (( EUID == 0 )); then
+#    umask 002
+#else
+#    umask 022
+#fi
+
 ## Now, we'll give a few examples of what you might want to use in your
 ## .zshrc.local file (just copy'n'paste and uncomment it there):
 

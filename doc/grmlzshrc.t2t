@@ -26,10 +26,7 @@ features are enabled in every version).
 //grmlzshrc// behaves differently depending on which user loads it. For the
 root user (**EUID** == 0) only a subset of features is loaded by default. This
 behaviour can be altered by setting the **GRML_ALWAYS_LOAD_ALL** STARTUP
-VARIABLE (see below). Also the umask(1) for the root user is set to 022,
-while for regular users it is set to 002. So read/write permissions
-for the regular user and her group are set for new files (keep that
-in mind on systems, where regular users share a common group).
+VARIABLE (see below).
 
 = STARTUP VARIABLES =
 Some of the behaviour of //grmlzshrc// can be altered by setting certain shell
