@@ -261,7 +261,11 @@ zrcautoload is-at-least || is-at-least() { return 1 }
 #o# r_umaskstr  rwxrwxr-x
 #o# umask       022
 #o# umaskstr    rwxr-xr-x
-(( EUID != 0 )) && umask 002 || umask 022
+if (( EUID == 0 )); then
+    umask 002
+else
+    umask 022
+fi
 
 setopt append_history       # append history list to the history file (important for multiple parallel zsh sessions!)
 is4 && setopt SHARE_HISTORY # import new commands from the history file also in other zsh-session
