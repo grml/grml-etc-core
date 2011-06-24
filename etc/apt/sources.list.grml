@@ -153,6 +153,9 @@
 #  deb     http://www.stanchina.net/~flavio/debian/ ./
 #  deb-src http://www.stanchina.net/~flavio/debian/ ./
 
+# HP Server Management (hpasm, hpacucli, etc.)
+#  deb     http://downloads.linux.hp.com/SDR/downloads/ProLiantSupportPack/ stable/current non-free
+
 # opera:
 #  deb http://deb.opera.com/opera/ unstable non-free
 
