@@ -10,7 +10,6 @@
 #
 # Also check out
 #      http://www.apt-get.org/
-#      http://www.debianforum.de/wiki/WoodyBackports
 #      http://www.backports.org/
 ##############################################################################
 
@@ -18,8 +17,8 @@
 ## main repositories:
 
 # stable grml repository:
-  deb     http://deb.grml.org/ grml-stable  main
-  deb-src http://deb.grml.org/ grml-stable  main
+#  deb     http://deb.grml.org/ grml-stable  main
+#  deb-src http://deb.grml.org/ grml-stable  main
 # testing/developer grml repository:
 #  deb     http://deb.grml.org/ grml-testing main
 #  deb-src http://deb.grml.org/ grml-testing main
@@ -32,8 +31,8 @@
 #  deb     http://10.0.0.5/mirror/debian                 unstable        main contrib non-free
 
 # AT/DE mirror:
-  deb     http://ftp.de.debian.org/debian        unstable        main contrib non-free
-  deb-src http://ftp.de.debian.org/debian/       unstable        main contrib non-free
+#  deb     http://ftp.de.debian.org/debian        unstable        main contrib non-free
+#  deb-src http://ftp.de.debian.org/debian/       unstable        main contrib non-free
 #  deb     http://ftp.at.debian.org/debian        unstable        main contrib non-free
 #  deb-src http://ftp.at.debian.org/debian/       unstable        main contrib non-free
 
