@@ -17,9 +17,9 @@
 # try to mitigate raceconditions from screen
 SCREENDIR_="/var/run/screen"
 if [ `id -u` = 0 ] ; then
-    mkdir -m 755 $SCREENDIR_ &>/dev/null && chgrp utmp $SCREENDIR_
+    mkdir -m 755 $SCREENDIR_ >/dev/null 2>& 1 && chgrp utmp $SCREENDIR_
 fi
-mkdir -m 700 "${SCREENDIR_}/S-$USER" &>/dev/null
+mkdir -m 700 "${SCREENDIR_}/S-$USER" >/dev/null 2>&1
 
 # now run screen with config
   cd $HOME     # important for e.g. hardcopy-feature
