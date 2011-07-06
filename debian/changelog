@@ -1,3 +1,17 @@
+grml-scripts-core (1.4.4) unstable; urgency=low
+
+  [ Michael Gebetsroither ]
+  * [76adfcd] grml-screen: use much simpler fix to mitigate
+    raceconditions from screen.
+  * [3194cd2] grml-screen: only chgrp if mkdir was successfull.
+
+  [ Michael Prokop ]
+  * [9a4bc7b] grml-screen: do not use & for redirecting output
+    since it is running inside dash.
+  * [94fb96c] Bump Standards-Version to 3.9.2.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 06 Jul 2011 16:20:14 +0200
+
 grml-scripts-core (1.4.3) unstable; urgency=low
 
   This is the first release of grml-scripts-core, one half of the splitted
