@@ -2274,8 +2274,8 @@ check_com S &>/dev/null || alias S='screen'
 check_com s &>/dev/null || alias s='ssh'
 
 # especially for roadwarriors using GNU screen and ssh:
-if ! check_com asc &>/dev/null ; then
-  asc() { autossh -t "$@" 'screen -RdU' }
+if check_com autossh &>/dev/null; then
+  asc() { autossh -M 0 -q -t -o "ServerAliveInterval 10" -o "ServerAliveCountMax 3" "$@" 'screen -RdU -S asc' }
   compdef asc=ssh
 fi
 
