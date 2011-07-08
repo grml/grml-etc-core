@@ -3650,6 +3650,13 @@ if is439 && [[ -d /dev/disk/by-id/ ]]; then
     }
 fi
 
+#f5# run command or function in a list of directories
+rundirs() {
+  local d CMD STARTDIR=$PWD
+  CMD=$1; shift
+  ( for d ($@) {cd -q $d && { print cd $d; ${(z)CMD} ; cd -q $STARTDIR }} )
+}
+
 # Translate DE<=>EN
 # 'translate' looks up fot a word in a file with language-to-language
 # translations (field separator should be " : "). A typical wordlist looks
