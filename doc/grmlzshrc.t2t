@@ -790,9 +790,16 @@ Runs a command in $SHELL with profiling enabled (See startup variable
 ZSH_PROFILE_RC above).
 
 : **purge()**
-Removes typical temporary files (i. e. files like "*~", ".*~", "#*#", "*.o",
-"a.out", "*.core", "*.cmo", "*.cmi" and ".*.swp") from current directory.
-Asks for confirmation.
+Removes temporary files from current directory. Asks for confirmation. Uses sudo if necessary.
+In detail it purges
+ - common temp files like "*~", ".*~", "#*#", "*.o", "a.out", "*.orig", "*.rej", "*.cmo", "*.cmi" and ".*.swp"
+ - core dumps
+ - debconf backup files: "*.dpkg-old", "*.dkpg-new", "*.dpkg-dist"
+ - gentoo dispatch-conf backups: ".cfg0000_*", ".mrg0000_*"
+ - precompiled python code ("*.pyc", "*.pyo") as long as matching "*.py" source is also present
+ - LaTeX temp files i.e. "*.(log|toc|aux|nav|snm|out|tex.backup|bbl|blg|bib.backup|vrb|lof|lot|hd|idx)" for any present "*.tex"
+ - ghc temp files, as long as matching "*.hs" or "*.lhs" is also present
+ - "*.mood(D)" Files which are missing their corresponding audio file
 
 : **readme()**
 Opens all README-like files in current working directory with the program
