@@ -3586,6 +3586,21 @@ rundirs() {
   ( for d ($@) {cd -q $d && { print cd $d; ${(z)CMD} ; cd -q $STARTDIR }} )
 }
 
+#f5# show labels and uuids of devices
+if is439; then
+    function lsdisk
+    {
+        emulate -L zsh
+        setopt extendedglob
+        local -a -U disks
+        disks=( /dev/disk/by-id/*(@:A) )
+        for dev in "$disks[@]"; do
+            print ${fg_bold[red]}${dev}${reset_color} /dev/disk/by-label/*(@e/'[[ ${REPLY:A} == $dev ]] && REPLY=${fg[blue]}LABEL=${REPLY:t}${reset_color}'/N) /dev/disk/by-uuid/*(@e/'[[ ${REPLY:A} == $dev ]] && REPLY=${fg[green]}UUID=${REPLY:t}${reset_color}'/N)
+            print -f "  %s\n" /dev/disk/by-id/*(@e/'[[ ${REPLY:A} == $dev ]]'/N:t)
+        done
+    }
+fi
+
 # Translate DE<=>EN
 # 'translate' looks up fot a word in a file with language-to-language
 # translations (field separator should be " : "). A typical wordlist looks
