@@ -427,6 +427,11 @@ user's life.
 Converts plaintext files to HTML using vim. The output is written to
 <filename>.html.
 
+: **2mp3_192()**
+Useful if you own players lacking ogg/flac support.
+Takes a list of "*.ogg" and "*.flac" files and transcodes them to mp3
+with a variable bitrate of at least 192, while preserving basic id3 tags.
+
 : **855resolution()**
 If 915resolution is available, issues a warning to the user to run it instead
 to modify the resolution on intel graphics chipsets.
@@ -768,9 +773,6 @@ Example usages:
 % # Inline:
 % ls -l *(e:'nt /reference/file':)
 ```
-
-: **ogg2mp3_192()**
-Recodes an ogg file to mp3 with a bitrate of 192.
 
 : **oleo()**
 Translates the given word using the english - german online
