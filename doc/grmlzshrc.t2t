@@ -766,8 +766,10 @@ Example usages:
 % ls -l *(e:'nt /reference/file':)
 ```
 
-: **ogg2mp3_192()**
-Recodes an ogg file to mp3 with a bitrate of 192.
+: **2mp3_192()**
+Useful if you own players lacking ogg/flac support.
+Takes a list of "*.ogg" and "*.flac" files and transcodes them to mp3
+with a variable bitrate of at least 192, while preserving basic id3 tags.
 
 : **oleo()**
 Translates the given word using the english - german online
