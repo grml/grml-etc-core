@@ -2280,7 +2280,7 @@ if ! check_com asc &>/dev/null ; then
 fi
 
 # get top 10 shell commands:
-alias top10='print -l ? ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
+alias top10='print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
 
 # truecrypt; use e.g. via 'truec /dev/ice /mnt/ice' or 'truec -i'
 if check_com -c truecrypt ; then
