@@ -3555,15 +3555,23 @@ lcheck() {
 
 #f5# Clean up directory - remove well known tempfiles
 purge() {
-    FILES=(*~(N) .*~(N) \#*\#(N) *.o(N) a.out(N) *.core(N) *.cmo(N) *.cmi(N) .*.swp(N))
-    NBFILES=${#FILES}
+    emulate -L zsh
+    setopt HIST_SUBST_PATTERN
+    local -a TEXTEMPFILES GHCTEMPFILES PYTEMPFILES FILES
+    TEXTEMPFILES=(*.tex(N:s/%tex/'(log|toc|aux|nav|snm|out|tex.backup|bbl|blg|bib.backup|vrb|lof|lot|hd|idx)(N)'/))
+    GHCTEMPFILES=(*.(hs|lhs)(N:r:s/%/'.(hi|hc|(p|u|s)_(o|hi))(N)'/))
+    PYTEMPFILES=(*.py(N:s/%py/'(pyc|pyo)(N)'/))
+    FILES=(*~(N) .*~(N) \#*\#(N) *.o(N) a.out(N) (*.|)core(N) *.cmo(N) *.cmi(N) .*.swp(N) *.(orig|rej)(DN) *.dpkg-(old|dist|new)(DN) ._(cfg|mrg)[0-9][0-9][0-9][0-9]_*(N) ${~TEXTEMPFILES} ${~GHCTEMPFILES} ${~PYTEMPFILES})
+    local NBFILES=${#FILES}
+    local CURDIRSUDO=""
+    [[ ! -w ./ ]] && CURDIRSUDO=$SUDO
     if [[ $NBFILES > 0 ]] ; then
         print $FILES
         local ans
         echo -n "Remove these files? [y/n] "
         read -q ans
         if [[ $ans == "y" ]] ; then
-            rm ${FILES}
+            $CURDIRSUDO rm ${FILES}
             echo ">> $PWD purged, $NBFILES files removed"
         else
             echo "Ok. .. then not.."
