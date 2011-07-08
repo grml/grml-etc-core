@@ -2789,7 +2789,7 @@ compdef _aliases edalias
 
 #f1# Edit a function via zle
 edfunc() {
-    [[ -z "$1" ]] && { echo "Usage: edfun <function_to_edit>" ; return 1 } || zed -f "$1" ;
+    [[ -z "$1" ]] && { echo "Usage: edfunc <function_to_edit>" ; return 1 } || zed -f "$1" ;
 }
 compdef _functions edfunc
 
