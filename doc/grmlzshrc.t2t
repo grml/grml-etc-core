@@ -457,10 +457,9 @@ layout.
 Advices the user how to create self signed certificates.
 
 : **asc()**
-Login on the host provided as argument using autossh. Then reattach a GNU screen
-session if a detached session is around or detach a currently attached screen or
-else start a new screen.  This is especially useful for roadwarriors using GNU
-screen and ssh.
+Login on the host provided as argument using autossh. Then reattach our GNU screen
+session (named asc) if around. If necessary detach it first. Else start a new screen.
+This is especially useful for roadwarriors using GNU screen and ssh.
 
 : **audioburn()**
 Burns the files in ~/ripps (see audiorip() below) to an audio CD.
@@ -699,6 +698,9 @@ directory.
 Prints specified range of (numbered) lines of a file.
 Usage: linenr <start>[,<end>] <file>
 
+: **lsdisk()**
+Uses udev's /etc/disk/ to list block devices with their LABEL, UUID and IDs
+
 : **makereadable()**
 Creates a PostScript and a PDF file (basename as first argument) from
 source code files.
@@ -766,8 +768,10 @@ Example usages:
 % ls -l *(e:'nt /reference/file':)
 ```
 
-: **ogg2mp3_192()**
-Recodes an ogg file to mp3 with a bitrate of 192.
+: **2mp3_192()**
+Useful if you own players lacking ogg/flac support.
+Takes a list of "*.ogg" and "*.flac" files and transcodes them to mp3
+with a variable bitrate of at least 192, while preserving basic id3 tags.
 
 : **oleo()**
 Translates the given word using the english - german online
@@ -785,9 +789,16 @@ Runs a command in $SHELL with profiling enabled (See startup variable
 ZSH_PROFILE_RC above).
 
 : **purge()**
-Removes typical temporary files (i. e. files like "*~", ".*~", "#*#", "*.o",
-"a.out", "*.core", "*.cmo", "*.cmi" and ".*.swp") from current directory.
-Asks for confirmation.
+Removes temporary files from current directory. Asks for confirmation. Uses sudo if necessary.
+In detail it purges
+ - common temp files like "*~", ".*~", "#*#", "*.o", "a.out", "*.orig", "*.rej", "*.cmo", "*.cmi" and ".*.swp"
+ - core dumps
+ - debconf backup files: "*.dpkg-old", "*.dkpg-new", "*.dpkg-dist"
+ - gentoo dispatch-conf backups: ".cfg0000_*", ".mrg0000_*"
+ - precompiled python code ("*.pyc", "*.pyo") as long as matching "*.py" source is also present
+ - LaTeX temp files i.e. "*.(log|toc|aux|nav|snm|out|tex.backup|bbl|blg|bib.backup|vrb|lof|lot|hd|idx)" for any present "*.tex"
+ - ghc temp files, as long as matching "*.hs" or "*.lhs" is also present
+ - "*.mood(D)" Files which are missing their corresponding audio file
 
 : **readme()**
 Opens all README-like files in current working directory with the program
@@ -799,6 +810,11 @@ Reloads functions given as parameters.
 : **regcheck()**
 Checks whether a regular expression (first parameter) matches a string
 (second parameter) using perl.
+
+: **rundirs()**
+Takes as first parameter a quoted string containing an exectuable command or function with arguments.
+Following that it takes a bunch of directories, which will then be traversed, executing the
+first argument in each one. E.g.: rundirs purge . **/*(/-/)
 
 : **salias()**
 Creates an alias whith sudo prepended, if $EUID is not zero. Run "salias -h"

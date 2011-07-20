@@ -2274,13 +2274,13 @@ check_com S &>/dev/null || alias S='screen'
 check_com s &>/dev/null || alias s='ssh'
 
 # especially for roadwarriors using GNU screen and ssh:
-if ! check_com asc &>/dev/null ; then
-  asc() { autossh -t "$@" 'screen -RdU' }
+if check_com autossh &>/dev/null; then
+  asc() { autossh -M 0 -q -t -o "ServerAliveInterval 10" -o "ServerAliveCountMax 3" "$@" 'screen -RdU -S asc' }
   compdef asc=ssh
 fi
 
 # get top 10 shell commands:
-alias top10='print -l ? ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
+alias top10='print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
 
 # truecrypt; use e.g. via 'truec /dev/ice /mnt/ice' or 'truec -i'
 if check_com -c truecrypt ; then
@@ -2789,7 +2789,7 @@ compdef _aliases edalias
 
 #f1# Edit a function via zle
 edfunc() {
-    [[ -z "$1" ]] && { echo "Usage: edfun <function_to_edit>" ; return 1 } || zed -f "$1" ;
+    [[ -z "$1" ]] && { echo "Usage: edfunc <function_to_edit>" ; return 1 } || zed -f "$1" ;
 }
 compdef _functions edfunc
 
@@ -2875,17 +2875,15 @@ check_com -c qma && alias ?='qma zshall'
 # grep for running process, like: 'any vim'
 any() {
     emulate -L zsh
+    unsetopt KSH_ARRAYS
     if [[ -z "$1" ]] ; then
         echo "any - grep for process(es) by keyword" >&2
         echo "Usage: any <keyword>" >&2 ; return 1
     else
-        local STRING=$1
-        local LENGTH=$(expr length $STRING)
-        local FIRSCHAR=$(echo $(expr substr $STRING 1 1))
-        local REST=$(echo $(expr substr $STRING 2 $LENGTH))
-        ps xauwww| grep "[$FIRSCHAR]$REST"
+        ps xauwww | grep --color=auto "[${1[1]}]${1[2,-1]}"
     fi
 }
+
 
 # After resuming from suspend, system is paging heavily, leading to very bad interactivity.
 # taken from $LINUX-KERNELSOURCE/Documentation/power/swsusp.txt
@@ -3557,21 +3555,52 @@ lcheck() {
 
 #f5# Clean up directory - remove well known tempfiles
 purge() {
-    FILES=(*~(N) .*~(N) \#*\#(N) *.o(N) a.out(N) *.core(N) *.cmo(N) *.cmi(N) .*.swp(N))
-    NBFILES=${#FILES}
+    emulate -L zsh
+    setopt HIST_SUBST_PATTERN
+    local -a TEXTEMPFILES GHCTEMPFILES PYTEMPFILES FILES
+    TEXTEMPFILES=(*.tex(N:s/%tex/'(log|toc|aux|nav|snm|out|tex.backup|bbl|blg|bib.backup|vrb|lof|lot|hd|idx)(N)'/))
+    GHCTEMPFILES=(*.(hs|lhs)(N:r:s/%/'.(hi|hc|(p|u|s)_(o|hi))(N)'/))
+    PYTEMPFILES=(*.py(N:s/%py/'(pyc|pyo)(N)'/))
+    LONELY_MOOD_FILES=((*.mood)(NDe:'local -a AF;AF=( ${${REPLY#.}%mood}(mp3|flac|ogg|asf|wmv|aac)(N) ); [[ -z "$AF" ]]':))
+    FILES=(*~(.N) \#*\#(.N) *.o(.N) a.out(.N) (*.|)core(.N) *.cmo(.N) *.cmi(.N) .*.swp(.N) *.(orig|rej)(.DN) *.dpkg-(old|dist|new)(DN) ._(cfg|mrg)[0-9][0-9][0-9][0-9]_*(N) ${~TEXTEMPFILES} ${~GHCTEMPFILES} ${~PYTEMPFILES} ${LONELY_MOOD_FILES})
+    local NBFILES=${#FILES}
+    local CURDIRSUDO=""
+    [[ ! -w ./ ]] && CURDIRSUDO=$SUDO
     if [[ $NBFILES > 0 ]] ; then
-        print $FILES
+        print -l $FILES
         local ans
         echo -n "Remove these files? [y/n] "
         read -q ans
         if [[ $ans == "y" ]] ; then
-            rm ${FILES}
+            $CURDIRSUDO rm ${FILES}
             echo ">> $PWD purged, $NBFILES files removed"
         else
             echo "Ok. .. then not.."
         fi
     fi
 }
+
+#f5# run command or function in a list of directories
+rundirs() {
+  local d CMD STARTDIR=$PWD
+  CMD=$1; shift
+  ( for d ($@) {cd -q $d && { print cd $d; ${(z)CMD} ; cd -q $STARTDIR }} )
+}
+
+#f5# show labels and uuids of devices
+if is439; then
+    function lsdisk
+    {
+        emulate -L zsh
+        setopt extendedglob
+        local -a -U disks
+        disks=( /dev/disk/by-id/*(@:A) )
+        for dev in "$disks[@]"; do
+            print ${fg_bold[red]}${dev}${reset_color} /dev/disk/by-label/*(@e/'[[ ${REPLY:A} == $dev ]] && REPLY=${fg[blue]}LABEL=${REPLY:t}${reset_color}'/N) /dev/disk/by-uuid/*(@e/'[[ ${REPLY:A} == $dev ]] && REPLY=${fg[green]}UUID=${REPLY:t}${reset_color}'/N)
+            print -f "  %s\n" /dev/disk/by-id/*(@e/'[[ ${REPLY:A} == $dev ]]'/N:t)
+        done
+    }
+fi
 
 # Translate DE<=>EN
 # 'translate' looks up fot a word in a file with language-to-language
@@ -3889,11 +3918,37 @@ allulimit() {
     ulimit -t unlimited
 }
 
-# ogg2mp3 with bitrate of 192
-ogg2mp3_192() {
+# 2mp3 transcodes flac and ogg to mp3 with bitrate of 192 while preserving basic tags
+2mp3_192() {
     emulate -L zsh
-    oggdec -o - $1 | lame -b 192 - ${1:r}.mp3
+    setopt extendedglob
+
+    local -a DECODE id3tags
+    local -A tagmap
+    local tagdata
+    tagmap=("(#l)title" --tt "(#l)artist" --ta "(#l)tracknumber" --tn "(#l)genre" --tg "(#l)album" --tl)
+
+    for af in "$@"; do
+      id3tags=()
+      case "$af" in
+        (*.flac)
+          DECODE=(flac -d -c "$af")
+          tagdata="$(metaflac --export-tags-to=- "$af")"
+          ;;
+        (*.ogg)
+          DECODE=(oggdec -Q -o - "$af")
+          tagdata="$(ogginfo "$af")"
+          ;;
+        (*) continue ;;
+      esac
+      for line (${(f)tagdata}) \
+        [[ "$line" == (#s)[[:space:]]#(#b)([^=]##)=(*)(#e) && -n $tagmap[(k)$match[1]] ]] && \
+          id3tags+=($tagmap[(k)$match[1]] "$match[2]")
+      [[ ${#id3tags} -gt 0 ]] && id3tags=(--add-id3v2 --ignore-tag-errors $id3tags)
+      $DECODE[*] | lame -b 192 -v -h --replaygain-fast  "${id3tags[@]}" - "${af:r}.mp3" || print "Error transcoding" "${af}"
+    done
 }
+alias ogg2mp3_192 2mp3_192
 
 #f5# RFC 2396 URL encoding in Z-Shell
 urlencode() {
