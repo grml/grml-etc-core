@@ -569,6 +569,11 @@ bindkey '\e[4~' end-of-line             # end
 bindkey '\e[A'  up-line-or-search       # cursor up
 bindkey '\e[B'  down-line-or-search     # <ESC>-
 
+## alt-backspace is already the default for backwards-delete-word
+## let's also set alt-delete for deleting current word (right of cursor)
+#k# Delete current word
+bindkey "3~" delete-word
+
 bindkey '^xp'   history-beginning-search-backward
 bindkey '^xP'   history-beginning-search-forward
 # bindkey -s '^L' "|less\n"             # ctrl-L pipes to less
