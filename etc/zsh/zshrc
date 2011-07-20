@@ -571,6 +571,8 @@ bindkey '\e[B'  down-line-or-search     # <ESC>-
 
 bindkey '^xp'   history-beginning-search-backward
 bindkey '^xP'   history-beginning-search-forward
+bindkey "\e[5~" history-beginning-search-backward #PageUp
+bindkey "\e[6~" history-beginning-search-forward  #PageDown
 # bindkey -s '^L' "|less\n"             # ctrl-L pipes to less
 # bindkey -s '^B' " &\n"                # ctrl-B runs it in the background
 # if terminal type is set to 'rxvt':
