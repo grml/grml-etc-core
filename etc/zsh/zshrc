@@ -609,6 +609,10 @@ bindkey "\e[1;5D" backward-word
 bindkey '^[[1;3C' forward-word
 bindkey '^[[1;3D' backward-word
 
+## alt-backspace is default for backwards-delete-word
+## let's also set alt-delete for delete-word
+bindkey "3~" delete-word
+
 bindkey '^xp'   history-beginning-search-backward
 bindkey '^xP'   history-beginning-search-forward
 bindkey "\e[5~" history-beginning-search-backward #PageUp
