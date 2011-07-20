@@ -1013,6 +1013,27 @@ zstyle ':completion:hist-complete:*' completer _history
 #k# complete word from history with menu
 bindkey "^X^X" hist-complete
 
+## complete word from currently visible SCREEN buffer.
+if check_com -c screen ; then
+    _complete_screen_display() {
+        [[ "$TERM" != "screen" ]] && return 1
+
+        local TMPFILE=$(mktemp)
+        local -U -a _screen_display_wordlist
+        trap "rm -f $TMPFILE" EXIT
+
+        screen -X hardcopy $TMPFILE
+        # fill array with contents from screen hardcopy
+        _screen_display_wordlist=( ${(QQ)$(<$TMPFILE)} )
+        # remove PREFIX to be completed from that array
+        _screen_display_wordlist[${_screen_display_wordlist[(i)$PREFIX]}]=""
+        compadd -a _screen_display_wordlist
+    }
+    #k# complete word from currently visible GNU screen buffer
+    bindkey -r "^XS"
+    compdef -k _complete_screen_display complete-word '^XS'
+fi
+
 # }}}
 
 # {{{ history
