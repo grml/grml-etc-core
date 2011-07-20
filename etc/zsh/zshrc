@@ -3571,7 +3571,7 @@ purge() {
     fi
 }
 
-#f5# show labels and uuids of devices
+#f5# show labels and uuids of disk devices
 if is439 && [[ -d /dev/disk/by-id/ ]]; then
     function lsdisk
     {
