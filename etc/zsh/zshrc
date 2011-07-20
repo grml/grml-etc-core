@@ -960,6 +960,12 @@ zle -N jump_after_first_word
 
 bindkey '^x1' jump_after_first_word
 
+# complete word from history with menu (from Book: ZSH, OpenSource-Press)
+zle -C hist-complete complete-word _generic
+zstyle ':completion:hist-complete:*' completer _history
+#k# complete word from history with menu
+bindkey "^X^X" hist-complete
+
 # }}}
 
 # {{{ history
