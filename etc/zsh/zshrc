@@ -3572,7 +3572,7 @@ purge() {
 }
 
 #f5# show labels and uuids of devices
-if is439; then
+if is439 && [[ -d /dev/disk/by-id/ ]]; then
     function lsdisk
     {
         emulate -L zsh
