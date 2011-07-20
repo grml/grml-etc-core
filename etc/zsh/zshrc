@@ -563,9 +563,43 @@ bindkey -e
 # use vi style:
 # bindkey -v
 
+## beginning-of-line OR beginning-of-buffer OR beginning of history
+## by: Bart Schaefer <schaefer@brasslantern.com>, Bernhard Tittelbach
+beginning-or-end-of-somewhere() {
+    local hno=$HISTNO
+    if [[ ( "${LBUFFER[-1]}" == $'\n' && "${WIDGET}" == beginning-of* ) || \
+      ( "${RBUFFER[1]}" == $'\n' && "${WIDGET}" == end-of* ) ]]; then
+        zle .${WIDGET:s/somewhere/buffer-or-history/} "$@"
+    else
+        zle .${WIDGET:s/somewhere/line-hist/} "$@"
+        if (( HISTNO != hno )); then
+            zle .${WIDGET:s/somewhere/buffer-or-history/} "$@"
+        fi
+    fi
+}
+zle -N beginning-of-somewhere beginning-or-end-of-somewhere
+zle -N end-of-somewhere beginning-or-end-of-somewhere
+
+
 #if [[ "$TERM" == screen ]] ; then
-bindkey '\e[1~' beginning-of-line       # home
-bindkey '\e[4~' end-of-line             # end
+
+## with HOME/END, move to beginning/end of line (on multiline) on first keypress
+## to beginning/end of buffer on second keypress
+## and to beginning/end of history on (at most) the third keypress
+# terminator & non-debian xterm
+bindkey '\eOH' beginning-of-somewhere  # home
+bindkey '\eOF' end-of-somewhere        # end
+# freebsd console
+bindkey '\e[H' beginning-of-somewhere   # home
+bindkey '\e[F' end-of-somewhere         # end
+# xterm,gnome-terminal,quake,etc
+bindkey '^[[1~' beginning-of-somewhere  # home
+bindkey '^[[4~' end-of-somewhere        # end
+# if terminal type is set to 'rxvt':
+bindkey '\e[7~' beginning-of-somewhere  # home
+bindkey '\e[8~' end-of-somewhere        # end
+#fi
+
 bindkey '\e[A'  up-line-or-search       # cursor up
 bindkey '\e[B'  down-line-or-search     # <ESC>-
 
@@ -575,10 +609,7 @@ bindkey "\e[5~" history-beginning-search-backward #PageUp
 bindkey "\e[6~" history-beginning-search-forward  #PageDown
 # bindkey -s '^L' "|less\n"             # ctrl-L pipes to less
 # bindkey -s '^B' " &\n"                # ctrl-B runs it in the background
-# if terminal type is set to 'rxvt':
-bindkey '\e[7~' beginning-of-line       # home
-bindkey '\e[8~' end-of-line             # end
-#fi
+
 
 # insert unicode character
 # usage example: 'ctrl-x i' 00A7 'ctrl-x i' will give you an §
