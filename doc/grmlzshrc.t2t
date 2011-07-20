@@ -436,6 +436,11 @@ Searches the last occurence of string before the cursor in the command history.
 : **CTRL-z**
 Brings a job, which got suspended with CTRL-z back to foreground.
 
+: **CTRL-o-s**
+Prepends the current comand line with "sudo".
+
+: **CTRL-o-i**
+Replace "filename" under cursor with "=(<filename) >! filename"
 
 == SHELL FUNCTIONS ==
 //grmlzshrc// comes with a wide array of defined shell functions to ease the
