@@ -608,6 +608,15 @@ bindkey '\e[B'  down-line-or-search     # <ESC>-
 #k# Delete current word
 bindkey "3~" delete-word
 
+## use Ctrl-left-arrow and Ctrl-right-arrow for jumping to word-beginnings on the CL
+bindkey "\e[5C" forward-word
+bindkey "\e[5D" backward-word
+bindkey "\e[1;5C" forward-word
+bindkey "\e[1;5D" backward-word
+## the same for alt-left-arrow and alt-right-arrow
+bindkey '^[[1;3C' forward-word
+bindkey '^[[1;3D' backward-word
+
 bindkey '^xp'   history-beginning-search-backward
 bindkey '^xP'   history-beginning-search-forward
 bindkey "\e[5~" history-beginning-search-backward #PageUp
