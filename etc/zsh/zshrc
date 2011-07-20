@@ -600,9 +600,6 @@ bindkey '\e[7~' beginning-of-somewhere  # home
 bindkey '\e[8~' end-of-somewhere        # end
 #fi
 
-bindkey '\e[A'  up-line-or-search       # cursor up
-bindkey '\e[B'  down-line-or-search     # <ESC>-
-
 bindkey '^xp'   history-beginning-search-backward
 bindkey '^xP'   history-beginning-search-forward
 bindkey "\e[5~" history-beginning-search-backward #PageUp
