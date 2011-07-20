@@ -424,6 +424,12 @@ Deletes a word left of the cursor; seeing '/' as additional word separator.
 : **CTRL-x-1**
 Jump right after the first word.
 
+: **CTRL-x-M()**
+Create directory under cursor or the selected area.
+To select an area press ctrl-@ and use the cursor.
+Use case: you type "mv abc ~/testa/testb/testc/" and remember that the
+directory does not exist yet -> press **CTRL-xM** and problem solved.
+
 : **CTRL-x-p**
 Searches the last occurence of string before the cursor in the command history.
 
