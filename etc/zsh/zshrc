@@ -893,6 +893,9 @@ fi
 if is4 && [[ -n ${(k)modules[zsh/complist]} ]] ; then
     #k# menu selection: pick item but stay in the menu
     bindkey -M menuselect '\e^M' accept-and-menu-complete
+    #also use + and INSERT since it's easier press repeatedly
+    bindkey -M menuselect "+" accept-and-menu-complete
+    bindkey -M menuselect "^[[2~" accept-and-menu-complete
 
     # accept a completion and try to complete again by using menu
     # completion; very useful with completing directories
