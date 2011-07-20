@@ -3749,6 +3749,7 @@ refunc() {
         autoload $func
     done
 }
+compdef _functions refunc
 
 # a small check to see which DIR is located on which server/partition.
 # stolen and modified from Sven's zshrc.forall
