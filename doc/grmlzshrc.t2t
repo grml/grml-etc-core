@@ -841,8 +841,9 @@ Lists the content of a gzipped tar archive in default pager.
 Shows the content of a zip archive in default pager.
 
 : **simple-extract()**
-Tries to uncompress/unpack given file with the appropriate programs. The
-choice is made along the filename ending.
+Tries to uncompress/unpack given files and URIs with the appropriate programs. The
+choice is made along the filename ending. simple-extract will never delete the 
+original archive (even on .gz,.bz2 or .xz) unless you use the '-d' option
 
 : **sll()**
 Prints details of symlinks given as arguments.
