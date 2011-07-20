@@ -1046,6 +1046,32 @@ if check_com -c screen ; then
     compdef -k _complete_screen_display complete-word '^XS'
 fi
 
+## press ctrl-Oi to facilitate inplace stream file editing
+## i.e. select an area or put the cursor over an (escaped) filename in the cmd-line
+##      if the file indeed exists, the filename will be replaced with
+##      =(<filename) and >! filename will be appended to the cmdline
+## e.g. you can turn a line like this
+##         cat filename | grep -v abc | sed 's/def/ghi/'
+##      into
+##         cat =(<filename) | grep -v abc | sed 's/def/ghi/' >! filename
+##      with just the press of one button
+function inplaceFileRedirectEdit()
+{
+    local bufwords iword lastword
+    bufwords=(${(z)LBUFFER})
+    iword=${#bufwords}
+    bufwords=(${(z)BUFFER})
+    #${(Q)var}: remove one level of quote
+    if [[ -e ${(Q)bufwords[iword]} ]]; then
+        BUFFER="${bufwords[0,iword-1]} =(<${bufwords[iword]}) ${bufwords[iword+1,-1]} >! ${bufwords[iword]}"
+    else
+        zle -M "Warning: file ${bufwords[iword]} does not exist, doing nothing"
+        return 1
+    fi
+}
+#k# replace filename under cursor with inplace stream edit syntax
+zle -N inplaceFileRedirectEdit && bindkey "^Oi" inplaceFileRedirectEdit
+
 # }}}
 
 # {{{ history
