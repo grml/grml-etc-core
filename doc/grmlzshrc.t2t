@@ -511,6 +511,10 @@ If the original cdrecord is not installed, issues a warning to the user to
 use the wodim binary instead. Wodim is the debian fork of Joerg Schillings
 cdrecord.
 
+: **cdt()**
+Creates a temporary directory using mktemp. Then changes current
+working directory to it.
+
 : **changed()**
 Lists files in current directory, which have been changed within the
 last N days. N is an integer to be passed as first and only argument.

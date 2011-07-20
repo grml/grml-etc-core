@@ -2656,6 +2656,13 @@ fir() {
 mcd() {
     mkdir -p "$@" && cd "$@"
 }
+#f5# Create temporary directory and \kbd{cd} to it
+cdt() {
+    local t
+    t=$(mktemp -d)
+    echo "$t"
+    builtin cd "$t"
+}
 #f5# Unified diff to timestamped outputfile
 mdiff() {
     diff -udrP "$1" "$2" > diff.`date "+%Y-%m-%d"`."$1"
