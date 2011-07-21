@@ -1,13 +1,13 @@
 GRMLZSHRC
 
-June, 2010
+July, 2011
 
 %!target: man
 %!postproc(man): "^(\.TH.*) 1 "  "\1 5 "
 
 
 = NAME =
-grmlzshrc - grml's zsh setup
+grmlzshrc - Grml's zsh setup
 
 
 = SYNOPSIS =
@@ -15,7 +15,7 @@ grmlzshrc - grml's zsh setup
 
 
 = DESCRIPTION =
-The grml project provides a fairly exhaustive interactive setup (referred to
+The Grml project provides a fairly exhaustive interactive setup (referred to
 as //grmlzshrc// throughout this document) for the amazing unix shell zsh
 (http://zsh.sourceforge.net). This is the reference manual for that
 setup.
@@ -45,7 +45,7 @@ A non zero value activates a handler, which is called when a command can not
 be found. The handler is defined by GRML_ZSH_CNF_HANDLER (see below).
 
 : **GRML_ALWAYS_LOAD_ALL**
-Enables the whole grml setup for root, if set to a non zero value.
+Enables the whole Grml setup for root, if set to a non zero value.
 
 : **GRML_ZSH_CNF_HANDLER**
 This variable contains the handler to be used by COMMAND_NOT_FOUND (see above)
@@ -59,7 +59,7 @@ grml-small.
 Where zsh saves the history. Default: ${HOME}/.zsh_history.
 
 : **HISTSIZE**
-Number of commands to be kept in the history. On a grml-CD this defaults to
+Number of commands to be kept in the history. On a Grml-CD this defaults to
 500, on a hard disk installation to 5000.
 
 : **MAILCHECK**
@@ -82,7 +82,7 @@ Show time (user, system and cpu) used by external commands, if they run longer
 than the defined number of seconds (default: 5).
 
 : **SAVEHIST**
-Number of commands to be stored in ${HISTFILE}. Defaults to 1000 on a grml-CD
+Number of commands to be stored in ${HISTFILE}. Defaults to 1000 on a Grml-CD
 and to 10000 on an installation on hard disk.
 
 : **watch**
@@ -1504,7 +1504,7 @@ Beckert <abe@deuxchevaux.org>.
 
 
 = COPYRIGHT =
-Copyright (c) 2009-2010 grml project <http://grml.org>
+Copyright (c) 2009-2011 Grml project <http://grml.org>
 
 This manpage is distributed under the terms of the GPL version 2.
 
