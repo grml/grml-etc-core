@@ -3741,6 +3741,7 @@ selhist() {
 }
 
 # Usage: simple-extract <file>
+# Using option -d deletes the original archive file.
 #f5# Smart archive extractor
 simple-extract() {
     emulate -L zsh
@@ -3818,7 +3819,7 @@ simple-extract() {
         esac
 
         if ! check_com ${DECOMP_CMD[(w)1]}; then
-            echo "ERROR: ${DECOMP_CMD[(w)1]} not installed !" >&2
+            echo "ERROR: ${DECOMP_CMD[(w)1]} not installed." >&2
             RC=$((RC+2))
             continue
         fi
@@ -3856,8 +3857,10 @@ simple-extract() {
             if $USES_STDIN; then
                 if $USES_STDOUT; then
                     ${=WGET_CMD} "$ARCHIVE" | ${=DECOMP_CMD} > $GZTARGET
+                    RC=$((RC+$?))
                 else
                     ${=WGET_CMD} "$ARCHIVE" | ${=DECOMP_CMD}
+                    RC=$((RC+$?))
                 fi
             else
                 if $USES_STDOUT; then
@@ -3868,7 +3871,7 @@ simple-extract() {
             fi
 
         else
-            print "ERROR: '$ARCHIVE' is neither a valid file nor a supported URI" >&2
+            print "ERROR: '$ARCHIVE' is neither a valid file nor a supported URI." >&2
             RC=$((RC+8))
         fi
     done
