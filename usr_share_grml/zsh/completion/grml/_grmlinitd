@@ -1,4 +1,0 @@
-#compdef Start Restart Stop Reload
-local scripts
-scripts=( ${$(print /etc/init.d/*(x)):t} )
-_describe "service startup script" scripts

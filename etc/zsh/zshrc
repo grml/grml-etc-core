@@ -2066,8 +2066,15 @@ if [[ -d /etc/init.d || -d /etc/service ]] ; then
         fi
     }
 
+    _grmlinitd() {
+        local -a scripts
+        scripts=( /etc/init.d/*(x:t) )
+        _describe "service startup script" scripts
+    }
+
     for i in Start Restart Stop Force-Reload Reload ; do
         eval "$i() { __start_stop $i \"\$1\" \"\$2\" ; }"
+        compdef _grmlinitd $i
     done
 fi
 
