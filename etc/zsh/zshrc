@@ -625,13 +625,17 @@ bindkey "\e[1;5D" backward-word
 bindkey '^[[1;3C' forward-word
 bindkey '^[[1;3D' backward-word
 
-bindkey '^xp'   history-beginning-search-backward
-bindkey '^xP'   history-beginning-search-forward
-bindkey "\e[5~" history-beginning-search-backward #PageUp
-bindkey "\e[6~" history-beginning-search-forward  #PageDown
+# Search backward in the history for a line beginning with the current
+# line up to the cursor and move the cursor to the end of the line then
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end  history-search-end
+bindkey '^xp'   history-beginning-search-backward-end
+bindkey '^xP'   history-beginning-search-forward-end
+bindkey "\e[5~" history-beginning-search-backward-end # PageUp
+bindkey "\e[6~" history-beginning-search-forward-end  # PageDown
+
 # bindkey -s '^L' "|less\n"             # ctrl-L pipes to less
 # bindkey -s '^B' " &\n"                # ctrl-B runs it in the background
-
 
 # insert unicode character
 # usage example: 'ctrl-x i' 00A7 'ctrl-x i' will give you an §
