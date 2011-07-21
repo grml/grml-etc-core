@@ -1,3 +1,68 @@
+grml-etc-core (0.4.00) unstable; urgency=low
+
+  The "this release qualifies for a minor version number bump" release.
+
+  [ Christian Hofstaedtler ]
+  * [04acd40] Don't hardcore zsh as shell in screenrc
+  * [941cec7] Sync screenrc_* file endings
+  * [ec2a092] Add README.md
+  * [b83a5a7] Remove completely dead entries from sources.list.grml
+  * [f9d123b] Disable *all* repositories in sources.list.grml
+  * [35c81f6] Add HP server management tools to sources.list.grml
+
+  [ Frank Terbeck ]
+  * [409ee3c] zshrc: Fix umask logic
+  * [1dda332] zshrc: Make sure grmlzshrc is only loaded once.
+  * [f014559] zshrc: Remove included vcs_info
+  * [a8ca94c] Remove comment about vcs_info from the manual
+  * [537471e] grmlzshrc.t2t: Add a note about disabling global
+    config files
+  * [3b0fb3c] zshrc: Put _grmlinitd completion directly into zshrc.
+
+  [ Michael Prokop ]
+  * [cbbf17b] zsh: Disable specific umask settings by default.
+  * [cdb7985] zsh docs: update copyright information and
+    Grml project information.
+  * [787c306] zshrc: make sure simple-extract() returns according
+    return code when download of an archive file fails and slightly
+    adjust error messages.
+  * [dce95d8] zsh docs: extend simple-extract() documentation to
+    match current implementation.
+  * [885aa37] zshrc: Add function cdt() to create a temporary
+    directory and change current working directory to it.
+  * [4a33608] zshrc: Added function inplaceMkDirs().
+    Thanks to Bernhard Tittelbach <bernhard@tittelbach.org>
+  * [e82bb71] zshrc: use history-beginning-search-{forward,backward}-end
+    instead of the version without "-end".
+    Thanks to Frank Terbeck <ft@grml.org>
+
+  [ Bernhard Tittelbach ]
+  * [515cabf] zshrc: New function lsdisk to use udev's /dev/disk/
+    to list block devices with their LABEL, UUID and IDs
+  * [77228e2] zshrc: fix typo in top10
+  * [1314616] zshrc: fix typo in edfunc usage text
+  * [741e769] zshrc: fixing broken any() function (drop usage of expr)
+  * [19cfd45] zshrc: replace ogg2mp3_192 with improved 2mp3_192
+  * [e3d86cc] zshrc: also support "+" and <INSERT> as keybindings
+    for accept-and-menu-complete.
+  * [cecd56b] zshrc: complete word from history with menu using
+    ctrl-x ctrl-x
+  * [1c9a325] zshrc: keybinding Alt-Delete kills current/right word
+  * [18dd9ed] zshrc: history-beginning-search with PageUp/PageDown.
+  * [9cb24cf] zshrc: use HOME/END as keybinding for
+    beginning-or-end-of-somewhere.
+  * [7b48dd9] zshrc: Ctrl/Alt-Cursor moves between words
+  * [edf2d10] zshrc: provide completion for refunc function
+  * [5dd23e2] zshrc: improve purge() function.
+  * [01fe02e] zshrc: new function rundirs() to run shell functions in
+    a bunch of directories.
+  * [8cd07c9] zshrc: provide screen hardcopy feature to complete word
+    from words currently displayed in Screen.
+  * [6b3ce44] zshrc: simple-extract on steroids (providing download feature).
+    [Closes: issue982]
+
+ -- Michael Prokop <mika@grml.org>  Fri, 22 Jul 2011 00:02:11 +0200
+
 grml-etc-core (0.3.90) unstable; urgency=low
 
   [ Frank Terbeck ]
