@@ -935,7 +935,7 @@ if is4 ; then
 fi
 
 if is4 && zrcautoload insert-files && zle -N insert-files ; then
-    #k# Insert files
+    #k# Insert files and test globbing
     bindkey "^Xf" insert-files # C-x-f
 fi
 
@@ -1000,7 +1000,7 @@ sudo-command-line() {
 }
 zle -N sudo-command-line
 
-#k# Put the current command line into a \kbd{sudo} call
+#k# prepend the current command with "sudo"
 bindkey "^Os" sudo-command-line
 
 ### jump behind the first word on the cmdline.
@@ -1016,7 +1016,7 @@ function jump_after_first_word() {
     fi
 }
 zle -N jump_after_first_word
-
+#k# jump to after first word (for adding options)
 bindkey '^x1' jump_after_first_word
 
 # complete word from history with menu (from Book: ZSH, OpenSource-Press)
@@ -2814,6 +2814,7 @@ inplaceMkDirs() {
         zle end-of-line
     fi
 }
+#k# mkdir -p <dir> from string under cursor or marked area
 zle -N inplaceMkDirs && bindkey '^XM' inplaceMkDirs
 
 #f5# Memory overview
