@@ -1017,8 +1017,8 @@ zstyle ':completion:hist-complete:*' completer _history
 #k# complete word from history with menu
 bindkey "^X^X" hist-complete
 
-## complete word from currently visible SCREEN buffer.
-if check_com -c screen ; then
+## complete word from currently visible Screen or Tmux buffer.
+if check_com -c screen || check_com -c tmux; then
     _complete_screen_display() {
         [[ "$TERM" != "screen" ]] && return 1
 
@@ -1026,8 +1026,15 @@ if check_com -c screen ; then
         local -U -a _screen_display_wordlist
         trap "rm -f $TMPFILE" EXIT
 
-        screen -X hardcopy $TMPFILE
         # fill array with contents from screen hardcopy
+        if ((${+TMUX})); then
+            #works, but crashes tmux below version 1.4
+            tmux -q capture-pane \; save-buffer -b 0 $TMPFILE \; delete-buffer -b 0
+        else
+            screen -X hardcopy $TMPFILE
+            #screen sucks, it dumps in latin1, apparently always. so recode it to system charset
+            check_com recode && recode latin1 $TMPFILE
+        fi
         _screen_display_wordlist=( ${(QQ)$(<$TMPFILE)} )
         # remove PREFIX to be completed from that array
         _screen_display_wordlist[${_screen_display_wordlist[(i)$PREFIX]}]=""
