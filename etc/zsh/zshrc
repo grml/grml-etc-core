@@ -1305,7 +1305,7 @@ function info_print () {
 is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
     [[ $NOPRECMD -gt 0 ]] && return 0
     # update VCS information
-    vcs_info
+    (( ${+functions[vcs_info]} )) && vcs_info
 
     if [[ $TERM == screen* ]] ; then
         if [[ -n ${vcs_info_msg_1_} ]] ; then
