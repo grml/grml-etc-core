@@ -605,7 +605,7 @@ bindkey '\e[B'  down-line-or-search     # <ESC>-
 
 ## alt-backspace is already the default for backwards-delete-word
 ## let's also set alt-delete for deleting current word (right of cursor)
-#k# Delete current word
+#k# Kill right-side word
 bindkey "3~" delete-word
 
 ## use Ctrl-left-arrow and Ctrl-right-arrow for jumping to word-beginnings on the CL
@@ -621,9 +621,13 @@ bindkey '^[[1;3D' backward-word
 # line up to the cursor and move the cursor to the end of the line then
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end  history-search-end
+#k# search history backward for entry beginning with typed text
 bindkey '^xp'   history-beginning-search-backward-end
+#k# search history forward for entry beginning with typed text
 bindkey '^xP'   history-beginning-search-forward-end
+#k# search history backward for entry beginning with typed text
 bindkey "\e[5~" history-beginning-search-backward-end # PageUp
+#k# search history forward for entry beginning with typed text
 bindkey "\e[6~" history-beginning-search-forward-end  # PageDown
 
 # bindkey -s '^L' "|less\n"             # ctrl-L pipes to less
@@ -677,11 +681,11 @@ slash-backward-kill-word() {
 }
 zle -N slash-backward-kill-word
 
-#k# Kill everything in a word up to its last \kbd{/}
+#k# Kill left-side word or everything up to next slash
 bindkey '\ev' slash-backward-kill-word
-#k# Kill everything in a word up to its last \kbd{/}
+#k# Kill left-side word or everything up to next slash
 bindkey '\e^h' slash-backward-kill-word
-#k# Kill everything in a word up to its last \kbd{/}
+#k# Kill left-side word or everything up to next slash
 bindkey '\e^?' slash-backward-kill-word
 
 # use the new *-pattern-* widgets for incremental history search
@@ -927,7 +931,7 @@ if is4 ; then
 fi
 
 if is4 && zrcautoload insert-files && zle -N insert-files ; then
-    #k# Insert files
+    #k# Insert files and test globbing
     bindkey "^Xf" insert-files # C-x-f
 fi
 
@@ -992,7 +996,7 @@ sudo-command-line() {
 }
 zle -N sudo-command-line
 
-#k# Put the current command line into a \kbd{sudo} call
+#k# prepend the current command with "sudo"
 bindkey "^Os" sudo-command-line
 
 ### jump behind the first word on the cmdline.
@@ -1008,7 +1012,7 @@ function jump_after_first_word() {
     fi
 }
 zle -N jump_after_first_word
-
+#k# jump to after first word (for adding options)
 bindkey '^x1' jump_after_first_word
 
 # complete word from history with menu (from Book: ZSH, OpenSource-Press)
@@ -2120,6 +2124,117 @@ H-Glob() {
 }
 alias help-zshglob=H-Glob
 
+#v1# set number of lines to display per page
+HELP_LINES_PER_PAGE=20
+#f1# helper function for help-zle, actually generates the help text
+help_zle_parse_keybindings()
+{
+    emulate -L zsh
+    setopt extendedglob
+    unsetopt ksharrays  #indexing starts at 1
+
+    #v1# choose files that help-zle will parse for keybindings
+    ((${+HELPZLE_KEYBINDING_FILES})) || HELPZLE_KEYBINDING_FILES=( /etc/zsh/zshrc ~/.zshrc.pre ~/.zshrc ~/.zshrc.local )
+
+    #fill with default keybindings, possibly to be overwriten in a file later
+    #Note that due to zsh inconsistency on escaping assoc array keys, we encase the key in '' which we will remove later
+    local -A help_zle_keybindings
+    help_zle_keybindings['<Ctrl>@']="set MARK"
+    help_zle_keybindings['<Ctrl>X<Ctrl>J']="vi-join lines"
+    help_zle_keybindings['<Ctrl>X<Ctrl>B']="jump to matching brace"
+    help_zle_keybindings['<Ctrl>X<Ctrl>U']="undo"
+    help_zle_keybindings['<Ctrl>_']="undo"
+    help_zle_keybindings['<Ctrl>X<Ctrl>F<c>']="find <c> in cmdline"
+    help_zle_keybindings['<Ctrl>A']="goto beginning of line"
+    help_zle_keybindings['<Ctrl>E']="goto end of line"
+    help_zle_keybindings['<Ctrl>t']="transpose charaters"
+    help_zle_keybindings['<Alt>T']="transpose words"
+    help_zle_keybindings['<Alt>s']="spellcheck word"
+    help_zle_keybindings['<Ctrl>K']="backward kill buffer"
+    help_zle_keybindings['<Ctrl>U']="forward kill buffer"
+    help_zle_keybindings['<Ctrl>y']="insert previously killed word/string"
+    help_zle_keybindings["<Alt>'"]="quote line"
+    help_zle_keybindings['<Alt>"']="quote from mark to cursor"
+    help_zle_keybindings['<Alt><arg>']="repeat next cmd/char <arg> times (<Alt>-<Alt>1<Alt>0a -> -10 times 'a')"
+    help_zle_keybindings['<Alt>U']="make next word Uppercase"
+    help_zle_keybindings['<Alt>l']="make next word lowercase"
+    help_zle_keybindings['<Ctrl>Xd']="preview expansion under cursor"
+    help_zle_keybindings['<Alt>q']="push current CL into background, freeing it. Restore on next CL"
+    help_zle_keybindings['<Alt>.']="insert (and interate through) last word from prev CLs"
+    help_zle_keybindings['<Alt>,']="complete word from newer history (consecutive hits)"
+    help_zle_keybindings['<Alt>m']="repeat last typed word on current CL"
+    help_zle_keybindings['<Ctrl>V']="insert next keypress symbol literally (e.g. for bindkey)"
+    help_zle_keybindings['!!:n*<Tab>']="insert last n arguments of last command"
+    help_zle_keybindings['!!:n-<Tab>']="insert arguments n..N-2 of last command (e.g. mv s s d)"
+    help_zle_keybindings['<Alt>H']="run help on current command"
+
+    #init global variables
+    unset help_zle_lines help_zle_sln
+    typeset -g -a help_zle_lines
+    typeset -g help_zle_sln=1
+
+    local k v
+    local lastkeybind_desc contents     #last description starting with #k# that we found
+    local num_lines_elapsed=0            #number of lines between last description and keybinding
+    #search config files in the order they a called (and thus the order in which they overwrite keybindings)
+    for f in $HELPZLE_KEYBINDING_FILES; do
+        [[ -r "$f" ]] || continue   #not readable ? skip it
+        contents="$(<$f)"
+        for cline in "${(f)contents}"; do
+            #zsh pattern: matches lines like: #k# ..............
+            if [[ "$cline" == (#s)[[:space:]]#\#k\#[[:space:]]##(#b)(*)[[:space:]]#(#e) ]]; then
+                lastkeybind_desc="$match[*]"
+                num_lines_elapsed=0
+            #zsh pattern: matches lines that set a keybinding using bindkey or compdef -k
+            #             ignores lines that are commentend out
+            #             grabs first in '' or "" enclosed string with length between 1 and 6 characters
+            elif [[ "$cline" == [^#]#(bindkey|compdef -k)[[:space:]](*)(#b)(\"((?)(#c1,6))\"|\'((?)(#c1,6))\')(#B)(*)  ]]; then
+                #description prevously found ? description not more than 2 lines away ? keybinding not empty ?
+                if [[ -n $lastkeybind_desc && $num_lines_elapsed -lt 2 && -n $match[1] ]]; then
+                    #substitute keybinding string with something readable
+                    k=${${${${${${${match[1]/\\e\^h/<Alt><BS>}/\\e\^\?/<Alt><BS>}/\\e\[5~/<PageUp>}/\\e\[6~/<PageDown>}//(\\e|\^\[)/<Alt>}//\^/<Ctrl>}/3~/<Alt><Del>}
+                    #put keybinding in assoc array, possibly overwriting defaults or stuff found in earlier files
+                    #Note that we are extracting the keybinding-string including the quotes (see Note at beginning)
+                    help_zle_keybindings[${k}]=$lastkeybind_desc
+                fi
+                lastkeybind_desc=""
+            else
+              ((num_lines_elapsed++))
+            fi
+        done
+    done
+    unset contents
+    #calculate length of keybinding column
+    local kstrlen=0
+    for k (${(k)help_zle_keybindings[@]}) ((kstrlen < ${#k})) && kstrlen=${#k}
+    #convert the assoc array into preformated lines, which we are able to sort
+    for k v in ${(kv)help_zle_keybindings[@]}; do
+        #pad keybinding-string to kstrlen chars and remove outermost characters (i.e. the quotes)
+        help_zle_lines+=("${(r:kstrlen:)k[2,-2]}${v}")
+    done
+    #sort lines alphabetically
+    help_zle_lines=("${(i)help_zle_lines[@]}")
+}
+typeset -g help_zle_sln
+typeset -g -a help_zle_lines
+
+#f1# Provides (partially autogenerated) help on keybindings and the zsh line editor
+help-zle()
+{
+    emulate -L zsh
+    unsetopt ksharrays  #indexing starts at 1
+    #help lines already generated ? no ? then do it
+    [[ ${+functions[help_zle_parse_keybindings]} -eq 1 ]] && {help_zle_parse_keybindings && unfunction help_zle_parse_keybindings}
+    #already displayed all lines ? go back to the start
+    [[ $help_zle_sln -gt ${#help_zle_lines} ]] && help_zle_sln=1
+    local sln=$help_zle_sln
+    #note that help_zle_sln is a global var, meaning we remember the last page we viewed
+    help_zle_sln=$((help_zle_sln + HELP_LINES_PER_PAGE))
+    zle -M "${(F)help_zle_lines[sln,help_zle_sln-1]}"
+}
+#k# display help for keybindings and ZLE (cycle pages with consecutive use)
+zle -N help-zle && bindkey '^Xz' help-zle
+
 check_com -c qma && alias ?='qma zshall'
 
 # grep for running process, like: 'any vim'
@@ -2722,6 +2837,7 @@ inplaceMkDirs() {
         zle end-of-line
     fi
 }
+#k# mkdir -p <dir> from string under cursor or marked area
 zle -N inplaceMkDirs && bindkey '^XM' inplaceMkDirs
 
 #f5# Memory overview
