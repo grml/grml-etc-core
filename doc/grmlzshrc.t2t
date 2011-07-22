@@ -433,6 +433,9 @@ directory does not exist yet -> press **CTRL-xM** and problem solved.
 : **CTRL-x-p**
 Searches the last occurence of string before the cursor in the command history.
 
+: **CTRL-x-z**
+Display help on keybindings and zsh line editor. Press consecutively to page through content.
+
 : **CTRL-z**
 Brings a job, which got suspended with CTRL-z back to foreground.
 
