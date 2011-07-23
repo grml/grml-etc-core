@@ -613,7 +613,7 @@ bindkey '\e[B'  down-line-or-search     # <ESC>-
 
 ## alt-backspace is already the default for backwards-delete-word
 ## let's also set alt-delete for deleting current word (right of cursor)
-#k# Delete current word
+#k# Kill right-side word
 bindkey "3~" delete-word
 
 ## use Ctrl-left-arrow and Ctrl-right-arrow for jumping to word-beginnings on the CL
@@ -629,9 +629,13 @@ bindkey '^[[1;3D' backward-word
 # line up to the cursor and move the cursor to the end of the line then
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end  history-search-end
+#k# search history backward for entry beginning with typed text
 bindkey '^xp'   history-beginning-search-backward-end
+#k# search history forward for entry beginning with typed text
 bindkey '^xP'   history-beginning-search-forward-end
+#k# search history backward for entry beginning with typed text
 bindkey "\e[5~" history-beginning-search-backward-end # PageUp
+#k# search history forward for entry beginning with typed text
 bindkey "\e[6~" history-beginning-search-forward-end  # PageDown
 
 # bindkey -s '^L' "|less\n"             # ctrl-L pipes to less
@@ -685,11 +689,11 @@ slash-backward-kill-word() {
 }
 zle -N slash-backward-kill-word
 
-#k# Kill everything in a word up to its last \kbd{/}
+#k# Kill left-side word or everything up to next slash
 bindkey '\ev' slash-backward-kill-word
-#k# Kill everything in a word up to its last \kbd{/}
+#k# Kill left-side word or everything up to next slash
 bindkey '\e^h' slash-backward-kill-word
-#k# Kill everything in a word up to its last \kbd{/}
+#k# Kill left-side word or everything up to next slash
 bindkey '\e^?' slash-backward-kill-word
 
 # use the new *-pattern-* widgets for incremental history search
