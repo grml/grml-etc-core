@@ -2655,6 +2655,17 @@ fir() {
         firefox -a firefox -remote "openURL($1)" || firefox ${1}&
     fi
 }
+# smart cd function, allows switching to /etc when running 'cd /etc/fstab'
+cd() {
+    if [[ -f ${1} ]]; then
+        [[ ! -e ${1:h} ]] && return 1
+        print "Correcting ${1} to ${1:h}"
+        builtin cd ${1:h}
+    else
+        builtin cd ${1}
+    fi
+}
+
 #f5# Create Directoy and \kbd{cd} to it
 mcd() {
     mkdir -p "$@" && cd "$@"
