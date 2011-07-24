@@ -2245,7 +2245,7 @@ any() {
         echo "any - grep for process(es) by keyword" >&2
         echo "Usage: any <keyword>" >&2 ; return 1
     else
-        ps xauwww | grep --color=auto "[${1[1]}]${1[2,-1]}"
+        ps xauwww | grep -i --color=auto "[${1[1]}]${1[2,-1]}"
     fi
 }
 
