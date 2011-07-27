@@ -7,6 +7,8 @@ Standards-Version: 3.9.2
 Homepage: http://git.grml.org/?p=grml-etc-core.git
 Vcs-git: git://git.grml.org/grml-etc-core.git
 Vcs-Browser: http://git.grml.org/?p=grml-etc-core.git
+Origin: Grml
+Bugs: mailto:bugs@grml.org
 
 Package: grml-etc-core
 Architecture: all
