@@ -8,6 +8,8 @@ Standards-Version: 3.9.2
 Homepage: http://git.grml.org/?p=grml-scripts-core.git
 Vcs-git: git://git.grml.org/grml-scripts-core.git
 Vcs-Browser: http://git.grml.org/?p=grml-scripts-core.git
+Origin: Grml
+Bugs: mailto:bugs@grml.org
 
 Package: grml-scripts-core
 Architecture: any
