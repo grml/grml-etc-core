@@ -2981,7 +2981,7 @@ purge() {
     PYTEMPFILES=(*.py(N:s/%py/'(pyc|pyo)(N)'/))
     LONELY_MOOD_FILES=((*.mood)(.NDe:'local -a AF;AF=( ${${REPLY#.}%mood}(mp3|flac|ogg|asf|wmv|aac)(N) ); [[ -z "$AF" ]]':))
     ZSH_COMPILED=(*.zwc(.NDe:'[[ -f ${REPLY%.zwc} && ${REPLY%.zwc} -nt ${REPLY} ]]':))
-    FILES=(*~(.N) \#*\#(.N) .zcompdump(.N) *.o(.N) a.out(.N) (*.|)core(.N) *.cmo(.N) *.cmi(.N) .*.swp(.N) *.(orig|rej)(.DN) *.dpkg-(old|dist|new)(DN) ._(cfg|mrg)[0-9][0-9][0-9][0-9]_*(N) ${~TEXTEMPFILES} ${~GHCTEMPFILES} ${~PYTEMPFILES} ${LONELY_MOOD_FILES} ${ZSH_COMPILED} )
+    FILES=(*~(.N) \#*\#(.N) *.o(.N) a.out(.N) (*.|)core(.N) *.cmo(.N) *.cmi(.N) .*.swp(.N) *.(orig|rej)(.DN) *.dpkg-(old|dist|new)(DN) ._(cfg|mrg)[0-9][0-9][0-9][0-9]_*(N) ${~TEXTEMPFILES} ${~GHCTEMPFILES} ${~PYTEMPFILES} ${LONELY_MOOD_FILES} ${ZSH_COMPILED} )
     local NBFILES=${#FILES}
     local CURDIRSUDO=""
     [[ ! -w ./ ]] && CURDIRSUDO=$SUDO
