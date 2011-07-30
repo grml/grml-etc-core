@@ -2977,10 +2977,16 @@ if is439 && [[ -d /dev/disk/by-id/ ]]; then
         emulate -L zsh
         setopt extendedglob
         local -a -U disks
+        local -A mountinfo
         disks=( /dev/disk/by-id/*(@:A) )
+        [[ -r /proc/mounts ]] && for cline ( "${(f)$(</proc/mounts)[@]}" ) mountinfo["${cline[(w)1]:A}"]="${cline[(w)2,-1]}"
         for dev in "$disks[@]"; do
             print ${fg_bold[red]}${dev}${reset_color} /dev/disk/by-label/*(@e/'[[ ${REPLY:A} == $dev ]] && REPLY=${fg[blue]}LABEL=${REPLY:t}${reset_color}'/N) /dev/disk/by-uuid/*(@e/'[[ ${REPLY:A} == $dev ]] && REPLY=${fg[green]}UUID=${REPLY:t}${reset_color}'/N)
-            print -f "  %s\n" /dev/disk/by-id/*(@e/'[[ ${REPLY:A} == $dev ]]'/N:t)
+            [[ -n "${mountinfo["$dev"]}" ]] && print -f " Mount: %s -t %s -o %s\n" ${mountinfo["$dev"][(w)1]} ${mountinfo["$dev"][(w)2]} "${mountinfo["$dev"][(w)3,-5]}"
+            for sysdevsize ( /sys/block/${dev:t}/size(N) /sys/block/${${dev:t}%%<->}/${dev:t}/size(N) ) \
+                print -f "  Size: %.3f GiB (%d Byte)\n" $(($(<$sysdevsize)/(2.0*1024.0*1024.0))) $(($(<$sysdevsize)*512))
+
+            print -f "    Id: %s\n" /dev/disk/by-id/*(@e/'[[ ${REPLY:A} == $dev ]]'/N:t)
         done
     }
 fi
