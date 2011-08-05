@@ -715,10 +715,11 @@ fi
 zstyle ':acceptline:*' rehash true
 
 function Accept-Line() {
-    emulate -L zsh
+    setopt localoptions noksharrays
     local -a subs
     local -xi aldone
     local sub
+    local alcontext=${1:-$alcontext}
 
     zstyle -a ":acceptline:${alcontext}" actions subs
 
@@ -748,9 +749,17 @@ function Accept-Line-getdefault() {
     esac
 }
 
+function Accept-Line-HandleContext() {
+    zle Accept-Line
+
+    default_action=$(Accept-Line-getdefault)
+    zstyle -T ":acceptline:${alcontext}" call_default \
+        && zle ${default_action}
+}
+
 function accept-line() {
-    emulate -L zsh
-    local -a cmdline
+    setopt localoptions noksharrays
+    local -ax cmdline
     local -x alcontext
     local buf com fname format msg default_action
 
@@ -760,11 +769,14 @@ function accept-line() {
     com="${cmdline[1]}"
     fname="_${com}"
 
+    Accept-Line 'preprocess'
+
     zstyle -t ":acceptline:${alcontext}" rehash \
         && [[ -z ${commands[$com]} ]]           \
         && rehash
 
-    if    [[ -n ${reswords[(r)$com]} ]] \
+    if    [[ -n ${com}               ]] \
+       && [[ -n ${reswords[(r)$com]} ]] \
        || [[ -n ${aliases[$com]}     ]] \
        || [[ -n ${functions[$com]}   ]] \
        || [[ -n ${builtins[$com]}    ]] \
@@ -772,11 +784,8 @@ function accept-line() {
 
         # there is something sensible to execute, just do it.
         alcontext='normal'
-        zle Accept-Line
+        Accept-Line-HandleContext
 
-        default_action=$(Accept-Line-getdefault)
-        zstyle -T ":acceptline:${alcontext}" call_default \
-            && zle ${default_action}
         return
     fi
 
@@ -792,49 +801,45 @@ function accept-line() {
             # Okay, we warned the user before, he called us again,
             # so have it his way.
             alcontext='force'
-            zle Accept-Line
+            Accept-Line-HandleContext
 
-            default_action=$(Accept-Line-getdefault)
-            zstyle -T ":acceptline:${alcontext}" call_default \
-                && zle ${default_action}
             return
         fi
 
-        # prepare warning message for the user, configurable via zstyle.
-        zstyle -s ":acceptline:${alcontext}" compwarnfmt msg
+        if zstyle -t ":acceptline:${alcontext}" nocompwarn ; then
+            alcontext='normal'
+            Accept-Line-HandleContext
+        else
+            # prepare warning message for the user, configurable via zstyle.
+            zstyle -s ":acceptline:${alcontext}" compwarnfmt msg
 
-        if [[ -z ${msg} ]] ; then
-            msg="%c will not execute and completion %f exists."
+            if [[ -z ${msg} ]] ; then
+                msg="%c will not execute and completion %f exists."
+            fi
+
+            zformat -f msg "${msg}" "c:${com}" "f:${fname}"
+
+            zle -M -- "${msg}"
         fi
-
-        zformat -f msg "${msg}" "c:${com}" "f:${fname}"
-
-        zle -M -- "${msg}"
         return
     elif [[ -n ${buf//[$' \t\n']##/} ]] ; then
         # If we are here, the commandline contains something that is not
         # executable, which is neither subject to _command_name correction
         # and is not empty. might be a variable assignment
         alcontext='misc'
-        zle Accept-Line
+        Accept-Line-HandleContext
 
-        default_action=$(Accept-Line-getdefault)
-        zstyle -T ":acceptline:${alcontext}" call_default \
-            && zle ${default_action}
         return
     fi
 
     # If we got this far, the commandline only contains whitespace, or is empty.
     alcontext='empty'
-    zle Accept-Line
-
-    default_action=$(Accept-Line-getdefault)
-    zstyle -T ":acceptline:${alcontext}" call_default \
-        && zle ${default_action}
+    Accept-Line-HandleContext
 }
 
 zle -N accept-line
 zle -N Accept-Line
+zle -N Accept-Line-HandleContext
 
 # }}}
 
