@@ -1,3 +1,27 @@
+grml-etc-core (0.4.01) unstable; urgency=low
+
+  [ Frank Terbeck ]
+  * [7f27648] Disable vcs_info if the function is not loaded
+  * [47b6a5f] zshrc: Updating accept-line wrapper
+
+  [ Christian Hofstaedtler ]
+  * [5f0f906] Revert "Make sure grmlzshrc is only loaded once"
+  * [59f4992] Add debian/control headers Origin, Bugs
+  * [c9d3e24] remove preferences.grml example file
+
+  [ Michael Prokop ]
+  * [aad6e4e] zshrc: provide smart cd function, allows switching to /etc
+    when running 'cd /etc/fstab'
+
+  [ Bernhard Tittelbach ]
+  * [3fbd060] zsh: complete from screen and tmux, workaround screen
+  * [303fb96] zsh: tmux hardcopy version check
+  * [95eeb86] zshrc: provide help_zle_parse_keybindings through ctrl-x-z,
+    add/change some keybinding comments accordingly.
+  * [05260a8] zsh: make any() case insensitive
+
+ -- Michael Prokop <mika@grml.org>  Mon, 08 Aug 2011 14:41:16 +0200
+
 grml-etc-core (0.4.00) unstable; urgency=low
 
   The "this release qualifies for a minor version number bump" release.
