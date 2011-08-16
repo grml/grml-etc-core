@@ -3295,8 +3295,10 @@ vman() {
 #f5# View all README-like files in current directory in pager
 readme() {
     emulate -L zsh
+    setopt extendedglob
     local files
     files=(./(#i)*(read*me|lue*m(in|)ut)*(ND))
+    files=(./(#i)*(read*me|lue*m(in|)ut|lies*mich)*(NDr^/=p%))
     if (($#files)) ; then
         $PAGER $files
     else
