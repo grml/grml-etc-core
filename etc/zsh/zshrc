@@ -2786,7 +2786,9 @@ fir() {
 }
 # smart cd function, allows switching to /etc when running 'cd /etc/fstab'
 cd() {
-    if [[ -f ${1} ]]; then
+    if [[ -n ${2} ]]; then
+        builtin cd $@
+    elif [[ -f ${1} ]]; then
         [[ ! -e ${1:h} ]] && return 1
         print "Correcting ${1} to ${1:h}"
         builtin cd ${1:h}
