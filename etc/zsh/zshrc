@@ -1648,9 +1648,9 @@ if [[ -r /etc/debian_version ]] ; then
 fi
 
 # sort installed Debian-packages by size
-if check_com -c grep-status ; then
+if check_com -c dpkg-query ; then
     #a3# List installed Debian-packages sorted by size
-    alias debs-by-size='grep-status -FStatus -sInstalled-Size,Package -n "install ok installed" | paste -sd "  \n" | sort -rn'
+    alias debs-by-size="dpkg-query -Wf 'x \${Installed-Size} \${Package} \${Status}\n' | sed -ne '/^x  /d' -e '/^x \(.*\) install ok installed$/s//\1/p' | sort -nr"
 fi
 
 # if cdrecord is a symlink (to wodim) or isn't present at all warn:
