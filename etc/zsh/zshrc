@@ -1077,7 +1077,7 @@ DIRSTACKFILE=${DIRSTACKFILE:-${HOME}/.zdirs}
 if [[ -f ${DIRSTACKFILE} ]] && [[ ${#dirstack[*]} -eq 0 ]] ; then
     dirstack=( ${(f)"$(< $DIRSTACKFILE)"} )
     # "cd -" won't work after login by just setting $OLDPWD, so
-    [[ -d $dirstack[0] ]] && cd $dirstack[0] && cd $OLDPWD
+    [[ -d $dirstack[1] ]] && cd $dirstack[1] && cd $OLDPWD
 fi
 
 chpwd() {
