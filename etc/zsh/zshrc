@@ -3638,9 +3638,9 @@ if check_com -c highlight ; then
                 lang=${1%:*}
                 [[ ${1} == *:* ]] && [[ -n ${1#*:} ]] && theme=${1#*:}
                 if [[ -n ${theme} ]] ; then
-                    highlight --xterm256 --syntax ${lang} --style ${theme} ${2} | less -SMr
+                    highlight -O xterm256 --syntax ${lang} --style ${theme} ${2} | less -SMr
                 else
-                    highlight --ansi --syntax ${lang} ${2} | less -SMr
+                    highlight -O ansi --syntax ${lang} ${2} | less -SMr
                 fi
                 ;;
         esac
