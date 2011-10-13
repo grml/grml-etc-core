@@ -1,3 +1,11 @@
+grml-scripts-core (2.0.0) unstable; urgency=low
+
+  * [e4d3f0f] Add debian/control headers Origin, Bugs
+  * [9df9caf] Remove grml-screen
+  * [8d03873] Remove code2color, cpu-screen.sh (legacy)
+
+ -- Christian Hofstaedtler <ch@grml.org>  Thu, 13 Oct 2011 23:28:51 +0200
+
 grml-scripts-core (1.4.4) unstable; urgency=low
 
   [ Michael Gebetsroither ]
