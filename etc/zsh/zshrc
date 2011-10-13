@@ -1496,28 +1496,6 @@ iso2utf() {
     fi
 }
 
-# set up software synthesizer via speakup
-swspeak() {
-    if [ -x /usr/sbin/swspeak-setup ] ; then
-       setopt singlelinezle
-       unsetopt prompt_cr
-       export PS1="%m%# "
-       /usr/sbin/swspeak-setup $@
-     else # old version:
-        if ! [[ -r /dev/softsynth ]] ; then
-            flite -o play -t "Sorry, software synthesizer not available. Did you boot with swspeak bootoption?"
-            return 1
-        else
-           setopt singlelinezle
-           unsetopt prompt_cr
-           export PS1="%m%# "
-            nice -n -20 speechd-up
-            sleep 2
-            flite -o play -t "Finished setting up software synthesizer"
-        fi
-     fi
-}
-
 # I like clean prompt, so provide simple way to get that
 check_com 0 || alias 0='return 0'
 
@@ -2277,17 +2255,6 @@ peval() {
     perl -e "print eval($CALC),\"\n\";"
 }
 functions peval &>/dev/null && alias calc=peval
-
-# brltty seems to have problems with utf8 environment and/or font Uni3-Terminus16 under
-# certain circumstances, so work around it, no matter which environment we have
-brltty() {
-    if [[ -z "$DISPLAY" ]] ; then
-        consolechars -f /usr/share/consolefonts/default8x16.psf.gz
-        command brltty "$@"
-    else
-        command brltty "$@"
-    fi
-}
 
 # just press 'asdf' keys to toggle between dvorak and us keyboard layout
 aoeu() {

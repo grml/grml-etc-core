@@ -505,11 +505,6 @@ Simple backup of a file or directory using cp(1). The target file name is the
 original name plus a time stamp attached. Symlinks and file attributes like mode,
 ownership and timestamps are preserved.
 
-: **brltty()**
-The brltty(1) program provides a braille display, so a blind person can access
-the console screen. This wrapper function works around problems with some
-environments (f. e. utf8).
-
 : **cdiff()**
 Runs a recursive diff(1) over two given directories trying to find the
 smallest set of changes. Three lines of context will be printed and binary
@@ -923,10 +918,6 @@ Shows some information about current system status.
 
 : **swiki()**
 Searches articles in the german Wikipedia for the term given as argument.
-
-: **swspeak()**
-Sets up software synthesizer by calling swspeak-setup(8). Kernel boot option
-swspeak must be set for this to work.
 
 : **trans()**
 Translates a word from german to english (-D) or vice versa (-E).
