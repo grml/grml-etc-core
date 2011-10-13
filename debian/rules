@@ -45,10 +45,8 @@ binary-arch: build install
 	dh_installchangelogs
 	dh_installdocs
 	dh_installman manpages/grml-scripts-core.1
-	dh_link /usr/share/man/man1/grml-scripts-core.1.gz /usr/share/man/man1/code2color.1.gz \
+	dh_link \
 		/usr/share/man/man1/grml-scripts-core.1.gz /usr/share/man/man1/cpu-screen.1.gz \
-		/usr/share/man/man1/grml-scripts-core.1.gz /usr/share/man/man1/cpu-screen.sh.1.gz \
-		/usr/share/man/man1/grml-scripts-core.1.gz /usr/share/man/man1/grml-screen.1.gz \
 		/usr/share/man/man1/grml-scripts-core.1.gz /usr/share/man/man1/ip-screen.1.gz \
 		/usr/share/man/man1/grml-scripts-core.1.gz /usr/share/man/man1/lesspipe.sh.1.gz
 	dh_strip
