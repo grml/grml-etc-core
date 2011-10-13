@@ -5,4 +5,5 @@ debian/*.substvars
 debian/grml-etc-core
 doc/*.[1-8]
 doc/*.html
+*.zwc
 *~
