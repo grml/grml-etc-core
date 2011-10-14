@@ -1,3 +1,9 @@
+grml-scripts-core (2.0.1) unstable; urgency=low
+
+  * [34895d3] Re-add code2color, it's required for lesspipe.sh
+
+ -- Christian Hofstaedtler <ch@grml.org>  Fri, 14 Oct 2011 17:02:15 +0200
+
 grml-scripts-core (2.0.0) unstable; urgency=low
 
   * [e4d3f0f] Add debian/control headers Origin, Bugs
