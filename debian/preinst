@@ -26,7 +26,7 @@ case "$1" in
         # move files from package grml-etc to grml-etc-core, make sure
         # we don't lose any files...
         for file in /etc/zsh/zlogin /etc/zsh/zprofile /etc/zsh/zshenv /etc/zsh/zshrc \
-                    /etc/zsh/zlogout /etc/vim/vimrc; do
+                    /etc/zsh/zlogout /etc/vim/vimrc /etc/tmux.conf; do
                [ -e "$file".original ] || cp -f "$file" "${file}.tmp.$TMP" 2>/dev/null || true
 	       # [ -e "$file".dpkg-new ] && cp -f "$file".dpkg-new "${file}.tmp.$TMP"
                backup_conffile $file && \
