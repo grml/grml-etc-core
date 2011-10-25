@@ -2951,8 +2951,9 @@ purge() {
     TEXTEMPFILES=(*.tex(N:s/%tex/'(log|toc|aux|nav|snm|out|tex.backup|bbl|blg|bib.backup|vrb|lof|lot|hd|idx)(N)'/))
     GHCTEMPFILES=(*.(hs|lhs)(N:r:s/%/'.(hi|hc|(p|u|s)_(o|hi))(N)'/))
     PYTEMPFILES=(*.py(N:s/%py/'(pyc|pyo)(N)'/))
-    LONELY_MOOD_FILES=((*.mood)(NDe:'local -a AF;AF=( ${${REPLY#.}%mood}(mp3|flac|ogg|asf|wmv|aac)(N) ); [[ -z "$AF" ]]':))
-    FILES=(*~(.N) \#*\#(.N) *.o(.N) a.out(.N) (*.|)core(.N) *.cmo(.N) *.cmi(.N) .*.swp(.N) *.(orig|rej)(.DN) *.dpkg-(old|dist|new)(DN) ._(cfg|mrg)[0-9][0-9][0-9][0-9]_*(N) ${~TEXTEMPFILES} ${~GHCTEMPFILES} ${~PYTEMPFILES} ${LONELY_MOOD_FILES})
+    LONELY_MOOD_FILES=((*.mood)(.NDe:'local -a AF;AF=( ${${REPLY#.}%mood}(mp3|flac|ogg|asf|wmv|aac)(N) ); [[ -z "$AF" ]]':))
+    ZSH_COMPILED=(*.zwc(.NDe:'[[ -f ${REPLY%.zwc} && ${REPLY%.zwc} -nt ${REPLY} ]]':))
+    FILES=(*~(.N) \#*\#(.N) *.o(.N) a.out(.N) (*.|)core(.N) *.cmo(.N) *.cmi(.N) .*.swp(.N) *.(orig|rej)(.DN) *.dpkg-(old|dist|new)(DN) ._(cfg|mrg)[0-9][0-9][0-9][0-9]_*(N) ${~TEXTEMPFILES} ${~GHCTEMPFILES} ${~PYTEMPFILES} ${LONELY_MOOD_FILES} ${ZSH_COMPILED} )
     local NBFILES=${#FILES}
     local CURDIRSUDO=""
     [[ ! -w ./ ]] && CURDIRSUDO=$SUDO
@@ -2960,7 +2961,7 @@ purge() {
         print -l $FILES
         local ans
         echo -n "Remove these files? [y/n] "
-        read -q ans
+        read -q ans; echo
         if [[ $ans == "y" ]] ; then
             $CURDIRSUDO rm ${FILES}
             echo ">> $PWD purged, $NBFILES files removed"
