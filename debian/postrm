@@ -13,30 +13,30 @@ TO_UNDIVERT2=".zshrc"
 TO_UNDIVERT3="vimrc"
 
 undivert_gen() {
-  if [ -f "$2/$1" -o "$2/$1".original ] ; then
-    DEXT=${3:-original}
-    dpkg-divert --remove --rename --package grml-etc-core \
-        --divert $2/$1.$DEXT $2/$1 #> /dev/null
-  fi
+    if [ -f "$2/$1" -o "$2/$1".original ] ; then
+        DEXT=${3:-original}
+        dpkg-divert --remove --rename --package grml-etc-core \
+            --divert $2/$1.$DEXT $2/$1 #> /dev/null
+    fi
 }
 
 case "$1" in
     purge)
         for cmd in $TO_UNDIVERT1; do
-                undivert_gen $cmd /etc/zsh
+            undivert_gen $cmd /etc/zsh
         done
         for cmd in $TO_UNDIVERT2; do
-                undivert_gen $cmd /etc/skel
+            undivert_gen $cmd /etc/skel
         done
         for cmd in $TO_UNDIVERT3; do
-                undivert_gen $cmd /etc/vim
+            undivert_gen $cmd /etc/vim
         done
-     ;;
-   remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
-     ;;
+    ;;
+    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+    ;;
     *)
-      echo "postrm called with unknown argument $1" >&2
-      exit 1
+        echo "postrm called with unknown argument $1" >&2
+        exit 1
 esac
 
 exit 0

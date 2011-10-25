@@ -21,35 +21,34 @@ backup_conffile() {
 }
 
 case "$1" in
-   install|upgrade|configure)
+    install|upgrade|configure)
         TMP=$$
         # move files from package grml-etc to grml-etc-core, make sure
         # we don't lose any files...
         for file in /etc/zsh/zlogin /etc/zsh/zprofile /etc/zsh/zshenv /etc/zsh/zshrc \
                     /etc/zsh/zlogout /etc/vim/vimrc /etc/tmux.conf; do
-               [ -e "$file".original ] || cp -f "$file" "${file}.tmp.$TMP" 2>/dev/null || true
-	       # [ -e "$file".dpkg-new ] && cp -f "$file".dpkg-new "${file}.tmp.$TMP"
-               backup_conffile $file && \
-               [ -f "$file" ] && rm $file && \
-               dpkg-divert --quiet --add --rename --package grml-etc-core --divert "$file".original $file  && \
-               [ -f "$file".dpkg-bak ]      && mv -f "$file".dpkg-bak "$file"
-               [ -f "$file".grml-etc-core ] && mv -f "$file".grml-etc-core "$file"
-	       [ -e "${file}.tmp.$TMP" ]      && mv -f "${file}.tmp.$TMP" "$file.original"
+             [ -e "$file".original ] || cp -f "$file" "${file}.tmp.$TMP" 2>/dev/null || true
+             backup_conffile $file && \
+             [ -f "$file" ] && rm $file && \
+             dpkg-divert --quiet --add --rename --package grml-etc-core --divert "$file".original $file  && \
+             [ -f "$file".dpkg-bak ]      && mv -f "$file".dpkg-bak "$file"
+             [ -f "$file".grml-etc-core ] && mv -f "$file".grml-etc-core "$file"
+             [ -e "${file}.tmp.$TMP" ]      && mv -f "${file}.tmp.$TMP" "$file.original"
 
-               # trying to overwrite `/etc/skel/.zshrc', which is also in package zsh
-               # [ -f /etc/skel/.zshrc ] && \
-               # dpkg-divert --quiet --add --rename --package grml-etc-core --divert /etc/skel/.zshrc.original /etc/skel/.zshrc
+             # trying to overwrite `/etc/skel/.zshrc', which is also in package zsh
+             # [ -f /etc/skel/.zshrc ] && \
+             # dpkg-divert --quiet --add --rename --package grml-etc-core --divert /etc/skel/.zshrc.original /etc/skel/.zshrc
         done
 
-	if dpkg-divert --list grml-etc-core 2>/dev/null | grep -q /etc/skel/.zshrc.original ; then
-	   mv -f /etc/skel/.zshrc.original /etc/skel/.zshrc.original.old && \
-	   dpkg-divert --remove --rename --package grml-etc-core /etc/skel/.zshrc
-	fi
+        if dpkg-divert --list grml-etc-core 2>/dev/null | grep -q /etc/skel/.zshrc.original ; then
+            mv -f /etc/skel/.zshrc.original /etc/skel/.zshrc.original.old && \
+            dpkg-divert --remove --rename --package grml-etc-core /etc/skel/.zshrc
+        fi
 
-     ;;
-   *)
-     echo "preinst called with unknown argument $1" >&2
-     exit 1
+    ;;
+    *)
+        echo "preinst called with unknown argument $1" >&2
+        exit 1
 esac
 
 exit 0
