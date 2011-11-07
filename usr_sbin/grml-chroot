@@ -88,6 +88,14 @@ fi
 mountit "proc"  "proc"
 mountit "sysfs" "sys"
 mountit "/dev"   "dev"   "--bind"
+
+WROTE_DEBIAN_CHROOT=""
+if [ ! -f "$DEST_"/etc/debian_chroot ]; then
+    WROTE_DEBIAN_CHROOT="yes"
+    echo "Writing /etc/debian_chroot ..."
+    cat "$DEST_"/etc/hostname > "$DEST_"/etc/debian_chroot
+fi
+
 if (( $# < 1 )); then
     chroot "$DEST_"
     RC=$?
@@ -96,5 +104,9 @@ else
     RC=$?
 fi
 umount_all
+
+if [ ! -z "$WROTE_DEBIAN_CHROOT" ]; then
+    rm "$DEST_"/etc/debian_chroot
+fi
 
 exit $RC
