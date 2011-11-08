@@ -2109,6 +2109,8 @@ alias help-zshglob=H-Glob
 
 #v1# set number of lines to display per page
 HELP_LINES_PER_PAGE=20
+#v1# set location of help-zle cache file
+HELP_ZLE_CACHE_FILE=~/.cache/zsh_help_zle_lines.zsh
 #f1# helper function for help-zle, actually generates the help text
 help_zle_parse_keybindings()
 {
@@ -2118,6 +2120,12 @@ help_zle_parse_keybindings()
 
     #v1# choose files that help-zle will parse for keybindings
     ((${+HELPZLE_KEYBINDING_FILES})) || HELPZLE_KEYBINDING_FILES=( /etc/zsh/zshrc ~/.zshrc.pre ~/.zshrc ~/.zshrc.local )
+
+    if [[ -r $HELP_ZLE_CACHE_FILE ]]; then
+        local load_cache=0
+        for f ($KEYBINDING_FILES) [[ $f -nt $HELP_ZLE_CACHE_FILE ]] && load_cache=1
+        [[ $load_cache -eq 0 ]] && . $HELP_ZLE_CACHE_FILE && return
+    fi
 
     #fill with default keybindings, possibly to be overwriten in a file later
     #Note that due to zsh inconsistency on escaping assoc array keys, we encase the key in '' which we will remove later
@@ -2197,6 +2205,9 @@ help_zle_parse_keybindings()
     done
     #sort lines alphabetically
     help_zle_lines=("${(i)help_zle_lines[@]}")
+    [[ -d ${HELP_ZLE_CACHE_FILE:h} ]] || mkdir -p "${HELP_ZLE_CACHE_FILE:h}"
+    echo "help_zle_lines=(${(q)help_zle_lines[@]})" >| $HELP_ZLE_CACHE_FILE
+    zcompile $HELP_ZLE_CACHE_FILE
 }
 typeset -g help_zle_sln
 typeset -g -a help_zle_lines
