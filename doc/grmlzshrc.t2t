@@ -1208,8 +1208,14 @@ Lists symbolic links in current directory.
 : **lsnew** (//ls -rl *(D.om[1,10])//)
 Displays the ten newest files (long output format).
 
+: **lsnewdir** (//ls -rthdl *(/om[1,10]) .*(D/om[1,10])//)
+Displays the ten newest directories and ten newest .directories.
+
 : **lsold** (//ls -rtlh *(D.om[1,10])//)
 Displays the ten oldest files (long output format).
+
+: **lsolddir** (//ls -rthdl *(/Om[1,10]) .*(D/Om[1,10])//)
+Displays the ten oldest directories and ten oldest .directories.
 
 : **lss** (//ls -l *(s,S,t)//)
 Lists files in current directory that have the setuid, setgid or sticky bit
