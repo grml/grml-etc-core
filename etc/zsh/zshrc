@@ -2566,8 +2566,10 @@ alias r--='chmod 644'
 alias r-x='chmod 755'
 
 # some useful aliases
-#a2# Execute \kbd{mkdir -o}
+#a2# Execute \kbd{mkdir -p}
 alias md='mkdir -p'
+#a2# Remove current empty directory. Execute \kbd{cd ..; rmdir $OLDCWD}
+alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
 
 # console stuff
 #a2# Execute \kbd{mplayer -vo fbdev}

@@ -1252,6 +1252,9 @@ Short rmdir(1) (remove directory).
 : **rm** (//nocorrect rm//)
 rm(1) without spelling correction.
 
+: **rmcdir** (//'cd ..; rmdir $OLDPWD || cd $OLDPWD//)
+rmdir current working directory
+
 : **screen** (///usr/bin/screen -c ${HOME}/.screenrc//)
 If invoking user is root, starts screen session with /etc/grml/screenrc
 as config file. If invoked by a regular user, start a screen session
