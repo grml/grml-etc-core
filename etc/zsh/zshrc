@@ -2810,7 +2810,7 @@ inplaceMkDirs() {
         bufwords=(${(z)LBUFFER})
         iword=${#bufwords}
         bufwords=(${(z)BUFFER})
-        PATHTOMKDIR="$bufwords[iword]"
+        PATHTOMKDIR="${(Q)bufwords[iword]}"
     fi
     [[ -z "${PATHTOMKDIR}" ]] && return 1
     if [[ -e "${PATHTOMKDIR}" ]]; then
