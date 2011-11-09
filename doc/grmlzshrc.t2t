@@ -1095,6 +1095,9 @@ Prints installed Packages sorted by size (descending).
 Sets font of xterm to "-misc-fixed-medium-r-normal-*-*-140-*-*-c-*-iso8859-15"
 using escape sequence.
 
+: **demac** (//rm -vfRi  **/.(_.|)DS_Store(.) **/._.Trashes(.) **/.Trashes(/) **/.fseventsd(/)//)
+Clean a drive or directory tree of those pesky OSX metadata-files
+
 : **dir** (//ls -lSrah//)
 Lists files (including dot files) sorted by size (biggest last) in long and
 human readable output format.

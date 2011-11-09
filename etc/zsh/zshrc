@@ -2581,6 +2581,9 @@ alias fblinks='links2 -driver fb'
 alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 
+#a2# clean a drive or directory tree of those pesky OSX metadata-files
+alias demac='rm -vfRi  **/.(_.|)DS_Store(.) **/._.Trashes(.) **/.Trashes(/) **/.fseventsd(/)'
+
 # simple webserver
 check_com -c python && alias http="python -m SimpleHTTPServer"
 
