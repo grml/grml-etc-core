@@ -606,7 +606,8 @@ bindkey '\e[B'  down-line-or-search     # <ESC>-
 ## alt-backspace is already the default for backwards-delete-word
 ## let's also set alt-delete for deleting current word (right of cursor)
 #k# Kill right-side word
-bindkey "3~" delete-word
+bindkey '^[[3~'   delete-word # Modeswitch
+bindkey '^[[3;3~' delete-word # Alt_L
 
 ## use Ctrl-left-arrow and Ctrl-right-arrow for jumping to word-beginnings on the CL
 bindkey "\e[5C" forward-word
