@@ -2481,17 +2481,6 @@ fi
 # set terminal property (used e.g. by msgid-chooser)
 export COLORTERM="yes"
 
-# set default browser
-if [[ -z "$BROWSER" ]] ; then
-    if [[ -n "$DISPLAY" ]] ; then
-        #v# If X11 is running
-        check_com -c firefox && export BROWSER=firefox
-    else
-        #v# If no X11 is running
-        check_com -c w3m && export BROWSER=w3m
-    fi
-fi
-
 #m# v QTDIR \kbd{/usr/share/qt[34]}\quad [for non-root only]
 [[ -d /usr/share/qt3 ]] && export QTDIR=/usr/share/qt3
 [[ -d /usr/share/qt4 ]] && export QTDIR=/usr/share/qt4

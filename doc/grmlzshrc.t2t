@@ -298,9 +298,6 @@ available via the usual history lookup widgets.
 //grmlzshrc// sets some environment variables, which influence the
 behaviour of applications.
 
-: **BROWSER**
-If X is running this is set to "firefox", otherwise to "w3m".
-
 : **COLORTERM**
 Set to "yes". Some applications read this to learn about properties
 of the terminal they are running in.
