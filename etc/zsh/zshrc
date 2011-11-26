@@ -1325,7 +1325,7 @@ is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
         fi
     fi
     # just use DONTSETRPROMPT=1 to be able to overwrite RPROMPT
-    if [[ $DONTSETRPROMPT -eq 0 ]] ; then
+    if [[ ${DONTSETRPROMPT:-} -eq 0 ]] ; then
         if [[ $BATTERY -gt 0 ]] ; then
             # update battery (dropped into $PERCENT) information
             battery
@@ -1336,7 +1336,7 @@ is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
     fi
     # adjust title of xterm
     # see http://www.faqs.org/docs/Linux-mini/Xterm-Title.html
-    [[ ${NOTITLE} -gt 0 ]] && return 0
+    [[ ${NOTITLE:-} -gt 0 ]] && return 0
     case $TERM in
         (xterm*|rxvt*)
             set_title ${(%):-"%n@%m: %~"}
