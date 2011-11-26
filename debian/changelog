@@ -1,3 +1,43 @@
+grml-etc-core (0.4.02) unstable; urgency=low
+
+  [ Frank Terbeck ]
+  * [43090cf] zshrc: Make cd() behave with more than one argument
+  * [fb6dc41] zshrc: Do not use bogus array index `0' in dirstack code
+    [Closes: issue1055]
+  * [2130d67] Fix spelling in debian/control
+  * [219a342] gitignore: zsh byte-compiled files (*.zwc)
+  * [7b4ae7e] zshrc: Stop setting $BROWSER
+
+  [ micah anderson ]
+  * [b7cea1c] zshrc: hl() parameter fix
+
+  [ Christian Hofstaedtler ]
+  * [8b7ef31] Remove unmaintained accessibility support
+  * [093bbd1] Cleanup indenting in preinst, postrm
+
+  [ Sebastian Boehm ]
+  * [11ce070] Add tmux.conf
+
+  [ Michael Prokop ]
+  * [f5f88df] zshrc: use dpkg-query instead of grep-status for debs-by-
+    size alias. Thanks to Thorsten Glaser <tg@mirbsd.org>
+  * [91e6659] zshrc: drop 2mp3_192 function
+  * [527ab11] lsb-functions: if we do not use colors then assume terminal
+    can not handle endcols
+  * [2eb78fd] zshrc: check for empty DONTSETRPROMPT and NOTITLE
+
+  [ Bernhard Tittelbach ]
+  * [7ee39bb] zshrc: purge old zsh compile-files, echo newline
+  * [87a8f70] zshrc: lsdisk mount and blocksize info
+  * [fd1f19f] zshrc: fix readme, add liesmich, improve globbing
+  * [e325343] zshrc: help-zle caching
+  * [eb2c0c6] zshrc: readme(): remove superfluous line
+  * [a443ac2] zshrc: inplaceMkDirs(): handle espaces and quotes better
+  * [5173aea] zshrc: alias remove current working diretory
+  * [a7cf6e3] zshrc: simple-extract: make curl follow redirects
+
+ -- Michael Prokop <mika@grml.org>  Sat, 26 Nov 2011 19:10:44 +0100
+
 grml-etc-core (0.4.01) unstable; urgency=low
 
   [ Frank Terbeck ]
