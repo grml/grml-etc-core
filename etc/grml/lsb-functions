@@ -177,9 +177,9 @@ RC_NOCOLOR="${RC_NOCOLOR:-no}"
 
 # Can the terminal handle endcols?
 if [ "${RC_NOCOLOR}" = "yes" ]; then
-  RC_ENDCOL="yes"
-else
   RC_ENDCOL="no"
+else
+  RC_ENDCOL="yes"
 fi
 
 # Setup COLS and ENDCOL so eend can line up the [ ok ]
