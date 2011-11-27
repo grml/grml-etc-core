@@ -1,3 +1,10 @@
+grml-etc-core (0.4.03) unstable; urgency=low
+
+  * [43b9baa] lsb-functions: fix logic of RC_NOCOLOR check for
+    RC_ENDCOL
+
+ -- Michael Prokop <mika@grml.org>  Sun, 27 Nov 2011 23:16:16 +0100
+
 grml-etc-core (0.4.02) unstable; urgency=low
 
   [ Frank Terbeck ]
