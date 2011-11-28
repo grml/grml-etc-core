@@ -3345,18 +3345,6 @@ audioburn() {
     fi
 }
 
-#f5# Make an audio CD from all mp3 files
-mkaudiocd() {
-    # TODO: do the renaming more zshish, possibly with zmv()
-    emulate -L zsh
-    cd ~/ripps
-    for i in *.[Mm][Pp]3; do mv "$i" `echo $i | tr '[A-Z]' '[a-z]'`; done
-    for i in *.mp3; do mv "$i" `echo $i | tr ' ' '_'`; done
-    for i in *.mp3; do mpg123 -w `basename $i .mp3`.wav $i; done
-    normalize -m *.wav
-    for i in *.wav; do sox $i.wav -r 44100 $i.wav resample; done
-}
-
 #f5# Set all ulimit parameters to \kbd{unlimited}
 allulimit() {
     ulimit -c unlimited
