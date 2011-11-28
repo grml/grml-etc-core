@@ -3398,14 +3398,6 @@ allulimit() {
     ulimit -t unlimited
 }
 
-#f5# RFC 2396 URL encoding in Z-Shell
-urlencode() {
-    emulate -L zsh
-    setopt extendedglob
-    input=( ${(s::)1} )
-    print ${(j::)input/(#b)([^A-Za-z0-9_.!~*\'\(\)-])/%${(l:2::0:)$(([##16]#match))}}
-}
-
 # highlight important stuff in diff output, usage example: hg diff | hidiff
 #m# a2 hidiff \kbd{histring} oneliner for diffs
 check_com -c histring && \
