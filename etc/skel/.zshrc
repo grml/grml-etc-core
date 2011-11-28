@@ -194,6 +194,19 @@ fi
 #    exec $SHELL $SHELL_ARGS "$@"
 #}
 
+## get_ic() - queries imap servers for capabilities; real simple. no imaps
+#ic_get() {
+#    emulate -L zsh
+#    local port
+#    if [[ ! -z $1 ]] ; then
+#        port=${2:-143}
+#        print "querying imap server on $1:${port}...\n";
+#        print "a1 capability\na2 logout\n" | nc $1 ${port}
+#    else
+#        print "usage:\n  $0 <imap-server> [port]"
+#    fi
+#}
+
 ## log out? set timeout in seconds...
 ## ...and do not log out in some specific terminals:
 #if [[ "${TERM}" == ([Exa]term*|rxvt|dtterm|screen*) ]] ; then
