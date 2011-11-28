@@ -3660,27 +3660,6 @@ whatwhen()  {
     esac
 }
 
-# change fluxbox keys from 'Alt-#' to 'Alt-F#' and vice versa
-fluxkey-change() {
-    emulate -L zsh
-    [[ -n "$FLUXKEYS" ]] || local FLUXKEYS="$HOME/.fluxbox/keys"
-    if ! [[ -r "$FLUXKEYS" ]] ; then
-        echo "Sorry, \$FLUXKEYS file $FLUXKEYS could not be read - nothing to be done."
-        return 1
-    else
-        if grep -q 'Mod1 F[0-9] :Workspace [0-9]' $FLUXKEYS ; then
-            echo -n 'Switching to Alt-# mode in ~/.fluxbox/keys: '
-            sed -i -e 's|^\(Mod[0-9]\+[: space :]\+\)F\([0-9]\+[: space :]\+:Workspace.*\)|\1\2|' $FLUXKEYS && echo done || echo failed
-        elif grep -q 'Mod1 [0-9] :Workspace [0-9]' $FLUXKEYS ; then
-            echo -n 'Switching to Alt-F# mode in ~/.fluxbox/keys: '
-            sed -i -e 's|^\(Mod[0-9]\+[: space :]\+\)\([0-9]\+[: space :]\+:Workspace.*\)|\1F\2|' $FLUXKEYS && echo done || echo failed
-        else
-            echo 'Sorry, do not know what to do.'
-            return 1
-        fi
-    fi
-}
-
 # mercurial related stuff
 if check_com -c hg ; then
     # gnu like diff for mercurial
