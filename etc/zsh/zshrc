@@ -3006,13 +3006,6 @@ selhist() {
     print -z "${cmd[$answer]#*$TAB}"
 }
 
-# Use vim to convert plaintext to HTML
-#f5# Transform files to html with highlighting
-2html() {
-    emulate -L zsh
-    vim -u NONE -n -c ':syntax on' -c ':so $VIMRUNTIME/syntax/2html.vim' -c ':wqa' $1 &>/dev/null
-}
-
 # Usage: simple-extract <file>
 # Using option -d deletes the original archive file.
 #f5# Smart archive extractor
