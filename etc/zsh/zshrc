@@ -3310,24 +3310,6 @@ status() {
     print
 }
 
-# Rip an audio CD
-#f5# Rip an audio CD
-audiorip() {
-    mkdir -p ~/ripps
-    cd ~/ripps
-    cdrdao read-cd --device $DEVICE --driver generic-mmc audiocd.toc
-    cdrdao read-cddb --device $DEVICE --driver generic-mmc audiocd.toc
-    echo " * Would you like to burn the cd now? (yes/no)"
-    read input
-    if [[ "$input" = "yes" ]] ; then
-        echo " ! Burning Audio CD"
-        audioburn
-        echo " * done."
-    else
-        echo " ! Invalid response."
-    fi
-}
-
 #f5# Set all ulimit parameters to \kbd{unlimited}
 allulimit() {
     ulimit -c unlimited
