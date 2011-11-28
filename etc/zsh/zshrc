@@ -3285,19 +3285,6 @@ dirspace() {
     fi
 }
 
-# % slow_print `cat /etc/passwd`
-#f5# Slowly print out parameters
-slow_print() {
-    for argument in "$@" ; do
-        for ((i = 1; i <= ${#1} ;i++)) ; do
-            print -n "${argument[i]}"
-            sleep 0.08
-        done
-        print -n " "
-    done
-    print ""
-}
-
 #f5# Set all ulimit parameters to \kbd{unlimited}
 allulimit() {
     ulimit -c unlimited
