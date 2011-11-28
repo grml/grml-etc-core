@@ -3248,9 +3248,6 @@ ansi-colors() {
     done
 }
 
-#f5# Find all files in \$PATH with setuid bit set
-suidfind() { ls -latg $path | grep '^...s' }
-
 # TODO: So, this is the third incarnation of this function!?
 #f5# Reload given functions
 refunc() {
