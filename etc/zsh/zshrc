@@ -3488,66 +3488,6 @@ xtrename() {
     return 0
 }
 
-# hl() highlighted less
-# http://ft.bewatermyfriend.org/comp/data/zsh/zfunct.html
-if check_com -c highlight ; then
-    function hl() {
-    emulate -L zsh
-        local theme lang
-        theme=${HL_THEME:-""}
-        case ${1} in
-            (-l|--list)
-                ( printf 'available languages (syntax parameter):\n\n' ;
-                    highlight --list-langs ; ) | less -SMr
-                ;;
-            (-t|--themes)
-                ( printf 'available themes (style parameter):\n\n' ;
-                    highlight --list-themes ; ) | less -SMr
-                ;;
-            (-h|--help)
-                printf 'usage: hl <syntax[:theme]> <file>\n'
-                printf '    available options: --list (-l), --themes (-t), --help (-h)\n\n'
-                printf '  Example: hl c main.c\n'
-                ;;
-            (*)
-                if [[ -z ${2} ]] || (( ${#argv} > 2 )) ; then
-                    printf 'usage: hl <syntax[:theme]> <file>\n'
-                    printf '    available options: --list (-l), --themes (-t), --help (-h)\n'
-                    (( ${#argv} > 2 )) && printf '  Too many arguments.\n'
-                    return 1
-                fi
-                lang=${1%:*}
-                [[ ${1} == *:* ]] && [[ -n ${1#*:} ]] && theme=${1#*:}
-                if [[ -n ${theme} ]] ; then
-                    highlight -O xterm256 --syntax ${lang} --style ${theme} ${2} | less -SMr
-                else
-                    highlight -O ansi --syntax ${lang} ${2} | less -SMr
-                fi
-                ;;
-        esac
-        return 0
-    }
-    # ... and a proper completion for hl()
-    # needs 'highlight' as well, so it fits fine in here.
-    function _hl_genarg()  {
-        local expl
-        if [[ -prefix 1 *: ]] ; then
-            local themes
-            themes=(${${${(f)"$(LC_ALL=C highlight --list-themes)"}/ #/}:#*(Installed|Use name)*})
-            compset -P 1 '*:'
-            _wanted -C list themes expl theme compadd ${themes}
-        else
-            local langs
-            langs=(${${${(f)"$(LC_ALL=C highlight --list-langs)"}/ #/}:#*(Installed|Use name)*})
-            _wanted -C list languages expl languages compadd -S ':' -q ${langs}
-        fi
-    }
-    function _hl_complete() {
-        _arguments -s '1: :_hl_genarg' '2:files:_path_files'
-    }
-    compdef _hl_complete hl
-fi
-
 # TODO:
 # Rewrite this by either using tinyurl.com's API
 # or using another shortening service to comply with

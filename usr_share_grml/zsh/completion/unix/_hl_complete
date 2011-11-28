@@ -1,0 +1,17 @@
+#compdef hl
+
+function _hl_genarg()  {
+    local expl
+    if [[ -prefix 1 *: ]] ; then
+        local themes
+        themes=(${${${(f)"$(LC_ALL=C highlight --list-themes)"}/ #/}:#*(Installed|Use name)*})
+        compset -P 1 '*:'
+        _wanted -C list themes expl theme compadd ${themes}
+    else
+        local langs
+        langs=(${${${(f)"$(LC_ALL=C highlight --list-langs)"}/ #/}:#*(Installed|Use name)*})
+        _wanted -C list languages expl languages compadd -S ':' -q ${langs}
+    fi
+}
+
+_arguments -s '1: :_hl_genarg' '2:files:_path_files'

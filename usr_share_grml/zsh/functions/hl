@@ -1,0 +1,36 @@
+# hl() highlighted less
+emulate -L zsh
+
+local theme lang
+theme=${HL_THEME:-""}
+case ${1} in
+(-l|--list)
+    ( printf 'available languages (syntax parameter):\n\n' ;
+        highlight --list-langs ; ) | less -SMr
+    ;;
+(-t|--themes)
+    ( printf 'available themes (style parameter):\n\n' ;
+        highlight --list-themes ; ) | less -SMr
+    ;;
+(-h|--help)
+    printf 'usage: hl <syntax[:theme]> <file>\n'
+    printf '    available options: --list (-l), --themes (-t), --help (-h)\n\n'
+    printf '  Example: hl c main.c\n'
+    ;;
+(*)
+    if [[ -z ${2} ]] || (( ${#argv} > 2 )) ; then
+        printf 'usage: hl <syntax[:theme]> <file>\n'
+        printf '    available options: --list (-l), --themes (-t), --help (-h)\n'
+        (( ${#argv} > 2 )) && printf '  Too many arguments.\n'
+        return 1
+    fi
+    lang=${1%:*}
+    [[ ${1} == *:* ]] && [[ -n ${1#*:} ]] && theme=${1#*:}
+    if [[ -n ${theme} ]] ; then
+        highlight -O xterm256 --syntax ${lang} --style ${theme} ${2} | less -SMr
+    else
+        highlight -O ansi --syntax ${lang} ${2} | less -SMr
+    fi
+    ;;
+esac
+return 0
