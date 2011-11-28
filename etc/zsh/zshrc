@@ -3207,17 +3207,6 @@ show-archive() {
     fi
 }
 
-# It's shameless stolen from <http://www.vim.org/tips/tip.php?tip_id=167>
-#f5# Use \kbd{vim} as your manpage reader
-vman() {
-    emulate -L zsh
-    if (( ${#argv} == 0 )); then
-        printf 'usage: vman <topic>\n'
-        return 1
-    fi
-    man "$@" | col -b | view -c 'set ft=man nomod nolist' -
-}
-
 # TODO: So, this is the third incarnation of this function!?
 #f5# Reload given functions
 refunc() {
