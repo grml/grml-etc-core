@@ -1,0 +1,49 @@
+# retrieve weather information on the console
+# Usage example: 'weather LOWG'
+
+emulate -L zsh
+
+if [[ -n "$1" ]]; then
+    print 'Usage: weather <station_id>'
+    print \
+  'List of stations: http://en.wikipedia.org/wiki/List_of_airports_by_ICAO_code'
+    return 0
+fi
+
+local VERBOSE="yes"    # TODO: Make this a command line switch
+
+local ODIR=`pwd`
+local PLACE="${1:u}"
+local DIR="${HOME}/.weather"
+local LOG="${DIR}/log"
+
+if [[ -d ${DIR} ]]; then
+    print -n "Creating ${DIR}: "
+    mkdir ${DIR}
+    print 'done'
+fi
+
+print "Retrieving information for ${PLACE}:"
+print
+cd ${DIR} && \
+  wget -T 10 --no-verbose --output-file=$LOG --timestamping \
+       http://weather.noaa.gov/pub/data/observations/metar/decoded/$PLACE.TXT
+
+if [[ $? -eq 0 ]]; then
+    if [[ -n "$VERBOSE" ]] ; then
+        cat ${PLACE}.TXT
+    else
+        DATE=$(grep 'UTC' ${PLACE}.TXT | sed 's#.* /##')
+        TEMPERATURE=$(awk '/Temperature/ {
+                             print $4" degree Celcius / " $2" degree Fahrenheit"
+                           }' ${PLACE}.TXT | tr -d '(')
+        echo "date: $DATE"
+        echo "temp:  $TEMPERATURE"
+    fi
+else
+    print "There was an error retrieving the weather information for $PLACE" >&2
+    cat $LOG
+    cd $ODIR
+    return 1
+fi
+cd $ODIR
