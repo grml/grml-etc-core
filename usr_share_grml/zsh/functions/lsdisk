@@ -1,0 +1,40 @@
+# show labels and uuids of disk devices
+emulate -L zsh
+setopt extendedglob
+
+local -a -U disks
+local -A mountinfo
+
+disks=( /dev/disk/by-id/*(N@:A) )
+
+if (( ${#disks} == 0 )); then
+    printf 'No disks detected.\n'
+    return 1
+fi
+
+if [[ -r /proc/mounts ]]; then
+    for cline in "${(f)$(</proc/mounts)[@]}"; do
+        mountinfo["${cline[(w)1]:A}"]="${cline[(w)2,-1]}"
+    done
+fi
+
+for dev in "$disks[@]"; do
+    print ${fg_bold[red]}${dev}${reset_color} \
+          /dev/disk/by-label/*(@e/'[[ ${REPLY:A} == $dev ]] && REPLY=${fg[blue]}LABEL=${REPLY:t}${reset_color}'/N) \
+          /dev/disk/by-uuid/*(@e/'[[ ${REPLY:A} == $dev ]] && REPLY=${fg[green]}UUID=${REPLY:t}${reset_color}'/N)
+    if [[ -n "${mountinfo["$dev"]}" ]]; then
+        print -f " Mount: %s -t %s -o %s\n" \
+                 ${mountinfo["$dev"][(w)1]} \
+                 ${mountinfo["$dev"][(w)2]} \
+                 "${mountinfo["$dev"][(w)3,-5]}"
+    for sysdevsize in \
+        /sys/block/${dev:t}/size(N) \
+        /sys/block/${${dev:t}%%<->}/${dev:t}/size(N)
+    do
+        print -f "  Size: %.3f GiB (%d Byte)\n" \
+                 $(($(<$sysdevsize)/(2.0*1024.0*1024.0))) \
+                 $(($(<$sysdevsize)*512))
+    done
+
+    print -f "    Id: %s\n" /dev/disk/by-id/*(@e/'[[ ${REPLY:A} == $dev ]]'/N:t)
+done
