@@ -207,6 +207,18 @@ fi
 #    fi
 #}
 
+## List all occurrences of programm in current PATH
+#plap() {
+#    emulate -L zsh
+#    if [[ $# = 0 ]] ; then
+#        echo "Usage:    $0 program"
+#        echo "Example:  $0 zsh"
+#        echo "Lists all occurrences of program in the current PATH."
+#    else
+#        ls -l ${^path}/*$1*(*N)
+#    fi
+#}
+
 ## log out? set timeout in seconds...
 ## ...and do not log out in some specific terminals:
 #if [[ "${TERM}" == ([Exa]term*|rxvt|dtterm|screen*) ]] ; then

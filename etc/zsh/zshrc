@@ -2977,18 +2977,6 @@ trans() {
     esac
 }
 
-#f5# List all occurrences of programm in current PATH
-plap() {
-    emulate -L zsh
-    if [[ $# = 0 ]] ; then
-        echo "Usage:    $0 program"
-        echo "Example:  $0 zsh"
-        echo "Lists all occurrences of program in the current PATH."
-    else
-        ls -l ${^path}/*$1*(*N)
-    fi
-}
-
 # Usage: simple-extract <file>
 # Using option -d deletes the original archive file.
 #f5# Smart archive extractor
