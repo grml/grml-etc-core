@@ -1,0 +1,21 @@
+# Print a specific line of file(s).
+emulate -L zsh
+
+if [ $# -lt 2 ] ; then
+    print "Usage: linenr <number>[,<number>] <file>" ; return 1
+elif [ $# -eq 2 ] ; then
+    local number=$1
+    local file=$2
+    command ed -s $file <<< "${number}n"
+else
+    local number=$1
+    shift
+    for file in "$@" ; do
+        if [ ! -d $file ] ; then
+            echo "${file}:"
+            command ed -s $file <<< "${number}n" 2> /dev/null
+        else
+            continue
+        fi
+    done | less
+fi
