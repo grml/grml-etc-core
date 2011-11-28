@@ -2989,23 +2989,6 @@ plap() {
     fi
 }
 
-# Found in the mailinglistarchive from Zsh (IIRC ~1996)
-#f5# Select items for specific command(s) from history
-selhist() {
-    emulate -L zsh
-    local TAB=$'\t';
-    (( $# < 1 )) && {
-        echo "Usage: $0 command"
-        return 1
-    };
-    cmd=(${(f)"$(grep -w $1 $HISTFILE | sort | uniq | pr -tn)"})
-    print -l $cmd | less -F
-    echo -n "enter number of desired command [1 - $(( ${#cmd[@]} - 1 ))]: "
-    local answer
-    read answer
-    print -z "${cmd[$answer]#*$TAB}"
-}
-
 # Usage: simple-extract <file>
 # Using option -d deletes the original archive file.
 #f5# Smart archive extractor
