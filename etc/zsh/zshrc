@@ -3261,30 +3261,6 @@ refunc() {
 }
 compdef _functions refunc
 
-# a small check to see which DIR is located on which server/partition.
-# stolen and modified from Sven's zshrc.forall
-#f5# Report diskusage of a directory
-dirspace() {
-    emulate -L zsh
-    if [[ -n "$1" ]] ; then
-        for dir in "$@" ; do
-            if [[ -d "$dir" ]] ; then
-                ( cd $dir; echo "-<$dir>"; du -shx .; echo);
-            else
-                echo "warning: $dir does not exist" >&2
-            fi
-        done
-    else
-        for dir in $path; do
-            if [[ -d "$dir" ]] ; then
-                ( cd $dir; echo "-<$dir>"; du -shx .; echo);
-            else
-                echo "warning: $dir does not exist" >&2
-            fi
-        done
-    fi
-}
-
 #f5# Set all ulimit parameters to \kbd{unlimited}
 allulimit() {
     ulimit -c unlimited
