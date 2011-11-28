@@ -3218,20 +3218,6 @@ vman() {
     man "$@" | col -b | view -c 'set ft=man nomod nolist' -
 }
 
-# function readme() { $PAGER -- (#ia3)readme* }
-#f5# View all README-like files in current directory in pager
-readme() {
-    emulate -L zsh
-    setopt extendedglob
-    local files
-    files=(./(#i)*(read*me|lue*m(in|)ut|lies*mich)*(NDr^/=p%))
-    if (($#files)) ; then
-        $PAGER $files
-    else
-        print 'No README files.'
-    fi
-}
-
 # TODO: So, this is the third incarnation of this function!?
 #f5# Reload given functions
 refunc() {
