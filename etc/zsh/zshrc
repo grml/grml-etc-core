@@ -3406,14 +3406,6 @@ urlencode() {
     print ${(j::)input/(#b)([^A-Za-z0-9_.!~*\'\(\)-])/%${(l:2::0:)$(([##16]#match))}}
 }
 
-# http://strcat.de/blog/index.php?/archives/335-Software-sauber-deinstallieren...html
-#f5# Log 'make install' output
-mmake() {
-    emulate -L zsh
-    [[ ! -d ~/.errorlogs ]] && mkdir ~/.errorlogs
-    make -n install > ~/.errorlogs/${PWD##*/}-makelog
-}
-
 # highlight important stuff in diff output, usage example: hg diff | hidiff
 #m# a2 hidiff \kbd{histring} oneliner for diffs
 check_com -c histring && \
