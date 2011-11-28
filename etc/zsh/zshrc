@@ -3369,24 +3369,6 @@ mkiso() {
     mkisofs -o ~/$iso -A $volume -allow-multidot -J -R -iso-level 3 -V $volume -R $files
 }
 
-#f5# Simple thumbnails generator
-genthumbs() {
-    rm -rf thumb-* index.html
-    echo "
-<html>
-  <head>
-    <title>Images</title>
-  </head>
-  <body>" > index.html
-    for f in *.(gif|jpeg|jpg|png) ; do
-        convert -size 100x200 "$f" -resize 100x200 thumb-"$f"
-        echo "    <a href=\"$f\"><img src=\"thumb-$f\"></a>" >> index.html
-    done
-    echo "
-  </body>
-</html>" >> index.html
-}
-
 #f5# Set all ulimit parameters to \kbd{unlimited}
 allulimit() {
     ulimit -c unlimited
