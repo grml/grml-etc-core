@@ -30,7 +30,7 @@
 # Doing so makes sure the right people get your patches for review and
 # possibly inclusion.
 
-# zsh-refcard-tag documentation: {{{
+# zsh-refcard-tag documentation:
 #   You may notice strange looking comments in this file.
 #   These are there for a purpose. grml's zsh-refcard can now be
 #   automatically generated from the contents of the actual configuration
@@ -101,19 +101,17 @@
 #   Furthermore, in 'grml-zsh-refcard.tex.in' @@INSERT-aliases@@ is
 #   exactly the same as @@INSERT-aliases-default@@. If you want a list of
 #   *all* aliases, for example, use @@INSERT-aliases-all@@.
-#}}}
 
-# zsh profiling {{{
+# zsh profiling
 # just execute 'ZSH_PROFILE_RC=1 zsh' and run 'zprof' to get the details
 if [[ $ZSH_PROFILE_RC -gt 0 ]] ; then
     zmodload zsh/zprof
 fi
-# }}}
 
 # load .zshrc.pre to give the user the chance to overwrite the defaults
 [[ -r ${HOME}/.zshrc.pre ]] && source ${HOME}/.zshrc.pre
 
-# {{{ check for version/system
+# check for version/system
 # check for versions (compatibility reasons)
 is4(){
     [[ $ZSH_VERSION == <4->* ]] && return 0
@@ -253,9 +251,7 @@ function zrcautoload() {
 # function could not be marked for autoloading.
 zrcautoload is-at-least || is-at-least() { return 1 }
 
-# }}}
-
-# {{{ set some important options (as early as possible)
+# set some important options (as early as possible)
 setopt append_history       # append history list to the history file (important for multiple parallel zsh sessions!)
 is4 && setopt SHARE_HISTORY # import new commands from the history file also in other zsh-session
 setopt extended_history     # save each command's beginning timestamp and the duration to the history file
@@ -283,9 +279,7 @@ setopt noglobdots           # * shouldn't match dotfiles. ever.
 setopt noshwordsplit        # use zsh style word splitting
 setopt unset                # don't error out when unset parameters are used
 
-# }}}
-
-# setting some default values {{{
+# setting some default values
 
 NOCOR=${NOCOR:-0}
 NOMENU=${NOMENU:-0}
@@ -297,9 +291,7 @@ GRMLSMALL_SPECIFIC=${GRMLSMALL_SPECIFIC:-1}
 GRML_ALWAYS_LOAD_ALL=${GRML_ALWAYS_LOAD_ALL:-0}
 ZSH_NO_DEFAULT_LOCALE=${ZSH_NO_DEFAULT_LOCALE:-0}
 
-# }}}
-
-# utility functions {{{
+# utility functions
 # this function checks if a command exists and returns either true
 # or false. This avoids using 'which' and 'whence', which will
 # avoid problems with aliases for which on certain weird systems. :-)
@@ -456,9 +448,7 @@ zrclocal() {
     return 0
 }
 
-#}}}
-
-# locale setup {{{
+# locale setup
 if (( ZSH_NO_DEFAULT_LOCALE == 0 )); then
     xsource "/etc/default/locale"
 fi
@@ -470,9 +460,8 @@ done
 xsource "/etc/sysconfig/keyboard"
 
 TZ=$(xcat /etc/timezone)
-# }}}
 
-# {{{ set some variables
+# set some variables
 if check_com -c vim ; then
 #v#
     export EDITOR=${EDITOR:-vim}
@@ -530,9 +519,8 @@ watch=(notme root) # watch for everyone but me and root
 
 # automatically remove duplicates from these arrays
 typeset -U path cdpath fpath manpath
-# }}}
 
-# {{{ keybindings
+# keybindings
 if [[ "$TERM" != emacs ]] ; then
     [[ -z "$terminfo[kdch1]" ]] || bindkey -M emacs "$terminfo[kdch1]" delete-char
     [[ -z "$terminfo[khome]" ]] || bindkey -M emacs "$terminfo[khome]" beginning-of-line
@@ -694,9 +682,8 @@ if is439 ; then
     bindkey '^r' history-incremental-pattern-search-backward
     bindkey '^s' history-incremental-pattern-search-forward
 fi
-# }}}
 
-# a generic accept-line wrapper {{{
+# a generic accept-line wrapper
 
 # This widget can prevent unwanted autocorrections from command-name
 # to _command-name, rehash automatically on enter and call any number
@@ -842,9 +829,7 @@ zle -N accept-line
 zle -N Accept-Line
 zle -N Accept-Line-HandleContext
 
-# }}}
-
-# power completion - abbreviation expansion {{{
+# power completion - abbreviation expansion
 # power completion / abbreviation expansion / buffer expansion
 # see http://zshwiki.org/home/examples/zleiab for details
 # less risky than the global aliases but powerful as well
@@ -892,9 +877,8 @@ globalias() {
 
 zle -N globalias
 bindkey ",." globalias
-# }}}
 
-# {{{ autoloading
+# autoloading
 zrcautoload zmv    # who needs mmv or rename?
 zrcautoload history-search-end
 
@@ -1057,9 +1041,7 @@ if check_com -c screen || check_com -c tmux; then
     compdef -k _complete_screen_display complete-word '^XS'
 fi
 
-# }}}
-
-# {{{ history
+# history
 
 ZSHDIR=$HOME/.zsh
 
@@ -1068,9 +1050,7 @@ HISTFILE=$HOME/.zsh_history
 isgrmlcd && HISTSIZE=500  || HISTSIZE=5000
 isgrmlcd && SAVEHIST=1000 || SAVEHIST=10000 # useful for setopt append_history
 
-# }}}
-
-# dirstack handling {{{
+# dirstack handling
 
 DIRSTACKSIZE=${DIRSTACKSIZE:-20}
 DIRSTACKFILE=${DIRSTACKFILE:-${HOME}/.zdirs}
@@ -1091,9 +1071,7 @@ chpwd() {
     fi
 }
 
-# }}}
-
-# directory based profiles {{{
+# directory based profiles
 
 if is433 ; then
 
@@ -1180,9 +1158,7 @@ chpwd_functions=( ${chpwd_functions} chpwd_profiles )
 
 fi # is433
 
-# }}}
-
-# {{{ display battery status on right side of prompt via running 'BATTERY=1 zsh'
+# display battery status on right side of prompt via running 'BATTERY=1 zsh'
 if [[ $BATTERY -gt 0 ]] ; then
     if ! check_com -c acpi ; then
         BATTERY=0
@@ -1203,9 +1179,7 @@ if [[ $BATTERY -gt 0 ]] ; then
     fi
 fi
 }
-# }}}
-
-# set colors for use in prompts {{{
+# set colors for use in prompts
 if zrcautoload colors && colors 2>/dev/null ; then
     BLUE="%{${fg[blue]}%}"
     RED="%{${fg_bold[red]}%}"
@@ -1226,9 +1200,7 @@ else
     NO_COLOUR=$'%{\e[0m%}'
 fi
 
-# }}}
-
-# gather version control information for inclusion in a prompt {{{
+# gather version control information for inclusion in a prompt
 
 if zrcautoload vcs_info; then
     # `vcs_info' in zsh versions 4.3.10 and below have a broken `_realpath'
@@ -1265,10 +1237,7 @@ else
     zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "%b${RED}:${YELLOW}%r"
 fi
 
-
-# }}}
-
-# command not found handling {{{
+# command not found handling
 
 (( ${COMMAND_NOT_FOUND} == 1 )) &&
 function command_not_found_handler() {
@@ -1279,9 +1248,7 @@ function command_not_found_handler() {
     return 1
 }
 
-# }}}
-
-# {{{ set prompt
+# set prompt
 if zrcautoload promptinit && promptinit 2>/dev/null ; then
     promptinit # people should be able to use their favourite prompt
 else
@@ -1404,9 +1371,8 @@ PROMPT="${PROMPT}"'${vcs_info_msg_0_}'"%# "
 if [[ -n "$GRML_CHROOT" ]] ; then
     PROMPT="%{$fg[red]%}(CHROOT) %{$fg_bold[red]%}%n%{$fg_no_bold[white]%}@%m %40<...<%B%~%b%<< %\# "
 fi
-# }}}
 
-# {{{ 'hash' some often used directories
+# 'hash' some often used directories
 #d# start
 hash -d deb=/var/cache/apt/archives
 hash -d doc=/usr/share/doc
@@ -1418,9 +1384,8 @@ hash -d templ=/usr/share/doc/grml-templates
 hash -d tt=/usr/share/doc/texttools-doc
 hash -d www=/var/www
 #d# end
-# }}}
 
-# {{{ some aliases
+# some aliases
 if check_com -c screen ; then
     if [[ $UID -eq 0 ]] ; then
         [[ -r /etc/grml/screenrc ]] && alias screen="${commands[screen]} -c /etc/grml/screenrc"
@@ -1697,16 +1662,14 @@ Run "grml-tips ssl-certificate" if you need further instructions.
 '
     }
 fi
-# }}}
 
-# {{{ Use hard limits, except for a smaller stack and no core dumps
+# Use hard limits, except for a smaller stack and no core dumps
 unlimit
 is425 && limit stack 8192
 isgrmlcd && limit core 0 # important for a live-cd-system
 limit -s
-# }}}
 
-# {{{ completion system
+# completion system
 
 # called later (via is4 && grmlcomp)
 # note: use 'zstyle' for getting current settings
@@ -1835,7 +1798,7 @@ grmlcomp() {
     [[ -d $ZSHDIR/cache ]] && zstyle ':completion:*' use-cache yes && \
                             zstyle ':completion::complete:*' cache-path $ZSHDIR/cache/
 
-    # host completion /* add brackets as vim can't parse zsh's complex cmdlines 8-) {{{ */
+    # host completion
     if is42 ; then
         [[ -r ~/.ssh/known_hosts ]] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
         [[ -r /etc/hosts ]] && : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(</etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}} || _etc_hosts=()
@@ -1864,9 +1827,8 @@ grmlcomp() {
     # see upgrade function in this file
     compdef _hosts upgrade
 }
-# }}}
 
-# {{{ grmlstuff
+# grmlstuff
 grmlstuff() {
 # people should use 'grml-x'!
     if check_com -c 915resolution; then
@@ -1892,19 +1854,16 @@ graphic chipset."
         }
     fi
 }
-# }}}
 
-# {{{ now run the functions
+# now run the functions
 isgrml && checkhome
 is4    && isgrml    && grmlstuff
 is4    && grmlcomp
-# }}}
 
-# {{{ keephack
+# keephack
 is4 && xsource "/etc/zsh/keephack"
-# }}}
 
-# {{{ wonderful idea of using "e" glob qualifier by Peter Stephenson
+# wonderful idea of using "e" glob qualifier by Peter Stephenson
 # You use it as follows:
 # $ NTREF=/reference/file
 # $ ls -l *(e:nt:)
@@ -1917,9 +1876,8 @@ is4 && nt() {
     fi
     [[ $REPLY -nt $NTREF ]]
 }
-# }}}
 
-# shell functions {{{
+# shell functions
 
 #f1# Provide csh compatibility
 setenv()  { typeset -x "${1}${1:+=}${(@)argv[2,$#]}" }  # csh compatibility
@@ -2362,7 +2320,6 @@ bk() {
 
 #f1# grep for patterns in grml's zsh setup
 zg() {
-#{{{
     LANG=C perl -e '
 
 sub usage {
@@ -2413,7 +2370,6 @@ close FH;
 exit 0;
 
     ' -- "$@"
-#}}}
     return $?
 }
 
@@ -2452,18 +2408,14 @@ ssl-cert-info() {
     ssl-cert-fingerprints $1
 }
 
-# }}}
-
-# {{{ make sure our environment is clean regarding colors
+# make sure our environment is clean regarding colors
 for color in BLUE RED GREEN CYAN YELLOW MAGENTA WHITE ; unset $color
-# }}}
 
-# "persistent history" {{{
+# "persistent history"
 # just write important commands you always need to ~/.important_commands
 if [[ -r ~/.important_commands ]] ; then
     fc -R ~/.important_commands
 fi
-# }}}
 
 # load the lookup subsystem if it's available on the system
 zrcautoload lookupinit && lookupinit
@@ -2477,7 +2429,7 @@ if (( GRML_ALWAYS_LOAD_ALL == 0 )) && (( $EUID == 0 )) ; then
     return 0
 fi
 
-# variables {{{
+# variables
 
 # set terminal property (used e.g. by msgid-chooser)
 export COLORTERM="yes"
@@ -2489,9 +2441,8 @@ export COLORTERM="yes"
 # support running 'jikes *.java && jamvm HelloWorld' OOTB:
 #v# [for non-root only]
 [[ -f /usr/share/classpath/glibj.zip ]] && export JIKESPATH=/usr/share/classpath/glibj.zip
-# }}}
 
-# aliases {{{
+# aliases
 
 # Xterm resizing-fu.
 # Based on http://svn.kitenet.net/trunk/home-full/.zshrc?rev=11710&view=log (by Joey Hess)
@@ -2596,9 +2547,8 @@ if check_com isutfenv && check_com luit ; then
             alias centericq="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit centericq"
     fi
 fi
-# }}}
 
-# useful functions {{{
+# useful functions
 
 # searching
 #f4# Search for newspostings from authors
@@ -3641,7 +3591,6 @@ fi
 
 #f2# Print a specific line of file(s).
 linenr () {
-# {{{
     emulate -L zsh
     if [ $# -lt 2 ] ; then
        print "Usage: linenr <number>[,<number>] <file>" ; return 1
@@ -3661,12 +3610,10 @@ linenr () {
              fi
          done | less
     fi
-# }}}
 }
 
 #f2# Find history events by search pattern and list them by date.
 whatwhen()  {
-# {{{
     emulate -L zsh
     local usage help ident format_l format_s first_char remain first last
     usage='USAGE: whatwhen [options] <searchstring> <search range>'
@@ -3711,7 +3658,6 @@ whatwhen()  {
             fc -li -m "*${first_char}${remain}*" $first $last
         ;;
     esac
-# }}}
 }
 
 # change fluxbox keys from 'Alt-#' to 'Alt-F#' and vice versa
@@ -3779,9 +3725,8 @@ weather() {
     fi
     cd $ODIR
 }
-# }}}
 
-# mercurial related stuff {{{
+# mercurial related stuff
 if check_com -c hg ; then
     # gnu like diff for mercurial
     # http://www.selenic.com/mercurial/wiki/index.cgi/TipsAndTricks
@@ -3809,9 +3754,7 @@ if check_com -c hg ; then
 
 fi # end of check whether we have the 'hg'-executable
 
-# }}}
-
-# some useful commands often hard to remember - let's grep for them {{{
+# some useful commands often hard to remember - let's grep for them
 # actually use our zg() function now. :)
 
 # Work around ion/xterm resize bug.
@@ -3854,9 +3797,8 @@ fi # end of check whether we have the 'hg'-executable
 # modify console cursor
 # see http://www.tldp.org/HOWTO/Framebuffer-HOWTO-5.html
 # print $'\e[?96;0;64c'
-# }}}
 
-# grml-small cleanups {{{
+# grml-small cleanups
 
 # The following is used to remove zsh-config-items that do not work
 # in grml-small by default.
@@ -3878,19 +3820,15 @@ if (( GRMLSMALL_SPECIFIC > 0 )) && isgrmlsmall ; then
 
 fi
 
-#}}}
-
 zrclocal
 
-## genrefcard.pl settings {{{
+## genrefcard.pl settings
 
 ### doc strings for external functions from files
 #m# f5 grml-wallpaper() Sets a wallpaper (try completion for possible values)
 
 ### example: split functions-search 8,16,24,32
 #@# split functions-search 8
-
-## }}}
 
 ## END OF FILE #################################################################
 # vim:filetype=zsh foldmethod=marker autoindent expandtab shiftwidth=4
