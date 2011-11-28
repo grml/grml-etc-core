@@ -2886,16 +2886,6 @@ alias GREP='grep -i --color=auto'
 #f5# Watch manpages in a stretched style
 man2() { PAGER='dash -c "sed G | /usr/bin/less"' command man "$@" ; }
 
-# usage example: 'lcheck strcpy'
-#f5# Find out which libs define a symbol
-lcheck() {
-    if [[ -n "$1" ]] ; then
-        nm -go /usr/lib/lib*.a 2>/dev/null | grep ":[[:xdigit:]]\{8\} . .*$1"
-    else
-        echo "Usage: lcheck <function>" >&2
-    fi
-}
-
 # Translate DE<=>EN
 # 'translate' looks up fot a word in a file with language-to-language
 # translations (field separator should be " : "). A typical wordlist looks

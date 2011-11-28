@@ -219,6 +219,15 @@ fi
 #    fi
 #}
 
+## Find out which libs define a symbol
+#lcheck() {
+#    if [[ -n "$1" ]] ; then
+#        nm -go /usr/lib/lib*.a 2>/dev/null | grep ":[[:xdigit:]]\{8\} . .*$1"
+#    else
+#        echo "Usage: lcheck <function>" >&2
+#    fi
+#}
+
 ## log out? set timeout in seconds...
 ## ...and do not log out in some specific terminals:
 #if [[ "${TERM}" == ([Exa]term*|rxvt|dtterm|screen*) ]] ; then
