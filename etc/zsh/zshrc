@@ -3298,18 +3298,6 @@ slow_print() {
     print ""
 }
 
-#f5# Show some status info
-status() {
-    print
-    print "Date..: "$(date "+%Y-%m-%d %H:%M:%S")
-    print "Shell.: Zsh $ZSH_VERSION (PID = $$, $SHLVL nests)"
-    print "Term..: $TTY ($TERM), ${BAUD:+$BAUD bauds, }$COLUMNS x $LINES chars"
-    print "Login.: $LOGNAME (UID = $EUID) on $HOST"
-    print "System: $(cat /etc/[A-Za-z]*[_-][rv]e[lr]*)"
-    print "Uptime:$(uptime)"
-    print
-}
-
 #f5# Set all ulimit parameters to \kbd{unlimited}
 allulimit() {
     ulimit -c unlimited
