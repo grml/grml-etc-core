@@ -3456,16 +3456,6 @@ ic_get() {
     fi
 }
 
-# creates a Maildir/ with its {new,cur,tmp} subdirs
-mkmaildir() {
-    emulate -L zsh
-    local root subdir
-    root=${MAILDIR_ROOT:-${HOME}/Mail}
-    if [[ -z ${1} ]] ; then print "Usage:\n $0 <dirname>" ; return 1 ; fi
-    subdir=${1}
-    mkdir -p ${root}/${subdir}/{cur,new,tmp}
-}
-
 #f5# Change the xterm title from within GNU-screen
 xtrename() {
     emulate -L zsh
