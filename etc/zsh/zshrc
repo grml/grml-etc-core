@@ -3414,11 +3414,6 @@ mmake() {
     make -n install > ~/.errorlogs/${PWD##*/}-makelog
 }
 
-#f5# Indent source code
-smart-indent() {
-    indent -npro -kr -i8 -ts8 -sob -l80 -ss -ncs "$@"
-}
-
 # highlight important stuff in diff output, usage example: hg diff | hidiff
 #m# a2 hidiff \kbd{histring} oneliner for diffs
 check_com -c histring && \
