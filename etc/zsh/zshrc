@@ -3328,23 +3328,6 @@ audiorip() {
     fi
 }
 
-# and burn it
-#f5# Burn an audio CD (in combination with audiorip)
-audioburn() {
-    cd ~/ripps
-    cdrdao write --device $DEVICE --driver generic-mmc audiocd.toc
-    echo " * Should I remove the temporary files? (yes/no)"
-    read input
-    if [[ "$input" = "yes" ]] ; then
-        echo " ! Removing Temporary Files."
-        cd ~
-        rm -rf ~/ripps
-        echo " * done."
-    else
-        echo " ! Invalid response."
-    fi
-}
-
 #f5# Set all ulimit parameters to \kbd{unlimited}
 allulimit() {
     ulimit -c unlimited
