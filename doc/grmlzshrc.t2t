@@ -441,10 +441,6 @@ Brings a job, which got suspended with CTRL-z back to foreground.
 //grmlzshrc// comes with a wide array of defined shell functions to ease the
 user's life.
 
-: **2html()**
-Converts plaintext files to HTML using vim. The output is written to
-<filename>.html.
-
 : **855resolution()**
 If 915resolution is available, issues a warning to the user to run it instead
 to modify the resolution on intel graphics chipsets.
@@ -459,10 +455,6 @@ Searches for USENET postings from authors using google groups.
 
 : **allulimit()**
 Sets all ulimit values to "unlimited".
-
-: **ansi-colors()**
-Prints a colored table of available ansi color codes (to be used in escape
-sequences) and the colors they represent.
 
 : **any()**
 Lists processes matching given pattern.
@@ -479,18 +471,6 @@ Login on the host provided as argument using autossh. Then reattach a GNU screen
 session if a detached session is around or detach a currently attached screen or
 else start a new screen.  This is especially useful for roadwarriors using GNU
 screen and ssh.
-
-: **audioburn()**
-Burns the files in ~/ripps (see audiorip() below) to an audio CD.
-Then prompts the user if she wants to remove that directory. You might need
-to tell audioburn which cdrom device to use like:
-"DEVICE=/dev/cdrom audioburn"
-
-: **audiorip()**
-Creates directory ~/ripps, if it does not exist. Then rips audio CD into
-it. Then prompts the user if she wants to burn a audio CD with audioburn()
-(see above). You might need to tell audiorip which cdrom device to use like:
-"DEVICE=/dev/cdrom audioburn"
 
 : **bk()**
 Simple backup of a file or directory using cp(1). The target file name is the
@@ -567,10 +547,6 @@ A trick from $LINUX-KERNELSOURCE/Documentation/power/swsusp.txt. It brings
 back interactive responsiveness after suspend, when the system is swapping
 heavily.
 
-: **dirspace()**
-Shows the disk usage of the directories given in human readable format;
-defaults to $path.
-
 : **disassemble()**
 Translates C source code to assembly and ouputs both.
 
@@ -607,21 +583,8 @@ Opens given URL with Firefox (Iceweasel on Debian). If there is already an
 instance of firefox running, attaches to the first window found and opens the
 URL in a new tab (this even works across an ssh session).
 
-: **fluxkey-change()**
-Switches the key combinations for changing current workspace under fluxbox(1)
-from Alt-[0-9] to Alt-F[0-9] and vice versa by rewriting $HOME/.fluxbox/keys.
-Requires the window manager to reread configuration to take effect.
-
 : **freload()**
 Reloads an autoloadable shell function (See autoload in zshbuiltins(1)).
-
-: **genthumbs()**
-A simple thumbnails generator. Resizes images (i. e. files that end in ".jpg",
-".jpeg", ".gif" or ".png") to 100x200. Output files are named "thumb-<original
-filename>". Creates an index.html with title "Images" showing the
-thumbnails as clickable links to the respective original file.
-//Warning:// On start genthumbs() silently removes a possibly existing "index.html"
-and all files and/or directories beginning with "thumb-" in current directory!
 
 : **get_tw_cli()**
 Fetches 3ware RAID controller software using get_3ware(1).
@@ -651,14 +614,6 @@ argument means last revision).
 
 : **hidiff()**
 Outputs highlighted diff; needs highstring(1).
-
-: **hl()**
-Shows source files in less(1) with syntax highlighting. Run "hl -h"
-for detailed usage information.
-
-: **ic_get()**
-Queries IMAP server (first parameter) for its capabilities. Takes
-port number as optional second argument.
 
 : **ipv6-tunnel()**
 Sets up an IPv6 tunnel on interface sit1. Needs one argument -
@@ -704,27 +659,13 @@ Returns true, if run within an utf environment, else false.
 : **iwclient()**
 Searches a wireless interface and runs dhclient(8) on it.
 
-: **lcheck()**
-Lists libraries that define the symbol containing the string given as
-parameter.
-
 : **limg()**
 Lists images (i. e. files ending with ".jpg", ".gif" or ".png") in current
 directory.
 
-: **linenr()**
-Prints specified range of (numbered) lines of a file.
-Usage: linenr <start>[,<end>] <file>
-
-: **lsdisk()**
-Uses udev's /dev/disk to list block devices with their LABEL, UUID and IDs.
-
 : **makereadable()**
 Creates a PostScript and a PDF file (basename as first argument) from
 source code files.
-
-: **man2()**
-Displays manpage in a streched style.
 
 : **manzsh()**
 Shows the zshall manpage and jumps to the first match of the regular
@@ -747,24 +688,6 @@ Searches Google Groups for a USENET message-ID.
 : **minimal-shell()**
 Spawns a minimally set up MirBSD Korn shell. It references no files in /usr,
 so that file system can be unmounted.
-
-: **mkaudiocd()**
-Renames all mp3 files in ~/ripps (see audiorip above) to lowercase and
-replaces spaces in file names with underscores. Then mkaudiocd()
-normalizes the files and recodes them to WAV.
-
-: **mkiso()**
-Creates an iso9660 filesystem image with Rockridge and Joliet extensions
-enabled using mkisofs(8). Prompts the user for volume name, filename and
-target directory.
-
-: **mkmaildir()**
-Creates a directory with first parameter as name inside $MAILDIR_ROOT
-(defaults to $HOME/Mail) and subdirectories cur, new and tmp.
-
-: **mmake()**
-Runs "make install" and logs the output under ~/.errorlogs/; useful for
-a clean deinstall later.
 
 : **modified()**
 Lists files in current directory, which have been modified within the
@@ -794,28 +717,9 @@ dictionary dict.leo.org.
 Evaluates a perl expression; useful as command line
 calculator, therefore also available as "calc".
 
-: **plap()**
-Lists all occurrences of the string given as argument in current $PATH.
-
 : **profile()**
 Runs a command in $SHELL with profiling enabled (See startup variable
 ZSH_PROFILE_RC above).
-
-: **purge()**
-Removes temporary files from current directory. Asks for confirmation. Uses sudo if necessary.
-In detail it purges
- - common temp files like "*~", ".*~", "#*#", "*.o", "a.out", "*.orig", "*.rej", "*.cmo", "*.cmi" and ".*.swp"
- - core dumps
- - debconf backup files: "*.dpkg-old", "*.dkpg-new", "*.dpkg-dist"
- - gentoo dispatch-conf backups: ".cfg0000_*", ".mrg0000_*"
- - precompiled python code ("*.pyc", "*.pyo") as long as matching "*.py" source is also present
- - LaTeX temp files i.e. "*.(log|toc|aux|nav|snm|out|tex.backup|bbl|blg|bib.backup|vrb|lof|lot|hd|idx)" for any present "*.tex"
- - ghc temp files, as long as matching "*.hs" or "*.lhs" is also present
- - "*.mood(D)" Files which are missing their corresponding audio file
-
-: **readme()**
-Opens all README-like files in current working directory with the program
-defined in the $PAGER environment variable.
 
 : **refunc()**
 Reloads functions given as parameters.
@@ -824,20 +728,9 @@ Reloads functions given as parameters.
 Checks whether a regular expression (first parameter) matches a string
 (second parameter) using perl.
 
-: **rundirs()**
-Takes as first parameter a quoted string containing an exectuable command or function with arguments.
-Following that it takes a bunch of directories, which will then be traversed, executing the
-first argument in each one. E.g.: rundirs purge . **/*(/-/)
-
 : **salias()**
 Creates an alias whith sudo prepended, if $EUID is not zero. Run "salias -h"
 for details. See also xunfunction() below.
-
-: **selhist()**
-Greps the history for the string provided as parameter and shows the numbered
-findings in default pager. On exit of the pager the user is prompted for a
-number. The shells readline buffer is then filled with the corresponding
-command line.
 
 : **setenv()**
 Reimplementation of the csh(1) builtin setenv.
@@ -862,16 +755,10 @@ ending. simple-extract will not delete the original archive (even on .gz,.bz2 or
 : **sll()**
 Prints details of symlinks given as arguments.
 
-: **slow_print()**
-Prints the arguments slowly by sleeping 0.08 seconds between each character.
-
 : **smartcompress()**
 Compresses/archives the file given as first parameter. Takes an optional
 second argument, which denotes the compression/archive type as typical
 filename extension; defaults to "tar.gz".
-
-: **smart-indent()**
-Indents C source code files given; uses Kernighan & Ritchie style.
 
 : **sshot()**
 Creates directory named shots in user's home directory, if it does not yet
@@ -905,9 +792,6 @@ Example usage:
 % Restart ssh
 ```
 
-: **status()**
-Shows some information about current system status.
-
 : **swiki()**
 Searches articles in the german Wikipedia for the term given as argument.
 
@@ -929,10 +813,6 @@ Content-Type.
 : **uprint()**
 Works around the "print -l ${(u)foo}"-limitation on zsh older than 4.2.
 
-: **urlencode()**
-Takes a string as its first argument and prints it RFC 2396 URL encoded to
-standard out.
-
 : **utf2iso()**
 Changes every occurrence of the string UTF-8 or utf-8 in environment
 variables to iso885915.
@@ -945,19 +825,10 @@ Wrapper for vim(1). It tries to set the title and hands vim the environment
 variable VIM_OPTIONS on the command line. So the user may define command
 line options, she always wants, in her .zshrc.local.
 
-: **vman()**
-Use vim(1) as manpage reader.
-
 : **whatwhen()**
 Searches the history for a given pattern and lists the results by date.
 The first argument is the search pattern. The second and third ones are
 optional and denote a search range (default: -100).
-
-: **weather()**
-Retrieves and prints weather information from "http://weather.noaa.gov".
-The first and only argument is the ICAO code for the desired station.
-For a list of ICAO codes see
-"http://en.wikipedia.org/wiki/List_of_airports_by_ICAO_code".
 
 : **wikide()**
 Looks up the argument on Wikipedia (german).
