@@ -2284,11 +2284,6 @@ ipv6-tunnel() {
     esac
 }
 
-# run dhclient for wireless device
-iwclient() {
-    sudo dhclient "$(wavemon -d | awk '/device/{print $3}')"
-}
-
 # spawn a minimally set up mksh - useful if you want to umount /usr/.
 minimal-shell() {
     emulate -L zsh
