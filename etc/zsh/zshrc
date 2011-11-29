@@ -2872,11 +2872,6 @@ modified() {
 # modified() was named new() in earlier versions, add an alias for backwards compatibility
 check_com new || alias new=modified
 
-#f5# Grep in history
-greph() {
-    emulate -L zsh
-    history 0 | grep $1
-}
 # use colors when GNU grep with color-support
 #a2# Execute \kbd{grep -{}-color=auto}
 (grep --help 2>/dev/null |grep -- --color) >/dev/null && alias grep='grep --color=auto'

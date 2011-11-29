@@ -598,9 +598,6 @@ Searches the arguments on Google Groups, a web to USENET gateway.
 : **google()**
 Searches the search engine Google using arguments as search string.
 
-: **greph()**
-Searches the zsh command history for a regular expression.
-
 : **hex()**
 Prints the hexadecimal representation of the number supplied as argument
 (base ten only).
