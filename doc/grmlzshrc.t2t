@@ -798,9 +798,6 @@ Works around the "print -l ${(u)foo}"-limitation on zsh older than 4.2.
 Changes every occurrence of the string UTF-8 or utf-8 in environment
 variables to iso885915.
 
-: **viless()**
-Vim as pager.
-
 : **vim()**
 Wrapper for vim(1). It tries to set the title and hands vim the environment
 variable VIM_OPTIONS on the command line. So the user may define command

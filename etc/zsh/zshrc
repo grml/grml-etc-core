@@ -2784,11 +2784,6 @@ udiff() {
     emulate -L zsh
     diff -urd $* | egrep -v "^Only in |^Binary files "
 }
-#f5# (Mis)use \kbd{vim} as \kbd{less}
-viless() {
-    emulate -L zsh
-    vim --cmd 'let no_plugin_maps = 1' -c "so \$VIMRUNTIME/macros/less.vim" "${@:--}"
-}
 
 # Function Usage: doc packagename
 #f5# \kbd{cd} to /usr/share/doc/\textit{package}
