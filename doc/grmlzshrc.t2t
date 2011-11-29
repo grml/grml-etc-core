@@ -578,11 +578,6 @@ which is an online dictionary (See: http://en.wiktionary.org/).
 : **exirename()**
 Renames image files based on date/time informations in their exif headers.
 
-: **fir()**
-Opens given URL with Firefox (Iceweasel on Debian). If there is already an
-instance of firefox running, attaches to the first window found and opens the
-URL in a new tab (this even works across an ssh session).
-
 : **freload()**
 Reloads an autoloadable shell function (See autoload in zshbuiltins(1)).
 

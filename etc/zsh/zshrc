@@ -2696,14 +2696,7 @@ disassemble(){
     emulate -L zsh
     gcc -pipe -S -o - -O -g $* | as -aldh -o /dev/null
 }
-#f5# Firefox remote control - open given URL
-fir() {
-    if [ -e /etc/debian_version ]; then
-        firefox -a iceweasel -remote "openURL($1)" || firefox ${1}&
-    else
-        firefox -a firefox -remote "openURL($1)" || firefox ${1}&
-    fi
-}
+
 # smart cd function, allows switching to /etc when running 'cd /etc/fstab'
 cd() {
     if (( ${#argv} == 1 )) && [[ -f ${1} ]]; then
