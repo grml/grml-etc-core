@@ -612,9 +612,6 @@ Reloads functions given as parameters.
 Creates an alias whith sudo prepended, if $EUID is not zero. Run "salias -h"
 for details. See also xunfunction() below.
 
-: **setenv()**
-Reimplementation of the csh(1) builtin setenv.
-
 : **show-archive()**
 Lists the contents of a (compressed) archive with the appropriate programs.
 The choice is made along the filename extension.

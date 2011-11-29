@@ -1879,9 +1879,6 @@ is4 && nt() {
 
 # shell functions
 
-#f1# Provide csh compatibility
-setenv()  { typeset -x "${1}${1:+=}${(@)argv[2,$#]}" }  # csh compatibility
-
 #f1# Reload an autoloadable function
 freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
 compdef _functions freload
