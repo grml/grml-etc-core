@@ -2765,11 +2765,6 @@ inplaceMkDirs() {
 #k# mkdir -p <dir> from string under cursor or marked area
 zle -N inplaceMkDirs && bindkey '^XM' inplaceMkDirs
 
-#f5# Memory overview
-memusage() {
-    ps aux | awk '{if (NR > 1) print $5; if (NR > 2) print "+"} END { print "p" }' | dc
-}
-
 # Function Usage: doc packagename
 #f5# \kbd{cd} to /usr/share/doc/\textit{package}
 doc() {

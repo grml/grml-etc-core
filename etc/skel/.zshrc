@@ -245,6 +245,13 @@ fi
 #    fi
 #}
 
+## Memory overview
+#memusage() {
+#    ps aux | awk '{if (NR > 1) print $5;
+#                   if (NR > 2) print "+"}
+#                   END { print "p" }' | dc
+#}
+
 ## log out? set timeout in seconds...
 ## ...and do not log out in some specific terminals:
 #if [[ "${TERM}" == ([Exa]term*|rxvt|dtterm|screen*) ]] ; then

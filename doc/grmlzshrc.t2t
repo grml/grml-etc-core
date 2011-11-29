@@ -668,9 +668,6 @@ current working directory to it.
 Diffs the two arguments recursively and writes the
 output (unified format) to a timestamped file.
 
-: **memusage()**
-Prints the summarized memory usage in bytes.
-
 : **mggogle()**
 Searches Google Groups for a USENET message-ID.
 
