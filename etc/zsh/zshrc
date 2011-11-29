@@ -2318,61 +2318,6 @@ bk() {
     cp -a "$1" "${1}_$(date --iso-8601=seconds)"
 }
 
-#f1# grep for patterns in grml's zsh setup
-zg() {
-    LANG=C perl -e '
-
-sub usage {
-    print "usage: zg -[anr] <pattern>\n";
-    print " Search for patterns in grml'\''s zshrc.\n";
-    print " zg takes no or exactly one option plus a non empty pattern.\n\n";
-    print "   options:\n";
-    print "     --  no options (use if your pattern starts in with a dash.\n";
-    print "     -a  search for the pattern in all code regions\n";
-    print "     -n  search for the pattern in non-root code only\n";
-    print "     -r  search in code for everyone (also root) only\n\n";
-    print "   The default is -a for non-root users and -r for root.\n\n";
-    print " If you installed the zshrc to a non-default locations (ie *NOT*\n";
-    print " in /etc/zsh/zshrc) do: export GRML_ZSHRC=\$HOME/.zshrc\n";
-    print " ...in case you copied the file to that location.\n\n";
-    exit 1;
-}
-
-if ($ENV{GRML_ZSHRC} ne "") {
-    $RC = $ENV{GRML_ZSHRC};
-} else {
-    $RC = "/etc/zsh/zshrc";
-}
-
-usage if ($#ARGV < 0 || $#ARGV > 1);
-if ($> == 0) { $mode = "allonly"; }
-else { $mode = "all"; }
-
-$opt = $ARGV[0];
-if ($opt eq "--")     { shift; }
-elsif ($opt eq "-a")  { $mode = "all"; shift; }
-elsif ($opt eq "-n")  { $mode = "nonroot"; shift; }
-elsif ($opt eq "-r" ) { $mode = "allonly"; shift; }
-elsif ($opt =~ m/^-/ || $#ARGV > 0) { usage(); }
-
-$pattern = $ARGV[0];
-usage() if ($pattern eq "");
-
-open FH, "<$RC" or die "zg: Could not open $RC: $!\n";
-while ($line = <FH>) {
-    chomp $line;
-    if ($line =~ m/^#:grep:marker:for:mika:/) { $markerfound = 1; next; }
-    next if ($mode eq "nonroot" && markerfound == 0);
-    break if ($mode eq "allonly" && markerfound == 1);
-    print $line, "\n" if ($line =~ /$pattern/);
-}
-close FH;
-exit 0;
-
-    ' -- "$@"
-    return $?
-}
-
 ssl_hashes=( sha512 sha256 sha1 md5 )
 
 for sh in ${ssl_hashes}; do
@@ -2420,7 +2365,6 @@ fi
 # load the lookup subsystem if it's available on the system
 zrcautoload lookupinit && lookupinit
 
-#:grep:marker:for:mika: :-)
 ### non-root (EUID != 0) code below
 ###
 
@@ -3045,50 +2989,6 @@ if check_com -c hg ; then
     }
 
 fi # end of check whether we have the 'hg'-executable
-
-# some useful commands often hard to remember - let's grep for them
-# actually use our zg() function now. :)
-
-# Work around ion/xterm resize bug.
-#if [[ "$SHLVL" -eq 1 ]]; then
-#       if check_com -c resize ; then
-#               eval `resize </dev/null`
-#       fi
-#fi
-
-# enable jackd:
-#  /usr/bin/jackd -dalsa -dhw:0 -r48000 -p1024 -n2
-# now play audio file:
-#  alsaplayer -o jack foobar.mp3
-
-# send files via netcat
-# on sending side:
-#  send() {j=$*; tar cpz ${j/%${!#}/}|nc -w 1 ${!#} 51330;}
-#  send dir* $HOST
-#  alias receive='nc -vlp 51330 | tar xzvp'
-
-# debian stuff:
-# dh_make -e foo@localhost -f $1
-# dpkg-buildpackage -rfakeroot
-# lintian *.deb
-# dpkg-scanpackages ./ /dev/null | gzip > Packages.gz
-# dpkg-scansources . | gzip > Sources.gz
-# grep-dctrl --field Maintainer $* /var/lib/apt/lists/*
-
-# other stuff:
-# convert -geometry 200x200 -interlace LINE -verbose
-# ldapsearch -x -b "OU=Bedienstete,O=tug" -h ldap.tugraz.at sn=$1
-# ps -ao user,pcpu,start,command
-# gpg --keyserver blackhole.pca.dfn.de --recv-keys
-# xterm -bg black -fg yellow -fn -misc-fixed-medium-r-normal--14-140-75-75-c-90-iso8859-15 -ah
-# nc -vz $1 1-1024   # portscan via netcat
-# wget --mirror --no-parent --convert-links
-# pal -d `date +%d`
-# autoload -U tetris; zle -N tetris; bindkey '...' ; echo "press ... for playing tennis"
-#
-# modify console cursor
-# see http://www.tldp.org/HOWTO/Framebuffer-HOWTO-5.html
-# print $'\e[?96;0;64c'
 
 # grml-small cleanups
 
