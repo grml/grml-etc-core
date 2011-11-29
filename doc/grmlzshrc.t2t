@@ -575,9 +575,6 @@ Edit given shell function.
 Looks up the first argument (optional in the english Wiktionary
 which is an online dictionary (See: http://en.wiktionary.org/).
 
-: **exirename()**
-Renames image files based on date/time informations in their exif headers.
-
 : **freload()**
 Reloads an autoloadable shell function (See autoload in zshbuiltins(1)).
 
