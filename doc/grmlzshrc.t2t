@@ -477,11 +477,6 @@ Simple backup of a file or directory using cp(1). The target file name is the
 original name plus a time stamp attached. Symlinks and file attributes like mode,
 ownership and timestamps are preserved.
 
-: **cdiff()**
-Runs a recursive diff(1) over two given directories trying to find the
-smallest set of changes. Three lines of context will be printed and binary
-files filtered out.
-
 : **cdrecord()**
 If the original cdrecord is not installed, issues a warning to the user to
 use the wodim binary instead. Wodim is the debian fork of Joerg Schillings

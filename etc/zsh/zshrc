@@ -2651,11 +2651,7 @@ bk() {
     emulate -L zsh
     cp -b $1 $1_`date --iso-8601=m`
 }
-#f5# Copied diff
-cdiff() {
-    emulate -L zsh
-    diff -crd "$@" | egrep -v "^Only in |^Binary files "
-}
+
 #f5# cd to directoy and list files
 cl() {
     emulate -L zsh
