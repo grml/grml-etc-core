@@ -2423,15 +2423,6 @@ inplaceMkDirs() {
 #k# mkdir -p <dir> from string under cursor or marked area
 zle -N inplaceMkDirs && bindkey '^XM' inplaceMkDirs
 
-# Function Usage: doc packagename
-#f5# \kbd{cd} to /usr/share/doc/\textit{package}
-doc() {
-    emulate -L zsh
-    cd /usr/share/doc/$1 && ls
-}
-_doc() { _files -W /usr/share/doc -/ }
-check_com compdef && compdef _doc doc
-
 #f5# Make screenshot
 sshot() {
     [[ ! -d ~/shots  ]] && mkdir ~/shots

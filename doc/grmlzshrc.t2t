@@ -509,11 +509,6 @@ heavily.
 : **dnews()**
 Shows the NEWS file for the given package in $PAGER.
 
-: **doc()**
-Takes packagename as argument. Sets current working directory to
-/usr/share/doc/<packagename> and prints out a directory listing.
-
-
 : **edalias()**
 Edit given alias.
 
