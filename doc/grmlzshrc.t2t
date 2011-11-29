@@ -456,10 +456,6 @@ Sets all ulimit values to "unlimited".
 : **any()**
 Lists processes matching given pattern.
 
-: **aoeu(), asdf(), uiae()**
-Pressing the 'asdf' keys toggles between dvorak or neon and us keyboard
-layout.
-
 : **apache2-ssl-certificate()**
 Advices the user how to create self signed certificates.
 

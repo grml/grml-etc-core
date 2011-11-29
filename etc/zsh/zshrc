@@ -2226,23 +2226,6 @@ peval() {
 }
 functions peval &>/dev/null && alias calc=peval
 
-# just press 'asdf' keys to toggle between dvorak and us keyboard layout
-aoeu() {
-    echo -n 'Switching to us keyboard layout: '
-    [[ -z "$DISPLAY" ]] && $SUDO loadkeys us &>/dev/null || setxkbmap us &>/dev/null
-    echo 'Done'
-}
-asdf() {
-    echo -n 'Switching to dvorak keyboard layout: '
-    [[ -z "$DISPLAY" ]] && $SUDO loadkeys dvorak &>/dev/null || setxkbmap dvorak &>/dev/null
-    echo 'Done'
-}
-# just press 'asdf' key to toggle from neon layout to us keyboard layout
-uiae() {
-    echo -n 'Switching to us keyboard layout: '
-    setxkbmap us && echo 'Done' || echo 'Failed'
-}
-
 # spawn a minimally set up mksh - useful if you want to umount /usr/.
 minimal-shell() {
     emulate -L zsh
