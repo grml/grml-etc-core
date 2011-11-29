@@ -1642,27 +1642,6 @@ if check_com -c get_3ware ; then
     }
 fi
 
-# I hate lacking backward compatibility, so provide an alternative therefore
-if ! check_com -c apache2-ssl-certificate ; then
-
-    apache2-ssl-certificate() {
-
-    print 'Debian does not ship apache2-ssl-certificate anymore (see #398520). :('
-    print 'You might want to take a look at Debian the package ssl-cert as well.'
-    print 'To generate a certificate for use with apache2 follow the instructions:'
-
-    echo '
-
-export RANDFILE=/dev/random
-mkdir /etc/apache2/ssl/
-openssl req $@ -new -x509 -days 365 -nodes -out /etc/apache2/ssl/apache.pem -keyout /etc/apache2/ssl/apache.pem
-chmod 600 /etc/apache2/ssl/apache.pem
-
-Run "grml-tips ssl-certificate" if you need further instructions.
-'
-    }
-fi
-
 # Use hard limits, except for a smaller stack and no core dumps
 unlimit
 is425 && limit stack 8192

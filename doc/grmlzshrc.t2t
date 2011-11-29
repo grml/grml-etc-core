@@ -456,9 +456,6 @@ Sets all ulimit values to "unlimited".
 : **any()**
 Lists processes matching given pattern.
 
-: **apache2-ssl-certificate()**
-Advices the user how to create self signed certificates.
-
 : **asc()**
 Login on the host provided as argument using autossh. Then reattach a GNU screen
 session if a detached session is around or detach a currently attached screen or
