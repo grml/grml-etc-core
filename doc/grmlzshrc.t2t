@@ -727,9 +727,6 @@ The choice is made along the filename extension.
 : **shtar()**
 Lists the content of a gzipped tar archive in default pager.
 
-: **shzip()**
-Shows the content of a zip archive in default pager.
-
 : **simple-extract()**
 Tries to uncompress/unpack given files with the appropriate programs. If an URI
 starting with https, http or ftp is provided simple-extract tries to download

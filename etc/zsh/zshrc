@@ -2774,11 +2774,6 @@ shtar() {
     emulate -L zsh
     gunzip -c $1 | tar -tf - -- | $PAGER
 }
-#f5# Show contents of zip file
-shzip() {
-    emulate -L zsh
-    unzip -l $1 | $PAGER
-}
 
 # Function Usage: doc packagename
 #f5# \kbd{cd} to /usr/share/doc/\textit{package}
