@@ -529,10 +529,6 @@ Reloads an autoloadable shell function (See autoload in zshbuiltins(1)).
 : **get_tw_cli()**
 Fetches 3ware RAID controller software using get_3ware(1).
 
-: **hex()**
-Prints the hexadecimal representation of the number supplied as argument
-(base ten only).
-
 : **hgdi()**
 Use GNU diff with options -ubwd for mercurial.
 

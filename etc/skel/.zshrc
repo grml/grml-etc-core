@@ -252,6 +252,17 @@ fi
 #                   END { print "p" }' | dc
 #}
 
+## print hex value of a number
+#hex() {
+#    emulate -L zsh
+#    if [[ -n "$1" ]]; then
+#        printf "%x\n" $1
+#    else
+#        print 'Usage: hex <number-to-convert>'
+#        return 1
+#    fi
+#}
+
 ## log out? set timeout in seconds...
 ## ...and do not log out in some specific terminals:
 #if [[ "${TERM}" == ([Exa]term*|rxvt|dtterm|screen*) ]] ; then
