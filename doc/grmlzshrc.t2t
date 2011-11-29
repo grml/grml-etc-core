@@ -721,10 +721,6 @@ ZSH_PROFILE_RC above).
 : **refunc()**
 Reloads functions given as parameters.
 
-: **regcheck()**
-Checks whether a regular expression (first parameter) matches a string
-(second parameter) using perl.
-
 : **salias()**
 Creates an alias whith sudo prepended, if $EUID is not zero. Run "salias -h"
 for details. See also xunfunction() below.

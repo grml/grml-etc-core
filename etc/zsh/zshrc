@@ -2842,16 +2842,6 @@ makereadable() {
     ps2pdf $output
 }
 
-# zsh with perl-regex - use it e.g. via:
-# regcheck '\s\d\.\d{3}\.\d{3} Euro' ' 1.000.000 Euro'
-#f5# Checks whether a regex matches or not.\\&\quad Example: \kbd{regcheck '.\{3\} EUR' '500 EUR'}
-regcheck() {
-    emulate -L zsh
-    zmodload -i zsh/pcre
-    pcre_compile $1 && \
-    pcre_match $2 && echo "regex matches" || echo "regex does not match"
-}
-
 #f5# List files which have been accessed within the last {\it n} days, {\it n} defaults to 1
 accessed() {
     emulate -L zsh
