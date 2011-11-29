@@ -547,10 +547,6 @@ argument means last revision).
 : **hidiff()**
 Outputs highlighted diff; needs highstring(1).
 
-: **ipv6-tunnel()**
-Sets up an IPv6 tunnel on interface sit1. Needs one argument -
-either "start", "stop" or "status".
-
 : **is4()**
 Returns true, if zsh version is equal or greater than 4, else false.
 

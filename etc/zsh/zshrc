@@ -2243,47 +2243,6 @@ uiae() {
     setxkbmap us && echo 'Done' || echo 'Failed'
 }
 
-# set up an ipv6 tunnel
-ipv6-tunnel() {
-    emulate -L zsh
-    case $1 in
-        start)
-            if ifconfig sit1 2>/dev/null | grep -q 'inet6 addr: 2002:.*:1::1' ; then
-                print 'ipv6 tunnel already set up, nothing to be done.'
-                print 'execute: "ifconfig sit1 down ; ifconfig sit0 down" to remove ipv6-tunnel.' ; return 1
-            else
-                [[ -n "$PUBLIC_IP" ]] || \
-                    local PUBLIC_IP=$(ifconfig $(route -n | awk '/^0\.0\.0\.0/{print $8; exit}') | \
-                                      awk '/inet addr:/ {print $2}' | tr -d 'addr:')
-
-                [[ -n "$PUBLIC_IP" ]] || { print 'No $PUBLIC_IP set and could not determine default one.' ; return 1 }
-                local IPV6ADDR=$(printf "2002:%02x%02x:%02x%02x:1::1" $(print ${PUBLIC_IP//./ }))
-                print -n "Setting up ipv6 tunnel $IPV6ADDR via ${PUBLIC_IP}: "
-                ifconfig sit0 tunnel ::192.88.99.1 up
-                ifconfig sit1 add "$IPV6ADDR" && print done || print failed
-            fi
-            ;;
-        status)
-            if ifconfig sit1 2>/dev/null | grep -q 'inet6 addr: 2002:.*:1::1' ; then
-                print 'ipv6 tunnel available' ; return 0
-            else
-                print 'ipv6 tunnel not available' ; return 1
-            fi
-            ;;
-        stop)
-            if ifconfig sit1 2>/dev/null | grep -q 'inet6 addr: 2002:.*:1::1' ; then
-                print -n 'Stopping ipv6 tunnel (sit0 + sit1): '
-                ifconfig sit1 down ; ifconfig sit0 down && print done || print failed
-            else
-                print 'No ipv6 tunnel found, nothing to be done.' ; return 1
-            fi
-            ;;
-        *)
-            print "Usage: ipv6-tunnel [start|stop|status]">&2 ; return 1
-            ;;
-    esac
-}
-
 # spawn a minimally set up mksh - useful if you want to umount /usr/.
 minimal-shell() {
     emulate -L zsh
