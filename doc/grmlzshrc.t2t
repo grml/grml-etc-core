@@ -656,10 +656,6 @@ Returns true, if run within an utf environment, else false.
 : **iwclient()**
 Searches a wireless interface and runs dhclient(8) on it.
 
-: **limg()**
-Lists images (i. e. files ending with ".jpg", ".gif" or ".png") in current
-directory.
-
 : **manzsh()**
 Shows the zshall manpage and jumps to the first match of the regular
 expression optionally given as argument (Needs qma(1)).

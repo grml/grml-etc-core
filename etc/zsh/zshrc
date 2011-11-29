@@ -2821,18 +2821,6 @@ sshot() {
     cd ~/shots ; sleep 5; import -window root shot_`date --iso-8601=m`.jpg
 }
 
-# list images only
-limg() {
-    local -a images
-    images=( *.{jpg,gif,png}(.N) )
-
-    if [[ $#images -eq 0 ]] ; then
-        print "No image files found"
-    else
-        ls "$images[@]"
-    fi
-}
-
 #f5# List files which have been accessed within the last {\it n} days, {\it n} defaults to 1
 accessed() {
     emulate -L zsh
