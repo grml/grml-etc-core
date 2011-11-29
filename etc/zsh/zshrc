@@ -2779,11 +2779,6 @@ shzip() {
     emulate -L zsh
     unzip -l $1 | $PAGER
 }
-#f5# Unified diff
-udiff() {
-    emulate -L zsh
-    diff -urd $* | egrep -v "^Only in |^Binary files "
-}
 
 # Function Usage: doc packagename
 #f5# \kbd{cd} to /usr/share/doc/\textit{package}

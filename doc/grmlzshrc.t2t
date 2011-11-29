@@ -786,11 +786,6 @@ Translates a word from german to english (-D) or vice versa (-E).
 : **uchange()**
 Shows upstreams changelog of a given package in $PAGER.
 
-: **udiff()**
-Makes a unified diff of the command line arguments trying hard to find a
-smaller set of changes. Descends recursively into subdirectories. Ignores
-hows some information about current status.
-
 : **uprint()**
 Works around the "print -l ${(u)foo}"-limitation on zsh older than 4.2.
 
