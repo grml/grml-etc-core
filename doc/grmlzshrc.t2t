@@ -664,10 +664,6 @@ expression optionally given as argument (Needs qma(1)).
 Creates directory including parent directories, if necessary. Then changes
 current working directory to it.
 
-: **mdiff()**
-Diffs the two arguments recursively and writes the
-output (unified format) to a timestamped file.
-
 : **mggogle()**
 Searches Google Groups for a USENET message-ID.
 

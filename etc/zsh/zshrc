@@ -2726,10 +2726,6 @@ cdt() {
     echo "$t"
     builtin cd "$t"
 }
-#f5# Unified diff to timestamped outputfile
-mdiff() {
-    diff -udrP "$1" "$2" > diff.`date "+%Y-%m-%d"`."$1"
-}
 
 #f5# Create directory under cursor or the selected area
 # Press ctrl-xM to create the directory under the cursor or the selected area.
