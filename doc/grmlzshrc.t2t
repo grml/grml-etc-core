@@ -620,13 +620,6 @@ Compresses/archives the file given as first parameter. Takes an optional
 second argument, which denotes the compression/archive type as typical
 filename extension; defaults to "tar.gz".
 
-: **sshot()**
-Creates directory named shots in user's home directory, if it does not yet
-exist and changes current working directory to it. Then sleeps 5 seconds,
-so you have plenty of time to switch desktops/windows. Then makes a screenshot
-of the current desktop. The result is stored in ~/shots to a timestamped
-jpg file.
-
 : **ssl-cert-fingerprints**
 Prints the SHA512, SHA256, SHA1 and MD5 digest of a x509 certificate.
 First and only parameter must be a file containing a certificate. Use

@@ -2423,13 +2423,6 @@ inplaceMkDirs() {
 #k# mkdir -p <dir> from string under cursor or marked area
 zle -N inplaceMkDirs && bindkey '^XM' inplaceMkDirs
 
-#f5# Make screenshot
-sshot() {
-    [[ ! -d ~/shots  ]] && mkdir ~/shots
-    #cd ~/shots ; sleep 5 ; import -window root -depth 8 -quality 80 `date "+%Y-%m-%d--%H:%M:%S"`.png
-    cd ~/shots ; sleep 5; import -window root shot_`date --iso-8601=m`.jpg
-}
-
 #f5# List files which have been accessed within the last {\it n} days, {\it n} defaults to 1
 accessed() {
     emulate -L zsh
