@@ -576,10 +576,6 @@ environment variables to UTF-8.
 : **isutfenv()**
 Returns true, if run within an utf environment, else false.
 
-: **manzsh()**
-Shows the zshall manpage and jumps to the first match of the regular
-expression optionally given as argument (Needs qma(1)).
-
 : **mcd()**
 Creates directory including parent directories, if necessary. Then changes
 current working directory to it.
@@ -1048,12 +1044,6 @@ Reboots using kexec(8) and thus reduces boot time by skipping hardware initializ
 
 : **...** (//cd ../..///)
 Changes current directory two levels higher.
-
-: **?** (//qma zshall//)
-Runs the grml script qma (quick manual access) to build the collected man
-pages for the z-shell. This compressed file is kept at
-~/man/zshall.txt.lzo Once it is built, the second use of the alias '?' is
-fast. See "man qma" for further information.
 
 
 = AUXILIARY FILES =

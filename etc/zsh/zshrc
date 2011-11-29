@@ -1897,15 +1897,6 @@ sll() {
     done
 }
 
-# fast manual access
-if check_com qma ; then
-    #f1# View the zsh manual
-    manzsh()  { qma zshall "$1" }
-    compdef _man qma
-else
-    manzsh()  { /usr/bin/man zshall |  vim -c "se ft=man| se hlsearch" +/"$1" - ; }
-fi
-
 # TODO: Is it supported to use pager settings like this?
 #   PAGER='less -Mr' - If so, the use of $PAGER here needs fixing
 # with respect to wordsplitting. (ie. ${=PAGER})
@@ -2187,8 +2178,6 @@ help-zle()
 }
 #k# display help for keybindings and ZLE (cycle pages with consecutive use)
 zle -N help-zle && bindkey '^Xz' help-zle
-
-check_com -c qma && alias ?='qma zshall'
 
 # grep for running process, like: 'any vim'
 any() {
