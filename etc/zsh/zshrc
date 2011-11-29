@@ -2691,11 +2691,6 @@ cvss() {
     emulate -L zsh
     cvs status -v $*
 }
-#f5# Disassemble source files using gcc and as
-disassemble(){
-    emulate -L zsh
-    gcc -pipe -S -o - -O -g $* | as -aldh -o /dev/null
-}
 
 # smart cd function, allows switching to /etc when running 'cd /etc/fstab'
 cd() {

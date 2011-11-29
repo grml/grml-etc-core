@@ -547,9 +547,6 @@ A trick from $LINUX-KERNELSOURCE/Documentation/power/swsusp.txt. It brings
 back interactive responsiveness after suspend, when the system is swapping
 heavily.
 
-: **disassemble()**
-Translates C source code to assembly and ouputs both.
-
 : **dmoz()**
 Searches for the first argument (optional) in the Open Directory Project
 (See http://www.dmoz.org/docs/en/about.html).
