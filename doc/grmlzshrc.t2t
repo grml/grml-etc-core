@@ -791,10 +791,6 @@ Makes a unified diff of the command line arguments trying hard to find a
 smaller set of changes. Descends recursively into subdirectories. Ignores
 hows some information about current status.
 
-: **uopen()**
-Downloads and displays a file using a suitable program for its
-Content-Type.
-
 : **uprint()**
 Works around the "print -l ${(u)foo}"-limitation on zsh older than 4.2.
 

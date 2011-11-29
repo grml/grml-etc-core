@@ -228,6 +228,23 @@ fi
 #    fi
 #}
 
+## Download a file and display it locally
+#uopen() {
+#    emulate -L zsh
+#    if ! [[ -n "$1" ]] ; then
+#        print "Usage: uopen \$URL/\$file">&2
+#        return 1
+#    else
+#        FILE=$1
+#        MIME=$(curl --head $FILE | \
+#               grep Content-Type | \
+#               cut -d ' ' -f 2 | \
+#               cut -d\; -f 1)
+#        MIME=${MIME%$'\r'}
+#        curl $FILE | see ${MIME}:-
+#    fi
+#}
+
 ## log out? set timeout in seconds...
 ## ...and do not log out in some specific terminals:
 #if [[ "${TERM}" == ([Exa]term*|rxvt|dtterm|screen*) ]] ; then
