@@ -2661,36 +2661,6 @@ cl() {
     emulate -L zsh
     cd $1 && ls -a
 }
-#f5# Cvs add
-cvsa() {
-    emulate -L zsh
-    cvs add $* && cvs com -m 'initial checkin' $*
-}
-#f5# Cvs diff
-cvsd() {
-    emulate -L zsh
-    cvs diff -N $* |& $PAGER
-}
-#f5# Cvs log
-cvsl() {
-    emulate -L zsh
-    cvs log $* |& $PAGER
-}
-#f5# Cvs update
-cvsq() {
-    emulate -L zsh
-    cvs -nq update
-}
-#f5# Rcs2log
-cvsr() {
-    emulate -L zsh
-    rcs2log $* | $PAGER
-}
-#f5# Cvs status
-cvss() {
-    emulate -L zsh
-    cvs status -v $*
-}
 
 # smart cd function, allows switching to /etc when running 'cd /etc/fstab'
 cd() {

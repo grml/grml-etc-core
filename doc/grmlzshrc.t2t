@@ -509,25 +509,6 @@ grml systems with autologin.
 Changes current directory to the one supplied by argument and lists the files
 in it, including file names starting with ".".
 
-: **cvsa()**
-Adds and commits the given files using cvs(1). The commit message will be
-'initial checkin'.
-
-: **cvsd()**
-Shows a cvs diff of the arguments in $PAGER.
-
-: **cvsl()**
-Shows the cvs log in $PAGER.
-
-: **cvsq()**
-Runs a cvs update.
-
-: **cvsr()**
-Generates a changelog using rcs2log and shows it in $PAGER.
-
-: **cvss()**
-Shows cvs status of given files.
-
 : **dchange()**
 Shows the changelog of given package in $PAGER.
 
