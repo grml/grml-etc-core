@@ -2218,14 +2218,6 @@ hex() {
     [[ -n "$1" ]] && printf "%x\n" $1 || { print 'Usage: hex <number-to-convert>' ; return 1 }
 }
 
-# calculate (or eval at all ;-)) with perl => p[erl-]eval
-# hint: also take a look at zcalc -> 'autoload zcalc' -> 'man zshmodules | less -p MATHFUNC'
-peval() {
-    [[ -n "$1" ]] && CALC="$*" || print "Usage: calc [expression]"
-    perl -e "print eval($CALC),\"\n\";"
-}
-functions peval &>/dev/null && alias calc=peval
-
 # spawn a minimally set up mksh - useful if you want to umount /usr/.
 minimal-shell() {
     emulate -L zsh

@@ -609,10 +609,6 @@ Example usages:
 % ls -l *(e:'nt /reference/file':)
 ```
 
-: **peval()**
-Evaluates a perl expression; useful as command line
-calculator, therefore also available as "calc".
-
 : **profile()**
 Runs a command in $SHELL with profiling enabled (See startup variable
 ZSH_PROFILE_RC above).
@@ -784,10 +780,6 @@ Resynchronizes the package index files from their sources. The indexes of
 available packages are fetched from the location(s) specified in
 /etc/apt/sources.list. An update should always be performed before an
 upgrade or dist-upgrade; run by sudo, if necessary.
-
-: **calc** (//peval//)
-Evaluates a perl expression (see peval() above); useful as a command line
-calculator.
 
 : **CH** (//./configure --help//)
 Lists available compilation options for building program from source.
