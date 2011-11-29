@@ -450,9 +450,6 @@ Lists files in current directory, which have been accessed within the
 last N days. N is an integer to be passed as first and only argument.
 If no argument is specified N is set to 1.
 
-: **agoogle()**
-Searches for USENET postings from authors using google groups.
-
 : **allulimit()**
 Sets all ulimit values to "unlimited".
 
@@ -507,13 +504,6 @@ in it, including file names starting with ".".
 : **dchange()**
 Shows the changelog of given package in $PAGER.
 
-: **debbug()**
-Searches the Debian bug tracking system (bugs.debian.org) for Bug numbers,
-email addresses of submitters or any string given on the command line.
-
-: **debbugm()**
-Shows bug report for debian given by number in mailbox format.
-
 : **debian2hd()**
 Tells the user to use grml-debootstrap, if she wants to install debian to
 harddisk.
@@ -523,10 +513,6 @@ A trick from $LINUX-KERNELSOURCE/Documentation/power/swsusp.txt. It brings
 back interactive responsiveness after suspend, when the system is swapping
 heavily.
 
-: **dmoz()**
-Searches for the first argument (optional) in the Open Directory Project
-(See http://www.dmoz.org/docs/en/about.html).
-
 : **dnews()**
 Shows the NEWS file for the given package in $PAGER.
 
@@ -534,9 +520,6 @@ Shows the NEWS file for the given package in $PAGER.
 Takes packagename as argument. Sets current working directory to
 /usr/share/doc/<packagename> and prints out a directory listing.
 
-: **dwicti()**
-Looks up the first argument (optional) in the german Wiktionary
-which is an online dictionary (See: http://de.wiktionary.org/).
 
 : **edalias()**
 Edit given alias.
@@ -544,24 +527,11 @@ Edit given alias.
 : **edfunc()**
 Edit given shell function.
 
-: **ewicti()**
-Looks up the first argument (optional in the english Wiktionary
-which is an online dictionary (See: http://en.wiktionary.org/).
-
 : **freload()**
 Reloads an autoloadable shell function (See autoload in zshbuiltins(1)).
 
 : **get_tw_cli()**
 Fetches 3ware RAID controller software using get_3ware(1).
-
-: **gex()**
-Performs an exact (i. e. quoted) web search using Google.
-
-: **ggogle()**
-Searches the arguments on Google Groups, a web to USENET gateway.
-
-: **google()**
-Searches the search engine Google using arguments as search string.
 
 : **hex()**
 Prints the hexadecimal representation of the number supplied as argument
@@ -629,9 +599,6 @@ expression optionally given as argument (Needs qma(1)).
 Creates directory including parent directories, if necessary. Then changes
 current working directory to it.
 
-: **mggogle()**
-Searches Google Groups for a USENET message-ID.
-
 : **minimal-shell()**
 Spawns a minimally set up MirBSD Korn shell. It references no files in /usr,
 so that file system can be unmounted.
@@ -640,9 +607,6 @@ so that file system can be unmounted.
 Lists files in current directory, which have been modified within the
 last N days. N is an integer to be passed as first and only argument.
 If no argument is specified N is set to 1.
-
-: **netcraft()**
-Asks netcraft.com for informations about the site given as argument.
 
 : **nt()**
 A helper function for the "e" glob qualifier to list all files newer
@@ -655,10 +619,6 @@ Example usages:
 % # Inline:
 % ls -l *(e:'nt /reference/file':)
 ```
-
-: **oleo()**
-Translates the given word using the english - german online
-dictionary dict.leo.org.
 
 : **peval()**
 Evaluates a perl expression; useful as command line
@@ -729,9 +689,6 @@ Example usage:
 % Restart ssh
 ```
 
-: **swiki()**
-Searches articles in the german Wikipedia for the term given as argument.
-
 : **trans()**
 Translates a word from german to english (-D) or vice versa (-E).
 
@@ -754,17 +711,6 @@ line options, she always wants, in her .zshrc.local.
 Searches the history for a given pattern and lists the results by date.
 The first argument is the search pattern. The second and third ones are
 optional and denote a search range (default: -100).
-
-: **wikide()**
-Looks up the argument on Wikipedia (german).
-
-: **wikien()**
-Looks up the argument on Wikipedia (english).
-
-: **wodeb()**
-Searches the list of official debian packages for the term given as
-first argument. The optional second argument denotes the distribution
-(stable, testing or unstable) and defaults to unstable.
 
 : **xcat()**
 Tries to cat(1) file(s) given as parameter(s). Always returns true.
