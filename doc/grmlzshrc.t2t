@@ -660,10 +660,6 @@ Searches a wireless interface and runs dhclient(8) on it.
 Lists images (i. e. files ending with ".jpg", ".gif" or ".png") in current
 directory.
 
-: **makereadable()**
-Creates a PostScript and a PDF file (basename as first argument) from
-source code files.
-
 : **manzsh()**
 Shows the zshall manpage and jumps to the first match of the regular
 expression optionally given as argument (Needs qma(1)).

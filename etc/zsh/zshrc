@@ -2833,15 +2833,6 @@ limg() {
     fi
 }
 
-#f5# Create PDF file from source code
-makereadable() {
-    emulate -L zsh
-    output=$1
-    shift
-    a2ps --medium A4dj -E -o $output $*
-    ps2pdf $output
-}
-
 #f5# List files which have been accessed within the last {\it n} days, {\it n} defaults to 1
 accessed() {
     emulate -L zsh
