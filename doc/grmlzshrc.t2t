@@ -779,10 +779,6 @@ human readable output format.
 A Web browser on the framebuffer device. So you can browse images and click
 links on the virtual tty.
 
-: **fbmplayer** (//mplayer -vo fbdev -fs -zoom//)
-Fullscreen Video player with the framebuffer as video output device. So you
-can watch videos on a virtual tty.
-
 : **g** (//git//)
 Revision control system by Linus Torvalds.
 
