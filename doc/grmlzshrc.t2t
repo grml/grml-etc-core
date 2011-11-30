@@ -56,9 +56,6 @@ put the battery status into the right hand side interactive prompt.
 A non zero value activates a handler, which is called when a command can not
 be found. The handler is defined by GRML_ZSH_CNF_HANDLER (see below).
 
-: **GRML_ALWAYS_LOAD_ALL**
-Enables the whole Grml setup for root, if set to a non zero value.
-
 : **GRML_ZSH_CNF_HANDLER**
 This variable contains the handler to be used by COMMAND_NOT_FOUND (see above)
 and defaults to "/usr/share/command-not-found/command-not-found".

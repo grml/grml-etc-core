@@ -287,7 +287,6 @@ COMMAND_NOT_FOUND=${COMMAND_NOT_FOUND:-0}
 GRML_ZSH_CNF_HANDLER=${GRML_ZSH_CNF_HANDLER:-/usr/share/command-not-found/command-not-found}
 BATTERY=${BATTERY:-0}
 GRMLSMALL_SPECIFIC=${GRMLSMALL_SPECIFIC:-1}
-GRML_ALWAYS_LOAD_ALL=${GRML_ALWAYS_LOAD_ALL:-0}
 ZSH_NO_DEFAULT_LOCALE=${ZSH_NO_DEFAULT_LOCALE:-0}
 
 # utility functions
@@ -1484,10 +1483,6 @@ very lately.
 System wide configuration without touching configuration files of grml
 can take place in /etc/zsh/zshrc.local.
 
-Normally, the root user (EUID == 0) does not get the whole grml setup.
-If you want to force the whole setup for that user, too, set
-GRML_ALWAYS_LOAD_ALL=1 in .zshrc.pre in root'\''s home directory.
-
 For information regarding zsh start at http://grml.org/zsh/
 
 Take a look at grml'\''s zsh refcard:
@@ -2181,14 +2176,6 @@ fi
 
 # load the lookup subsystem if it's available on the system
 zrcautoload lookupinit && lookupinit
-
-### non-root (EUID != 0) code below
-###
-
-if (( GRML_ALWAYS_LOAD_ALL == 0 )) && (( $EUID == 0 )) ; then
-    zrclocal
-    return 0
-fi
 
 # variables
 
