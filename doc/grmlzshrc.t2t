@@ -751,11 +751,6 @@ upgrade or dist-upgrade; run by sudo, if necessary.
 : **CH** (//./configure --help//)
 Lists available compilation options for building program from source.
 
-: **cmplayer** (//mplayer -vo fbdev//)
-Video player with framebuffer as video output device, so you can watch
-videos on a virtual tty. Hint: Using fbdev2 allows you to use the shell
-while watching a movie.
-
 : **CO** (//./configure//)
 Prepares compilation for building program from source.
 
