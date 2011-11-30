@@ -1470,15 +1470,6 @@ if ! check_com asc &>/dev/null ; then
   compdef asc=ssh
 fi
 
-# truecrypt; use e.g. via 'truec /dev/ice /mnt/ice' or 'truec -i'
-if check_com -c truecrypt ; then
-    if isutfenv ; then
-        alias truec='truecrypt --mount-options "rw,sync,dirsync,users,uid=1000,gid=users,umask=077,utf8" '
-    else
-        alias truec='truecrypt --mount-options "rw,sync,dirsync,users,uid=1000,gid=users,umask=077" '
-    fi
-fi
-
 #f1# Hints for the use of zsh on grml
 zsh-help() {
     print "$bg[white]$fg[black]

@@ -903,11 +903,6 @@ http://www.cl.cam.ac.uk/~mgk25/unicode.html#term).
 : **tlog** (//tail -f /var/log/syslog//)
 Prints syslog continuously (See tail(1)).
 
-: **truec** (//truecrypt [ mount options ]//)
-Mount a truecrypt volume with some reasonable mount options
-("rw,sync,dirsync,users,uid=1000,gid=users,umask=077" and "utf8", if
-available).
-
 : **up** (//aptitude update ; aptitude safe-upgrade//)
 Performs a system update followed by a system upgrade using aptitude; run
 by sudo, if necessary. See au and ag above.
