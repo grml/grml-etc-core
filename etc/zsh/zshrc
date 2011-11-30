@@ -1428,11 +1428,6 @@ if [[ -x /sbin/kexec ]] && [[ -r /proc/cmdline ]] ; then
     alias "$(uname -r)-reboot"="kexec -l --initrd=/boot/initrd.img-"$(uname -r)" --command-line=\"$(cat /proc/cmdline)\" /boot/vmlinuz-"$(uname -r)""
 fi
 
-alias cp='nocorrect cp'         # no spelling correction on cp
-alias mkdir='nocorrect mkdir'   # no spelling correction on mkdir
-alias mv='nocorrect mv'         # no spelling correction on mv
-alias rm='nocorrect rm'         # no spelling correction on rm
-
 #a1# Execute \kbd{rmdir}
 alias rd='rmdir'
 #a1# Execute \kbd{mkdir}

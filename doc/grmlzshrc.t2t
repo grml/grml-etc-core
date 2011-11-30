@@ -754,9 +754,6 @@ Lists available compilation options for building program from source.
 : **CO** (//./configure//)
 Prepares compilation for building program from source.
 
-: **cp** (//nocorrect cp//)
-cp(1) without spelling correction.
-
 : **da** (//du -sch//)
 Prints the summarized disk usage of the arguments as well as a grand total
 in human readable format.
@@ -876,20 +873,11 @@ Lists only executable files.
 Lists all active md (i.e. linux software raid) devices with some information
 about them.
 
-: **mkdir** (//nocorrect mkdir//)
-mkdir(1) without spelling correction.
-
 : **mq** (//hg -R $(readlink -f $(hg root)/.hg/patches)//)
 Executes the commands on the versioned patch queue from current repository.
 
-: **mv** (//nocorrect mv//)
-mv(1) without spelling correction.
-
 : **rd** (//rmdir//)
 Short rmdir(1) (remove directory).
-
-: **rm** (//nocorrect rm//)
-rm(1) without spelling correction.
 
 : **rmcdir** (//'cd ..; rmdir $OLDPWD || cd $OLDPWD//)
 rmdir current working directory
