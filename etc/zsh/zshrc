@@ -1457,13 +1457,6 @@ iso2utf() {
     fi
 }
 
-# I like clean prompt, so provide simple way to get that
-check_com 0 || alias 0='return 0'
-
-# for really lazy people like mika:
-check_com S &>/dev/null || alias S='screen'
-check_com s &>/dev/null || alias s='ssh'
-
 # especially for roadwarriors using GNU screen and ssh:
 if ! check_com asc &>/dev/null ; then
   asc() { autossh -t "$@" 'screen -RdU' }
@@ -2262,9 +2255,6 @@ alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/nu
 
 # simple webserver
 check_com -c python && alias http="python -m SimpleHTTPServer"
-
-# Use 'g' instead of 'git':
-check_com g || alias g='git'
 
 # work around non utf8 capable software in utf environment via $LANG and luit
 if check_com isutfenv && check_com luit ; then

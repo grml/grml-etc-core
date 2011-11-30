@@ -762,9 +762,6 @@ Prints installed Packages sorted by size (descending).
 Lists files (including dot files) sorted by size (biggest last) in long and
 human readable output format.
 
-: **g** (//git//)
-Revision control system by Linus Torvalds.
-
 : **ge** (//grep-excuses//)
 Searches the testing excuses files for a specific maintainer (See:
 grep-excuses(1)).
@@ -882,12 +879,6 @@ as config file. If invoked by a regular user, start a screen session
 with users .screenrc config if it exists, else use /etc/grml/screenrc_grml
 as configuration.
 
-: **S** (//screen//)
-Short for screen(1).
-
-: **s** (//ssh//)
-Short for ssh(1).
-
 : **su** (//sudo su//)
 If user is running a grml live-CD, dont ask for any password, if she
 wants a root shell.
@@ -910,9 +901,6 @@ by sudo, if necessary. See au and ag above.
 : **url-quote** (//autoload -U url-quote-magic ; zle -N self-insert url-quote-magic//)
 After calling, characters of URLs as typed get automatically escaped, if necessary, to
 protect them from the shell.
-
-: **0** (//return 0//)
-Gives a clean prompt (i.e. without $?).
 
 : **$(uname -r)-reboot** (//kexec -l --initrd=/boot/initrd.img-"$(uname -r)" --command-line=\"$(cat /proc/cmdline)\" /boot/vmlinuz-"$(uname -r)"//)
 Reboots using kexec(8) and thus reduces boot time by skipping hardware initialization of BIOS/firmware.
