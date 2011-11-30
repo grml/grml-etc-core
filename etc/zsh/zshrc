@@ -2536,25 +2536,6 @@ _simple_extract()
 compdef _simple_extract simple-extract
 alias se=simple-extract
 
-# Usage: show-archive <archive>
-#f5# List an archive's content
-show-archive() {
-    emulate -L zsh
-    if [[ -f $1 ]] ; then
-        case $1 in
-            *.tar.gz)      gunzip -c $1 | tar -tf - -- ;;
-            *.tar)         tar -tf $1 ;;
-            *.tgz)         tar -ztf $1 ;;
-            *.zip)         unzip -l $1 ;;
-            *.bz2)         bzless $1 ;;
-            *.deb)         dpkg-deb --fsys-tarfile $1 | tar -tf - -- ;;
-            *)             echo "'$1' Error. Please go away" ;;
-        esac
-    else
-        echo "'$1' is not a valid archive"
-    fi
-}
-
 # TODO: So, this is the third incarnation of this function!?
 #f5# Reload given functions
 refunc() {
