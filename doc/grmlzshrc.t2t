@@ -767,10 +767,6 @@ Builds binary or source packages from sources (See: dpkg-buildpackage(1)).
 : **debs-by-size** (//grep-status -FStatus -sInstalled-Size,Package -n "install ok installed" | paste -sd "  \n" | sort -rn//)
 Prints installed Packages sorted by size (descending).
 
-: **default** (//echo -en [ escape sequence ]//)
-Sets font of xterm to "-misc-fixed-medium-r-normal-*-*-140-*-*-c-*-iso8859-15"
-using escape sequence.
-
 : **dir** (//ls -lSrah//)
 Lists files (including dot files) sorted by size (biggest last) in long and
 human readable output format.
@@ -810,13 +806,6 @@ ssh with possible man-in-the-middle attack enabled
 : **help-zshglob** (//H-Glob()//)
 Runs the function H-Glob() to expand or explain wildcards.
 
-: **hide** (//echo -en [ escape sequence ]//)
-Tries to hide xterm window using escape sequence.
-
-: **huge** (//echo -en [ escape sequence ]//)
-Sets huge font in xterm ("-misc-fixed-medium-r-normal-*-*-210-*-*-c-*-iso8859-15")
-using escape sequence.
-
 : **j** (//jobs -l//)
 Prints status of jobs in the current shell session in long format.
 
@@ -830,10 +819,6 @@ starting with ".".
 
 : **lad** (//ls -d .*(/)//)
 Lists the dot directories (not their contents) in current directory.
-
-: **large** (//echo -en [ escape sequence ]//)
-Sets large font in xterm ("-misc-fixed-medium-r-normal-*-*-150-*-*-c-*-iso8859-15")
-using escape sequence.
 
 : **lh** (//ls -hAl --color=auto//)
 Lists files in long and human readable output format in nice colors,
@@ -891,11 +876,6 @@ Lists only executable files.
 Lists all active md (i.e. linux software raid) devices with some information
 about them.
 
-: **medium** (//echo -en [ escape sequence ]//)
-Sets medium sized font
-("-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso8859-15") in xterm
-using escape sequence.
-
 : **mkdir** (//nocorrect mkdir//)
 mkdir(1) without spelling correction.
 
@@ -926,18 +906,6 @@ Short for screen(1).
 : **s** (//ssh//)
 Short for ssh(1).
 
-: **semifont** (//echo -en [ escape sequence ]//)
-Sets font of xterm to
-"-misc-fixed-medium-r-semicondensed-*-*-120-*-*-*-*-iso8859-15" using
-escape sequence.
-
-: **small** (//echo -en [ escape sequence ]//)
-Sets small xterm font ("6x10") using escape sequence.
-
-: **smartfont** (//echo -en [ escape sequence ]//)
-Sets font of xterm to "-artwiz-smoothansi-*-*-*-*-*-*-*-*-*-*-*-*" using
-escape sequence.
-
 : **su** (//sudo su//)
 If user is running a grml live-CD, dont ask for any password, if she
 wants a root shell.
@@ -949,11 +917,6 @@ http://www.cl.cam.ac.uk/~mgk25/unicode.html#term).
 : **term2utf** (//echo 'Setting terminal to utf-8 mode'; print -n '\e%G'//)
 Sets mode from ISO 2022 to UTF-8 (See:
 http://www.cl.cam.ac.uk/~mgk25/unicode.html#term).
-
-: **tiny** (//echo -en [ escape sequence ]//)
-Sets tiny xterm font
-("-misc-fixed-medium-r-normal-*-*-80-*-*-c-*-iso8859-15") using escape
-sequence.
 
 : **tlog** (//tail -f /var/log/syslog//)
 Prints syslog continuously (See tail(1)).
