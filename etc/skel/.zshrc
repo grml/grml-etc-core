@@ -175,6 +175,9 @@ fi
 #alias -g T='|tail'
 #alias -g V='| vim -'
 
+## get top 10 shell commands:
+#alias top10='print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
+
 ## miscellaneous code ##
 
 ## Use a default width of 80 for manpages for more convenient reading

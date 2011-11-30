@@ -909,9 +909,6 @@ http://www.cl.cam.ac.uk/~mgk25/unicode.html#term).
 : **tlog** (//tail -f /var/log/syslog//)
 Prints syslog continuously (See tail(1)).
 
-: **top10** (//print -l ? ${(o)history%% *} | uniq -c | sort -nr | head -n 10//)
-Prints the ten most used shell commands.
-
 : **truec** (//truecrypt [ mount options ]//)
 Mount a truecrypt volume with some reasonable mount options
 ("rw,sync,dirsync,users,uid=1000,gid=users,umask=077" and "utf8", if
