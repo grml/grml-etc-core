@@ -317,10 +317,6 @@ already set otherwise.
 : **PAGER**
 Set less(1) as default pager, if not already set to something different.
 
-: **QTDIR**
-Holds the path to shared files for the C++ application framework QT
-(version 3 or 4).
-
 : **SHELL**
 Set explicitly to /bin/zsh, to prevent certain terminal emulators to
 default to /bin/sh or /bin/bash.
