@@ -2434,8 +2434,6 @@ check_com new || alias new=modified
 # use colors when GNU grep with color-support
 #a2# Execute \kbd{grep -{}-color=auto}
 (grep --help 2>/dev/null |grep -- --color) >/dev/null && alias grep='grep --color=auto'
-#a2# Execute \kbd{grep -i -{}-color=auto}
-alias GREP='grep -i --color=auto'
 
 # Translate DE<=>EN
 # 'translate' looks up fot a word in a file with language-to-language
