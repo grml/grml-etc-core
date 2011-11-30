@@ -569,10 +569,6 @@ Returns true, if run within an utf environment, else false.
 Creates directory including parent directories, if necessary. Then changes
 current working directory to it.
 
-: **minimal-shell()**
-Spawns a minimally set up MirBSD Korn shell. It references no files in /usr,
-so that file system can be unmounted.
-
 : **modified()**
 Lists files in current directory, which have been modified within the
 last N days. N is an integer to be passed as first and only argument.

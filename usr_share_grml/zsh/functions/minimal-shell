@@ -1,0 +1,15 @@
+# spawn a minimally set up mksh - useful if you want to umount /usr/.
+emulate -L zsh
+
+local shell="/bin/mksh"
+local env_file="/etc/minimal-shellrc"
+
+if [[ ! -x ${shell} ]]; then
+    printf '`%s'\'' not available, giving up.\n' ${shell} >&2
+    return 1
+elif [[ ! -f ${env_file} ]]; then
+    printf 'minimal-shell: Configuration missing: `%s'\''\n' ${shell} >&2
+    return 2
+fi
+
+exec env -i ENV="$env_file" HOME="$HOME" TERM="$TERM" ${shell}
