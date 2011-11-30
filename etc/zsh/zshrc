@@ -2365,9 +2365,10 @@ cd() {
 }
 
 #f5# Create Directoy and \kbd{cd} to it
-mcd() {
+mkcd() {
     mkdir -p "$@" && cd "$@"
 }
+
 #f5# Create temporary directory and \kbd{cd} to it
 cdt() {
     local t

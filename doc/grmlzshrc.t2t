@@ -565,7 +565,7 @@ environment variables to UTF-8.
 : **isutfenv()**
 Returns true, if run within an utf environment, else false.
 
-: **mcd()**
+: **mkcd()**
 Creates directory including parent directories, if necessary. Then changes
 current working directory to it.
 
