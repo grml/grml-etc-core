@@ -139,12 +139,14 @@ is43(){
 }
 
 is433(){
-    [[ $ZSH_VERSION == 4.3.<3->* || $ZSH_VERSION == 4.<4->* || $ZSH_VERSION == <5->* ]] && return 0
+    [[ $ZSH_VERSION == 4.3.<3->* || $ZSH_VERSION == 4.<4->* \
+                                 || $ZSH_VERSION == <5->* ]] && return 0
     return 1
 }
 
 is439(){
-    [[ $ZSH_VERSION == 4.3.<9->* || $ZSH_VERSION == 4.<4->* || $ZSH_VERSION == <5->* ]] && return 0
+    [[ $ZSH_VERSION == 4.3.<9->* || $ZSH_VERSION == 4.<4->* \
+                                 || $ZSH_VERSION == <5->* ]] && return 0
     return 1
 }
 
@@ -163,7 +165,10 @@ isgrmlcd(){
 if isgrml ; then
 #f1# Checks whether or not you're running grml-small
     isgrmlsmall() {
-        [[ ${${${(f)"$(</etc/grml_version)"}%% *}##*-} == 'small' ]] && return 0 ; return 1
+        if [[ ${${${(f)"$(</etc/grml_version)"}%% *}##*-} == 'small' ]]; then
+            return 0
+        fi
+        return 1
     }
 else
     isgrmlsmall() { return 1 }
@@ -246,40 +251,75 @@ function zrcautoload() {
     return 0
 }
 
-# Load is-at-least() for more precise version checks
-# Note that this test will *always* fail, if the is-at-least
-# function could not be marked for autoloading.
+# Load is-at-least() for more precise version checks Note that this test will
+# *always* fail, if the is-at-least function could not be marked for
+# autoloading.
 zrcautoload is-at-least || is-at-least() { return 1 }
 
 # set some important options (as early as possible)
-setopt append_history       # append history list to the history file (important for multiple parallel zsh sessions!)
-is4 && setopt SHARE_HISTORY # import new commands from the history file also in other zsh-session
-setopt extended_history     # save each command's beginning timestamp and the duration to the history file
-is4 && setopt histignorealldups # If  a  new  command  line being added to the history
-                            # list duplicates an older one, the older command is removed from the list
-setopt histignorespace      # remove command lines from the history list when
-                            # the first character on the line is a space
-setopt auto_cd              # if a command is issued that can't be executed as a normal command,
-                            # and the command is the name of a directory, perform the cd command to that directory
-setopt extended_glob        # in order to use #, ~ and ^ for filename generation
-                            # grep word *~(*.gz|*.bz|*.bz2|*.zip|*.Z) ->
-                            # -> searches for word not in compressed files
-                            # don't forget to quote '^', '~' and '#'!
-setopt longlistjobs         # display PID when suspending processes as well
-setopt notify               # report the status of backgrounds jobs immediately
-setopt hash_list_all        # Whenever a command completion is attempted, make sure \
-                            # the entire command path is hashed first.
-setopt completeinword       # not just at the end
-setopt nohup                # and don't kill them, either
-setopt auto_pushd           # make cd push the old directory onto the directory stack.
-setopt nobeep               # avoid "beep"ing
-setopt pushd_ignore_dups    # don't push the same dir twice.
-setopt noglobdots           # * shouldn't match dotfiles. ever.
-setopt noshwordsplit        # use zsh style word splitting
-setopt unset                # don't error out when unset parameters are used
+
+# append history list to the history file; this is the default but we make sure
+# because it's required for share_history.
+setopt append_history
+
+# import new commands from the history file also in other zsh-session
+is4 && setopt share_history
+
+# save each command's beginning timestamp and the duration to the history file
+setopt extended_history
+
+# If a new command line being added to the history list duplicates an older
+# one, the older command is removed from the list
+is4 && setopt histignorealldups
+
+# remove command lines from the history list when the first character on the
+# line is a space
+setopt histignorespace
+
+# if a command is issued that can't be executed as a normal command, and the
+# command is the name of a directory, perform the cd command to that directory.
+setopt auto_cd
+
+# in order to use #, ~ and ^ for filename generation grep word
+# *~(*.gz|*.bz|*.bz2|*.zip|*.Z) -> searches for word not in compressed files
+# don't forget to quote '^', '~' and '#'!
+setopt extended_glob
+
+# display PID when suspending processes as well
+setopt longlistjobs
+
+# report the status of backgrounds jobs immediately
+setopt notify
+
+# whenever a command completion is attempted, make sure the entire command path
+# is hashed first.
+setopt hash_list_all
+
+# not just at the end
+setopt completeinword
+
+# Don't send SIGHUP to background processes when the shell exits.
+setopt nohup
+
+# make cd push the old directory onto the directory stack.
+setopt auto_pushd
+
+# avoid "beep"ing
+setopt nobeep
+
+# don't push the same dir twice.
+setopt pushd_ignore_dups
+
+# * shouldn't match dotfiles. ever.
+setopt noglobdots
+
+# use zsh style word splitting
+setopt noshwordsplit
+
+# don't error out when unset parameters are used
+setopt unset
 
 # setting some default values
-
 NOCOR=${NOCOR:-0}
 NOMENU=${NOMENU:-0}
 NOPRECMD=${NOPRECMD:-0}
@@ -511,9 +551,15 @@ export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
-MAILCHECK=30       # mailchecks
-REPORTTIME=5       # report about cpu-/system-/user-time of command if running longer than 5 seconds
-watch=(notme root) # watch for everyone but me and root
+# mailchecks
+MAILCHECK=30
+
+# report about cpu-/system-/user-time of command if running longer than
+# 5 seconds
+REPORTTIME=5
+
+# watch for everyone but me and root
+watch=(notme root)
 
 # automatically remove duplicates from these arrays
 typeset -U path cdpath fpath manpath
@@ -1026,7 +1072,8 @@ if check_com -c screen || check_com -c tmux; then
             tmux -q capture-pane \; save-buffer -b 0 $TMPFILE \; delete-buffer -b 0
         else
             screen -X hardcopy $TMPFILE
-            #screen sucks, it dumps in latin1, apparently always. so recode it to system charset
+            # screen sucks, it dumps in latin1, apparently always. so recode it
+            # to system charset
             check_com recode && recode latin1 $TMPFILE
         fi
         _screen_display_wordlist=( ${(QQ)$(<$TMPFILE)} )
@@ -1335,9 +1382,13 @@ preexec () {
 }
 
 EXITCODE="%(?..%?%1v )"
-PS2='\`%_> '      # secondary prompt, printed when the shell needs more information to complete a command.
-PS3='?# '         # selection prompt used within a select loop.
-PS4='+%N:%i:%_> ' # the execution trace prompt (setopt xtrace). default: '+%N:%i>'
+# secondary prompt, printed when the shell needs more information to complete a
+# command.
+PS2='\`%_> '
+# selection prompt used within a select loop.
+PS3='?# '
+# the execution trace prompt (setopt xtrace). default: '+%N:%i>'
+PS4='+%N:%i:%_> '
 
 # set variable debian_chroot if running in a chroot with /etc/debian_chroot
 if [[ -z "$debian_chroot" ]] && [[ -r /etc/debian_chroot ]] ; then
@@ -1348,8 +1399,9 @@ fi
 if [[ "$TERM" == dumb ]] ; then
     PROMPT="${EXITCODE}${debian_chroot:+($debian_chroot)}%n@%m %40<...<%B%~%b%<< "
 else
-    # only if $GRMLPROMPT is set (e.g. via 'GRMLPROMPT=1 zsh') use the extended prompt
-    # set variable identifying the chroot you work in (used in the prompt below)
+    # only if $GRMLPROMPT is set (e.g. via 'GRMLPROMPT=1 zsh') use the extended
+    # prompt set variable identifying the chroot you work in (used in the
+    # prompt below)
     if [[ $GRMLPROMPT -gt 0 ]] ; then
         PROMPT="${RED}${EXITCODE}${CYAN}[%j running job(s)] ${GREEN}{history#%!} ${RED}%(3L.+.) ${BLUE}%* %D
 ${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< "
@@ -1386,20 +1438,26 @@ hash -d www=/var/www
 # some aliases
 if check_com -c screen ; then
     if [[ $UID -eq 0 ]] ; then
-        [[ -r /etc/grml/screenrc ]] && alias screen="${commands[screen]} -c /etc/grml/screenrc"
+        if [[ -r /etc/grml/screenrc ]]; then
+            alias screen="${commands[screen]} -c /etc/grml/screenrc"
+        fi
     elif [[ -r $HOME/.screenrc ]] ; then
         alias screen="${commands[screen]} -c $HOME/.screenrc"
     else
         if [[ -r /etc/grml/screenrc_grml ]]; then
             alias screen="${commands[screen]} -c /etc/grml/screenrc_grml"
         else
-            [[ -r /etc/grml/screenrc ]] && alias screen="${commands[screen]} -c /etc/grml/screenrc"
+            if [[ -r /etc/grml/screenrc ]]; then
+                alias screen="${commands[screen]} -c /etc/grml/screenrc"
+            fi
         fi
     fi
 fi
 
 # do we have GNU ls with color-support?
-if ls --help 2>/dev/null | grep -- --color= >/dev/null && [[ "$TERM" != dumb ]] ; then
+if ls --help 2>/dev/null | grep -- --color= >/dev/null \
+   && [[ "$TERM" != dumb ]]
+then
     #a1# execute \kbd{@a@}:\quad ls with colors
     alias ls='ls -b -CF --color=auto'
     #a1# execute \kbd{@a@}:\quad list all files, with colors
@@ -1500,7 +1558,8 @@ Basically meant for bash users who are not used to the power of
 the zsh yet. :)
 
   "NOCOR=1    zsh" => deactivate automatic correction
-  "NOMENU=1   zsh" => do not use auto menu completion (note: use ctrl-d for completion instead!)
+  "NOMENU=1   zsh" => do not use auto menu completion
+                      (note: use ctrl-d for completion instead!)
   "NOPRECMD=1 zsh" => disable the precmd + preexec commands (set GNU screen title)
   "NOTITLE=1  zsh" => disable setting the title of xterms without disabling
                       preexec() and precmd() completely
