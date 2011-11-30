@@ -867,9 +867,6 @@ about them.
 : **mq** (//hg -R $(readlink -f $(hg root)/.hg/patches)//)
 Executes the commands on the versioned patch queue from current repository.
 
-: **rd** (//rmdir//)
-Short rmdir(1) (remove directory).
-
 : **rmcdir** (//'cd ..; rmdir $OLDPWD || cd $OLDPWD//)
 rmdir current working directory
 

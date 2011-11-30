@@ -1428,11 +1428,6 @@ if [[ -x /sbin/kexec ]] && [[ -r /proc/cmdline ]] ; then
     alias "$(uname -r)-reboot"="kexec -l --initrd=/boot/initrd.img-"$(uname -r)" --command-line=\"$(cat /proc/cmdline)\" /boot/vmlinuz-"$(uname -r)""
 fi
 
-#a1# Execute \kbd{rmdir}
-alias rd='rmdir'
-#a1# Execute \kbd{mkdir}
-alias md='mkdir'
-
 # see http://www.cl.cam.ac.uk/~mgk25/unicode.html#term for details
 alias term2iso="echo 'Setting terminal to iso mode' ; print -n '\e%@'"
 alias term2utf="echo 'Setting terminal to utf-8 mode'; print -n '\e%G'"
