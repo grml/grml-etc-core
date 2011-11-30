@@ -920,21 +920,6 @@ as config file. If invoked by a regular user, start a screen session
 with users .screenrc config if it exists, else use /etc/grml/screenrc_grml
 as configuration.
 
-: **rw-** (//chmod 600//)
-Grants read and write permission of a file to the owner and nobody else.
-
-: **rwx** (//chmod 700//)
-Grants read, write and execute permission of a file to the owner and nobody
-else.
-
-: **r--** (//chmod 644//)
-Grants read and write permission of a file to the owner and read-only to
-anybody else.
-
-: **r-x** (//chmod 755//)
-Grants read, write and execute permission of a file to the owner and
-read-only plus execute permission to anybody else.
-
 : **S** (//screen//)
 Short for screen(1).
 
