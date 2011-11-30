@@ -382,11 +382,6 @@ A wildcard character never matches a leading '.'.
 : **nohup** <grml>
 Do not send the hangup signal (HUP:1) to running jobs when the shell exits.
 
-: **nonomatch** <grml>
-If a pattern for filename generation has no matches, do not print an error
-and leave it unchanged in the argument list. This also applies to file
-expansion of an initial `~' or `='.
-
 : **notify**
 Report the status of background jobs immediately, rather than waiting until
 just before printing a prompt.
