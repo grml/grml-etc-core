@@ -2678,11 +2678,6 @@ allulimit() {
     ulimit -t unlimited
 }
 
-# highlight important stuff in diff output, usage example: hg diff | hidiff
-#m# a2 hidiff \kbd{histring} oneliner for diffs
-check_com -c histring && \
-    alias hidiff="histring -fE '^Comparing files .*|^diff .*' | histring -c yellow -fE '^\-.*' | histring -c green -fE '^\+.*'"
-
 #f5# Change the xterm title from within GNU-screen
 xtrename() {
     emulate -L zsh

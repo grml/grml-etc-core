@@ -829,9 +829,6 @@ Runs the function H-Glob() to expand or explain wildcards.
 : **hide** (//echo -en [ escape sequence ]//)
 Tries to hide xterm window using escape sequence.
 
-: **hidiff** (//histring -fE '^Comparing files .*|^diff .*' | histring -c yellow -fE '^\-.*' | histring -c green -fE '^\+.*'//)
-If histring(1) is installed, highlight important stuff in diff(1) output.
-
 : **huge** (//echo -en [ escape sequence ]//)
 Sets huge font in xterm ("-misc-fixed-medium-r-normal-*-*-210-*-*-c-*-iso8859-15")
 using escape sequence.
