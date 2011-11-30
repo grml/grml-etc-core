@@ -2233,12 +2233,6 @@ alias da='du -sch'
 #a2# Execute \kbd{jobs -l}
 alias j='jobs -l'
 
-# compile stuff
-#a2# Execute \kbd{./configure}
-alias CO="./configure"
-#a2# Execute \kbd{./configure --help}
-alias CH="./configure --help"
-
 # listing stuff
 #a2# Execute \kbd{ls -lSrah}
 alias dir="ls -lSrah"

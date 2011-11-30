@@ -748,12 +748,6 @@ available packages are fetched from the location(s) specified in
 /etc/apt/sources.list. An update should always be performed before an
 upgrade or dist-upgrade; run by sudo, if necessary.
 
-: **CH** (//./configure --help//)
-Lists available compilation options for building program from source.
-
-: **CO** (//./configure//)
-Prepares compilation for building program from source.
-
 : **da** (//du -sch//)
 Prints the summarized disk usage of the arguments as well as a grand total
 in human readable format.
