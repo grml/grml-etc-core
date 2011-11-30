@@ -860,7 +860,7 @@ abk=(
     'co'   './configure && make && sudo make install'
 )
 
-globalias() {
+zleiab() {
     emulate -L zsh
     setopt extendedglob
     local MATCH
@@ -875,8 +875,8 @@ globalias() {
     LBUFFER+=${abk[$MATCH]:-$MATCH}
 }
 
-zle -N globalias
-bindkey ",." globalias
+zle -N zleiab
+bindkey ",." zleiab
 
 # autoloading
 zrcautoload zmv    # who needs mmv or rename?
