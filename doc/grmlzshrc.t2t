@@ -887,9 +887,6 @@ world executable (long output format).
 : **lsx** (//ls -l *(*)//)
 Lists only executable files.
 
-: **md** (//mkdir -p//)
-Creates directory including parent directories, if necessary
-
 : **mdstat** (//cat /proc/mdstat//)
 Lists all active md (i.e. linux software raid) devices with some information
 about them.
