@@ -2536,16 +2536,6 @@ _simple_extract()
 compdef _simple_extract simple-extract
 alias se=simple-extract
 
-# TODO: So, this is the third incarnation of this function!?
-#f5# Reload given functions
-refunc() {
-    for func in $argv ; do
-        unfunction $func
-        autoload $func
-    done
-}
-compdef _functions refunc
-
 #f5# Set all ulimit parameters to \kbd{unlimited}
 allulimit() {
     ulimit -c unlimited

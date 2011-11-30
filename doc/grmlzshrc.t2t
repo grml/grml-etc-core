@@ -581,9 +581,6 @@ Example usages:
 Runs a command in $SHELL with profiling enabled (See startup variable
 ZSH_PROFILE_RC above).
 
-: **refunc()**
-Reloads functions given as parameters.
-
 : **salias()**
 Creates an alias whith sudo prepended, if $EUID is not zero. Run "salias -h"
 for details. See also xunfunction() below.
