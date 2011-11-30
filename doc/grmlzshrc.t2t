@@ -775,10 +775,6 @@ using escape sequence.
 Lists files (including dot files) sorted by size (biggest last) in long and
 human readable output format.
 
-: **fblinks** (//links2 -driver fb//)
-A Web browser on the framebuffer device. So you can browse images and click
-links on the virtual tty.
-
 : **g** (//git//)
 Revision control system by Linus Torvalds.
 

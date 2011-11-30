@@ -2303,10 +2303,6 @@ alias md='mkdir -p'
 #a2# Remove current empty directory. Execute \kbd{cd ..; rmdir $OLDCWD}
 alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
 
-# console stuff
-#a2# Execute \kbd{links2 -driver fb}
-alias fblinks='links2 -driver fb'
-
 #a2# ssh with StrictHostKeyChecking=no \\&\quad and UserKnownHostsFile unset
 alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
