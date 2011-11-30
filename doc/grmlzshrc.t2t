@@ -602,11 +602,6 @@ ending. simple-extract will not delete the original archive (even on .gz,.bz2 or
 : **sll()**
 Prints details of symlinks given as arguments.
 
-: **smartcompress()**
-Compresses/archives the file given as first parameter. Takes an optional
-second argument, which denotes the compression/archive type as typical
-filename extension; defaults to "tar.gz".
-
 : **ssl-cert-fingerprints**
 Prints the SHA512, SHA256, SHA1 and MD5 digest of a x509 certificate.
 First and only parameter must be a file containing a certificate. Use

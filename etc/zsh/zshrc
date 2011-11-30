@@ -2536,27 +2536,6 @@ _simple_extract()
 compdef _simple_extract simple-extract
 alias se=simple-extract
 
-# Usage: smartcompress <file> (<type>)
-#f5# Smart archive creator
-smartcompress() {
-    emulate -L zsh
-    if [[ -n $2 ]] ; then
-        case $2 in
-            tgz | tar.gz)   tar -zcvf$1.$2 $1 ;;
-            tbz2 | tar.bz2) tar -jcvf$1.$2 $1 ;;
-            tar.Z)          tar -Zcvf$1.$2 $1 ;;
-            tar)            tar -cvf$1.$2  $1 ;;
-            gz | gzip)      gzip           $1 ;;
-            bz2 | bzip2)    bzip2          $1 ;;
-            *)
-                echo "Error: $2 is not a valid compression type"
-                ;;
-        esac
-    else
-        smartcompress $1 tar.gz
-    fi
-}
-
 # Usage: show-archive <archive>
 #f5# List an archive's content
 show-archive() {
