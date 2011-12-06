@@ -1,3 +1,102 @@
+grml-etc-core (0.5.0) grml-testing; urgency=low
+
+  [ Bernhard Tittelbach ]
+  * [bff1927] zshrc: alias lsnewdir/lsolddir shows newest/oldest created 20 directories (10 .dirs)
+
+  [ Michael Prokop ]
+  * [262bccc] zshrc: fix delete-word keybinding
+  * [7621f9f] zshrc: readd setopt nonomatch
+
+  [ Frank Terbeck ]
+  * [433f1c4] zshrc: Remove vim fold-markers
+  * [3db9d15] zshrc: Move weather to its own file
+  * [8c93e85] zshrc: Remove fluxkey-change
+  * [2b85131] zshrc: Move linenr to its own file
+  * [e149179] zshrc: Move hl and its completion to their own files
+  * [c9b2d70] zshrc: Remove mkmaildir
+  * [a4eb95c] zshrc: Move ic_get to skel/.zshrc
+  * [9eb3cd4] zshrc: Move exirename to its own file
+  * [21eb785] zshrc: Remove smart-indent
+  * [18e610e] zshrc: Remove mmake
+  * [36bdfe0] zshrc: Move urldecode to its own file
+  * [972d792] zshrc: Remove genthumbs
+  * [8569837] zshrc: Remove mkiso
+  * [3254c19] zshrc: Remove mkaudiocd
+  * [a861b6b] zshrc: Remove audioburn
+  * [349659e] zshrc: Remove audiorip
+  * [e72da8d] zshrc: Remove status
+  * [1130de3] zshrc: Remove slow_print
+  * [d2bf4ca] zshrc: Remove dirspace
+  * [6253c5b] zshrc: Remove suidfind
+  * [ad3991d] zshrc: Remove ansi-colors
+  * [f1005a1] zshrc: Move readme() to its own file
+  * [30282f6] zshrc: Remove vman
+  * [e450b32] zshrc: Remove 2html
+  * [427ed4a] zshrc: Remove selhist
+  * [713060b] zshrc: Move plap to skel/.zshrc
+  * [cc1840a] zshrc: Remove rundirs
+  * [919ba75] zshrc: Move lsdisk to its own file
+  * [af18804] zshrc: Move purge to its own file
+  * [c1d8920] zshrc: Move lcheck to skel/.zshrc
+  * [670ef7a] zshrc: Remove man2
+  * [6149d80] grmlzshrc.t2t: Update with removals
+  * [8e9aced] zshrc: Remove greph
+  * [0a79afd] zshrc: Remove regcheck
+  * [006fc86] zshrc: Remove makereadable
+  * [ce4346f] zshrc: Remove limg
+  * [73a6cb7] zshrc: Move uopen to skel/.zshrc
+  * [b4428f4] zshrc: Remove viless
+  * [2933102] zshrc: Remove udiff
+  * [e49d294] zshrc: Remove shzip
+  * [d2ac165] zshrc: Remove shtar
+  * [48186d3] zshrc: Move memusage to skel/.zshrc
+  * [5a731e3] zshrc: Remove mdiff
+  * [cc9c8cb] zshrc: Remove fir
+  * [a7b0488] grmlzshrc.t2t: Remove exirename documentation
+  * [e6beda1] zshrc: Remove disassemble
+  * [4338c8c] zshrc: Remove cvs* functions
+  * [6555fbd] zshrc: Remove cvs* cdiff
+  * [85fcef7] zshrc: Remove webservice functions
+  * [39f9664] zshrc: Remove zg()
+  * [344ce4b] zshrc: Remove iwclient
+  * [270ae2f] zshrc: Move ipv6-tunnel to its own function file
+  * [f4d4452] zshrc: Remove kbd layout-changing fcts
+  * [2e9ff8e] zshrc: Remove peval and calc
+  * [fe25fa0] zshrc: Move hex to skel/.zshrc
+  * [a5d4d99] zshrc: Remove qma
+  * [bd6da85] zshrc: Remove setenv
+  * [2093575] zshrc: Remove apache2-ssl-certificate
+  * [37bc165] zshrc: Remove get_tw_cli
+  * [ad6af51] zshrc: Remove upgrade
+  * [32adff6] zshrc: Remove doc()
+  * [f3c3139] zshrc: Remove sshot
+  * [15383cb] zshrc: Move minimal-shell to its own file
+  * [500599c] zshrc: mcd -> mkcd
+  * [d078ae0] zshrc globalias -> zleiab
+  * [50226ef] zshrc: Remove hidiff
+  * [b7ebc81] zshrc: Remove GREP
+  * [6949abc] zshrc: Remove cmplayer
+  * [5e5508b] zshrc: Remove fbmplayer
+  * [0c46c6b] zshrc: Remove fblinks
+  * [fb3386a] zshrc: Remove md
+  * [f4bf5eb] zshrc: Remove chmod aliases
+  * [e44dffb] zshrc: Remove font-changing aliases
+  * [ef25f1d] zshrc: Remove correction-disabled aliases
+  * [c5743df] zshrc: Move `top10' alias to skel/.zshrc
+  * [4c98820] zshrc: Remove CO and CH aliases
+  * [2cbc16c] zshrc: Remove truecrypt alias
+  * [ed94530] zshrc: Remove 1-char aliases: 0, g, s, S
+  * [dd58483] zshrc: Remove md and rd aliases
+  * [b9dc150] zshrc: Remove QTPATH and JIKESPATH
+  * [b4c73df] zshrc: Don't unset `nomatch' anymore
+  * [58ccc98] zshrc: Remove smart-compress
+  * [a9d3f36] zshrc: Remove `show-archive'
+  * [ac404c1] zshrc: Remove `refunc' as `freload' does the same thing
+  * [a3d8018] zshrc: Remove the root/non-root split
+  * [2fa5597] zshrc: Try to keep lines under 80 chars
+
+ -- Christian Hofstaedtler <ch@grml.org>  Tue, 06 Dec 2011 22:48:36 +0100
+
 grml-etc-core (0.4.03) unstable; urgency=low
 
   * [43b9baa] lsb-functions: fix logic of RC_NOCOLOR check for
