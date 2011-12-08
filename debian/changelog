@@ -1,3 +1,10 @@
+grml-etc-core (0.5.2) grml-testing; urgency=low
+
+  * [25a6fad] Remove /etc/skel/.toprc, not supported by recent procps.
+    [Closes: issue1091]
+
+ -- Michael Prokop <mika@grml.org>  Thu, 08 Dec 2011 21:21:23 +0100
+
 grml-etc-core (0.5.1) grml-testing; urgency=low
 
   [ Christian Hofstaedtler ]
