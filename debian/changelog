@@ -1,3 +1,10 @@
+grml-etc-core (0.5.1) grml-testing; urgency=low
+
+  [ Christian Hofstaedtler ]
+  * [8d787e5] Remove extra delete-word bindings
+
+ -- Michael Prokop <mika@grml.org>  Thu, 08 Dec 2011 14:30:23 +0100
+
 grml-etc-core (0.5.0) grml-testing; urgency=low
 
   [ Bernhard Tittelbach ]
