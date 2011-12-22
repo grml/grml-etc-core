@@ -3,7 +3,7 @@
 
 emulate -L zsh
 
-if [[ -n "$1" ]]; then
+if [[ -z "$1" ]]; then
     print 'Usage: weather <station_id>'
     print \
   'List of stations: http://en.wikipedia.org/wiki/List_of_airports_by_ICAO_code'
