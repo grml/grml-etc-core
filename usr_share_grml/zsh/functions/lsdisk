@@ -27,6 +27,7 @@ for dev in "$disks[@]"; do
                  ${mountinfo["$dev"][(w)1]} \
                  ${mountinfo["$dev"][(w)2]} \
                  "${mountinfo["$dev"][(w)3,-5]}"
+    fi
     for sysdevsize in \
         /sys/block/${dev:t}/size(N) \
         /sys/block/${${dev:t}%%<->}/${dev:t}/size(N)
