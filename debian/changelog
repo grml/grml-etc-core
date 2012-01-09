@@ -1,3 +1,15 @@
+grml-etc-core (0.5.3) grml-testing; urgency=low
+
+  [ Bernhard Tittelbach ]
+  * [3b39caa] zsh: weather: fix typo
+  * [caf6961] zsh: lsdisk: fix typo introduced through rewrapping
+
+  [ Ulrich Dangel ]
+  * [74b9ce9] Remove deprecated file /etc/apt/sources.list.grml
+  * [3d0fba5] Remove hg-snapshot-script and corresponding apt.conf.example
+
+ -- Michael Prokop <mika@grml.org>  Mon, 09 Jan 2012 16:30:00 +0100
+
 grml-etc-core (0.5.2) grml-testing; urgency=low
 
   * [25a6fad] Remove /etc/skel/.toprc, not supported by recent procps.
