@@ -870,6 +870,33 @@ zle -N accept-line
 zle -N Accept-Line
 zle -N Accept-Line-HandleContext
 
+## This widget prevents accidental execution of rm -R / or rm -R ~
+## It only works if rmstartsilent option (turns of rm /* check) is off
+## It won't bother you, unless rm is used with -r or -R option and target is home or root
+## In case of abort, the commandline is pushed on the history so it can be corrected
+zle_confirm_rm_home_or_root () {
+    [[ -o rmstarsilent ]] && return 0
+    emulate -L zsh
+    setopt extendedglob
+    local -a cmdline
+    cmdline=(${(z)BUFFER})
+    [[ $cmdline[(I)(-[fiIv]#[rR][fiIv]#|--recursive)] -eq 0 ]] && return 0
+    local askindex=$cmdline[(I)(\~|\~/|/|$HOME)]
+    if [[ "${cmdline[1]}" = "rm" && $askindex -ne 0 ]]
+    then
+        zle -R "zsh: sure you want to recursively delete: $cmdline[askindex] [yN]?"
+        read -k
+        if [[ $REPLY != [YyJj] ]]
+        then
+            fc -R =(<<<"$BUFFER")
+            zle send-break
+        fi
+    fi
+}
+zle -N zle_confirm_rm_home_or_root
+## add as widget to be executed by grmls Accept-Line if it's a valid command
+zstyle ":acceptline:normal" actions "zle_confirm_rm_home_or_root"
+
 # power completion - abbreviation expansion
 # power completion / abbreviation expansion / buffer expansion
 # see http://zshwiki.org/home/examples/zleiab for details
