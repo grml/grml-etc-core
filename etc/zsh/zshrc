@@ -2042,7 +2042,7 @@ help_zle_parse_keybindings()
 
     if [[ -r $HELP_ZLE_CACHE_FILE ]]; then
         local load_cache=0
-        for f ($KEYBINDING_FILES) [[ $f -nt $HELP_ZLE_CACHE_FILE ]] && load_cache=1
+        for f ($HELPZLE_KEYBINDING_FILES) [[ $f -nt $HELP_ZLE_CACHE_FILE ]] && load_cache=1
         [[ $load_cache -eq 0 ]] && . $HELP_ZLE_CACHE_FILE && return
     fi
 
