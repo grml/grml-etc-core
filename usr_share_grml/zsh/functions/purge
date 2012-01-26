@@ -41,9 +41,9 @@ local CURDIRSUDO=""
 if [[ $NBFILES > 0 ]] ; then
     print -l $FILES
     local ans
-    echo -n "Remove these files? [y/n] "
+    echo -n "Remove these files? [y/N] "
     read -q ans; echo
-    if [[ $ans == "y" ]] ; then
+    if [[ $ans == [yY] ]] ; then
         $CURDIRSUDO rm ${FILES}
         echo ">> $PWD purged, $NBFILES files removed"
     else
