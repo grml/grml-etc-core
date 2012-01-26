@@ -175,6 +175,9 @@ fi
 #alias -g T='|tail'
 #alias -g V='| vim -'
 
+## instead of global aliase it might be better to use grmls $abk assoc array, whose contents are expanded after pressing ,.
+#$abk[SnL]="| sort -n | less"
+
 ## get top 10 shell commands:
 #alias top10='print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
 
@@ -202,6 +205,11 @@ fi
 #restart () {
 #    exec $SHELL $SHELL_ARGS "$@"
 #}
+
+## Handy functions for use with the (e::) globbing qualifier (like nt)
+#contains() { grep -q "$*" $REPLY }
+#sameas() { diff -q "$*" $REPLY &>/dev/null }
+#ot () { [[ $REPLY -ot ${~1} ]] }
 
 ## get_ic() - queries imap servers for capabilities; real simple. no imaps
 #ic_get() {
