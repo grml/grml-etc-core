@@ -660,8 +660,8 @@ bindkey "\e[5~" history-beginning-search-backward-end # PageUp
 #k# search history forward for entry beginning with typed text
 bindkey "\e[6~" history-beginning-search-forward-end  # PageDown
 
-# bindkey -s '^L' "|less\n"             # ctrl-L pipes to less
-# bindkey -s '^B' " &\n"                # ctrl-B runs it in the background
+# bindkey -s '^l' "|less\n"             # ctrl-L pipes to less
+# bindkey -s '^b' " &\n"                # ctrl-B runs it in the background
 
 # insert unicode character
 # usage example: 'ctrl-x i' 00A7 'ctrl-x i' will give you an §
@@ -1002,7 +1002,7 @@ insert-datestamp() { LBUFFER+=${(%):-'%D{%Y-%m-%d}'}; }
 zle -N insert-datestamp
 
 #k# Insert a timestamp on the command line (yyyy-mm-dd)
-bindkey '^Ed' insert-datestamp
+bindkey '^ed' insert-datestamp
 
 # press esc-m for inserting last typed word again (thanks to caphuso!)
 insert-last-typed-word() { zle insert-last-word -- 0 -1 };
