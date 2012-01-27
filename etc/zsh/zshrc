@@ -692,6 +692,7 @@ grml_toggle_abbrev() {
     fi
 }
 
+#k# Toggle abbreviation expansion on/off
 zle -N grml_toggle_abbrev
 bindkey '^xA' grml_toggle_abbrev
 
@@ -916,8 +917,15 @@ zleiab() {
     LBUFFER+=${abk[$MATCH]:-$MATCH}
 }
 
-zle -N zleiab
-bindkey ",." zleiab
+zle -N zleiab && bindkey ",." zleiab
+
+#f# display contents of assoc array $abk
+help-show-abk()
+{
+  zle -M "$(print "Type ,. after these abbreviations to expand them:"; print -a -C 2 ${(kv)abk})"
+}
+#k# Display list of abbreviations that expand when followed by ,.
+zle -N help-show-abk && bindkey '^Xb' help-show-abk
 
 # autoloading
 zrcautoload zmv    # who needs mmv or rename?
