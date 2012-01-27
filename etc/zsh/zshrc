@@ -669,7 +669,7 @@ bindkey "\e[6~" history-beginning-search-forward-end  # PageDown
 zrcautoload insert-unicode-char
 zle -N insert-unicode-char
 #k# Insert Unicode character
-bindkey '^Xi' insert-unicode-char
+bindkey '^xi' insert-unicode-char
 
 #m# k Shift-tab Perform backwards menu completion
 if [[ -n "$terminfo[kcbt]" ]]; then
@@ -925,7 +925,7 @@ help-show-abk()
   zle -M "$(print "Type ,. after these abbreviations to expand them:"; print -a -C 2 ${(kv)abk})"
 }
 #k# Display list of abbreviations that expand when followed by ,.
-zle -N help-show-abk && bindkey '^Xb' help-show-abk
+zle -N help-show-abk && bindkey '^xb' help-show-abk
 
 # autoloading
 zrcautoload zmv    # who needs mmv or rename?
@@ -971,7 +971,7 @@ fi
 
 if is4 && zrcautoload insert-files && zle -N insert-files ; then
     #k# Insert files and test globbing
-    bindkey "^Xf" insert-files # C-x-f
+    bindkey "^xf" insert-files # C-x-f
 fi
 
 bindkey ' '   magic-space    # also do history expansion on space
@@ -1036,7 +1036,7 @@ sudo-command-line() {
 zle -N sudo-command-line
 
 #k# prepend the current command with "sudo"
-bindkey "^Os" sudo-command-line
+bindkey "^os" sudo-command-line
 
 ### jump behind the first word on the cmdline.
 ### useful to add options.
@@ -1058,7 +1058,7 @@ bindkey '^x1' jump_after_first_word
 zle -C hist-complete complete-word _generic
 zstyle ':completion:hist-complete:*' completer _history
 #k# complete word from history with menu
-bindkey "^X^X" hist-complete
+bindkey "^x^x" hist-complete
 
 ## complete word from currently visible Screen or Tmux buffer.
 if check_com -c screen || check_com -c tmux; then
@@ -1087,8 +1087,8 @@ if check_com -c screen || check_com -c tmux; then
         compadd -a _screen_display_wordlist
     }
     #k# complete word from currently visible GNU screen buffer
-    bindkey -r "^XS"
-    compdef -k _complete_screen_display complete-word '^XS'
+    bindkey -r "^xS"
+    compdef -k _complete_screen_display complete-word '^xS'
 fi
 
 # history
@@ -1653,7 +1653,7 @@ limit -s
 
 # called later (via is4 && grmlcomp)
 # note: use 'zstyle' for getting current settings
-#         press ^Xh (control-x h) for getting tags in context; ^X? (control-x ?) to run complete_debug with trace output
+#         press ^xh (control-x h) for getting tags in context; ^x? (control-x ?) to run complete_debug with trace output
 grmlcomp() {
     # TODO: This could use some additional information
 
@@ -2058,33 +2058,33 @@ help_zle_parse_keybindings()
     #Note that due to zsh inconsistency on escaping assoc array keys, we encase the key in '' which we will remove later
     local -A help_zle_keybindings
     help_zle_keybindings['<Ctrl>@']="set MARK"
-    help_zle_keybindings['<Ctrl>X<Ctrl>J']="vi-join lines"
-    help_zle_keybindings['<Ctrl>X<Ctrl>B']="jump to matching brace"
-    help_zle_keybindings['<Ctrl>X<Ctrl>U']="undo"
+    help_zle_keybindings['<Ctrl>x<Ctrl>j']="vi-join lines"
+    help_zle_keybindings['<Ctrl>x<Ctrl>b']="jump to matching brace"
+    help_zle_keybindings['<Ctrl>x<Ctrl>u']="undo"
     help_zle_keybindings['<Ctrl>_']="undo"
-    help_zle_keybindings['<Ctrl>X<Ctrl>F<c>']="find <c> in cmdline"
-    help_zle_keybindings['<Ctrl>A']="goto beginning of line"
-    help_zle_keybindings['<Ctrl>E']="goto end of line"
+    help_zle_keybindings['<Ctrl>x<Ctrl>f<c>']="find <c> in cmdline"
+    help_zle_keybindings['<Ctrl>a']="goto beginning of line"
+    help_zle_keybindings['<Ctrl>e']="goto end of line"
     help_zle_keybindings['<Ctrl>t']="transpose charaters"
-    help_zle_keybindings['<Alt>T']="transpose words"
+    help_zle_keybindings['<Alt>t']="transpose words"
     help_zle_keybindings['<Alt>s']="spellcheck word"
-    help_zle_keybindings['<Ctrl>K']="backward kill buffer"
-    help_zle_keybindings['<Ctrl>U']="forward kill buffer"
+    help_zle_keybindings['<Ctrl>k']="backward kill buffer"
+    help_zle_keybindings['<Ctrl>u']="forward kill buffer"
     help_zle_keybindings['<Ctrl>y']="insert previously killed word/string"
     help_zle_keybindings["<Alt>'"]="quote line"
     help_zle_keybindings['<Alt>"']="quote from mark to cursor"
     help_zle_keybindings['<Alt><arg>']="repeat next cmd/char <arg> times (<Alt>-<Alt>1<Alt>0a -> -10 times 'a')"
-    help_zle_keybindings['<Alt>U']="make next word Uppercase"
+    help_zle_keybindings['<Alt>u']="make next word Uppercase"
     help_zle_keybindings['<Alt>l']="make next word lowercase"
-    help_zle_keybindings['<Ctrl>Xd']="preview expansion under cursor"
+    help_zle_keybindings['<Ctrl>xd']="preview expansion under cursor"
     help_zle_keybindings['<Alt>q']="push current CL into background, freeing it. Restore on next CL"
     help_zle_keybindings['<Alt>.']="insert (and interate through) last word from prev CLs"
     help_zle_keybindings['<Alt>,']="complete word from newer history (consecutive hits)"
     help_zle_keybindings['<Alt>m']="repeat last typed word on current CL"
-    help_zle_keybindings['<Ctrl>V']="insert next keypress symbol literally (e.g. for bindkey)"
+    help_zle_keybindings['<Ctrl>v']="insert next keypress symbol literally (e.g. for bindkey)"
     help_zle_keybindings['!!:n*<Tab>']="insert last n arguments of last command"
     help_zle_keybindings['!!:n-<Tab>']="insert arguments n..N-2 of last command (e.g. mv s s d)"
-    help_zle_keybindings['<Alt>H']="run help on current command"
+    help_zle_keybindings['<Alt>h']="show help/manpage for current command"
 
     #init global variables
     unset help_zle_lines help_zle_sln
@@ -2154,7 +2154,7 @@ help-zle()
     zle -M "${(F)help_zle_lines[sln,help_zle_sln-1]}"
 }
 #k# display help for keybindings and ZLE (cycle pages with consecutive use)
-zle -N help-zle && bindkey '^Xz' help-zle
+zle -N help-zle && bindkey '^xz' help-zle
 
 # grep for running process, like: 'any vim'
 any() {
@@ -2385,7 +2385,7 @@ inplaceMkDirs() {
     fi
 }
 #k# mkdir -p <dir> from string under cursor or marked area
-zle -N inplaceMkDirs && bindkey '^XM' inplaceMkDirs
+zle -N inplaceMkDirs && bindkey '^xM' inplaceMkDirs
 
 #f5# List files which have been accessed within the last {\it n} days, {\it n} defaults to 1
 accessed() {
