@@ -1,3 +1,16 @@
+grml-etc-core (0.5.5) grml-testing; urgency=low
+
+  [ Bernhard Tittelbach ]
+  * [87c92b3] zsh: some handy examples for the skel/.zshrc
+  * [82921ea] zsh: purge: make default uppercase
+  * [2cf5d4e] zsh: help-zle bugfix
+  * [cd5a844] zsh: help-show-abk
+  * [6ae9d0d] zsh: keybindings: unify case of caseinsensitive
+    control chars
+  * [764b204] zsh: keybindings: unify case ++
+
+ -- Michael Prokop <mika@grml.org>  Sun, 29 Jan 2012 13:27:56 +0100
+
 grml-etc-core (0.5.4) grml-testing; urgency=low
 
   [ Frank Terbeck ]
