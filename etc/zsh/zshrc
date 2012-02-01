@@ -339,7 +339,8 @@ if ls --help 2> /dev/null | grep -q GNU; then
 elif [[ $OSTYPE == freebsd* ]]; then
     ls_options=( -G )
 fi
-if grep --help 2> /dev/null | grep -q GNU; then
+if grep --help 2> /dev/null | grep -q GNU || \
+   [[ $OSTYPE == freebsd* ]]; then
     grep_options=( --color=auto )
 fi
 
