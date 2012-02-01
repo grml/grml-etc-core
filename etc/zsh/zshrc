@@ -2419,7 +2419,7 @@ check_com new || alias new=modified
 
 # use colors when GNU grep with color-support
 #a2# Execute \kbd{grep -{}-color=auto}
-(( $#grep_options > 0 )) && alias grep='grep '${grep_options:+"${grep_options[*]} "}'
+(( $#grep_options > 0 )) && alias grep='grep '${grep_options:+"${grep_options[*]} "}
 
 # Translate DE<=>EN
 # 'translate' looks up fot a word in a file with language-to-language
