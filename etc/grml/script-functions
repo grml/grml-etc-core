@@ -76,8 +76,9 @@ stringinstring(){
 
 # {{{ reread boot command line; echo last parameter's argument or return false.
 getbootparam(){
-  stringinstring " $1=" /proc/cmdline || return 1
-  result="${/proc/cmdline##*$1=}"
+  CMDLINE=$(cat /proc/cmdline)
+  stringinstring " $1=" "$CMDLINE" || return 1
+  result="${CMDLINE##*$1=}"
   result="${result%%[   ]*}"
   echo "$result"
   return 0
@@ -86,7 +87,7 @@ getbootparam(){
 
 # {{{ check boot commandline for specified option
 checkbootparam(){
-  stringinstring " $1" /proc/cmdline
+  stringinfile " $1" /proc/cmdline
   return "$?"
 }
 # }}}
