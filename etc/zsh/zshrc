@@ -2304,9 +2304,6 @@ alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
 alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 
-# simple webserver
-check_com -c python && alias http="python -m SimpleHTTPServer"
-
 # work around non utf8 capable software in utf environment via $LANG and luit
 if check_com isutfenv && check_com luit ; then
     if check_com -c mrxvt ; then
