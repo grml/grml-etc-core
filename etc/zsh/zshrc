@@ -2273,7 +2273,7 @@ alias lad='ls -d .*(/)'                # only show dot-directories
 alias lsa='ls -a .*(.)'                # only show dot-files
 #a2# Only files with setgid/setuid/sticky flag
 alias lss='ls -l *(s,S,t)'             # only files with setgid/setuid/sticky flag
-#a2# Only show 1st ten symlinks
+#a2# Only show symlinks
 alias lsl='ls -l *(@)'                 # only symlinks
 #a2# Display only executables
 alias lsx='ls -l *(*)'                 # only executables
