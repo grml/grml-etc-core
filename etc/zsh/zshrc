@@ -2349,7 +2349,16 @@ cd() {
 
 #f5# Create Directoy and \kbd{cd} to it
 mkcd() {
-    mkdir -p "$@" && cd "$@"
+    if (( ARGC != 1 )); then
+        printf 'usage: mkcd <new-directory>\n'
+        return 1;
+    fi
+    if [[ ! -d "$1" ]]; then
+        command mkdir -p "$1"
+    else
+        printf '`%s'\'' already exists: cd-ing.\n' "$1"
+    fi
+    builtin cd "$1"
 }
 
 #f5# Create temporary directory and \kbd{cd} to it
