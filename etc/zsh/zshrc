@@ -2393,6 +2393,7 @@ inplaceMkDirs() {
         PATHTOMKDIR="${(Q)bufwords[iword]}"
     fi
     [[ -z "${PATHTOMKDIR}" ]] && return 1
+    PATHTOMKDIR=${~PATHTOMKDIR}
     if [[ -e "${PATHTOMKDIR}" ]]; then
         zle -M " path already exists, doing nothing"
     else
