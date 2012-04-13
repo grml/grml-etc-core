@@ -4,6 +4,8 @@ emulate -L zsh
 setopt HIST_SUBST_PATTERN
 local -a TEXTEMPFILES GHCTEMPFILES PYTEMPFILES FILES
 
+[[ -d "$1" ]] && { TRAPEXIT() { popd -q } && pushd -q "$1" }
+
 TEXTEMPFILES=(*.tex(N:s/%tex/'(log|toc|aux|nav|snm|out|tex.backup|bbl|blg|bib.backup|vrb|lof|lot|hd|idx)(N)'/))
 
 GHCTEMPFILES=(*.(hs|lhs)(N:r:s/%/'.(hi|hc|(p|u|s)_(o|hi))(N)'/))
@@ -39,7 +41,8 @@ local CURDIRSUDO=""
 [[ ! -w ./ ]] && CURDIRSUDO=$SUDO
 
 if [[ $NBFILES > 0 ]] ; then
-    print -l $FILES
+    print "in $PWD:"
+    print -f "  %s\n" $FILES
     local ans
     echo -n "Remove these files? [y/N] "
     read -q ans; echo
