@@ -1,3 +1,30 @@
+grml-etc-core (0.6.0) grml-testing; urgency=low
+
+  [ Frank Terbeck ]
+  * [b2a42cb] zshrc: Fix ls (and grep) option handling on non-linux
+    systems
+  * [e0920bf] zshrc: Enable --color=auto for grep in FreeBSD
+  * [d4e14fd] zshrc: Typo: grml_options -> grep_options
+  * [5f433e9] zshrc: Fix broken quoting
+  * [143008f] zshrc: Fix documentation tag for alias lsl
+  * [a8546c9] zshrc: Remove superfluous comments
+  * [828d43a] zshrc: Make mkcd() more robust
+
+  [ Michael Prokop ]
+  * [e5e6e3a] script-functions: fix getbootparam/checkbootparam
+  * [37f4af2] zshrc: drop http alias. Thanks to Axel Beckert
+    for reporting
+
+  [ Jerome Leclanche ]
+  * [49339f2] Re-implement zurl() under the goo.gl API
+
+  [ Bernhard Tittelbach ]
+  * [2ebcbd6] zshrc: fix inplaceMkDirs
+  * [a4cd061] zsh: purge: make purge take an optional dir argument so it
+    can be used e.g. with zargs --max-args 1 -- **/ -- purge
+
+ -- Michael Prokop <mika@grml.org>  Wed, 09 May 2012 12:29:22 +0200
+
 grml-etc-core (0.5.5) grml-testing; urgency=low
 
   [ Bernhard Tittelbach ]
