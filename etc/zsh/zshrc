@@ -1137,85 +1137,124 @@ chpwd() {
 
 if is433 ; then
 
-CHPWD_PROFILE='default'
+# chpwd_profiles(): Directory Profiles
+#
+# Say you want certain settings to be active in certain directories. This is
+# what you want.
+#
+# To get it working you will need this function and something along the
+# following lines:
+#
+#   chpwd_functions+=( chpwd_profiles )
+#   chpwd_profiles
+#
+# You will usually want to do that *after* you configured the system. That
+# configuration is described below.
+#
+# zstyle ':chpwd:profiles:/usr/src/grml(|/|/*)'   profile grml
+# zstyle ':chpwd:profiles:/usr/src/debian(|/|/*)' profile debian
+#
+# When that's done and you enter a directory that matches the pattern in the
+# third part of the context, a function called chpwd_profile_grml, for example,
+# is called (if it exists).
+#
+# If no pattern patches (read: no profile is detected) the profile is set to
+# 'default', which means chpwd_profile_default is attempted to be called.
+#
+# A word about the context (the ':chpwd:profiles:*' stuff in the zstyle
+# command) which is used: The third part in the context is matched against
+# ${PWD}. That's why using a pattern such as /foo/bar(|/|/*) makes sense.
+# Because that way the profile is detected for all these values of ${PWD}:
+#   /foo/bar
+#   /foo/bar/
+#   /foo/bar/baz
+# So, if you want to make double damn sure a profile works in /foo/bar and
+# everywhere deeper in that tree, just use (|/|/*) and be happy.
+#
+# The name of the detected profile will be available in a variable called
+# 'profile' in your functions. You don't need to do anything, it'll just be
+# there.
+#
+# Then there is the parameter $CHPWD_PROFILE is set to the profile, that was is
+# currently active (the default value is "default"). That way you can avoid
+# running code for a profile that is already active, by running code such as
+# the following at the start of your function:
+#
+# function chpwd_profile_grml() {
+#     [[ ${profile} == ${CHPWD_PROFILE} ]] && return 1
+#   ...
+# }
+#
+# If you know you are going to do that all the time for each and every
+# directory-profile function you are ever going to write, you may also set the
+# `re-execute' style to `false' (which only defaults to `true' for backwards
+# compatibility), like this:
+#
+#   zstyle ':chpwd:profiles:*' re-execute false
+#
+# If you use this feature and need to know whether it is active in your current
+# shell, there are several ways to do that. Here are two simple ways:
+#
+# a) If knowing if the profiles feature is active when zsh starts is good
+#    enough for you, you can use the following snippet:
+#
+# (( ${+functions[chpwd_profiles]} )) && print "directory profiles active"
+#
+# b) If that is not good enough, and you would prefer to be notified whenever a
+#    profile changes, you can solve that by making sure you start *every*
+#    profile function you create like this:
+#
+# function chpwd_profile_myprofilename() {
+#     [[ ${profile} == ${CHPWD_PROFILE} ]] && return 1
+#     print "chpwd(): Switching to profile: $profile"
+#   ...
+# }
+#
+# That makes sure you only get notified if a profile is *changed*, not
+# everytime you change directory. (To avoid this, you may also set the newer
+# `re-execute' style like described further above instead of the test on top of
+# the function.
+#
+# If you need to do initialisations the first time `chpwd_profiles' is called
+# (which should be in your configuration file), you can do that in a function
+# called "chpwd_profiles_init". That function needs to be defined *before*
+# `chpwd_profiles' is called for this to work.
+#
+# During the *first* call of `chpwd_profiles' (and therefore all its profile
+# functions) the parameter `$CHPWD_PROFILES_INIT' exists and is set to `1'. In
+# all other cases, the parameter does not exist at all.
+#
+# When the system switches from one profile to another, it executes a function
+# named "chpwd_leave_profile_<PREVIOUS-PROFILE-NAME>()" before calling the
+# profile-function for the new profile.
+#
+# There you go. Now have fun with that.
+#
+# Note: This feature requires zsh 4.3.3 or newer.
 function chpwd_profiles() {
-    # Say you want certain settings to be active in certain directories.
-    # This is what you want.
-    #
-    # zstyle ':chpwd:profiles:/usr/src/grml(|/|/*)'   profile grml
-    # zstyle ':chpwd:profiles:/usr/src/debian(|/|/*)' profile debian
-    #
-    # When that's done and you enter a directory that matches the pattern
-    # in the third part of the context, a function called chpwd_profile_grml,
-    # for example, is called (if it exists).
-    #
-    # If no pattern matches (read: no profile is detected) the profile is
-    # set to 'default', which means chpwd_profile_default is attempted to
-    # be called.
-    #
-    # A word about the context (the ':chpwd:profiles:*' stuff in the zstyle
-    # command) which is used: The third part in the context is matched against
-    # ${PWD}. That's why using a pattern such as /foo/bar(|/|/*) makes sense.
-    # Because that way the profile is detected for all these values of ${PWD}:
-    #   /foo/bar
-    #   /foo/bar/
-    #   /foo/bar/baz
-    # So, if you want to make double damn sure a profile works in /foo/bar
-    # and everywhere deeper in that tree, just use (|/|/*) and be happy.
-    #
-    # The name of the detected profile will be available in a variable called
-    # 'profile' in your functions. You don't need to do anything, it'll just
-    # be there.
-    #
-    # Then there is the parameter $CHPWD_PROFILE is set to the profile, that
-    # was is currently active. That way you can avoid running code for a
-    # profile that is already active, by running code such as the following
-    # at the start of your function:
-    #
-    # function chpwd_profile_grml() {
-    #     [[ ${profile} == ${CHPWD_PROFILE} ]] && return 1
-    #   ...
-    # }
-    #
-    # The initial value for $CHPWD_PROFILE is 'default'.
-    #
-    # Version requirement:
-    #   This feature requires zsh 4.3.3 or newer.
-    #   If you use this feature and need to know whether it is active in your
-    #   current shell, there are several ways to do that. Here are two simple
-    #   ways:
-    #
-    #   a) If knowing if the profiles feature is active when zsh starts is
-    #      good enough for you, you can put the following snippet into your
-    #      .zshrc.local:
-    #
-    #   (( ${+functions[chpwd_profiles]} )) && print "directory profiles active"
-    #
-    #   b) If that is not good enough, and you would prefer to be notified
-    #      whenever a profile changes, you can solve that by making sure you
-    #      start *every* profile function you create like this:
-    #
-    #   function chpwd_profile_myprofilename() {
-    #       [[ ${profile} == ${CHPWD_PROFILE} ]] && return 1
-    #       print "chpwd(): Switching to profile: $profile"
-    #     ...
-    #   }
-    #
-    #      That makes sure you only get notified if a profile is *changed*,
-    #      not everytime you change directory, which would probably piss
-    #      you off fairly quickly. :-)
-    #
-    # There you go. Now have fun with that.
-    local -x profile
+    local profile context
+    local -i reexecute
 
-    zstyle -s ":chpwd:profiles:${PWD}" profile profile || profile='default'
-    if (( ${+functions[chpwd_profile_$profile]} )) ; then
-        chpwd_profile_${profile}
+    context=":chpwd:profiles:$PWD"
+    zstyle -s "$context" profile profile || profile='default'
+    zstyle -T "$context" re-execute && reexecute=1 || reexecute=0
+
+    if (( ${+parameters[CHPWD_PROFILE]} == 0 )); then
+        typeset -g CHPWD_PROFILE
+        local CHPWD_PROFILES_INIT=1
+        (( ${+functions[chpwd_profiles_init]} )) && chpwd_profiles_init
+    elif [[ $profile != $CHPWD_PROFILE ]]; then
+        (( ${+functions[chpwd_leave_profile_$CHPWD_PROFILE]} )) \
+            && chpwd_leave_profile_${CHPWD_PROFILE}
+    fi
+    if (( reexecute )) || [[ $profile != $CHPWD_PROFILE ]]; then
+        (( ${+functions[chpwd_profile_$profile]} )) && chpwd_profile_${profile}
     fi
 
     CHPWD_PROFILE="${profile}"
     return 0
 }
+
 chpwd_functions=( ${chpwd_functions} chpwd_profiles )
 
 fi # is433
