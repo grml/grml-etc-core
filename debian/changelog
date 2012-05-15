@@ -1,3 +1,15 @@
+grml-etc-core (0.6.1) grml-testing; urgency=low
+
+  [ Frank Terbeck ]
+  * [638c191] Merge latest directory-profiles code
+  * [af590e7] dirprofiles: Move updated documentation from source code
+    comment to the setup's manual page
+
+  [ Michael Prokop ]
+  * [f2fcaea] Bump Standards-Version to 3.9.3.
+
+ -- Michael Prokop <mika@grml.org>  Tue, 15 May 2012 20:24:01 +0200
+
 grml-etc-core (0.6.0) grml-testing; urgency=low
 
   [ Frank Terbeck ]
