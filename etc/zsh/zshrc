@@ -898,7 +898,7 @@ abk=(
     '....' '../../..'
     'BG'   '& exit'
     'C'    '| wc -l'
-    'G'    '|& grep '${grep_options:+"${grep_options[*]} "}
+    'G'    '|& grep '${grep_options:+"${grep_options[*]}"}
     'H'    '| head'
     'Hl'   ' --help |& less -r'    #d (Display help in pager)
     'L'    '| less'
@@ -1428,15 +1428,15 @@ fi
 # do we have GNU ls with color-support?
 if [[ "$TERM" != dumb ]]; then
     #a1# execute \kbd{@a@}:\quad ls with colors
-    alias ls='ls -b -CF '${ls_options:+"${ls_options[*]} "}
+    alias ls='ls -b -CF '${ls_options:+"${ls_options[*]}"}
     #a1# execute \kbd{@a@}:\quad list all files, with colors
-    alias la='ls -la '${ls_options:+"${ls_options[*]} "}
+    alias la='ls -la '${ls_options:+"${ls_options[*]}"}
     #a1# long colored list, without dotfiles (@a@)
-    alias ll='ls -l '${ls_options:+"${ls_options[*]} "}
+    alias ll='ls -l '${ls_options:+"${ls_options[*]}"}
     #a1# long colored list, human readable sizes (@a@)
-    alias lh='ls -hAl '${ls_options:+"${ls_options[*]} "}
+    alias lh='ls -hAl '${ls_options:+"${ls_options[*]}"}
     #a1# List files, append qualifier to filenames \\&\quad(\kbd{/} for directories, \kbd{@} for symlinks ...)
-    alias l='ls -lF '${ls_options:+"${ls_options[*]} "}
+    alias l='ls -lF '${ls_options:+"${ls_options[*]}"}
 else
     alias ls='ls -b -CF'
     alias la='ls -la'
@@ -2380,7 +2380,7 @@ check_com new || alias new=modified
 
 # use colors when GNU grep with color-support
 #a2# Execute \kbd{grep -{}-color=auto}
-(( $#grep_options > 0 )) && alias grep='grep '${grep_options:+"${grep_options[*]} "}
+(( $#grep_options > 0 )) && alias grep='grep '${grep_options:+"${grep_options[*]}"}
 
 # Translate DE<=>EN
 # 'translate' looks up fot a word in a file with language-to-language
