@@ -1920,6 +1920,7 @@ compdef _functions edfunc
 #m# f6 Stop() \kbd{/etc/init.d/\em{process}}\quad\kbd{stop}
 #m# f6 Reload() \kbd{/etc/init.d/\em{process}}\quad\kbd{reload}
 #m# f6 Force-Reload() \kbd{/etc/init.d/\em{process}}\quad\kbd{force-reload}
+#m# f6 Status() \kbd{/etc/init.d/\em{process}}\quad\kbd{status}
 if [[ -d /etc/init.d || -d /etc/service ]] ; then
     __start_stop() {
         local action_="${1:l}"  # e.g Start/Stop/Restart
@@ -1951,7 +1952,7 @@ if [[ -d /etc/init.d || -d /etc/service ]] ; then
         _describe "service startup script" scripts
     }
 
-    for i in Start Restart Stop Force-Reload Reload ; do
+    for i in Start Restart Stop Force-Reload Reload Status ; do
         eval "$i() { __start_stop $i \"\$1\" \"\$2\" ; }"
         compdef _grmlinitd $i
     done
