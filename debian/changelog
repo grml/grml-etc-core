@@ -1,3 +1,12 @@
+grml-etc-core (0.6.2) grml-testing; urgency=low
+
+  * [162b488] zshrc: drop trailing space in grep and ls _options.
+    Thanks to Frank Terbeck <ft@grml.org> for the bugfix
+  * [6472d2d] zshrc: provide Status as shortcut for
+    /etc/init.d/$service status
+
+ -- Michael Prokop <mika@grml.org>  Tue, 12 Jun 2012 00:36:48 +0200
+
 grml-etc-core (0.6.1) grml-testing; urgency=low
 
   [ Frank Terbeck ]
