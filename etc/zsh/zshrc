@@ -179,6 +179,11 @@ isdarwin(){
     return 1
 }
 
+isfreebsd(){
+    [[ $OSTYPE == freebsd* ]] && return 0
+    return 1
+}
+
 #f1# are we running within an utf environment?
 isutfenv() {
     case "$LANG $CHARSET $LANGUAGE" in
@@ -533,8 +538,9 @@ export SHELL='/bin/zsh'
 
 # color setup for ls:
 check_com -c dircolors && eval $(dircolors -b)
-# color setup for ls on OS X:
+# color setup for ls on OS X / FreeBSD:
 isdarwin && export CLICOLOR=1
+isfreebsd && export CLICOLOR=1
 
 # do MacPorts setup on darwin
 if isdarwin && [[ -d /opt/local ]]; then
