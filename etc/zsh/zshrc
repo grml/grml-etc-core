@@ -2156,9 +2156,11 @@ deswap() {
 #           VIM_OPTIONS=( -p )
 #       This will cause vim to send every file given on the
 #       commandline to be send to it's own tab (needs vim7).
-vim() {
-    VIM_PLEASE_SET_TITLE='yes' command vim ${VIM_OPTIONS} "$@"
-}
+if check_com vim; then
+    vim() {
+        VIM_PLEASE_SET_TITLE='yes' command vim ${VIM_OPTIONS} "$@"
+    }
+fi
 
 # make a backup of a file
 bk() {
