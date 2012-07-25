@@ -969,7 +969,6 @@ if zrcautoload compinit ; then
     compinit || print 'Notice: no compinit available :('
 else
     print 'Notice: no compinit available :('
-    function zstyle { }
     function compdef { }
 fi
 
