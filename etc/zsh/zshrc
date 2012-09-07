@@ -585,6 +585,22 @@ watch=(notme root)
 # automatically remove duplicates from these arrays
 typeset -U path cdpath fpath manpath
 
+# Remove zle-line-{init,finish} if it looks like it turns smkx. This would be
+# better fixed by working with those modes too, but we use way too many
+# hardcoded bindings for now.
+function remove_widget () {
+    local name=$1
+    local cap=$2
+    if (( ${+functions[$name]} )) && [[ ${functions[$name]} == *${cap}* ]]; then
+        local w=${widgets[$name]}
+        zle -D $name
+        [[ $w == user:* ]] && unfunction ${w#*:}
+    fi
+}
+remove_widget zle-line-init smkx
+remove_widget zle-line-finish rmkx
+unfunction remove_widget
+
 # keybindings
 if [[ "$TERM" != emacs ]] ; then
     [[ -z "$terminfo[kdch1]" ]] || bindkey -M emacs "$terminfo[kdch1]" delete-char
