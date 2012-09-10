@@ -1,3 +1,36 @@
+grml-etc-core (0.7.0) grml-testing; urgency=low
+
+  [ Michael Prokop ]
+  * [ea65fdc] zshrc: Enable CLICOLOR on FreeBSD. Thanks to
+    Christian Hofstaedtler
+
+  [ Bernhard Tittelbach ]
+  * [174a091] zshrc: make simple-extract also work with uris that end in
+    e.g. format=zip
+  * [9cef3a9] zsh: fix typo grml functions autoload
+  * tmux related changes:
+    - [895e6d6] new statusline, space and backspace enabled for
+      window switching
+    - [5da798c] more space, session name
+    - [f4ad46f] mouse-select-pane off to enable terminal window
+      copy&paste
+    - [046d45b] better user@host:session scheme
+    - [646f73f] date and time, and commented out alternatives
+    - [7eaf7d8] make copy&pase mode useable
+    - [ee6fa75] kill-session for gebi
+    - [c6c2094] kill-pane instead of kill-window
+    - [3309823] join-pane
+
+  [ Frank Terbeck ]
+  * [76ee162] Only define vim() if vim is available
+  * [c67b327] Do not disable zstyle if compsys did not load
+  * [78d890c] Specify a command search path for sudo completion
+    [Closes: issue1207]
+  * [8564319] Workaround incompatibilities with the keyboard setup of
+    some  vendors
+
+ -- Michael Prokop <mika@grml.org>  Mon, 10 Sep 2012 09:09:16 +0200
+
 grml-etc-core (0.6.2) grml-testing; urgency=low
 
   * [162b488] zshrc: drop trailing space in grep and ls _options.
