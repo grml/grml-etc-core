@@ -2,17 +2,18 @@
 emulate -L zsh
 
 setopt HIST_SUBST_PATTERN
-local -a TEXTEMPFILES GHCTEMPFILES PYTEMPFILES FILES
+local -a TEXTEMPFILES GHCTEMPFILES PYTEMPFILES
+local -a -U FILES
 
 [[ -d "$1" ]] && { TRAPEXIT() { popd -q } && pushd -q "$1" }
 
-TEXTEMPFILES=(*.tex(N:s/%tex/'(log|toc|aux|nav|snm|out|tex.backup|bbl|blg|bib.backup|vrb|lof|lot|hd|idx)(N)'/))
+TEXTEMPFILES=(*.tex(N-.:s/%tex/'(log|toc|aux|nav|snm|out|tex.backup|bbl|blg|bib.backup|vrb|lof|lot|hd|idx)(.N)'/))
 
-GHCTEMPFILES=(*.(hs|lhs)(N:r:s/%/'.(hi|hc|(p|u|s)_(o|hi))(N)'/))
+GHCTEMPFILES=(*.(hs|lhs)(N-.:r:s/%/'.(hi|hc|(p|u|s)_(o|hi))(.N)'/))
 
-PYTEMPFILES=(*.py(N:s/%py/'(pyc|pyo)(N)'/))
+PYTEMPFILES=(*.py(N-.:s/%py/'(pyc|pyo)(.N)'/))
 
-LONELY_MOOD_FILES=((*.mood)(.NDe:'local -a AF;AF=( ${${REPLY#.}%mood}(mp3|flac|ogg|asf|wmv|aac)(N) ); [[ -z "$AF" ]]':))
+LONELY_MOOD_FILES=((*.mood)(.NDe:'local -a AF;AF=( ${${REPLY#.}%mood}(mp3|flac|ogg|asf|wmv|aac)(N-.) ); [[ -z "$AF" ]]':))
 
 ZSH_COMPILED=(*.zwc(.NDe:'[[ -f ${REPLY%.zwc} && ${REPLY%.zwc} -nt ${REPLY} ]]':))
 
