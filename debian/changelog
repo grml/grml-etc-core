@@ -1,3 +1,15 @@
+grml-etc-core (0.7.1) grml-testing; urgency=low
+
+  [ Bernhard Tittelbach ]
+  * [88b8704] zsh: improve purge(), glob for files where appropriate and
+    don't try to delete stuff twice
+
+  [ Michael Prokop ]
+  * [fe6aa2b] zshrc: use variable ffound in zrcautoload function
+  * [0098421] Bump Standards-Version to 3.9.4
+
+ -- Michael Prokop <mika@grml.org>  Tue, 02 Oct 2012 09:58:46 +0200
+
 grml-etc-core (0.7.0) grml-testing; urgency=low
 
   [ Michael Prokop ]
