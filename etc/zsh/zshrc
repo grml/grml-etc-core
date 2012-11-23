@@ -1225,7 +1225,7 @@ if zrcautoload colors && colors 2>/dev/null ; then
     MAGENTA="%{${fg[magenta]}%}"
     YELLOW="%{${fg[yellow]}%}"
     WHITE="%{${fg[white]}%}"
-    NO_COLOUR="%{${reset_color}%}"
+    NO_COLOR="%{${reset_color}%}"
 else
     BLUE=$'%{\e[1;34m%}'
     RED=$'%{\e[1;31m%}'
@@ -1234,7 +1234,7 @@ else
     WHITE=$'%{\e[1;37m%}'
     MAGENTA=$'%{\e[1;35m%}'
     YELLOW=$'%{\e[1;33m%}'
-    NO_COLOUR=$'%{\e[0m%}'
+    NO_COLOR=$'%{\e[0m%}'
 fi
 
 # gather version control information for inclusion in a prompt
@@ -1266,10 +1266,10 @@ if [[ "$TERM" == dumb ]] ; then
     zstyle ':vcs_info:*' actionformats "(%s%)-[%b|%a] " "zsh: %r"
     zstyle ':vcs_info:*' formats       "(%s%)-[%b] "    "zsh: %r"
 else
-    # these are the same, just with a lot of colours:
-    zstyle ':vcs_info:*' actionformats "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOUR} " \
+    # these are the same, just with a lot of colors:
+    zstyle ':vcs_info:*' actionformats "${MAGENTA}(${NO_COLOR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOR} " \
                                        "zsh: %r"
-    zstyle ':vcs_info:*' formats       "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${MAGENTA}]${NO_COLOUR}%} " \
+    zstyle ':vcs_info:*' formats       "${MAGENTA}(${NO_COLOR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${MAGENTA}]${NO_COLOR}%} " \
                                        "zsh: %r"
     zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "%b${RED}:${YELLOW}%r"
 fi
@@ -1396,13 +1396,13 @@ else
     # prompt below)
     if [[ $GRMLPROMPT -gt 0 ]] ; then
         PROMPT="${RED}${EXITCODE}${CYAN}[%j running job(s)] ${GREEN}{history#%!} ${RED}%(3L.+.) ${BLUE}%* %D
-${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< "
+${BLUE}%n${NO_COLOR}@%m %40<...<%B%~%b%<< "
     else
         # This assembles the primary prompt string
         if (( EUID != 0 )); then
-            PROMPT="%B${RED}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${BLUE}%b%n${NO_COLOUR}@${CYAN}%m${NO_COLOUR} %40<...<%B%~%b%<< "
+            PROMPT="%B${RED}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${BLUE}%b%n${NO_COLOR}@${CYAN}%m${NO_COLOR} %40<...<%B%~%b%<< "
         else
-            PROMPT="%B${BLUE}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${RED}%b%n${NO_COLOUR}@${CYAN}%m${NO_COLOUR} %40<...<%B%~%b%<< "
+            PROMPT="%B${BLUE}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${RED}%b%n${NO_COLOR}@${CYAN}%m${NO_COLOR} %40<...<%B%~%b%<< "
         fi
     fi
 fi
