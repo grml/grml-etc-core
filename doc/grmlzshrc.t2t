@@ -524,6 +524,9 @@ in it, including file names starting with ".".
 : **dchange()**
 Shows the changelog of given package in $PAGER.
 
+: **dcopyright()**
+Shows the copyright of given package in $PAGER.
+
 : **debian2hd()**
 Tells the user to use grml-debootstrap, if she wants to install debian to
 harddisk.

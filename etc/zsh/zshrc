@@ -1913,6 +1913,19 @@ if check_com -c $PAGER ; then
     _dnews() { _files -W /usr/share/doc -/ }
     compdef _dnews dnews
 
+    #f1# View Debian's copyright of a given package
+    dcopyright() {
+        emulate -L zsh
+        if [[ -r /usr/share/doc/$1/copyright ]] ; then
+            $PAGER /usr/share/doc/$1/copyright
+        else
+            echo "No copyright file for package $1 found, sorry."
+            return 1
+        fi
+    }
+    _dcopyright() { _files -W /usr/share/doc -/ }
+    compdef _dcopyright dcopyright
+
     #f1# View upstream's changelog of a given package
     uchange() {
         emulate -L zsh
