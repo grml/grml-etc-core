@@ -102,7 +102,7 @@
   endif
 
 " turn these ON:
-  set ek hidden ruler sc vb wmnu
+  set ek vb
 " set digraph
 " turn these OFF ("no" prefix):
   set nodigraph noeb noet nosol
@@ -127,13 +127,9 @@
 " some colors - as an example "white on black" [use bold fonts]:
 "  hi normal   ctermfg=white  ctermbg=black guifg=white  guibg=black
 "  hi nontext  ctermfg=blue   ctermbg=black guifg=blue   guibg=black
-  if has("syntax")
-     syn on
-  endif
 " set t_Co=256                " number of colors
 
 " some useful mappings:
-  set pastetoggle=<f11>
 
 " with F7 copy all current buffer to clipboard, or a selection.
 " with shift-F7, paste all clipboard contents
