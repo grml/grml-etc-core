@@ -131,6 +131,10 @@ fi
 #zstyle ':completion:*:my-accounts' users-hosts $my_accounts
 #zstyle ':completion:*:other-accounts' users-hosts $other_accounts
 
+## add grml.org to your list of hosts
+#hosts+=(grml.org)
+#zstyle ':completion:*:hosts' hosts $hosts
+
 ## telnet on non-default ports? ...well:
 ## specify specific port/service settings:
 #telnet_users_hosts_ports=(
