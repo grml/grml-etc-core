@@ -109,7 +109,7 @@ if [[ $ZSH_PROFILE_RC -gt 0 ]] ; then
 fi
 
 # load .zshrc.pre to give the user the chance to overwrite the defaults
-[[ -r ${HOME}/.zshrc.pre ]] && source ${HOME}/.zshrc.pre
+[[ -r ${ZDOTDIR:-${HOME}}/.zshrc.pre ]] && source ${ZDOTDIR:-${HOME}}/.zshrc.pre
 
 # check for version/system
 # check for versions (compatibility reasons)
@@ -502,7 +502,7 @@ xunfunction() {
 # modifications in ~/.zshrc.local
 zrclocal() {
     xsource "/etc/zsh/zshrc.local"
-    xsource "${HOME}/.zshrc.local"
+    xsource "${ZDOTDIR:-${HOME}}/.zshrc.local"
     return 0
 }
 
@@ -1126,17 +1126,17 @@ fi
 
 # history
 
-ZSHDIR=$HOME/.zsh
+ZSHDIR=${ZDOTDIR:-${HOME}/.zsh}
 
 #v#
-HISTFILE=$HOME/.zsh_history
+HISTFILE=${ZDOTDIR:-${HOME}}/.zsh_history
 isgrmlcd && HISTSIZE=500  || HISTSIZE=5000
 isgrmlcd && SAVEHIST=1000 || SAVEHIST=10000 # useful for setopt append_history
 
 # dirstack handling
 
 DIRSTACKSIZE=${DIRSTACKSIZE:-20}
-DIRSTACKFILE=${DIRSTACKFILE:-${HOME}/.zdirs}
+DIRSTACKFILE=${DIRSTACKFILE:-${ZDOTDIR:-${HOME}}/.zdirs}
 
 if [[ -f ${DIRSTACKFILE} ]] && [[ ${#dirstack[*]} -eq 0 ]] ; then
     dirstack=( ${(f)"$(< $DIRSTACKFILE)"} )
@@ -1784,7 +1784,6 @@ grmlcomp() {
         $(hostname)
         "$_ssh_hosts[@]"
         "$_etc_hosts[@]"
-        grml.org
         localhost
     )
     zstyle ':completion:*:hosts' hosts $hosts
