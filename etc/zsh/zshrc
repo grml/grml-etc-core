@@ -946,8 +946,7 @@ zleiab() {
         return 0
     fi
 
-    matched_chars='[.-|_a-zA-Z0-9]#'
-    LBUFFER=${LBUFFER%%(#m)[.-|_a-zA-Z0-9]#}
+    LBUFFER=${LBUFFER%%(#m)[.\-+:|_a-zA-Z0-9]#}
     LBUFFER+=${abk[$MATCH]:-$MATCH}
 }
 
