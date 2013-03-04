@@ -1468,13 +1468,18 @@ function info_print () {
     printf '%s' "${esc_end}"
 }
 
-# TODO: revise all these NO* variables and especially their documentation
-#       in zsh-help() below.
-is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
-    [[ $NOPRECMD -gt 0 ]] && return 0
-    # update VCS information
-    (( ${+functions[vcs_info]} )) && vcs_info
+function grml_reset_screen_title () {
+    # adjust title of xterm
+    # see http://www.faqs.org/docs/Linux-mini/Xterm-Title.html
+    [[ ${NOTITLE:-} -gt 0 ]] && return 0
+    case $TERM in
+        (xterm*|rxvt*)
+            set_title ${(%):-"%n@%m: %~"}
+            ;;
+    esac
+}
 
+function grml_vcs_to_screen_title () {
     if [[ $TERM == screen* ]] ; then
         if [[ -n ${vcs_info_msg_1_} ]] ; then
             ESC_print ${vcs_info_msg_1_}
@@ -1482,6 +1487,17 @@ is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
             ESC_print "zsh"
         fi
     fi
+}
+
+zrcautoload add-zsh-hook || add-zsh-hook () { :; }
+if [[ $NOPRECMD -gt 0 ]]; then
+    add-zsh-hook precmd grml_reset_screen_title
+    add-zsh-hook precmd grml_vcs_to_screen_title
+fi
+
+# TODO: revise all these NO* variables and especially their documentation
+#       in zsh-help() below.
+is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
     # just use DONTSETRPROMPT=1 to be able to overwrite RPROMPT
     if [[ ${DONTSETRPROMPT:-} -eq 0 ]] ; then
         if [[ $BATTERY -gt 0 ]] ; then
@@ -1492,14 +1508,6 @@ is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
             RPROMPT="%(?..:() "
         fi
     fi
-    # adjust title of xterm
-    # see http://www.faqs.org/docs/Linux-mini/Xterm-Title.html
-    [[ ${NOTITLE:-} -gt 0 ]] && return 0
-    case $TERM in
-        (xterm*|rxvt*)
-            set_title ${(%):-"%n@%m: %~"}
-            ;;
-    esac
 }
 
 # preexec() => a function running before every command
