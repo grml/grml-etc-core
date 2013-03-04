@@ -1351,6 +1351,13 @@ function prompt_grml_precmd () {
 # set prompt
 if zrcautoload promptinit && promptinit 2>/dev/null ; then
     promptinit # people should be able to use their favourite prompt
+
+    # Since we define the required functions in here and not in files in
+    # $fpath, we need to stick the theme's name into `$prompt_themes'
+    # ourselves, since promptinit does not pick them up otherwise.
+    prompt_themes+=( grml )
+    # Also, keep the array sorted...
+    prompt_themes=( "${(@on)prompt_themes}" )
 else
     print 'Notice: no promptinit available :('
 fi
