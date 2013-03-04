@@ -1284,6 +1284,70 @@ function command_not_found_handler() {
     return 1
 }
 
+function prompt_grml_help () {
+    cat <<__EOF0__
+  prompt grml
+
+    This is the prompt as used by the grml-live system <http://grml.org>.
+    It is a rather simple one-line prompt, that by default looks like this:
+
+        <user>@<host> <current-working-directory>[ <vcs_info-data>]%
+
+    The prompt itself integrates with zsh's prompt themes system (as you are
+    witnessing right now) and is configurable to a certain degree. In
+    particular, these aspects are customisable:
+
+        - The items used in the prompt (e.g. you can remove \`user' from
+          the list of activated items, which will cause the user name to
+          be omitted from the prompt string).
+
+        - The attributes used with the items are customisable via strings
+          used before and after the actual item.
+
+    The available items are: rc, rc-always, change-root, user, at, host, path,
+    vcs, percent, sad-smiley.
+
+    The actual configuration is done via zsh's \`zstyle' mechanism. The
+    context, that is used while looking up styles is:
+
+        ':prompt:grml:<sub-context>'
+
+    Here <sub-context> is either 'items:<item>' or 'setup'. The available
+    styles in the \`setup' context are: use-rprompt, items. For example,
+    default \`items' style could be configured like this:
+
+        zstyle ':prompt:grml:setup' items user at host path \\
+                                          vcs percent
+
+    The styles:
+
+        - use-rprompt (boolean): If \`true' (the default), print a sad smiley
+          in $RPROMPT if the last command a returned non-successful error
+          code.
+
+        - items (list): The list of items used in the prompt. If \`vcs' is
+          present in the list, the theme's code invokes \`vcs_info'
+          accordingly. Default: rc user change-root at host path vcs precent
+
+    Available styles in 'items:<item>' are: pre, post. These are strings that
+    are inserted before (pre) and after (post) the item in question. Thus, the
+    following would cause the user name to be printed in red instead of the
+    default blue:
+
+        zstyle ':prompt:grml:items:user' pre '%F{red}'
+
+    Note, that the \`post' style may remain at its default value, because its
+    default value is '%f', which turns the foreground text attribute off (which
+    is exactly, what is still required with the new \`pre' value).
+__EOF0__
+}
+
+function prompt_grml_setup () {
+}
+
+function prompt_grml_precmd () {
+}
+
 # set prompt
 if zrcautoload promptinit && promptinit 2>/dev/null ; then
     promptinit # people should be able to use their favourite prompt
