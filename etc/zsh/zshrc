@@ -1343,9 +1343,92 @@ __EOF0__
 }
 
 function prompt_grml_setup () {
+    emulate -L zsh
+    autoload -Uz vcs_info
+    autoload -Uz add-zsh-hook
+    add-zsh-hook precmd prompt_grml_precmd
 }
 
+typeset -gA grml_prompt_pre_default \
+            grml_prompt_post_default \
+            grml_prompt_token_default
+
+grml_prompt_pre_default=(
+    rc                '%F{red}'
+    rc-always         ''
+    change-root       ''
+    user              '%B%F{blue}'
+    at                ''
+    host              ''
+    path              '%b'
+    vcs               ''
+    percent           ''
+    sad-smiley        ''
+)
+
+grml_prompt_post_default=(
+    rc                '%f'
+    rc-always         ''
+    change-root       ''
+    user              '%f%b'
+    at                ''
+    host              ' '
+    path              ' %B'
+    vcs               ''
+    percent           ' '
+    sad-smiley        ''
+)
+
+grml_prompt_token_default=(
+    rc                '%(?..%? )'
+    rc-always         '%?'
+    change-root       'debian_chroot'
+    user              '%n'
+    at                '@'
+    host              '%m'
+    path              '%40<..<%~%<<'
+    vcs               '0'
+    percent           '%%'
+    sad-smiley        '%(?..:()'
+)
+
 function prompt_grml_precmd () {
+    emulate -L zsh
+    setopt extendedglob
+    local it apre apost new v
+    local -a items
+
+    zstyle -a ':prompt:grml:setup' items items \
+        || items=( rc change-root user at host path vcs percent )
+    PS1=''
+    for it in "${items[@]}"; do
+        zstyle -s ":prompt:grml:items:$it" pre apre \
+            || apre=${grml_prompt_pre_default[$it]}
+        zstyle -s ":prompt:grml:items:$it" post apost \
+            || apost=${grml_prompt_post_default[$it]}
+        zstyle -s ":prompt:grml:items:$it" token new \
+            || new=${grml_prompt_token_default[$it]}
+        PS1="${PS1}${apre}"
+        case $it in
+            change-root)
+                (( ${+parameters[$new]} )) && PS1="${PS1}(${(P)new})"
+                ;;
+            vcs)
+                v="vcs_info_msg_${new}_"
+                vcs_info
+                if (( ${+parameters[$v]} )) && [[ -n "${(P)v}" ]]; then
+                    PS1="${PS1}${(P)v}"
+                fi
+                ;;
+            *) PS1="${PS1}${new}" ;;
+        esac
+        PS1="${PS1}${apost}"
+    done
+    if zstyle -t ':prompt:grml:setup' use-rprompt; then
+        zstyle -s ":prompt:grml:items:sad-smiley" token new \
+            || new=${grml_prompt_token_default[sad-smiley]}
+        RPS1="$new"
+    fi
 }
 
 # set prompt
