@@ -1288,8 +1288,8 @@ function prompt_grml_help () {
     cat <<__EOF0__
   prompt grml
 
-    This is the prompt as used by the grml-live system <http://grml.org>.
-    It is a rather simple one-line prompt, that by default looks like this:
+    This is the prompt as used by the grml-live system <http://grml.org>. It is
+    a rather simple one-line prompt, that by default looks something like this:
 
         <user>@<host> <current-working-directory>[ <vcs_info-data>]%
 
@@ -1310,20 +1310,17 @@ function prompt_grml_help () {
     The actual configuration is done via zsh's \`zstyle' mechanism. The
     context, that is used while looking up styles is:
 
-        ':prompt:grml:<sub-context>'
+        ':prompt:grml:<left-or-right>:<subcontext>'
 
-    Here <sub-context> is either 'items:<item>' or 'setup'. The available
-    styles in the \`setup' context are: use-rprompt, items. For example,
-    default \`items' style could be configured like this:
-
-        zstyle ':prompt:grml:setup' items user at host path \\
-                                          vcs percent
+    Here <left-or-right> is either \`left' or \`right', signifying whether the
+    style should affect the left or the right prompt. <subcontext> is either
+    \`setup' or 'items:<item>', where \`<item>' is one of the available items.
 
     The styles:
 
         - use-rprompt (boolean): If \`true' (the default), print a sad smiley
-          in $RPROMPT if the last command a returned non-successful error
-          code.
+          in $RPROMPT if the last command a returned non-successful error code.
+          (This in only valid if <left-or-right> is "right"; ignored otherwise)
 
         - items (list): The list of items used in the prompt. If \`vcs' is
           present in the list, the theme's code invokes \`vcs_info'
@@ -1334,7 +1331,7 @@ function prompt_grml_help () {
     following would cause the user name to be printed in red instead of the
     default blue:
 
-        zstyle ':prompt:grml:items:user' pre '%F{red}'
+        zstyle ':prompt:grml:*:items:user' pre '%F{red}'
 
     Note, that the \`post' style may remain at its default value, because its
     default value is '%f', which turns the foreground text attribute off (which
@@ -1392,42 +1389,54 @@ grml_prompt_token_default=(
     sad-smiley        '%(?..:()'
 )
 
-function prompt_grml_precmd () {
+function grml_prompt_addto () {
     emulate -L zsh
-    setopt extendedglob
-    local it apre apost new v
+    local target="$1"
+    local lr it apre apost new v
     local -a items
+    shift
 
-    zstyle -a ':prompt:grml:setup' items items \
-        || items=( rc change-root user at host path vcs percent )
-    PS1=''
+    [[ $target == PS1 ]] && lr=left || lr=right
+    zstyle -a ":prompt:${grmltheme}:${lr}:setup" items items || items=( "$@" )
+    typeset -g "${target}="
     for it in "${items[@]}"; do
-        zstyle -s ":prompt:grml:items:$it" pre apre \
+        zstyle -s ":prompt:${grmltheme}:${lr}:items:$it" pre apre \
             || apre=${grml_prompt_pre_default[$it]}
-        zstyle -s ":prompt:grml:items:$it" post apost \
+        zstyle -s ":prompt:grml:${grmltheme}:${lr}:$it" post apost \
             || apost=${grml_prompt_post_default[$it]}
-        zstyle -s ":prompt:grml:items:$it" token new \
+        zstyle -s ":prompt:${grmltheme}:${lr}:items:$it" token new \
             || new=${grml_prompt_token_default[$it]}
-        PS1="${PS1}${apre}"
+        typeset -g "${target}=${(P)target}${apre}"
         case $it in
             change-root)
-                (( ${+parameters[$new]} )) && PS1="${PS1}(${(P)new})"
+                if (( ${+parameters[$new]} )); then
+                    typeset -g "${target}=${(P)target}${(P)new}"
+                fi
                 ;;
             vcs)
                 v="vcs_info_msg_${new}_"
-                vcs_info
+                if (( ! vcscalled )); then
+                    vcs_info
+                    vcscalled=1
+                fi
                 if (( ${+parameters[$v]} )) && [[ -n "${(P)v}" ]]; then
-                    PS1="${PS1}${(P)v}"
+                    typeset -g "${target}=${(P)target}${(P)v}"
                 fi
                 ;;
-            *) PS1="${PS1}${new}" ;;
+            *) typeset -g "${target}=${(P)target}${new}" ;;
         esac
-        PS1="${PS1}${apost}"
+        typeset -g "${target}=${(P)target}${apost}"
     done
-    if zstyle -t ':prompt:grml:setup' use-rprompt; then
-        zstyle -s ":prompt:grml:items:sad-smiley" token new \
-            || new=${grml_prompt_token_default[sad-smiley]}
-        RPS1="$new"
+}
+
+function prompt_grml_precmd () {
+    emulate -L zsh
+    local -i vcscalled=0
+    local grmltheme=grml
+
+    grml_prompt_addto PS1 rc change-root user at host path vcs percent
+    if zstyle -T ":prompt:${grmltheme}:right:setup" use-rprompt; then
+        grml_prompt_addto RPS1 sad-smiley
     fi
 }
 
