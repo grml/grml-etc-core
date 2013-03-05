@@ -1348,8 +1348,9 @@ function prompt_grml_help () {
         - The attributes used with the items are customisable via strings
           used before and after the actual item.
 
-    The available items are: rc, rc-always, change-root, user, at, host, path,
-    vcs, percent, sad-smiley, battery.
+    The available items are: at, battery, change-root, date, grml-chroot,
+    history, host, jobs, newline, path, percent, rc, rc-always, sad-smiley,
+    shell-level, time, user, vcs
 
     The actual configuration is done via zsh's \`zstyle' mechanism. The
     context, that is used while looking up styles is:
@@ -1368,7 +1369,8 @@ function prompt_grml_help () {
 
         - items (list): The list of items used in the prompt. If \`vcs' is
           present in the list, the theme's code invokes \`vcs_info'
-          accordingly. Default: rc user change-root at host path vcs precent
+          accordingly. Default (left): rc change-root user at host path vcs
+          percent; Default (right): sad-smiley
 
     Available styles in 'items:<item>' are: pre, post. These are strings that
     are inserted before (pre) and after (post) the item in question. Thus, the
@@ -1380,6 +1382,37 @@ function prompt_grml_help () {
     Note, that the \`post' style may remain at its default value, because its
     default value is '%f', which turns the foreground text attribute off (which
     is exactly, what is still required with the new \`pre' value).
+__EOF0__
+}
+
+function prompt_grml-chroot_help () {
+    cat <<__EOF0__
+  prompt grml-chroot
+
+    This is a variation of the grml prompt, see: prompt -h grml
+
+    The main difference is the default value of the \`items' style. The rest
+    behaves exactly the same. Here are the defaults for \`grml-chroot':
+
+        - left: grml-chroot user at host path percent
+        - right: (empty list)
+__EOF0__
+}
+
+function prompt_grml-large_help () {
+    cat <<__EOF0__
+  prompt grml-large
+
+    This is a variation of the grml prompt, see: prompt -h grml
+
+    The main difference is the default value of the \`items' style. In
+    particular, this theme uses _two_ lines instead of one with the plain
+    \`grml' theme. The rest behaves exactly the same. Here are the defaults
+    for \`grml-chroot':
+
+        - left: rc jobs history shell-level change-root time date newline user
+                at host path vcs percent
+        - right: sad-smiley
 __EOF0__
 }
 
