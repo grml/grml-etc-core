@@ -1267,7 +1267,7 @@ fi
 
 # set variable debian_chroot if running in a chroot with /etc/debian_chroot
 if [[ -z "$debian_chroot" ]] && [[ -r /etc/debian_chroot ]] ; then
-    debian_chroot=$(cat /etc/debian_chroot)
+    debian_chroot=$(</etc/debian_chroot)
 fi
 
 # gather version control information for inclusion in a prompt
