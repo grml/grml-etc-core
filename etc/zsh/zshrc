@@ -1562,9 +1562,21 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
     fi
 else
     print 'Notice: no promptinit available :('
-fi
 
-setopt prompt_subst
+    # Support a fallback, in case promptsys isn't available.
+    setopt prompt_subst
+
+    precmd() { (( ${+functions[vcs_info]} )) && vcs_info; }
+
+    p0="${RED}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}"
+    p1="${BLUE}%n${NO_COLOR}@%m %40<...<%B%~%b%<< "'${vcs_info_msg_0_}'"%# "
+    if (( EUID == 0 )); then
+        PROMPT="${BLUE}${p0}${RED}${p1}"
+    else
+        PROMPT="${RED}${p0}${BLUE}${p1}"
+    fi
+    unset p0 p1
+fi
 
 # make sure to use right prompt only when not running a command
 is41 && setopt transient_rprompt
