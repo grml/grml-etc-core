@@ -1549,6 +1549,8 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
     elif (( EUID == 0 )); then
         zstyle ':prompt:grml(|-large|-chroot):*:items:user' pre '%F{red}'
     fi
+
+    prompt grml
 else
     print 'Notice: no promptinit available :('
 fi
