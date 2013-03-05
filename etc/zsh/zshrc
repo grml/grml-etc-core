@@ -1350,6 +1350,10 @@ function prompt_grml_setup () {
     grml_prompt_setup grml
 }
 
+function prompt_grml-chroot_setup () {
+    grml_prompt_setup grml-chroot
+}
+
 function prompt_grml-large_setup () {
     grml_prompt_setup grml-large
 }
@@ -1376,6 +1380,7 @@ grml_prompt_pre_default=(
     date              '%F{blue}'
     time              '%F{blue}'
     shell-level       '%F{red}'
+    grml-chroot       '%F{red}'
 )
 
 grml_prompt_post_default=(
@@ -1396,6 +1401,7 @@ grml_prompt_post_default=(
     date              '%f'
     time              '%f'
     shell-level       '%f'
+    grml-chroot       '%f '
 )
 
 grml_prompt_token_default=(
@@ -1416,6 +1422,7 @@ grml_prompt_token_default=(
     date              '%D{%Y-%m-%d}'
     time              '%D{%H:%M:%S} '
     shell-level       '%(3L.+ .)'
+    grml-chroot       'GRML_CHROOT'
 )
 
 function grml_typeset_and_wrap () {
@@ -1455,6 +1462,11 @@ function grml_prompt_addto () {
             change-root)
                 grml_typeset_and_wrap $target $new '(' ')'
                 ;;
+            grml-chroot)
+                if [[ -n ${(P)new} ]]; then
+                    typeset -g "${target}=${(P)target}(CHROOT)"
+                fi
+                ;;
             vcs)
                 v="vcs_info_msg_${new}_"
                 if (( ! vcscalled )); then
@@ -1477,6 +1489,16 @@ function prompt_grml_precmd () {
     local -a left_items right_items
     left_items=(rc change-root user at host path vcs percent)
     right_items=(sad-smiley)
+
+    prompt_grml_precmd_worker
+}
+
+function prompt_grml-chroot_precmd () {
+    emulate -L zsh
+    local grmltheme=grml-chroot
+    local -a left_items right_items
+    left_items=(grml-chroot user at host path percent)
+    right_items=()
 
     prompt_grml_precmd_worker
 }
@@ -1509,7 +1531,7 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
     # Since we define the required functions in here and not in files in
     # $fpath, we need to stick the theme's name into `$prompt_themes'
     # ourselves, since promptinit does not pick them up otherwise.
-    prompt_themes+=( grml grml-large )
+    prompt_themes+=( grml grml-chroot grml-large )
     # Also, keep the array sorted...
     prompt_themes=( "${(@on)prompt_themes}" )
 
@@ -1519,13 +1541,13 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
     fi
     if [[ "$TERM" == dumb ]] ; then
         for i in rc user path jobs history date time shell-level; do
-            zstyle ":prompt:grml(|-large):*:items:$i" pre ''
-            zstyle ':prompt:grml(|-large):*:items:$i' post ''
+            zstyle ":prompt:grml(|-large|-chroot):*:items:$i" pre ''
+            zstyle ':prompt:grml(|-large|-chroot):*:items:$i' post ''
         done
         unset i
-        zstyle ':prompt:grml:right:setup' use-rprompt false
+        zstyle ':prompt:grml(|-large|-chroot):right:setup' use-rprompt false
     elif (( EUID != 0 )); then
-        zstyle ':prompt:grml:*:items:user' pre '%F{red}'
+        zstyle ':prompt:grml(|-large|-chroot):*:items:user' pre '%F{red}'
     fi
 else
     print 'Notice: no promptinit available :('
