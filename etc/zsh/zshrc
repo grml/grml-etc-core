@@ -1540,6 +1540,8 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
         add-zsh-hook precmd battery
     fi
     if [[ "$TERM" == dumb ]] ; then
+        zstyle ":prompt:grml(|-large|-chroot):*:items:grml-chroot" pre ''
+        zstyle ":prompt:grml(|-large|-chroot):*:items:grml-chroot" post ' '
         for i in rc user path jobs history date time shell-level; do
             zstyle ":prompt:grml(|-large|-chroot):*:items:$i" pre ''
             zstyle ":prompt:grml(|-large|-chroot):*:items:$i" post ''
