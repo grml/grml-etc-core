@@ -1552,7 +1552,14 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
         zstyle ':prompt:grml(|-large|-chroot):*:items:user' pre '%F{red}'
     fi
 
-    prompt grml
+    # Finally enable one of the prompts.
+    if [[ -n $GRML_CHROOT ]]; then
+        prompt grml-chroot
+    elif [[ $GRMLPROMPT -gt 0 ]]; then
+        prompt grml-large
+    else
+        prompt grml
+    fi
 else
     print 'Notice: no promptinit available :('
 fi
