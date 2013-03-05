@@ -1194,6 +1194,49 @@ chpwd_functions=( ${chpwd_functions} chpwd_profiles )
 
 fi # is433
 
+# Prompt setup for grml:
+
+# set colors for use in prompts (modern zshs allow for the use of %F{red}foo%f
+# in prompts to get a red "foo" embedded, but it's good to keep these for
+# backwards compatibility).
+if zrcautoload colors && colors 2>/dev/null ; then
+    BLUE="%{${fg[blue]}%}"
+    RED="%{${fg_bold[red]}%}"
+    GREEN="%{${fg[green]}%}"
+    CYAN="%{${fg[cyan]}%}"
+    MAGENTA="%{${fg[magenta]}%}"
+    YELLOW="%{${fg[yellow]}%}"
+    WHITE="%{${fg[white]}%}"
+    NO_COLOR="%{${reset_color}%}"
+else
+    BLUE=$'%{\e[1;34m%}'
+    RED=$'%{\e[1;31m%}'
+    GREEN=$'%{\e[1;32m%}'
+    CYAN=$'%{\e[1;36m%}'
+    WHITE=$'%{\e[1;37m%}'
+    MAGENTA=$'%{\e[1;35m%}'
+    YELLOW=$'%{\e[1;33m%}'
+    NO_COLOR=$'%{\e[0m%}'
+fi
+
+# First, the easy ones: PS2..4:
+
+# secondary prompt, printed when the shell needs more information to complete a
+# command.
+PS2='\`%_> '
+# selection prompt used within a select loop.
+PS3='?# '
+# the execution trace prompt (setopt xtrace). default: '+%N:%i>'
+PS4='+%N:%i:%_> '
+
+# Some additional features to use with our prompt:
+#
+#    - battery status
+#    - debian_chroot
+#    - vcs_info setup and version specific fixes
+#    - command-not-found handling
+#      (TODO: This has nothing to do with prompts: move!)
+
 # display battery status on right side of prompt via running 'BATTERY=1 zsh'
 if [[ $BATTERY -gt 0 ]] ; then
     if ! check_com -c acpi ; then
@@ -1215,25 +1258,10 @@ if [[ $BATTERY -gt 0 ]] ; then
     fi
 fi
 }
-# set colors for use in prompts
-if zrcautoload colors && colors 2>/dev/null ; then
-    BLUE="%{${fg[blue]}%}"
-    RED="%{${fg_bold[red]}%}"
-    GREEN="%{${fg[green]}%}"
-    CYAN="%{${fg[cyan]}%}"
-    MAGENTA="%{${fg[magenta]}%}"
-    YELLOW="%{${fg[yellow]}%}"
-    WHITE="%{${fg[white]}%}"
-    NO_COLOR="%{${reset_color}%}"
-else
-    BLUE=$'%{\e[1;34m%}'
-    RED=$'%{\e[1;31m%}'
-    GREEN=$'%{\e[1;32m%}'
-    CYAN=$'%{\e[1;36m%}'
-    WHITE=$'%{\e[1;37m%}'
-    MAGENTA=$'%{\e[1;35m%}'
-    YELLOW=$'%{\e[1;33m%}'
-    NO_COLOR=$'%{\e[0m%}'
+
+# set variable debian_chroot if running in a chroot with /etc/debian_chroot
+if [[ -z "$debian_chroot" ]] && [[ -r /etc/debian_chroot ]] ; then
+    debian_chroot=$(cat /etc/debian_chroot)
 fi
 
 # gather version control information for inclusion in a prompt
@@ -1283,6 +1311,18 @@ function command_not_found_handler() {
     fi
     return 1
 }
+
+# Now for the fun part: The grml prompt themes in `promptsys' mode of operation
+
+# This actually defines three prompts:
+#
+#    - grml
+#    - grml-large
+#    - grml-chroot
+#
+# They all share the same code and only differ with respect to which items they
+# contain. The main source of documentation is the `prompt_grml_help' function
+# below, which gets called when the user does this: prompt -h grml
 
 function prompt_grml_help () {
     cat <<__EOF0__
@@ -1358,6 +1398,9 @@ function prompt_grml-large_setup () {
     grml_prompt_setup grml-large
 }
 
+# These maps define default tokens and pre-/post-decoration for items to be
+# used within the themes. All defaults may be customised in a context sensitive
+# matter by using zsh's `zstyle' mechanism.
 typeset -gA grml_prompt_pre_default \
             grml_prompt_post_default \
             grml_prompt_token_default
@@ -1524,10 +1567,7 @@ function prompt_grml_precmd_worker () {
     fi
 }
 
-# set prompt
 if zrcautoload promptinit && promptinit 2>/dev/null ; then
-    promptinit # people should be able to use their favourite prompt
-
     # Since we define the required functions in here and not in files in
     # $fpath, we need to stick the theme's name into `$prompt_themes'
     # ourselves, since promptinit does not pick them up otherwise.
@@ -1568,7 +1608,7 @@ else
 
     precmd() { (( ${+functions[vcs_info]} )) && vcs_info; }
 
-    p0="${RED}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}"
+    p0="${RED}%(?..%? )${WHITE}${debian_chroot:+($debian_chroot)}"
     p1="${BLUE}%n${NO_COLOR}@%m %40<...<%B%~%b%<< "'${vcs_info_msg_0_}'"%# "
     if (( EUID == 0 )); then
         PROMPT="${BLUE}${p0}${RED}${p1}"
@@ -1649,20 +1689,6 @@ preexec () {
             ;;
     esac
 }
-
-EXITCODE="%(?..%?%1v )"
-# secondary prompt, printed when the shell needs more information to complete a
-# command.
-PS2='\`%_> '
-# selection prompt used within a select loop.
-PS3='?# '
-# the execution trace prompt (setopt xtrace). default: '+%N:%i>'
-PS4='+%N:%i:%_> '
-
-# set variable debian_chroot if running in a chroot with /etc/debian_chroot
-if [[ -z "$debian_chroot" ]] && [[ -r /etc/debian_chroot ]] ; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
 
 # 'hash' some often used directories
 #d# start
