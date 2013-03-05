@@ -1671,35 +1671,40 @@ function grml_vcs_to_screen_title () {
     fi
 }
 
-zrcautoload add-zsh-hook || add-zsh-hook () { :; }
-if [[ $NOPRECMD -gt 0 ]]; then
-    add-zsh-hook precmd grml_reset_screen_title
-    add-zsh-hook precmd grml_vcs_to_screen_title
-fi
-
-# preexec() => a function running before every command
-is4 && [[ $NOPRECMD -eq 0 ]] && \
-preexec () {
-    [[ $NOPRECMD -gt 0 ]] && return 0
-# set hostname if not running on host with name 'grml'
+function grml_maintain_name () {
+    # set hostname if not running on host with name 'grml'
     if [[ -n "$HOSTNAME" ]] && [[ "$HOSTNAME" != $(hostname) ]] ; then
        NAME="@$HOSTNAME"
     fi
-# get the name of the program currently running and hostname of local machine
-# set screen window title if running in a screen
+}
+
+function grml_cmd_to_screen_title () {
+    # get the name of the program currently running and hostname of local
+    # machine set screen window title if running in a screen
     if [[ "$TERM" == screen* ]] ; then
-        # local CMD=${1[(wr)^(*=*|sudo|ssh|-*)]}       # don't use hostname
-        local CMD="${1[(wr)^(*=*|sudo|ssh|-*)]}$NAME" # use hostname
+        local CMD="${1[(wr)^(*=*|sudo|ssh|-*)]}$NAME"
         ESC_print ${CMD}
     fi
-# adjust title of xterm
-    [[ ${NOTITLE} -gt 0 ]] && return 0
+}
+
+function grml_control_xterm_title () {
     case $TERM in
         (xterm*|rxvt*)
             set_title "${(%):-"%n@%m:"}" "$1"
             ;;
     esac
 }
+
+zrcautoload add-zsh-hook || add-zsh-hook () { :; }
+if [[ $NOPRECMD -gt 0 ]]; then
+    add-zsh-hook precmd grml_reset_screen_title
+    add-zsh-hook precmd grml_vcs_to_screen_title
+    add-zsh-hook preexec grml_maintain_name
+    add-zsh-hook preexec grml_cmd_to_screen_title
+    if [[ $NOTITLE -eq 0 ]]; then
+        add-zsh-hook preexec grml_control_xterm_title
+    fi
+fi
 
 # 'hash' some often used directories
 #d# start
