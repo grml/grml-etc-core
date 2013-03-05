@@ -1471,6 +1471,15 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
         zstyle ':prompt:grml:right:setup' items sad-smiley battery
         add-zsh-hook precmd battery
     fi
+    if [[ "$TERM" == dumb ]] ; then
+        zstyle ':prompt:grml:*:items:rc' pre ''
+        zstyle ':prompt:grml:*:items:user' pre ''
+        zstyle ':prompt:grml:*:items:path' pre ''
+        zstyle ':prompt:grml:*:items:rc' post ''
+        zstyle ':prompt:grml:*:items:user' post ''
+        zstyle ':prompt:grml:*:items:path' post ' '
+        zstyle ':prompt:grml:right:setup' use-rprompt false
+    fi
 else
     print 'Notice: no promptinit available :('
 fi
