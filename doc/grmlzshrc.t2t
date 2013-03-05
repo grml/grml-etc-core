@@ -310,6 +310,37 @@ style. (The default is **true** in all contexts.)
 
 == PROMPT ==
 
+The //grmlzshrc// now supplies three prompt themes compatible with zsh's
+**promptinit** system. The three themes are called **grml**, **grml-large** and
+**grml-chroot**.
+
+By default, **grml** is used, unless //$GRMLPROMPT// is set to a value larger
+than zero, in which case **grml-large** is used. Lastly, if //$GRML_CHROOT// is
+non-empty, **grml-chroot** is used.
+
+As usual, with promtinit themes, the user may switch to a different theme using
+the //prompt// utility:
+\
+```
+    prompt grml-large
+```
+
+That will use the **grml-large** prompt theme.
+
+The themes are highly customisable. The main source of documentation about
+customisation is the main **grml** theme's doc-string, that is available via
+the following command:
+\
+```
+    prompt -h grml
+```
+
+The other themes also come with doc-strings, but the main theme's is the
+canonical reference about all of them.
+
+This feature requires version //4.3.7// of the shell. Older versions will use
+the classic grml prompt as a fallback.
+
 
 == GNU/SCREEN STATUS SETTING ==
 //grmlzshrc// sets screen's hardstatus lines to the currently running command
