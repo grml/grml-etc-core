@@ -1664,33 +1664,6 @@ if [[ -z "$debian_chroot" ]] && [[ -r /etc/debian_chroot ]] ; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# don't use colors on dumb terminals (like emacs):
-if [[ "$TERM" == dumb ]] ; then
-    PROMPT="${EXITCODE}${debian_chroot:+($debian_chroot)}%n@%m %40<...<%B%~%b%<< "
-else
-    # only if $GRMLPROMPT is set (e.g. via 'GRMLPROMPT=1 zsh') use the extended
-    # prompt set variable identifying the chroot you work in (used in the
-    # prompt below)
-    if [[ $GRMLPROMPT -gt 0 ]] ; then
-        PROMPT="${RED}${EXITCODE}${CYAN}[%j running job(s)] ${GREEN}{history#%!} ${RED}%(3L.+.) ${BLUE}%* %D
-${BLUE}%n${NO_COLOR}@%m %40<...<%B%~%b%<< "
-    else
-        # This assembles the primary prompt string
-        if (( EUID != 0 )); then
-            PROMPT="${RED}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${BLUE}%n${NO_COLOR}@%m %40<...<%B%~%b%<< "
-        else
-            PROMPT="${BLUE}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${RED}%n${NO_COLOR}@%m %40<...<%B%~%b%<< "
-        fi
-    fi
-fi
-
-PROMPT="${PROMPT}"'${vcs_info_msg_0_}'"%# "
-
-# if we are inside a grml-chroot set a specific prompt theme
-if [[ -n "$GRML_CHROOT" ]] ; then
-    PROMPT="%{$fg[red]%}(CHROOT) %{$fg_bold[red]%}%n%{$fg_no_bold[white]%}@%m %40<...<%B%~%b%<< %\# "
-fi
-
 # 'hash' some often used directories
 #d# start
 hash -d deb=/var/cache/apt/archives
