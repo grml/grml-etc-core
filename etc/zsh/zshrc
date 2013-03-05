@@ -1479,6 +1479,8 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
         zstyle ':prompt:grml:*:items:user' post ''
         zstyle ':prompt:grml:*:items:path' post ' '
         zstyle ':prompt:grml:right:setup' use-rprompt false
+    elif (( EUID != 0 )); then
+        zstyle ':prompt:grml:*:items:user' pre '%F{red}'
     fi
 else
     print 'Notice: no promptinit available :('
