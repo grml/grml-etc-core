@@ -1339,11 +1339,19 @@ function prompt_grml_help () {
 __EOF0__
 }
 
-function prompt_grml_setup () {
+function grml_prompt_setup () {
     emulate -L zsh
     autoload -Uz vcs_info
     autoload -Uz add-zsh-hook
-    add-zsh-hook precmd prompt_grml_precmd
+    add-zsh-hook precmd prompt_$1_precmd
+}
+
+function prompt_grml_setup () {
+    grml_prompt_setup grml
+}
+
+function prompt_grml-large_setup () {
+    grml_prompt_setup grml-large
 }
 
 typeset -gA grml_prompt_pre_default \
@@ -1362,6 +1370,12 @@ grml_prompt_pre_default=(
     percent           ''
     sad-smiley        ''
     battery           ' '
+    newline           ''
+    jobs              '%F{cyan}'
+    history           '%F{green}'
+    date              '%F{blue}'
+    time              '%F{blue}'
+    shell-level       '%F{red}'
 )
 
 grml_prompt_post_default=(
@@ -1370,12 +1384,18 @@ grml_prompt_post_default=(
     change-root       ''
     user              '%f%b'
     at                ''
-    host              ' '
-    path              ' %B'
+    host              ''
+    path              '%B'
     vcs               ''
-    percent           ' '
+    percent           ''
     sad-smiley        ''
     battery           ''
+    newline           ''
+    jobs              '%f'
+    history           '%f'
+    date              '%f'
+    time              '%f'
+    shell-level       '%f'
 )
 
 grml_prompt_token_default=(
@@ -1384,12 +1404,18 @@ grml_prompt_token_default=(
     change-root       'debian_chroot'
     user              '%n'
     at                '@'
-    host              '%m'
-    path              '%40<..<%~%<<'
+    host              '%m '
+    path              '%40<..<%~%<< '
     vcs               '0'
-    percent           '%%'
+    percent           '%% '
     sad-smiley        '%(?..:()'
     battery           'PERCENT'
+    newline           $'\n'
+    jobs              '[%j running job(s)] '
+    history           '{history#%!} '
+    date              '%D{%Y-%m-%d}'
+    time              '%D{%H:%M:%S} '
+    shell-level       '%(3L.+ .)'
 )
 
 function grml_typeset_and_wrap () {
@@ -1447,12 +1473,32 @@ function grml_prompt_addto () {
 
 function prompt_grml_precmd () {
     emulate -L zsh
-    local -i vcscalled=0
     local grmltheme=grml
+    local -a left_items right_items
+    left_items=(rc change-root user at host path vcs percent)
+    right_items=(sad-smiley)
 
-    grml_prompt_addto PS1 rc change-root user at host path vcs percent
+    prompt_grml_precmd_worker
+}
+
+function prompt_grml-large_precmd () {
+    emulate -L zsh
+    local grmltheme=grml-large
+    local -a left_items right_items
+    left_items=(rc jobs history shell-level change-root time date newline
+                user at host path vcs percent)
+    right_items=(sad-smiley)
+
+    prompt_grml_precmd_worker
+}
+
+function prompt_grml_precmd_worker () {
+    emulate -L zsh
+    local -i vcscalled=0
+
+    grml_prompt_addto PS1 "${left_items[@]}"
     if zstyle -T ":prompt:${grmltheme}:right:setup" use-rprompt; then
-        grml_prompt_addto RPS1 sad-smiley
+        grml_prompt_addto RPS1 "${right_items[@]}"
     fi
 }
 
@@ -1463,7 +1509,7 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
     # Since we define the required functions in here and not in files in
     # $fpath, we need to stick the theme's name into `$prompt_themes'
     # ourselves, since promptinit does not pick them up otherwise.
-    prompt_themes+=( grml )
+    prompt_themes+=( grml grml-large )
     # Also, keep the array sorted...
     prompt_themes=( "${(@on)prompt_themes}" )
 
@@ -1472,12 +1518,11 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
         add-zsh-hook precmd battery
     fi
     if [[ "$TERM" == dumb ]] ; then
-        zstyle ':prompt:grml:*:items:rc' pre ''
-        zstyle ':prompt:grml:*:items:user' pre ''
-        zstyle ':prompt:grml:*:items:path' pre ''
-        zstyle ':prompt:grml:*:items:rc' post ''
-        zstyle ':prompt:grml:*:items:user' post ''
-        zstyle ':prompt:grml:*:items:path' post ' '
+        for i in rc user path jobs history date time shell-level; do
+            zstyle ":prompt:grml(|-large):*:items:$i" pre ''
+            zstyle ':prompt:grml(|-large):*:items:$i' post ''
+        done
+        unset i
         zstyle ':prompt:grml:right:setup' use-rprompt false
     elif (( EUID != 0 )); then
         zstyle ':prompt:grml:*:items:user' pre '%F{red}'
