@@ -1305,7 +1305,7 @@ function prompt_grml_help () {
           used before and after the actual item.
 
     The available items are: rc, rc-always, change-root, user, at, host, path,
-    vcs, percent, sad-smiley.
+    vcs, percent, sad-smiley, battery.
 
     The actual configuration is done via zsh's \`zstyle' mechanism. The
     context, that is used while looking up styles is:
@@ -1361,6 +1361,7 @@ grml_prompt_pre_default=(
     vcs               ''
     percent           ''
     sad-smiley        ''
+    battery           ' '
 )
 
 grml_prompt_post_default=(
@@ -1374,6 +1375,7 @@ grml_prompt_post_default=(
     vcs               ''
     percent           ' '
     sad-smiley        ''
+    battery           ''
 )
 
 grml_prompt_token_default=(
@@ -1387,7 +1389,20 @@ grml_prompt_token_default=(
     vcs               '0'
     percent           '%%'
     sad-smiley        '%(?..:()'
+    battery           'PERCENT'
 )
+
+function grml_typeset_and_wrap () {
+    emulate -L zsh
+    local target="$1"
+    local new="$2"
+    local left="$3"
+    local right="$4"
+
+    if (( ${+parameters[$new]} )); then
+        typeset -g "${target}=${(P)target}${left}${(P)new}${right}"
+    fi
+}
 
 function grml_prompt_addto () {
     emulate -L zsh
@@ -1408,10 +1423,11 @@ function grml_prompt_addto () {
             || new=${grml_prompt_token_default[$it]}
         typeset -g "${target}=${(P)target}${apre}"
         case $it in
+            battery)
+                grml_typeset_and_wrap $target $new '' ''
+                ;;
             change-root)
-                if (( ${+parameters[$new]} )); then
-                    typeset -g "${target}=${(P)target}${(P)new}"
-                fi
+                grml_typeset_and_wrap $target $new '(' ')'
                 ;;
             vcs)
                 v="vcs_info_msg_${new}_"
@@ -1450,6 +1466,11 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
     prompt_themes+=( grml )
     # Also, keep the array sorted...
     prompt_themes=( "${(@on)prompt_themes}" )
+
+    if [[ $BATTERY -gt 0 ]]; then
+        zstyle ':prompt:grml:right:setup' items sad-smiley battery
+        add-zsh-hook precmd battery
+    fi
 else
     print 'Notice: no promptinit available :('
 fi
@@ -1503,21 +1524,6 @@ if [[ $NOPRECMD -gt 0 ]]; then
     add-zsh-hook precmd grml_reset_screen_title
     add-zsh-hook precmd grml_vcs_to_screen_title
 fi
-
-# TODO: revise all these NO* variables and especially their documentation
-#       in zsh-help() below.
-is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
-    # just use DONTSETRPROMPT=1 to be able to overwrite RPROMPT
-    if [[ ${DONTSETRPROMPT:-} -eq 0 ]] ; then
-        if [[ $BATTERY -gt 0 ]] ; then
-            # update battery (dropped into $PERCENT) information
-            battery
-            RPROMPT="%(?..:() ${PERCENT}"
-        else
-            RPROMPT="%(?..:() "
-        fi
-    fi
-}
 
 # preexec() => a function running before every command
 is4 && [[ $NOPRECMD -eq 0 ]] && \
