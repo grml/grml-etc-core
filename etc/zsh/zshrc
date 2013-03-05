@@ -144,6 +144,12 @@ is433(){
     return 1
 }
 
+is437(){
+    [[ $ZSH_VERSION == 4.3.<7->* || $ZSH_VERSION == 4.<4->* \
+                                 || $ZSH_VERSION == <5->* ]] && return 0
+    return 1
+}
+
 is439(){
     [[ $ZSH_VERSION == 4.3.<9->* || $ZSH_VERSION == 4.<4->* \
                                  || $ZSH_VERSION == <5->* ]] && return 0
@@ -1567,6 +1573,22 @@ function prompt_grml_precmd_worker () {
     fi
 }
 
+grml_prompt_fallback() {
+    setopt prompt_subst
+    precmd() {
+        (( ${+functions[vcs_info]} )) && vcs_info
+    }
+
+    p0="${RED}%(?..%? )${WHITE}${debian_chroot:+($debian_chroot)}"
+    p1="${BLUE}%n${NO_COLOR}@%m %40<...<%B%~%b%<< "'${vcs_info_msg_0_}'"%# "
+    if (( EUID == 0 )); then
+        PROMPT="${BLUE}${p0}${RED}${p1}"
+    else
+        PROMPT="${RED}${p0}${BLUE}${p1}"
+    fi
+    unset p0 p1
+}
+
 if zrcautoload promptinit && promptinit 2>/dev/null ; then
     # Since we define the required functions in here and not in files in
     # $fpath, we need to stick the theme's name into `$prompt_themes'
@@ -1574,7 +1596,14 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
     prompt_themes+=( grml grml-chroot grml-large )
     # Also, keep the array sorted...
     prompt_themes=( "${(@on)prompt_themes}" )
+else
+    print 'Notice: no promptinit available :('
+    grml_prompt_fallback
+fi
 
+if is437; then
+    # The prompt themes use modern features of zsh, that require at least
+    # version 4.3.7 of the shell. Use the fallback otherwise.
     if [[ $BATTERY -gt 0 ]]; then
         zstyle ':prompt:grml:right:setup' items sad-smiley battery
         add-zsh-hook precmd battery
@@ -1601,26 +1630,10 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
         prompt grml
     fi
 else
-    print 'Notice: no promptinit available :('
-
-    # Support a fallback, in case promptsys isn't available.
-    setopt prompt_subst
-
-    precmd() { (( ${+functions[vcs_info]} )) && vcs_info; }
-
-    p0="${RED}%(?..%? )${WHITE}${debian_chroot:+($debian_chroot)}"
-    p1="${BLUE}%n${NO_COLOR}@%m %40<...<%B%~%b%<< "'${vcs_info_msg_0_}'"%# "
-    if (( EUID == 0 )); then
-        PROMPT="${BLUE}${p0}${RED}${p1}"
-    else
-        PROMPT="${RED}${p0}${BLUE}${p1}"
-    fi
-    unset p0 p1
+    grml_prompt_fallback
 fi
 
-# make sure to use right prompt only when not running a command
-is41 && setopt transient_rprompt
-
+# Terminal-title wizardry
 
 function ESC_print () {
     info_print $'\ek' $'\e\\' "$@"
