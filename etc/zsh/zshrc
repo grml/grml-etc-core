@@ -1542,7 +1542,7 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
     if [[ "$TERM" == dumb ]] ; then
         for i in rc user path jobs history date time shell-level; do
             zstyle ":prompt:grml(|-large|-chroot):*:items:$i" pre ''
-            zstyle ':prompt:grml(|-large|-chroot):*:items:$i' post ''
+            zstyle ":prompt:grml(|-large|-chroot):*:items:$i" post ''
         done
         unset i
         zstyle ':prompt:grml(|-large|-chroot):right:setup' use-rprompt false
