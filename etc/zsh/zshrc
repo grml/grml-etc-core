@@ -985,6 +985,17 @@ for rh in run-help{,-git,-svk,-svn}; do
     zrcautoload $rh
 done; unset rh
 
+# command not found handling
+
+(( ${COMMAND_NOT_FOUND} == 1 )) &&
+function command_not_found_handler() {
+    emulate -L zsh
+    if [[ -x ${GRML_ZSH_CNF_HANDLER} ]] ; then
+        ${GRML_ZSH_CNF_HANDLER} $1
+    fi
+    return 1
+}
+
 # completion system
 if zrcautoload compinit ; then
     compinit || print 'Notice: no compinit available :('
@@ -1240,8 +1251,6 @@ PS4='+%N:%i:%_> '
 #    - battery status
 #    - debian_chroot
 #    - vcs_info setup and version specific fixes
-#    - command-not-found handling
-#      (TODO: This has nothing to do with prompts: move!)
 
 # display battery status on right side of prompt via running 'BATTERY=1 zsh'
 if [[ $BATTERY -gt 0 ]] ; then
@@ -1306,17 +1315,6 @@ else
                                        "zsh: %r"
     zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "%b${RED}:${YELLOW}%r"
 fi
-
-# command not found handling
-
-(( ${COMMAND_NOT_FOUND} == 1 )) &&
-function command_not_found_handler() {
-    emulate -L zsh
-    if [[ -x ${GRML_ZSH_CNF_HANDLER} ]] ; then
-        ${GRML_ZSH_CNF_HANDLER} $1
-    fi
-    return 1
-}
 
 # Now for the fun part: The grml prompt themes in `promptsys' mode of operation
 
