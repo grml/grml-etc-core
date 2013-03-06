@@ -341,6 +341,19 @@ canonical reference about all of them.
 This feature requires version //4.3.7// of the shell. Older versions will use
 the classic grml prompt as a fallback.
 
+A note to people who like customisation: If you are **not** using a prompt
+theme for your customisation, but you're either statically setting $PS1 (or
+$PROMPT) or you're constructing one of those variables in zsh's \`precmd()'
+function, make sure you are turning the zsh's prompt theme system **off**
+before doing so. A correct example customisation could look like this:
+\
+```
+    # Turn the prompt system off:
+    prompt off
+    # Customise the prompt yourself:
+    PS1='%~ %# '
+```
+
 
 == GNU/SCREEN STATUS SETTING ==
 //grmlzshrc// sets screen's hardstatus lines to the currently running command
