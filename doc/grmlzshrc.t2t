@@ -831,9 +831,6 @@ grep-excuses(1)).
 : **grep** (//grep --color=auto//)
 Shows grep output in nice colors, if available.
 
-: **grml-rebuildfstab** (//rebuildfstab -v -r -config//)
-Scans for new devices and updates /etc/fstab according to the findings.
-
 : **grml-version** (//cat /etc/grml_version//)
 Prints version of running grml.
 

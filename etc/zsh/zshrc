@@ -2140,11 +2140,6 @@ graphic chipset."
     #a1# Output version of running grml
     alias grml-version='cat /etc/grml_version'
 
-    if check_com -c rebuildfstab ; then
-        #a1# Rebuild /etc/fstab
-        alias grml-rebuildfstab='rebuildfstab -v -r -config'
-    fi
-
     if check_com -c grml-debootstrap ; then
         debian2hd() {
             echo "Installing debian to harddisk is possible by using grml-debootstrap."
