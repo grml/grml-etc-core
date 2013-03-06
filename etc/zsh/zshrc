@@ -733,8 +733,8 @@ grml_toggle_abbrev() {
 }
 
 #k# Toggle abbreviation expansion on/off
-zle -N grml_toggle_abbrev
 bindkey '^xA' grml_toggle_abbrev
+zle -N grml_toggle_abbrev
 
 # add a command line to the shells history without executing it
 commit-to-history() {
@@ -1135,7 +1135,7 @@ if check_com -c screen || check_com -c tmux; then
         _screen_display_wordlist[${_screen_display_wordlist[(i)$PREFIX]}]=""
         compadd -a _screen_display_wordlist
     }
-    #k# complete word from currently visible GNU screen buffer
+    #m# k CTRL-x\,\,\,S Complete word from GNU screen buffer
     bindkey -r "^xS"
     compdef -k _complete_screen_display complete-word '^xS'
 fi
@@ -2196,7 +2196,7 @@ sll() {
 #   PAGER='less -Mr' - If so, the use of $PAGER here needs fixing
 # with respect to wordsplitting. (ie. ${=PAGER})
 if check_com -c $PAGER ; then
-    #f1# View Debian's changelog of a given package
+    #f3# View Debian's changelog of a given package
     dchange() {
         emulate -L zsh
         if [[ -r /usr/share/doc/$1/changelog.Debian.gz ]] ; then
@@ -2220,7 +2220,7 @@ if check_com -c $PAGER ; then
     _dchange() { _files -W /usr/share/doc -/ }
     compdef _dchange dchange
 
-    #f1# View Debian's NEWS of a given package
+    #f3# View Debian's NEWS of a given package
     dnews() {
         emulate -L zsh
         if [[ -r /usr/share/doc/$1/NEWS.Debian.gz ]] ; then
@@ -2237,7 +2237,7 @@ if check_com -c $PAGER ; then
     _dnews() { _files -W /usr/share/doc -/ }
     compdef _dnews dnews
 
-    #f1# View Debian's copyright of a given package
+    #f3# View Debian's copyright of a given package
     dcopyright() {
         emulate -L zsh
         if [[ -r /usr/share/doc/$1/copyright ]] ; then
@@ -2250,7 +2250,7 @@ if check_com -c $PAGER ; then
     _dcopyright() { _files -W /usr/share/doc -/ }
     compdef _dcopyright dcopyright
 
-    #f1# View upstream's changelog of a given package
+    #f3# View upstream's changelog of a given package
     uchange() {
         emulate -L zsh
         if [[ -r /usr/share/doc/$1/changelog.gz ]] ; then
@@ -2621,7 +2621,7 @@ alias lsnewdir="ls -rthdl *(/om[1,10]) .*(D/om[1,10])"
 alias lsolddir="ls -rthdl *(/Om[1,10]) .*(D/Om[1,10])"
 
 # some useful aliases
-#a2# Remove current empty directory. Execute \kbd{cd ..; rmdir $OLDCWD}
+#a2# Remove current empty directory. Execute \kbd{cd ..; rmdir \$OLDCWD}
 alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
 
 #a2# ssh with StrictHostKeyChecking=no \\&\quad and UserKnownHostsFile unset
@@ -2694,11 +2694,11 @@ cdt() {
 }
 
 #f5# Create directory under cursor or the selected area
-# Press ctrl-xM to create the directory under the cursor or the selected area.
-# To select an area press ctrl-@ or ctrl-space and use the cursor.
-# Use case: you type "mv abc ~/testa/testb/testc/" and remember that the
-# directory does not exist yet -> press ctrl-XM and problem solved
 inplaceMkDirs() {
+    # Press ctrl-xM to create the directory under the cursor or the selected area.
+    # To select an area press ctrl-@ or ctrl-space and use the cursor.
+    # Use case: you type "mv abc ~/testa/testb/testc/" and remember that the
+    # directory does not exist yet -> press ctrl-XM and problem solved
     local PATHTOMKDIR
     if ((REGION_ACTIVE==1)); then
         local F=$MARK T=$CURSOR
@@ -2725,6 +2725,7 @@ inplaceMkDirs() {
         zle end-of-line
     fi
 }
+
 #k# mkdir -p <dir> from string under cursor or marked area
 zle -N inplaceMkDirs && bindkey '^xM' inplaceMkDirs
 
