@@ -1408,7 +1408,7 @@ function prompt_grml-large_help () {
     The main difference is the default value of the \`items' style. In
     particular, this theme uses _two_ lines instead of one with the plain
     \`grml' theme. The rest behaves exactly the same. Here are the defaults
-    for \`grml-chroot':
+    for \`grml-large':
 
         - left: rc jobs history shell-level change-root time date newline user
                 at host path vcs percent
