@@ -406,6 +406,7 @@ check_com() {
 salias() {
     emulate -L zsh
     local only=0 ; local multi=0
+    local key val
     while [[ $1 == -* ]] ; do
         case $1 in
             (-o) only=1 ;;
