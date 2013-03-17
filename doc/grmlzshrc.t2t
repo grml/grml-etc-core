@@ -508,6 +508,23 @@ Display help on keybindings and zsh line editor. Press consecutively to page thr
 Brings a job, which got suspended with CTRL-z back to foreground.
 
 
+=== Customisation ===
+
+To customise keybindings, you can just use zsh's bindkey utility. However, if
+you plan to to use the `//zle-line-init//' or `//zle-line-finish//' hooks
+yourself, make sure you call the following functions in the respective hook:
+
+- **zle-line-init**: //zle-smkx//
+- **zle-line-finish**: //zle-rmkx//
+
+
+This is **required** so the keybindings set up by //grmlzshrc// work. The
+reason for this is to turn the terminal into the right mode while zsh's line
+editor (zle) is running. This enables us to query //terminfo// about escape
+sequences for special keys and thus simplify and generalise our keybinding
+section.
+
+
 == SHELL FUNCTIONS ==
 //grmlzshrc// comes with a wide array of defined shell functions to ease the
 user's life.
