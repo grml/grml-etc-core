@@ -496,11 +496,7 @@ xcat() {
 xunfunction() {
     emulate -L zsh
     local -a funcs
-    funcs=(salias xcat xsource xunfunction zrcautoload
-                                           zrcautozle
-                                           zrcbindkey
-                                           zrcgotkeymap
-                                           zrcgotwidget)
+    funcs=(salias xcat xsource xunfunction zrcautoload zrcautozle)
     for func in $funcs ; do
         [[ -n ${functions[$func]} ]] \
             && unfunction $func
