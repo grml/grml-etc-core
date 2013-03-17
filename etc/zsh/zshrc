@@ -1392,6 +1392,7 @@ bind2maps       viins vicmd -- Right  vi-forward-char
 bind2maps       viins vicmd -- Right  vi-forward-char
 
 if zrcgotkeymap menuselect; then
+    #m# k Shift-tab Perform backwards menu completion
     bind2maps menuselect -- BackTab reverse-menu-complete
 
     #k# menu selection: pick item but stay in the menu
@@ -1442,13 +1443,6 @@ zrcbindkey "\e[6~" history-beginning-search-forward-end  # PageDown
 # See for example http://unicode.org/charts/ for unicode characters code
 #k# Insert Unicode character
 zrcbindkey '^xi' insert-unicode-char
-
-#m# k Shift-tab Perform backwards menu completion
-if [[ -n "$terminfo[kcbt]" ]]; then
-    zrcbindkey "$terminfo[kcbt]" reverse-menu-complete
-elif [[ -n "$terminfo[cbt]" ]]; then # required for GNU screen
-    zrcbindkey "$terminfo[cbt]"  reverse-menu-complete
-fi
 
 #k# Toggle abbreviation expansion on/off
 zrcbindkey '^xA' grml_toggle_abbrev
