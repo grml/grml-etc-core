@@ -1040,15 +1040,14 @@ zleiab() {
     LBUFFER+=${abk[$MATCH]:-$MATCH}
 }
 
-zle -N zleiab && bindkey ",." zleiab ## KEYB!
+zle -N zleiab
 
 help-show-abk()
 {
   zle -M "$(print "Type ,. after these abbreviations to expand them:"; print -a -C 2 ${(kv)abk})"
 }
 
-#k# Display list of abbreviations that expand when followed by ,.
-zle -N help-show-abk && bindkey '^xb' help-show-abk ## KEYB!
+zle -N help-show-abk
 
 # press "ctrl-e d" to insert the actual date in the form yyyy-mm-dd
 insert-datestamp() { LBUFFER+=${(%):-'%D{%Y-%m-%d}'}; }
@@ -1128,7 +1127,7 @@ inplaceMkDirs() {
 }
 
 #k# mkdir -p <dir> from string under cursor or marked area
-zle -N inplaceMkDirs && bindkey '^xM' inplaceMkDirs ## KEYB!
+zle -N inplaceMkDirs
 
 #v1# set number of lines to display per page
 HELP_LINES_PER_PAGE=20
@@ -1249,8 +1248,7 @@ help-zle()
     help_zle_sln=$((help_zle_sln + HELP_LINES_PER_PAGE))
     zle -M "${(F)help_zle_lines[sln,help_zle_sln-1]}"
 }
-#k# display help for keybindings and ZLE
-zle -N help-zle && bindkey '^xz' help-zle # note: cycle pages with consecutive use of '^xz' ## KEYB!
+zle -N help-zle
 
 ## complete word from currently visible Screen or Tmux buffer.
 if check_com -c screen || check_com -c tmux; then
@@ -1407,6 +1405,13 @@ if zrcgotkeymap menuselect; then
     # by using 'undo' one's got a simple file browser
     zrcbindkey -M menuselect '^o' accept-and-infer-next-history
 fi
+
+#k# Display list of abbreviations that expand when followed by ,.
+zrcbindkey ",." zleiab
+zrcbindkey '^xb' help-show-abk
+zrcbindkey '^xM' inplaceMkDirs
+#k# display help for keybindings and ZLE
+zrcbindkey '^xz' help-zle
 
 #k# Insert files and test globbing
 zrcbindkey "^xf" insert-files # C-x-f
