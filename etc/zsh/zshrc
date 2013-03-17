@@ -596,7 +596,7 @@ typeset -U path cdpath fpath manpath
 
 # Load a few modules
 is4 && \
-for mod in complist deltochar mathfunc ; do
+for mod in parameter complist deltochar mathfunc ; do
     zmodload -i zsh/${mod} 2>/dev/null || print "Notice: no ${mod} available :("
 done
 
