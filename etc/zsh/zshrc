@@ -1313,7 +1313,7 @@ zstyle ':completion:hist-complete:*' completer _history
 typeset -ga grml_missing_features
 
 function zrcbindkey() {
-    if (( ARGC && ${+widgets[${argv[-1]}]} )); then
+    if (( ARGC )) && zrcgotwidget ${argv[-1]}; then
         bindkey "$@"
     fi
 }
