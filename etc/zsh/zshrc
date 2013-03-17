@@ -1290,7 +1290,7 @@ function zrcautozle() {
 }
 
 function zrcgotwidget() {
-    (( ${+widgets[$i]} ))
+    (( ${+widgets[$1]} ))
 }
 
 function zrcgotkeymap() {
