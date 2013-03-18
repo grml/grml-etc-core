@@ -1440,7 +1440,8 @@ function prompt_grml-large_setup () {
 # matter by using zsh's `zstyle' mechanism.
 typeset -gA grml_prompt_pre_default \
             grml_prompt_post_default \
-            grml_prompt_token_default
+            grml_prompt_token_default \
+            grml_prompt_token_function
 
 grml_prompt_pre_default=(
     at                ''
@@ -1505,6 +1506,110 @@ grml_prompt_token_default=(
     vcs               '0'
 )
 
+function GRML_theme_add_token_usage () {
+    cat <<__EOF__
+  Usage: grml_theme_add_token <name> [-f|-i] <token/function> [<pre> <post>]
+
+    <name> is the name for the newly added token. If the \`-f' or \`-i' options
+    are used, <token/function> is the name of the function (see below for
+    details). Otherwise it is the literal token string to be used. <pre> and
+    <post> are optional.
+
+  Options:
+
+    -f <function>   Use a function named \`<function>' each time the token
+                    is to be expanded.
+
+    -i <function>   Use a function named \`<function>' to initialise the
+                    value of the token _once_ at runtime.
+
+    The functions are called with one argument: the tokens new name. The
+    return value is expected in the \$REPLY parameter. The use of these
+    options is mutually exclusive.
+
+  Example:
+
+    To add a new token \`day' that expands to the current weekday in the
+    current locale in green foreground colour, use this:
+
+      grml_theme_add_token day '%D{%A}' '%F{green}' '%f'
+
+    Another example would be support for \$VIRTUAL_ENV:
+
+      function virtual_env_prompt () {
+        REPLY=${VIRTUAL_ENV+${VIRTUAL_ENV:t} }
+      }
+      grml_theme_add_token virtual-env -f virtual_env_prompt
+
+    After that, you will be able to use a changed \`items' style to
+    assemble your prompt.
+__EOF__
+}
+
+function grml_theme_add_token () {
+    emulate -L zsh
+    local name token pre post
+    local -i init funcall
+
+    if (( ARGC == 0 )); then
+        GRML_theme_add_token_usage
+        return 0
+    fi
+
+    init=0
+    funcall=0
+    pre=''
+    post=''
+    name=$1
+    shift
+    if [[ $1 == '-f' ]]; then
+        funcall=1
+        shift
+    elif [[ $1 == '-i' ]]; then
+        init=1
+        shift
+    fi
+
+    if (( ARGC == 0 )); then
+        printf '
+grml_theme_add_token: No token-string/function-name provided!\n\n'
+        GRML_theme_add_token_usage
+        return 1
+    fi
+    token=$1
+    shift
+    if (( ARGC != 0 && ARGC != 2 )); then
+        printf '
+grml_theme_add_token: <pre> and <post> need to by specified _both_!\n\n'
+        GRML_theme_add_token_usage
+        return 1
+    fi
+    if (( ARGC )); then
+        pre=$1
+        post=$2
+        shift 2
+    fi
+
+    if (( ${+grml_prompt_token_default[$name]} )); then
+        printf '
+grml_theme_add_token: Token `%s'\'' exists! Giving up!\n\n' $name
+        GRML_theme_add_token_usage
+        return 2
+    fi
+    if (( init )); then
+        $token $name
+        token=$REPLY
+    fi
+    grml_prompt_pre_default[$name]=$pre
+    grml_prompt_post_default[$name]=$post
+    if (( funcall )); then
+        grml_prompt_token_function[$name]=$token
+        grml_prompt_token_default[$name]=23
+    else
+        grml_prompt_token_default[$name]=$token
+    fi
+}
+
 function grml_typeset_and_wrap () {
     emulate -L zsh
     local target="$1"
@@ -1535,7 +1640,11 @@ function grml_prompt_addto () {
         zstyle -s ":prompt:${grmltheme}:${lr}:items:$it" token new \
             || new=${grml_prompt_token_default[$it]}
         typeset -g "${target}=${(P)target}${apre}"
-        case $it in
+        if (( ${+grml_prompt_token_function[$it]} )); then
+            ${grml_prompt_token_function[$it]} $it
+            typeset -g "${target}=${(P)target}${REPLY}"
+        else
+            case $it in
             battery)
                 grml_typeset_and_wrap $target $new '' ''
                 ;;
@@ -1558,7 +1667,8 @@ function grml_prompt_addto () {
                 fi
                 ;;
             *) typeset -g "${target}=${(P)target}${new}" ;;
-        esac
+            esac
+        fi
         typeset -g "${target}=${(P)target}${apost}"
     done
 }
