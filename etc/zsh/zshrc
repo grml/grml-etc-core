@@ -1523,7 +1523,7 @@ function GRML_theme_add_token_usage () {
     -i <function>   Use a function named \`<function>' to initialise the
                     value of the token _once_ at runtime.
 
-    The functions are called with one argument: the tokens new name. The
+    The functions are called with one argument: the token's new name. The
     return value is expected in the \$REPLY parameter. The use of these
     options is mutually exclusive.
 
@@ -1537,7 +1537,7 @@ function GRML_theme_add_token_usage () {
     Another example would be support for \$VIRTUAL_ENV:
 
       function virtual_env_prompt () {
-        REPLY=${VIRTUAL_ENV+${VIRTUAL_ENV:t} }
+        REPLY=\${VIRTUAL_ENV+\${VIRTUAL_ENV:t} }
       }
       grml_theme_add_token virtual-env -f virtual_env_prompt
 
