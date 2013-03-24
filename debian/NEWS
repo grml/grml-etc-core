@@ -1,3 +1,40 @@
+grml-etc-core (0.7.5) unstable; urgency=low
+
+  * zshrc: Prompt converted to zsh's prompt theme system:
+
+    This version of the included zsh setup features a prompt theme based
+    on the old statically set prompt, that we shipped. The prompt is very
+    much customisable. Changing colours or removing and adding information
+    used in the prompt is easily possible via zsh's zstyle mechanism. For
+    more details call this:
+
+        prompt -h grml
+
+    However, if you used to discard our old prompt and used an own static
+    prompt, you need to disable the prompt system so your changes stick,
+    because when a prompt theme is active it takes over control of prompt
+    variables, which will undo your changes again. So your customisation
+    now has to look like this:
+
+        prompt off
+        PS1='%~ %# '
+
+    Our prompt is also quite extensible: For example, if you use
+    Virtualenv, and would like integration in our prompt, this is how it
+    can be done (the default way Virtualenv tries to do this is by
+    statically extending $PS1, which doesn't work with zsh themes, as
+    discussed above):
+
+        function virtual_env_prompt () {
+            REPLY=${VIRTUAL_ENV+(${VIRTUAL_ENV:t}) }
+        }
+        grml_theme_add_token \
+            virtual-env -f virtual_env_prompt '%F{magenta}' '%f'
+        zstyle ':prompt:grml:left:setup:items' \
+            rc virtual-env change-root user at host path vcs percent
+
+ -- Frank Terbeck <ft@bewatermyfriend.org>  Sun, 24 Mar 2013 01:21:18 +0100
+
 grml-etc-core (0.3.62) unstable; urgency=low
 
   * Merged /etc/skel/.zshrc into /etc/zsh/zshrc:
