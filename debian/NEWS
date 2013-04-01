@@ -33,7 +33,33 @@ grml-etc-core (0.7.5) unstable; urgency=low
         zstyle ':prompt:grml:left:setup:items' \
             rc virtual-env change-root user at host path vcs percent
 
- -- Frank Terbeck <ft@grml.org>  Sun, 24 Mar 2013 01:21:18 +0100
+  * zshrc: Keyboard setup changed to terminfo data
+
+    This setup had a mixture of hard-coded escape sequences and a broken
+    terminfo data extraction scheme.
+
+    Starting with this release, escape sequences are extracted from
+    terminfo exclusively (except for a handful of combinations, that are
+    commonly not found in terminfo databases). For this to work properly,
+    the terminal needs to be switched to "keyboard transmit mode" via the
+    `smkx' escape sequence (if a terminal's terminfo entry does not
+    support this key, keyboard transmit-mode is active all the time). To
+    enable this feature when zsh's line editor (zle) is active, this setup
+    now uses the `zle-line-init' and `zle-line-finish' hooks. The former
+    invokes the `smkx' sequence and the latter invokes the `rmkx'
+    sequence.
+
+    If you override these hooks in your setup, make sure you include the
+    following function calls in your own hooks:
+
+        zle-line-init:    zle-smkx
+        zle-line-finish:  zle-rmkx
+
+    Unless your system does not have support for terminfo, the new setup
+    should work a lot more robust across a much larger number of terminals
+    and terminal/terminal-multiplexer combinations.
+
+ -- Frank Terbeck <ft@grml.org>  Mon, 01 Apr 2013 16:53:31 +0200
 
 grml-etc-core (0.3.62) unstable; urgency=low
 
