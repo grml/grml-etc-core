@@ -1342,9 +1342,11 @@ function bind2maps () {
 
 if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
     function zle-smkx () {
+        emulate -L zsh
         printf '%s' ${terminfo[smkx]}
     }
     function zle-rmkx () {
+        emulate -L zsh
         printf '%s' ${terminfo[rmkx]}
     }
     function zle-line-init () {
