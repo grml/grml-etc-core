@@ -1,4 +1,4 @@
-grml-etc-core (0.7.5) unstable; urgency=low
+grml-etc-core (0.8.0) unstable; urgency=low
 
   * zshrc: Prompt converted to zsh's prompt theme system:
 

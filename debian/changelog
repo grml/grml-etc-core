@@ -1,3 +1,81 @@
+grml-etc-core (0.8.0) grml-testing; urgency=low
+
+  The "new prompt + keyboard handling in grml-zshrc" release
+
+  [ Bernhard Tittelbach ]
+  * [aa572fc] zsh: abk, don't match everything between . and | and thus
+    make it work after e.g. /
+
+  [ Frank Terbeck ]
+  * zshrc, prompt related changes:
+    - [2766294] Add promptsys help (-h) text
+    - [6c4346c] Register prompt theme with promptsys
+    - [b97f20f] Implement the basic grml prompt framework
+    - [feb4d46] Move more precmd() code to hook fncs
+    - [cc7541f] Allow `items' list for PS1 _and_ RPS1
+    - [ee36478] support [[ $BATTERY -gt 0 ]]
+    - [c1d7811] Support TERM == dumb
+    - [c875d64] Username in red for root
+    - [9dfd5ff] Add new theme: grml-large
+    - [76c7e00] Add new theme: grml-chroot
+    - [316eaeb] Fix wrong logic for user name colouring
+    - [205760c] Enable the grml prompt theme via promptsys
+    - [4dc88ce] Fix quoting style in dumb-terminal config
+    - [1daee92] Handle grml-chroot in dumb-terminal config
+    - [a94f602] Enable one of the prompts
+    - [db038bb] Provide fallback in case promptinit fails
+    - [605fb0e] Remove old prompt setting scheme
+    - [5989b0e] Reorganise the prompt section
+    - [08ab5d9] Only enable prompt themes with zsh >= 4.3.7
+    - [6cc9bb0] Use a non-forking expression to read /etc/debian_chroot
+    - [e705ddd] Keep maps sorted
+    - [1a812dd] Documentation update
+    - [4e72b7f] New prompt mixed up %B and %b for the path item
+    - [6de54e2] grmlzshrc.t2t: Document the new prompt themes
+    - [226d414] grmlzshrc.t2t: Document how static prompt
+      customisation should be done now
+    - [5ef5260] Use %# instead of %% for the `percent' token in the prompt
+    - [6aff2d8] NEWS: Add note about prompt changes in new version
+    - [d9c3851] Fix `percent' token in the new prompt
+    - [d62ce6e] Add `grml_theme_add_token()' function
+    - [20f6245] Fix mistakes in grml_theme_add_token() help output
+    - [0c58a53] skel/.zshrc: Add example for prompt extension for virtualenv
+
+  * zshrc, keyboard related changes:
+    - [d6923f3] zshrc, keys: Reorganise keyboard setup
+    - [4c8faef] zshrc, keys: Move bindkey calls to the right place
+    - [7d0a2bc] zshrc, keys: fix `zrcgotwidget()' function
+    - [00522c8] zshrc: Use zrcgotwidget in appropriate places
+    - [7ea446c] zshrc: Remove old reverse-menu-complete binding
+    - [2e1c62b] zshrc, keys: Move all bindings over to bind2maps
+    - [8ffa1f8] Add NEWS entry about changed keyboard handling
+
+  * zshrc, misc changes:
+    - [49a3e77] zshrc: Load zsh/parameters module
+    - [cb300a4] zshrc: Fix `salias' wrt parameter scope
+    - [828c8a4] zshrc: unfunction less utilities
+    - [f366ab2] grmlzshrc.t2t: Add customisation note about smkx and rmkx
+      for keybindings
+    - [5c7ee58] NEWS: Use grml.org address
+    - [81427a7] zshrc: Make zle-smkx() and zle-rmkx() more robust wrt
+      changed options
+    - [6a512b0] zshrc: Move preexec() code to hooks
+    - [b5b5fbf] grmlzshrc.t2t: Update copyright years
+    - [01f5d9f] zshrc: Fix error in docstring
+    - [2b02230] zshrc: Move CNF handler to a better place
+
+  [ Michael Prokop ]
+  * [82c0c4a] zshrc: some fixes to make grml-gen-zshrefcard happy again.
+    Thanks to Frank Terbeck <ft@grml.org> for helping
+  * [47c6a05] zshrc: drop deprecated grml-rebuildfstab alias
+  * [e67dc22] zshrc: some further tuning to make grml-gen-zshrefcard
+    output nice
+
+  [ Benedikt Morbach ]
+  * [4258fbb] fix NOPRECMD logic
+
+ -- Michael Prokop <mika@grml.org>  Tue, 02 Apr 2013 13:39:47 +0200
+
 grml-etc-core (0.7.4) grml-testing; urgency=low
 
   [ Michael Prokop ]
