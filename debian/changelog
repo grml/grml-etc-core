@@ -1,3 +1,10 @@
+grml-etc-core (0.8.1) grml-testing; urgency=low
+
+  [ Frank Terbeck ]
+  * [06a39dc] zshrc: Make root-user name bold in prompt again
+
+ -- Michael Prokop <mika@grml.org>  Wed, 03 Apr 2013 10:37:11 +0200
+
 grml-etc-core (0.8.0) grml-testing; urgency=low
 
   The "new prompt + keyboard handling in grml-zshrc" release
