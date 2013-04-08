@@ -1195,10 +1195,10 @@ help_zle_parse_keybindings()
             if [[ "$cline" == (#s)[[:space:]]#\#k\#[[:space:]]##(#b)(*)[[:space:]]#(#e) ]]; then
                 lastkeybind_desc="$match[*]"
                 num_lines_elapsed=0
-            #zsh pattern: matches lines that set a keybinding using bindkey or compdef -k
+            #zsh pattern: matches lines that set a keybinding using bind2map, bindkey or compdef -k
             #             ignores lines that are commentend out
             #             grabs first in '' or "" enclosed string with length between 1 and 6 characters
-            elif [[ "$cline" == [^#]#(bindkey|compdef -k)[[:space:]](*)(#b)(\"((?)(#c1,6))\"|\'((?)(#c1,6))\')(#B)(*)  ]]; then
+            elif [[ "$cline" == [^#]#(bind2maps[[:space:]](*)-s|bindkey|compdef -k)[[:space:]](*)(#b)(\"((?)(#c1,6))\"|\'((?)(#c1,6))\')(#B)(*)  ]]; then
                 #description prevously found ? description not more than 2 lines away ? keybinding not empty ?
                 if [[ -n $lastkeybind_desc && $num_lines_elapsed -lt 2 && -n $match[1] ]]; then
                     #substitute keybinding string with something readable
@@ -1274,6 +1274,7 @@ if check_com -c screen || check_com -c tmux; then
         compadd -a _screen_display_wordlist
     }
     #m# k CTRL-x\,\,\,S Complete word from GNU screen buffer
+    #k# Complete word from GNU screen buffer
     bindkey -r "^xS"
     compdef -k _complete_screen_display complete-word '^xS'
 fi
