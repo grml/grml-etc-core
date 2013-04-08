@@ -1618,7 +1618,7 @@ fi # is433
 # backwards compatibility).
 if zrcautoload colors && colors 2>/dev/null ; then
     BLUE="%{${fg[blue]}%}"
-    RED="%{${fg_bold[red]}%}"
+    RED="%{${fg[red]}%}"
     GREEN="%{${fg[green]}%}"
     CYAN="%{${fg[cyan]}%}"
     MAGENTA="%{${fg[magenta]}%}"
