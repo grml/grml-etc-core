@@ -30,7 +30,7 @@ grml-etc-core (0.8.0) unstable; urgency=low
         }
         grml_theme_add_token \
             virtual-env -f virtual_env_prompt '%F{magenta}' '%f'
-        zstyle ':prompt:grml:left:setup:items' \
+        zstyle ':prompt:grml:left:setup' items \
             rc virtual-env change-root user at host path vcs percent
 
   * zshrc: Keyboard setup changed to terminfo data
