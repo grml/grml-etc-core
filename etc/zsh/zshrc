@@ -1274,7 +1274,6 @@ if check_com -c screen || check_com -c tmux; then
         compadd -a _screen_display_wordlist
     }
     #m# k CTRL-x\,\,\,S Complete word from GNU screen buffer
-    #k# Complete word from GNU screen buffer
     bindkey -r "^xS"
     compdef -k _complete_screen_display complete-word '^xS'
 fi
