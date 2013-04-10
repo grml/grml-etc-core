@@ -2035,7 +2035,7 @@ function grml_prompt_addto () {
     for it in "${items[@]}"; do
         zstyle -s ":prompt:${grmltheme}:${lr}:items:$it" pre apre \
             || apre=${grml_prompt_pre_default[$it]}
-        zstyle -s ":prompt:grml:${grmltheme}:${lr}:$it" post apost \
+        zstyle -s ":prompt:${grmltheme}:${lr}:items:$it" post apost \
             || apost=${grml_prompt_post_default[$it]}
         zstyle -s ":prompt:${grmltheme}:${lr}:items:$it" token new \
             || new=${grml_prompt_token_default[$it]}
