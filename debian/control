@@ -13,6 +13,7 @@ Bugs: mailto:bugs@grml.org
 Package: grml-etc-core
 Architecture: all
 Conflicts: grml-etc (<< 0.8-11), grml-autoconfig (<< 0.5-7), grml-scripts (<< 0.8-27)
+Replaces: vim-common
 Depends: vim | nvi | editor
 Recommends: grml-scripts-core
 Pre-Depends: zsh
