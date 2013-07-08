@@ -1,3 +1,25 @@
+grml-etc-core (0.8.2) grml-testing; urgency=low
+
+  [ Christian Hesse ]
+  * [21be0f4] print error code in bold
+
+  [ Bernhard Tittelbach ]
+  * [3c6ce0c] make help-zle work with new bind2maps
+
+  [ Michael Prokop ]
+  * [6c3c1d6] zshrc: drop duplicated "Complete word from GNU screen
+    buffer" documentation. Thanks to Frank Terbeck <ft@grml.org> for the
+    hint
+
+  [ Frank Terbeck ]
+  * [89815de] Fix Virtualenv prompt example
+
+  [ Jan Hruban ]
+  * [d5f9c90] zshrc: Fix style lookup of `post' styles in prompt setup
+    [Closes: issue1253]
+
+ -- Michael Prokop <mika@grml.org>  Mon, 08 Jul 2013 10:59:29 +0200
+
 grml-etc-core (0.8.1) grml-testing; urgency=low
 
   [ Frank Terbeck ]
