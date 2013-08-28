@@ -354,7 +354,7 @@ before doing so. A correct example customisation could look like this:
     PS1='%~ %# '
 ```
 
-You also add your own tokens by using the \`grml_theme_has_token()' function.
+You also add your own tokens by using the \`grml_theme_add_token()' function.
 Call the function without arguments for detailed documentation about that
 procedure.
 
