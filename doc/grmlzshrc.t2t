@@ -354,6 +354,9 @@ before doing so. A correct example customisation could look like this:
     PS1='%~ %# '
 ```
 
+You also add your own tokens by using the \`grml_theme_has_token()' function.
+Call the function without arguments for detailed documentation about that
+procedure.
 
 == GNU/SCREEN STATUS SETTING ==
 //grmlzshrc// sets screen's hardstatus lines to the currently running command
