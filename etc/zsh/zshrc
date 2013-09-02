@@ -992,11 +992,10 @@ zle -N accept-line
 zle -N Accept-Line
 zle -N Accept-Line-HandleContext
 
-# power completion - abbreviation expansion
 # power completion / abbreviation expansion / buffer expansion
 # see http://zshwiki.org/home/examples/zleiab for details
 # less risky than the global aliases but powerful as well
-# just type the abbreviation key and afterwards ',.' to expand it
+# just type the abbreviation key and afterwards 'ctrl-x .' to expand it
 declare -A abk
 setopt extendedglob
 setopt interactivecomments
@@ -1408,7 +1407,7 @@ bind2maps emacs             -- Right  forward-char
 bind2maps       viins vicmd -- Right  vi-forward-char
 bind2maps       viins vicmd -- Right  vi-forward-char
 #k# Display list of abbreviations that expand when followed by ,.
-bind2maps emacs viins       -- -s ',.' zleiab
+bind2maps emacs viins       -- -s '^x.' zleiab
 bind2maps emacs viins       -- -s '^xb' help-show-abk
 bind2maps emacs viins       -- -s '^xM' inplaceMkDirs
 #k# display help for keybindings and ZLE
