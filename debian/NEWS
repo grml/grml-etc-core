@@ -1,3 +1,16 @@
+grml-etc-core (0.9.0) grml-testing; urgency=low
+
+  zshrc: use "ctrl-x ." instead ",." to enable power completion /
+  abbreviation expansion:
+
+  The use of ",." for enabling the power completion /
+  abbreviation expansion / buffer expansion was a bad idea
+  because you'll get either a delay or even missing characters,
+  e.g. when ",." is part of a copy/paste action. So we decided to
+  switch to a safer approach by using "ctrl-x ." instead.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 04 Sep 2013 17:06:45 +0200
+
 grml-etc-core (0.8.0) unstable; urgency=low
 
   * zshrc: Prompt converted to zsh's prompt theme system:

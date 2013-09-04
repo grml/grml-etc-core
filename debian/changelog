@@ -1,3 +1,21 @@
+grml-etc-core (0.9.0) grml-testing; urgency=low
+
+  [ Thorsten Glaser ]
+  * [eaf6856] Fix: trying to overwrite '/etc/vim/vimrc', which is also in
+    package vim-common 2:7.3.547-7
+
+  [ Frank Terbeck ]
+  * [45c3009] Add `grml_theme_has_token' guard function
+  * [d5c0c24] grmlzshrc(5): Briefly mention `grml_theme_has_token()'
+  * [2db6417] grmlzshrc(5): Mentioned the wrong function; actually:
+    grml_theme_add_token()
+
+  [ Michael Prokop ]
+  * [7fc9f75] zshrc: use "ctrl-x ." instead ",." to enable power
+    completion / abbreviation expansion
+
+ -- Michael Prokop <mika@grml.org>  Wed, 04 Sep 2013 17:06:27 +0200
+
 grml-etc-core (0.8.2) grml-testing; urgency=low
 
   [ Christian Hesse ]
