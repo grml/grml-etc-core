@@ -1,3 +1,11 @@
+grml-scripts-core (2.1.0) unstable; urgency=low
+
+  * [5f4620e] Update lesspipe.sh to upstream version 1.82
+  * [9e0c8f5] Bump Standards-Version to 3.9.4
+  * [24dfb28] Remove alumni developer from Uploaders
+
+ -- Michael Prokop <mika@grml.org>  Tue, 17 Sep 2013 13:23:19 +0200
+
 grml-scripts-core (2.0.1) unstable; urgency=low
 
   * [34895d3] Re-add code2color, it's required for lesspipe.sh
