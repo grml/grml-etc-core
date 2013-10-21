@@ -5,11 +5,11 @@
 # License:       This file is licensed under the GPL v2.
 ################################################################################
 
-  caption always "%{+b rk}$USER@%{wk}%H | %{yk}(load: %l)  %-21=%{wk}%D %d.%m.%Y %0c"
+  caption always "%{+b rk}$USER@%{wk}%H | %{yk}(load: %l)  %-21=%{wk}%D %Y-%m-%d %0c"
   hardstatus alwayslastline "%{wr}%n%f %t %{kw} | %?%-Lw%?%{wb}%n*%f %t%?(%u)%?%{kw}%?%+Lw%? %{wk}"
 
 # switch order of caption and hardstatus:
-#  hardstatus alwayslastline "%{+b rk}$USER@%{wk}%H | %{yk}(load: %l |%{rk} cpu: %1` | %{Gk}net: %2`)  %-21=%{wk}%D %d.%m.%Y %0c"
+#  hardstatus alwayslastline "%{+b rk}$USER@%{wk}%H | %{yk}(load: %l |%{rk} cpu: %1` | %{Gk}net: %2`)  %-21=%{wk}%D %Y-%m-%d %0c"
 #  caption always "%{wr}%n%f %t %{kw} | %?%-Lw%?%{wb}%n*%f %t%?(%u)%?%{kw}%?%+Lw%? %{wk}"
 
 # detach on hangup
