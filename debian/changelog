@@ -1,3 +1,15 @@
+grml-etc-core (0.9.1) grml-testing; urgency=low
+
+  [ Michael Prokop ]
+  * [931ce01] Use ISO8601 date in /etc/grml/screenrc [Closes: issue1283]
+    Thanks to Andras Korn for the suggestion
+
+  [ Thilo Six ]
+  * [3d5b16f] Rewrite check4progs from etc/grml/script-functions
+    [Closes: issue1279]
+
+ -- Michael Prokop <mika@grml.org>  Thu, 07 Nov 2013 09:54:32 +0100
+
 grml-etc-core (0.9.0) grml-testing; urgency=low
 
   [ Thorsten Glaser ]
