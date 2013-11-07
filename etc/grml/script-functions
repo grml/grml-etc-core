@@ -48,15 +48,25 @@ setdialog(){
 # }}}
 
 # {{{ check for availability of program(s)
-check4progs(){
-  local RC=''
-  for arg in $* ; do
-    which $arg >/dev/null 2>&1 || RC="$arg"
-  done
-  if [ -n "$RC" ] ; then
-     echo "$RC not installed"
-     return 1
-  fi
+check4progs() {
+    local RTN=0
+    local ARG=''
+    while [ ${#} -gt 0 ]
+    do
+        ARG="${1}"
+        shift
+
+        # check for availability
+        if ! \which "${ARG}" >/dev/null 2>&1
+        then
+            printf "%s: binary not found\n" "${ARG}" >&2
+            RTN=1
+        fi
+
+    done
+
+    # return non zero, if at least one prog is missing!
+    return ${RTN}
 }
 # }}}
 
