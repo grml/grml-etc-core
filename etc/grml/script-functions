@@ -48,25 +48,60 @@ setdialog(){
 # }}}
 
 # {{{ check for availability of program(s)
+# usage example:
+#       check4progs [-s,-q,--quiet,--silent] arg [arg .... argn]
+#
+# with option given either of:
+#       -s,-q,--quiet,--silent
+#
+# check for available progs but produce no output
 check4progs() {
+    [ -n "${ZSH_VERSION}" ] && emulate -L sh
     local RTN=0
-    local ARG=''
-    while [ ${#} -gt 0 ]
+    local oldifs="${IFS}"
+    local ARG d found
+    local VERBOSE=1
+
+    case ${1} in
+        -q | -s | --quiet | --silent)
+            VERBOSE=0
+            shift 1
+            ;;
+
+        *)
+            ;;
+    esac
+
+    while [ $# -gt 0 ]
     do
-        ARG="${1}"
+        ARG="$1"
         shift
 
+        found=0
+        IFS=:
+        for d in $PATH
+        do
+            if [ -x "${d}/${ARG}" ]
+            then
+                found=1
+                break
+            fi
+        done
+        IFS="${oldifs}"
+
         # check for availability
-        if ! \which "${ARG}" >/dev/null 2>&1
+        if [ ${found} -eq 0 ]
         then
-            printf "%s: binary not found\n" "${ARG}" >&2
+            if [ ${VERBOSE} -eq 1 ]
+            then
+                printf "%s: binary not found\n" "${ARG}" >&2
+            fi
             RTN=1
         fi
-
     done
 
     # return non zero, if at least one prog is missing!
-    return ${RTN}
+    return $RTN
 }
 # }}}
 
