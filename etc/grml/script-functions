@@ -194,4 +194,4 @@ is_older_than() {
 #}}}
 
 ## END OF FILE #################################################################
-# vim:foldmethod=marker tw=80 ai expandtab shiftwidth=2 tabstop=8
+# vim:foldmethod=marker tw=80 ai expandtab shiftwidth=2 tabstop=8 ft=sh
