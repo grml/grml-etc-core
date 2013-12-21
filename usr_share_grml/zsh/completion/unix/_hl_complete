@@ -1,17 +1,38 @@
 #compdef hl
 
-function _hl_genarg()  {
+# Taken from:
+# https://dev.0x50.de/projects/ftzsh/repository/revisions/master/entry/functions/_hl_complete
+
+function _hl_themes() {
     local expl
-    if [[ -prefix 1 *: ]] ; then
-        local themes
-        themes=(${${${(f)"$(LC_ALL=C highlight --list-themes)"}/ #/}:#*(Installed|Use name)*})
-        compset -P 1 '*:'
-        _wanted -C list themes expl theme compadd ${themes}
-    else
-        local langs
-        langs=(${${${(f)"$(LC_ALL=C highlight --list-langs)"}/ #/}:#*(Installed|Use name)*})
-        _wanted -C list languages expl languages compadd -S ':' -q ${langs}
-    fi
+    local -a themes
+    themes=(${${${(f)"$(LC_ALL=C highlight --list-themes)"}/ #/}:#*(Installed|Use name)*})
+    _wanted -C list themes expl theme compadd ${themes}
 }
 
-_arguments -s '1: :_hl_genarg' '2:files:_path_files'
+function _hl_languages() {
+    local dir expl curcontext="$curcontext"
+    local -a langs
+    zstyle -s ":completion:${curcontext}:" theme-directory dir \
+        || dir='/usr/share/highlight/langDefs/'
+    langs=( $dir/*(.:t:r) )
+    _wanted -C list languages expl languages compadd ${langs}
+}
+
+function _hl_complete () {
+    local -a args
+    args=(
+        '(--help -h)'{--help,-h}'[display help text]'
+        '(-c --cat --no-pager)'{--no-pager,--cat,-c}'[do not use a pager]'
+        '(--format -F)'{--format,-F}'[specify output format]'
+        '(--list -l)'{--list,-l}'[list available languages]'
+        '(--pager -P)'{--pager,-P}'[specify which pager to use]'
+        '(--syntax -s)'{--syntax,-s}'[specify which syntax to assume]:languages:_hl_languages'
+        '(--themes -t)'{--themes,-t}'[list available themes]'
+        '(--theme -T)'{--theme,-T}'[specify which theme to use]:themes:_hl_themes'
+        '*:files:_path_files'
+    )
+    _arguments -s $args
+}
+
+_hl_complete "$@"
