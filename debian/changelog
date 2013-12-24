@@ -1,3 +1,20 @@
+grml-etc-core (0.9.2) grml-testing; urgency=low
+
+  [ Michael Prokop ]
+  * [4bbd12c] script-functions: correct tabstop setting in vim modeline
+  * [a74236f] Bump Standards-Version to 3.9.5
+
+  [ Thilo Six ]
+  * [6b83c3f] script-functions: Set filetype to "sh" with vim
+  * [5f9a26a] check4progs: Change testing from ‘which’ to iterating
+    over $PATH [Closes: issue1284]
+
+  [ Frank Terbeck ]
+  * [eb08ffe] Update hl and _hl_complete to work with current
+    ‘highlight’ versions
+
+ -- Michael Prokop <mika@grml.org>  Tue, 24 Dec 2013 13:12:42 +0100
+
 grml-etc-core (0.9.1) grml-testing; urgency=low
 
   [ Michael Prokop ]
