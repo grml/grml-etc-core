@@ -2295,8 +2295,8 @@ fi
 
 # do we have GNU ls with color-support?
 if [[ "$TERM" != dumb ]]; then
-    #a1# List files with colors (\kbd{ls -b -CF \ldots})
-    alias ls='ls -b -CF '${ls_options:+"${ls_options[*]}"}
+    #a1# List files with colors (\kbd{ls -CF \ldots})
+    alias ls='ls -CF '${ls_options:+"${ls_options[*]}"}
     #a1# List all files, with colors (\kbd{ls -la \ldots})
     alias la='ls -la '${ls_options:+"${ls_options[*]}"}
     #a1# List files with long colored list, without dotfiles (\kbd{ls -l \ldots})
@@ -2306,7 +2306,7 @@ if [[ "$TERM" != dumb ]]; then
     #a1# List files with long colored list, append qualifier to filenames (\kbd{ls -lF \ldots})\\&\quad(\kbd{/} for directories, \kbd{@} for symlinks ...)
     alias l='ls -lF '${ls_options:+"${ls_options[*]}"}
 else
-    alias ls='ls -b -CF'
+    alias ls='ls -CF'
     alias la='ls -la'
     alias ll='ls -l'
     alias lh='ls -hAl'

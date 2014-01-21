@@ -898,11 +898,10 @@ Lists files in long colored output format.
 : **llog** (//$PAGER /var/log/syslog//)
 Opens syslog in pager.
 
-: **ls** (//ls -b -CF --color=auto//)
-Lists directory printing octal escapes for nongraphic characters.
-Entries are listed by columns and an indicator for file type is appended
-to each file name. Additionally the output is colored, if the terminal
-supports it.
+: **ls** (//ls -CF --color=auto//)
+Lists directory, entries are listed by columns and an indicator for
+file type is appended to each file name. Additionally the output is
+colored, if the terminal supports it.
 
 : **lsa** (//ls -a .*(.)//)
 Lists dot files in current working directory.
