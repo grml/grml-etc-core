@@ -7,7 +7,7 @@ local -a -U FILES
 
 [[ -d "$1" ]] && { TRAPEXIT() { popd -q } && pushd -q "$1" }
 
-TEXTEMPFILES=(*.tex(N-.:s/%tex/'(log|toc|aux|nav|snm|out|tex.backup|bbl|blg|bib.backup|vrb|lof|lot|hd|idx|fdb_latexmk)(.N)'/))
+TEXTEMPFILES=(*.tex(N-.:s/%tex/'(log|toc|aux|nav|snm|out|tex.backup|bbl|blg|bib.backup|vrb|lof|lot|hd|idx|fdb_latexmk|fls|glo|ilg|ind)(.N)'/))
 
 GHCTEMPFILES=(*.(hs|lhs)(N-.:r:s/%/'.(hi|hc|(p|u|s)_(o|hi))(.N)'/))
 
