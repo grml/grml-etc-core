@@ -521,8 +521,6 @@ for var in LANG LC_ALL LC_MESSAGES ; do
     [[ -n ${(P)var} ]] && export $var
 done
 
-xsource "/etc/sysconfig/keyboard"
-
 # set some variables
 if check_com -c vim ; then
 #v#
