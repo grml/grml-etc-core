@@ -1556,6 +1556,7 @@ if [[ -f ${DIRSTACKFILE} ]] && [[ ${#dirstack[*]} -eq 0 ]] ; then
 fi
 
 chpwd() {
+    if (( $DIRSTACKSIZE <= 0 )) || [[ -z $DIRSTACKFILE ]]; then return; fi
     local -ax my_stack
     my_stack=( ${PWD} ${dirstack} )
     if is42 ; then
