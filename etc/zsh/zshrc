@@ -523,8 +523,6 @@ done
 
 xsource "/etc/sysconfig/keyboard"
 
-TZ=$(xcat /etc/timezone)
-
 # set some variables
 if check_com -c vim ; then
 #v#
