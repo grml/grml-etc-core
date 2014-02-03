@@ -1,3 +1,17 @@
+grml-etc-core (0.9.3) grml-testing; urgency=medium
+
+  [ Michael Prokop ]
+  * [5394032] zshrc: drop -b option from `ls' alias, unsupported
+    e.g. on OpenBSD
+  * [da81021] zshrc: drop setting TZ via /etc/timezone
+  * [57254cb] zshrc: do not source /etc/sysconfig/keyboard
+  * [85825da] zshrc: check for DIRSTACK{SIZE,FILE} in chpwd()
+
+  [ Bernhard Tittelbach ]
+  * [9b93265] zsh: purge more latex filename extensions
+
+ -- Michael Prokop <mika@grml.org>  Mon, 03 Feb 2014 16:11:16 +0100
+
 grml-etc-core (0.9.2) grml-testing; urgency=low
 
   [ Michael Prokop ]
