@@ -105,6 +105,9 @@ Import "/etc/default/locale", if set to zero (default).
 A non zero value causes shell functions to be profiled. The results can be
 obtained with the zprof builtin command (see zshmodules(1) for details).
 
+: **COMPDUMPFILE**
+Specifies the location of the completion dump file. Default: $HOME/.zcompdump.
+
 
 = FEATURE DESCRIPTION =
 This is an in depth description of non-standard features implemented by

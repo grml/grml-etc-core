@@ -601,8 +601,9 @@ if is4 ; then
 fi
 
 # completion system
+COMPDUMPFILE=${COMPDUMPFILE:-${ZDOTDIR:-${HOME}}/.zcompdump}
 if zrcautoload compinit ; then
-    compinit || print 'Notice: no compinit available :('
+    compinit -d ${COMPDUMPFILE} || print 'Notice: no compinit available :('
 else
     print 'Notice: no compinit available :('
     function compdef { }
