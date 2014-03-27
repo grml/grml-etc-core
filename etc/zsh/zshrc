@@ -2941,8 +2941,13 @@ modified() {
 check_com new || alias new=modified
 
 # use colors when GNU grep with color-support
-#a2# Execute \kbd{grep -{}-color=auto}
-(( $#grep_options > 0 )) && alias grep='grep '${grep_options:+"${grep_options[*]}"}
+if (( $#grep_options > 0 )); then
+    o=${grep_options:+"${grep_options[*]}"}
+    #a2# Execute \kbd{grep -{}-color=auto}
+    alias grep='grep '$o
+    alias egrep='egrep '$o
+    unset o
+fi
 
 # Translate DE<=>EN
 # 'translate' looks up fot a word in a file with language-to-language
