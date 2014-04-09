@@ -770,7 +770,7 @@ grmlcomp() {
 
     # use generic completion system for programs not yet defined; (_gnu_generic works
     # with commands that provide a --help option with "standard" gnu-like output.)
-    for compcom in cp deborphan df feh fetchipac head hnb ipacsum mv \
+    for compcom in cp deborphan df feh fetchipac gpasswd head hnb ipacsum mv \
                    pal stow tail uname ; do
         [[ -z ${_comps[$compcom]} ]] && compdef _gnu_generic ${compcom}
     done; unset compcom
