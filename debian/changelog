@@ -1,3 +1,16 @@
+grml-etc-core (0.9.4) grml-testing; urgency=medium
+
+  [ Erik Bernstein ]
+  * [46c723f] zshrc: introduce variable for the compdump file
+    [Closes: issue1275]
+
+  [ Frank Terbeck ]
+  * [5afe1a2] Make ‘egrep’ use the same options as ‘grep’
+    [Closes: issue1230]
+  * [1317ff5] zshrc: Make options of gpasswd complete via _gnu_generic
+
+ -- Michael Prokop <mika@grml.org>  Sat, 19 Apr 2014 15:44:35 +0200
+
 grml-etc-core (0.9.3) grml-testing; urgency=medium
 
   [ Michael Prokop ]
