@@ -1,3 +1,11 @@
+grml-etc-core (0.9.4) grml-testing; urgency=medium
+
+  [ Erik Bernstein ]
+  * [46c723f] zshrc: introduce variable for the compdump file
+    [Closes: issue1275]
+
+ -- Michael Prokop <mika@grml.org>  Sat, 19 Apr 2014 15:41:53 +0200
+
 grml-etc-core (0.9.3) grml-testing; urgency=medium
 
   [ Michael Prokop ]
