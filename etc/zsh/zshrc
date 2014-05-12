@@ -2544,26 +2544,31 @@ sll() {
 #   PAGER='less -Mr' - If so, the use of $PAGER here needs fixing
 # with respect to wordsplitting. (ie. ${=PAGER})
 if check_com -c $PAGER ; then
-    #f3# View Debian's changelog of a given package
+    #f3# View Debian's changelog of given package(s)
     dchange() {
         emulate -L zsh
-        if [[ -r /usr/share/doc/$1/changelog.Debian.gz ]] ; then
-            $PAGER /usr/share/doc/$1/changelog.Debian.gz
-        elif [[ -r /usr/share/doc/$1/changelog.gz ]] ; then
-            $PAGER /usr/share/doc/$1/changelog.gz
-        else
-            if check_com -c aptitude ; then
-                echo "No changelog for package $1 found, using aptitude to retrieve it."
-                if isgrml ; then
-                    aptitude -t unstable changelog $1
-                else
-                    aptitude changelog $1
-                fi
+        [[ -z "$1" ]] && printf 'Usage: %s <package_name(s)>\n' "$0" && return 1
+
+        local package
+        for package in "$@" ; do
+            if [[ -r /usr/share/doc/${package}/changelog.Debian.gz ]] ; then
+                $PAGER /usr/share/doc/${package}/changelog.Debian.gz
+            elif [[ -r /usr/share/doc/${package}/changelog.gz ]] ; then
+                $PAGER /usr/share/doc/${package}/changelog.gz
+            elif [[ -r /usr/share/doc/${package}/changelog ]] ; then
+                $PAGER /usr/share/doc/${package}/changelog
             else
-                echo "No changelog for package $1 found, sorry."
-                return 1
+                if check_com -c aptitude ; then
+                    echo "No changelog for package $package found, using aptitude to retrieve it."
+                    aptitude changelog "$package"
+                elif check_com -c apt-get ; then
+                    echo "No changelog for package $package found, using apt-get to retrieve it."
+                    apt-get changelog "$package"
+                else
+                    echo "No changelog for package $package found, sorry."
+                fi
             fi
-        fi
+        done
     }
     _dchange() { _files -W /usr/share/doc -/ }
     compdef _dchange dchange
