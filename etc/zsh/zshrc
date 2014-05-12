@@ -2532,6 +2532,7 @@ compdef _functions freload
 #f1# List symlinks in detail (more detailed version of 'readlink -f' and 'whence -s')
 sll() {
     [[ -z "$1" ]] && printf 'Usage: %s <file(s)>\n' "$0" && return 1
+    local file
     for file in "$@" ; do
         while [[ -h "$file" ]] ; do
             ls -l $file
