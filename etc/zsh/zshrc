@@ -2755,11 +2755,6 @@ if check_com vim; then
     }
 fi
 
-# make a backup of a file
-bk() {
-    cp -a "$1" "${1}_$(date --iso-8601=seconds)"
-}
-
 ssl_hashes=( sha512 sha256 sha1 md5 )
 
 for sh in ${ssl_hashes}; do
