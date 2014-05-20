@@ -1,3 +1,14 @@
+grml-etc-core (0.9.5) grml-testing; urgency=medium
+
+  * [8875863] Debian packaging: use correct "Grml" spelling
+  * [1d2b682] zshrc: extend dchange() to support apt-get and multiple
+    package names
+  * [7bbee30] zshrc: use "local" file variable in sll()
+  * [4d08694] zshrc: drop duplicated bk() function [Closes: issue1307]
+    Thanks to Thilo Six <tech@xk2c.de>
+
+ -- Michael Prokop <mika@grml.org>  Tue, 20 May 2014 12:28:22 +0200
+
 grml-etc-core (0.9.4) grml-testing; urgency=medium
 
   [ Erik Bernstein ]
