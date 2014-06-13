@@ -818,21 +818,6 @@ beginning-or-end-of-somewhere() {
 zle -N beginning-of-somewhere beginning-or-end-of-somewhere
 zle -N end-of-somewhere beginning-or-end-of-somewhere
 
-## toggle the ,. abbreviation feature on/off
-# NOABBREVIATION: default abbreviation-state
-#                 0 - enabled (default)
-#                 1 - disabled
-NOABBREVIATION=${NOABBREVIATION:-0}
-
-grml_toggle_abbrev() {
-    if (( ${NOABBREVIATION} > 0 )) ; then
-        NOABBREVIATION=0
-    else
-        NOABBREVIATION=1
-    fi
-}
-zle -N grml_toggle_abbrev
-
 # add a command line to the shells history without executing it
 commit-to-history() {
     print -s ${(z)BUFFER}
@@ -1029,11 +1014,6 @@ zleiab() {
     setopt extendedglob
     local MATCH
 
-    if (( NOABBREVIATION > 0 )) ; then
-        LBUFFER="${LBUFFER},."
-        return 0
-    fi
-
     LBUFFER=${LBUFFER%%(#m)[.\-+:|_a-zA-Z0-9]#}
     LBUFFER+=${abk[$MATCH]:-$MATCH}
 }
@@ -1042,7 +1022,7 @@ zle -N zleiab
 
 help-show-abk()
 {
-  zle -M "$(print "Type ,. after these abbreviations to expand them:"; print -a -C 2 ${(kv)abk})"
+  zle -M "$(print "Available abbreviations for expansion:"; print -a -C 2 ${(kv)abk})"
 }
 
 zle -N help-show-abk
@@ -1407,8 +1387,9 @@ bind2maps       viins vicmd -- Left   vi-backward-char
 bind2maps emacs             -- Right  forward-char
 bind2maps       viins vicmd -- Right  vi-forward-char
 bind2maps       viins vicmd -- Right  vi-forward-char
-#k# Display list of abbreviations that expand when followed by ,.
+#k# Perform abbreviation expansion
 bind2maps emacs viins       -- -s '^x.' zleiab
+#k# Display list of abbreviations that would expand
 bind2maps emacs viins       -- -s '^xb' help-show-abk
 #k# mkdir -p <dir> from string under cursor or marked area
 bind2maps emacs viins       -- -s '^xM' inplaceMkDirs
@@ -1426,8 +1407,6 @@ bind2maps emacs viins       -- -s '^xP' history-beginning-search-forward-end
 bind2maps emacs viins       -- PageUp history-beginning-search-backward-end
 #k# search history forward for entry beginning with typed text
 bind2maps emacs viins       -- PageDown history-beginning-search-forward-end
-#k# Toggle abbreviation expansion on/off
-bind2maps emacs viins       -- -s '^xA' grml_toggle_abbrev
 bind2maps emacs viins       -- -s "^x^h" commit-to-history
 #k# Kill left-side word or everything up to next slash
 bind2maps emacs viins       -- -s '\ev' slash-backward-kill-word
