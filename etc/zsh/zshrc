@@ -1124,7 +1124,6 @@ inplaceMkDirs() {
     fi
 }
 
-#k# mkdir -p <dir> from string under cursor or marked area
 zle -N inplaceMkDirs
 
 #v1# set number of lines to display per page
@@ -1411,6 +1410,7 @@ bind2maps       viins vicmd -- Right  vi-forward-char
 #k# Display list of abbreviations that expand when followed by ,.
 bind2maps emacs viins       -- -s '^x.' zleiab
 bind2maps emacs viins       -- -s '^xb' help-show-abk
+#k# mkdir -p <dir> from string under cursor or marked area
 bind2maps emacs viins       -- -s '^xM' inplaceMkDirs
 #k# display help for keybindings and ZLE
 bind2maps emacs viins       -- -s '^xz' help-zle
