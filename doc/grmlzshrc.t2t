@@ -615,6 +615,15 @@ Edit given shell function.
 : **freload()**
 Reloads an autoloadable shell function (See autoload in zshbuiltins(1)).
 
+: **grml_vcs_info_toggle_colour()**
+Toggles between coloured and uncoloured formats in vcs_info configuration.
+This is useful with prompts that break if colour codes are in vcs_info
+format expansions (like the `clint' prompt and every other prompt that
+uses %v to expand the contents of `$vcs_into_msg_0_'). If you are using
+customised vcs_info formats, you shouldn't be using this function, since
+it will set all formats to grml's default values (either coloured or plain)
+again.
+
 : **hgdi()**
 Use GNU diff with options -ubwd for mercurial.
 
