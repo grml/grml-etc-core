@@ -1597,7 +1597,16 @@ fi # is433
 # set colors for use in prompts (modern zshs allow for the use of %F{red}foo%f
 # in prompts to get a red "foo" embedded, but it's good to keep these for
 # backwards compatibility).
-if zrcautoload colors && colors 2>/dev/null ; then
+if is437; then
+    BLUE="%F{blue}"
+    RED="%F{red}"
+    GREEN="%F{green}"
+    CYAN="%F{cyan}"
+    MAGENTA="%F{magenta}"
+    YELLOW="%F{yellow}"
+    WHITE="%F{white}"
+    NO_COLOR="%f"
+elif zrcautoload colors && colors 2>/dev/null ; then
     BLUE="%{${fg[blue]}%}"
     RED="%{${fg_bold[red]}%}"
     GREEN="%{${fg[green]}%}"
