@@ -1,3 +1,18 @@
+grml-etc-core (0.9.6) grml-testing; urgency=medium
+
+  [ Michael Prokop ]
+  * [cd0cfc7] zshrc: export SHELL only if unset, don't hardcode path for
+    zsh binary
+
+  [ Frank Terbeck ]
+  * [fa4c0c3] zshrc: Move generation marker to right position
+  * [6f238eb] zshrc: Adjustments for abbreviation expansion
+  * [fd56fcd] zshrc: Use modern colour codes with modern zsh versions
+  * [deeb32a] zshrc: Add function to toggle colour codes in vcs_info
+    formats
+
+ -- Michael Prokop <mika@grml.org>  Thu, 03 Jul 2014 12:47:36 +0200
+
 grml-etc-core (0.9.5) grml-testing; urgency=medium
 
   * [8875863] Debian packaging: use correct "Grml" spelling
