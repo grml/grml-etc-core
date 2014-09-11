@@ -345,9 +345,9 @@ ZSH_NO_DEFAULT_LOCALE=${ZSH_NO_DEFAULT_LOCALE:-0}
 
 typeset -ga ls_options
 typeset -ga grep_options
-if ls --help 2> /dev/null | grep -q GNU; then
+if ls --color=auto / >/dev/null 2>&1; then
     ls_options=( --color=auto )
-elif [[ $OSTYPE == freebsd* ]]; then
+elif ls -G / >/dev/null 2>&1; then
     ls_options=( -G )
 fi
 if grep --help 2> /dev/null | grep -q GNU || \
