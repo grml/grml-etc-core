@@ -350,8 +350,7 @@ if ls --color=auto / >/dev/null 2>&1; then
 elif ls -G / >/dev/null 2>&1; then
     ls_options=( -G )
 fi
-if grep --help 2> /dev/null | grep -q GNU || \
-   [[ $OSTYPE == freebsd* ]]; then
+if grep --color=auto -q "a" <<< "a"; then
     grep_options=( --color=auto )
 fi
 
