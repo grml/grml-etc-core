@@ -1649,25 +1649,46 @@ PS4='+%N:%i:%_> '
 #    - debian_chroot
 #    - vcs_info setup and version specific fixes
 
-# display battery status on right side of prompt via running 'BATTERY=1 zsh'
+# display battery status on right side of prompt using 'BATTERY=1' in .zshrc.pre
 if [[ $BATTERY -gt 0 ]] ; then
-    if ! check_com -c acpi ; then
+    if ! islinux ; then
+        # not yet supported
         BATTERY=0
     fi
 fi
 
 battery() {
 if [[ $BATTERY -gt 0 ]] ; then
-    PERCENT="${${"$(acpi 2>/dev/null)"}/(#b)[[:space:]]#Battery <->: [^0-9]##, (<->)%*/${match[1]}}"
-    if [[ -z "$PERCENT" ]] ; then
-        PERCENT='acpi not present'
-    else
-        if [[ "$PERCENT" -lt 20 ]] ; then
-            PERCENT="warning: ${PERCENT}%%"
-        else
-            PERCENT="${PERCENT}%%"
-        fi
+    if islinux ; then
+        batterylinux
     fi
+fi
+}
+
+batterylinux(){
+PERCENT=''
+local batteries bat capacity
+batteries=( /sys/class/power_supply/BAT*(N) )
+if (( $#batteries > 0 )) ; then
+    for bat in $batteries ; do
+        capacity=$(< $bat/capacity)
+        case $(< $bat/status) in
+        Charging)
+            PERCENT+=" ^"
+            ;;
+        Discharging)
+            if (( capacity < 20 )) ; then
+                PERCENT+=" !v"
+            else
+                PERCENT+=" v"
+            fi
+            ;;
+        *) # Full, Unknown
+            PERCENT+=" ="
+            ;;
+        esac
+        PERCENT+="${capacity}%%"
+    done
 fi
 }
 
