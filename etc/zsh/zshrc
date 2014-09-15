@@ -1651,7 +1651,7 @@ PS4='+%N:%i:%_> '
 
 # display battery status on right side of prompt using 'GRML_DISPLAY_BATTERY=1' in .zshrc.pre
 if [[ $GRML_DISPLAY_BATTERY -gt 0 ]] ; then
-    if ! islinux ; then
+    if ! islinux && ! isopenbsd ; then
         # not yet supported
         GRML_DISPLAY_BATTERY=0
     fi
@@ -1661,6 +1661,8 @@ battery() {
 if [[ $GRML_DISPLAY_BATTERY -gt 0 ]] ; then
     if islinux ; then
         batterylinux
+    elif isopenbsd ; then
+        batteryopenbsd
     fi
 fi
 }
@@ -1690,6 +1692,35 @@ if (( $#batteries > 0 )) ; then
         GRML_BATTERY_LEVEL+="${capacity}%%"
     done
 fi
+}
+
+batteryopenbsd(){
+GRML_BATTERY_LEVEL=''
+local batfull batwarn batnow num
+for num in 0 1 ; do
+    bat=$(sysctl -n hw.sensors.acpibat${num})
+    if [[ ! -z $bat ]]; then
+        batfull=${"$(sysctl -n hw.sensors.acpibat${num}.amphour0)"%% *}
+        batwarn=${"$(sysctl -n hw.sensors.acpibat${num}.amphour1)"%% *}
+        batnow=${"$(sysctl -n hw.sensors.acpibat${num}.amphour3)"%% *}
+        case "$(sysctl -n hw.sensors.acpibat${num}.raw0)" in
+            *" discharging"*)
+                if (( batnow < batwarn )) ; then
+                    GRML_BATTERY_LEVEL+=" !v"
+                else
+                    GRML_BATTERY_LEVEL+=" v"
+                fi
+                ;;
+            *" charging"*)
+                GRML_BATTERY_LEVEL+=" ^"
+                ;;
+            *)
+                GRML_BATTERY_LEVEL+=" ="
+                ;;
+        esac
+        GRML_BATTERY_LEVEL+="${$(( 100 * batnow / batfull ))%%.*}%%"
+    fi
+done
 }
 
 # set variable debian_chroot if running in a chroot with /etc/debian_chroot
