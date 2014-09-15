@@ -180,14 +180,22 @@ else
     isgrmlsmall() { return 1 }
 fi
 
+GRML_OSTYPE=$(uname -s)
+
+islinux(){
+    [[ $GRML_OSTYPE == "Linux" ]]
+}
+
 isdarwin(){
-    [[ $OSTYPE == darwin* ]] && return 0
-    return 1
+    [[ $GRML_OSTYPE == "Darwin" ]]
 }
 
 isfreebsd(){
-    [[ $OSTYPE == freebsd* ]] && return 0
-    return 1
+    [[ $GRML_OSTYPE == "FreeBSD" ]]
+}
+
+isopenbsd(){
+    [[ $GRML_OSTYPE == "OpenBSD" ]]
 }
 
 #f1# are we running within an utf environment?
