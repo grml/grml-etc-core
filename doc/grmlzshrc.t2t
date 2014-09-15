@@ -44,17 +44,20 @@ zshenv file.
 Some of the behaviour of //grmlzshrc// can be altered by setting certain shell
 variables. These may be set temporarily when starting zsh like this:
 \
-``` % BATTERY=1 zsh
+``` % GRML_DISPLAY_BATTERY=1 zsh
 
 Or by setting them permanently in **zshrc.pre** (See AUXILIARY FILES below).
 
 : **BATTERY**
-If set to a value greater than zero and //acpi// installed, //grmlzshrc// will
-put the battery status into the right hand side interactive prompt.
+Deprecated. Use **GRML_DISPLAY_BATTERY** instead.
 
 : **COMMAND_NOT_FOUND**
 A non zero value activates a handler, which is called when a command can not
 be found. The handler is defined by GRML_ZSH_CNF_HANDLER (see below).
+
+: **GRML_DISPLAY_BATTERY**
+If set to a value greater than zero and //acpi// installed, //grmlzshrc// will
+put the battery status into the right hand side interactive prompt.
 
 : **GRML_ZSH_CNF_HANDLER**
 This variable contains the handler to be used by COMMAND_NOT_FOUND (see above)
@@ -1012,7 +1015,7 @@ be used to permantenly change //grmlzshrc//'s STARTUP VARIABLES (see above):
 \
 ```
 # show battery status in RPROMPT
-BATTERY=1
+GRML_DISPLAY_BATTERY=1
 # always load the complete setup, even for root
 GRML_ALWAYS_LOAD_ALL=1
 ```
