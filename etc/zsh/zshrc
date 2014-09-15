@@ -347,7 +347,7 @@ NOMENU=${NOMENU:-0}
 NOPRECMD=${NOPRECMD:-0}
 COMMAND_NOT_FOUND=${COMMAND_NOT_FOUND:-0}
 GRML_ZSH_CNF_HANDLER=${GRML_ZSH_CNF_HANDLER:-/usr/share/command-not-found/command-not-found}
-BATTERY=${BATTERY:-0}
+GRML_DISPLAY_BATTERY=${GRML_DISPLAY_BATTERY:-0}
 GRMLSMALL_SPECIFIC=${GRMLSMALL_SPECIFIC:-1}
 ZSH_NO_DEFAULT_LOCALE=${ZSH_NO_DEFAULT_LOCALE:-0}
 
@@ -1649,16 +1649,16 @@ PS4='+%N:%i:%_> '
 #    - debian_chroot
 #    - vcs_info setup and version specific fixes
 
-# display battery status on right side of prompt using 'BATTERY=1' in .zshrc.pre
-if [[ $BATTERY -gt 0 ]] ; then
+# display battery status on right side of prompt using 'GRML_DISPLAY_BATTERY=1' in .zshrc.pre
+if [[ $GRML_DISPLAY_BATTERY -gt 0 ]] ; then
     if ! islinux ; then
         # not yet supported
-        BATTERY=0
+        GRML_DISPLAY_BATTERY=0
     fi
 fi
 
 battery() {
-if [[ $BATTERY -gt 0 ]] ; then
+if [[ $GRML_DISPLAY_BATTERY -gt 0 ]] ; then
     if islinux ; then
         batterylinux
     fi
@@ -1666,7 +1666,7 @@ fi
 }
 
 batterylinux(){
-PERCENT=''
+GRML_BATTERY_LEVEL=''
 local batteries bat capacity
 batteries=( /sys/class/power_supply/BAT*(N) )
 if (( $#batteries > 0 )) ; then
@@ -1674,20 +1674,20 @@ if (( $#batteries > 0 )) ; then
         capacity=$(< $bat/capacity)
         case $(< $bat/status) in
         Charging)
-            PERCENT+=" ^"
+            GRML_BATTERY_LEVEL+=" ^"
             ;;
         Discharging)
             if (( capacity < 20 )) ; then
-                PERCENT+=" !v"
+                GRML_BATTERY_LEVEL+=" !v"
             else
-                PERCENT+=" v"
+                GRML_BATTERY_LEVEL+=" v"
             fi
             ;;
         *) # Full, Unknown
-            PERCENT+=" ="
+            GRML_BATTERY_LEVEL+=" ="
             ;;
         esac
-        PERCENT+="${capacity}%%"
+        GRML_BATTERY_LEVEL+="${capacity}%%"
     done
 fi
 }
@@ -1945,7 +1945,7 @@ grml_prompt_post_default=(
 
 grml_prompt_token_default=(
     at                '@'
-    battery           'PERCENT'
+    battery           'GRML_BATTERY_LEVEL'
     change-root       'debian_chroot'
     date              '%D{%Y-%m-%d}'
     grml-chroot       'GRML_CHROOT'
@@ -2216,7 +2216,7 @@ fi
 if is437; then
     # The prompt themes use modern features of zsh, that require at least
     # version 4.3.7 of the shell. Use the fallback otherwise.
-    if [[ $BATTERY -gt 0 ]]; then
+    if [[ $GRML_DISPLAY_BATTERY -gt 0 ]]; then
         zstyle ':prompt:grml:right:setup' items sad-smiley battery
         add-zsh-hook precmd battery
     fi
@@ -2459,7 +2459,8 @@ the zsh yet. :)
   "NOPRECMD=1 zsh" => disable the precmd + preexec commands (set GNU screen title)
   "NOTITLE=1  zsh" => disable setting the title of xterms without disabling
                       preexec() and precmd() completely
-  "BATTERY=1  zsh" => activate battery status (via acpi) on right side of prompt
+  "GRML_DISPLAY_BATTERY=1  zsh"
+                   => activate battery status on right side of prompt (WIP)
   "COMMAND_NOT_FOUND=1 zsh"
                    => Enable a handler if an external command was not found
                       The command called in the handler can be altered by setting
