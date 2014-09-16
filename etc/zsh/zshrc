@@ -1650,12 +1650,6 @@ PS4='+%N:%i:%_> '
 #    - vcs_info setup and version specific fixes
 
 # display battery status on right side of prompt using 'GRML_DISPLAY_BATTERY=1' in .zshrc.pre
-if [[ $GRML_DISPLAY_BATTERY -gt 0 ]] ; then
-    if ! islinux && ! isopenbsd && ! isfreebsd ; then
-        # not yet supported
-        GRML_DISPLAY_BATTERY=0
-    fi
-fi
 
 battery() {
 if [[ $GRML_DISPLAY_BATTERY -gt 0 ]] ; then
@@ -1665,6 +1659,9 @@ if [[ $GRML_DISPLAY_BATTERY -gt 0 ]] ; then
         batteryopenbsd
     elif isfreebsd ; then
         batteryfreebsd
+    else
+        #not yet supported
+        GRML_DISPLAY_BATTERY=0
     fi
 fi
 }
