@@ -1651,7 +1651,7 @@ PS4='+%N:%i:%_> '
 
 # display battery status on right side of prompt using 'GRML_DISPLAY_BATTERY=1' in .zshrc.pre
 if [[ $GRML_DISPLAY_BATTERY -gt 0 ]] ; then
-    if ! islinux && ! isopenbsd ; then
+    if ! islinux && ! isopenbsd && ! isfreebsd ; then
         # not yet supported
         GRML_DISPLAY_BATTERY=0
     fi
@@ -1663,6 +1663,8 @@ if [[ $GRML_DISPLAY_BATTERY -gt 0 ]] ; then
         batterylinux
     elif isopenbsd ; then
         batteryopenbsd
+    elif isfreebsd ; then
+        batteryfreebsd
     fi
 fi
 }
@@ -1719,6 +1721,33 @@ for num in 0 1 ; do
                 ;;
         esac
         GRML_BATTERY_LEVEL+="${$(( 100 * batnow / batfull ))%%.*}%%"
+    fi
+done
+}
+
+batteryfreebsd(){
+GRML_BATTERY_LEVEL=''
+local num
+local -A table
+for num in 0 1 ; do
+    table=( ${=${${${${${(M)${(f)"$(acpiconf -i $num)"}:#(State|Remaining capacity):*}%%( ##|%)}//:[ $'\t']##/@}// /-}//@/ }} )
+    if [[ $table[State] != "not-present" ]] ; then
+        case $table[State] in
+            *discharging*)
+                if (( $table[Remaining-capacity] < 20 )) ; then
+                    GRML_BATTERY_LEVEL+=" !v"
+                else
+                    GRML_BATTERY_LEVEL+=" v"
+                fi
+                ;;
+            *charging*)
+                GRML_BATTERY_LEVEL+=" ^"
+                ;;
+            *)
+                GRML_BATTERY_LEVEL+=" ="
+                ;;
+        esac
+        GRML_BATTERY_LEVEL+="$table[Remaining-capacity]%%"
     fi
 done
 }
