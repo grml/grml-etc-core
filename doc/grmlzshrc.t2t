@@ -56,8 +56,9 @@ A non zero value activates a handler, which is called when a command can not
 be found. The handler is defined by GRML_ZSH_CNF_HANDLER (see below).
 
 : **GRML_DISPLAY_BATTERY**
-If set to a value greater than zero and //acpi// installed, //grmlzshrc// will
-put the battery status into the right hand side interactive prompt.
+If set to a value greater than zero, //grmlzshrc// will put the battery status
+into the right hand side interactive prompt. Supported OSes are //GNU/Linux//,
+//FreeBSD//, //OpenBSD// and //Darwin//.
 
 : **GRML_ZSH_CNF_HANDLER**
 This variable contains the handler to be used by COMMAND_NOT_FOUND (see above)
