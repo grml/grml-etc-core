@@ -658,6 +658,9 @@ Returns true, if zsh version is equal or greater than 4.3.3, else false.
 : **isdarwin()**
 Returns true, if running on darwin, else false.
 
+: **isfreebsd()**
+Returns true, if running on FreeBSD, else false.
+
 : **isgrml()**
 Returns true, if running on a grml system, else false.
 
@@ -667,9 +670,15 @@ Returns true, if running on a grml system from a live cd, else false.
 : **isgrmlsmall()**
 Returns true, if run on grml-small, else false.
 
+: **islinux()**
+Returns true, if running on Linux, else false.
+
 : **iso2utf()**
 Changes every occurrence of the string iso885915 or ISO885915 in
 environment variables to UTF-8.
+
+: **isopenbsd()**
+Returns true, if running on OpenBSD, else false.
 
 : **isutfenv()**
 Returns true, if run within an utf environment, else false.
