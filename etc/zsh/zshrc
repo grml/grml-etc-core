@@ -1659,6 +1659,8 @@ if [[ $GRML_DISPLAY_BATTERY -gt 0 ]] ; then
         batteryopenbsd
     elif isfreebsd ; then
         batteryfreebsd
+    elif isdarwin ; then
+        batterydarwin
     else
         #not yet supported
         GRML_DISPLAY_BATTERY=0
@@ -1747,6 +1749,28 @@ for num in 0 1 ; do
         GRML_BATTERY_LEVEL+="$table[Remaining-capacity]%%"
     fi
 done
+}
+
+batterydarwin(){
+GRML_BATTERY_LEVEL=''
+local -a table
+table=( ${$(pmset -g ps)[(w)7,8]%%(\%|);} )
+case $table[2] in
+    charging)
+        GRML_BATTERY_LEVEL+=" ^"
+        ;;
+    discharging)
+        if (( $table[1] < 20 )) ; then
+            GRML_BATTERY_LEVEL+=" !v"
+        else
+            GRML_BATTERY_LEVEL+=" v"
+        fi
+        ;;
+    *)
+        GRML_BATTERY_LEVEL+=" ="
+        ;;
+esac
+GRML_BATTERY_LEVEL+="$table[1]%%"
 }
 
 # set variable debian_chroot if running in a chroot with /etc/debian_chroot
