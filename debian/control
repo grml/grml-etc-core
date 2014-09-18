@@ -2,7 +2,8 @@ Source: grml-etc-core
 Section: grml
 Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
-Build-Depends: debhelper (>= 5), txt2tags
+Build-Depends: debhelper (>= 5),
+               txt2tags
 Standards-Version: 3.9.5
 Homepage: http://git.grml.org/?p=grml-etc-core.git
 Vcs-git: git://git.grml.org/grml-etc-core.git
@@ -12,7 +13,9 @@ Bugs: mailto:bugs@grml.org
 
 Package: grml-etc-core
 Architecture: all
-Conflicts: grml-etc (<< 0.8-11), grml-autoconfig (<< 0.5-7), grml-scripts (<< 0.8-27)
+Conflicts: grml-autoconfig (<< 0.5-7),
+           grml-etc (<< 0.8-11),
+           grml-scripts (<< 0.8-27)
 Replaces: vim-common
 Depends: vim | nvi | editor
 Recommends: grml-scripts-core
