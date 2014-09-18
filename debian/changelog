@@ -1,3 +1,36 @@
+grml-etc-core (0.10.0) grml-testing; urgency=medium
+
+  [ Frank Terbeck ]
+  * [3680c71] zshrc: Remove ‘-C’ from the ‘ls’ alias's options
+  * [6936cb2] zshrc: Add fallback to $BATTERY for backwards compatibility
+  * [feb94ae] grmlzshrc.5: Update manual wrt $BATTERY and
+    $GRML_DISPLAY_BATTERY
+  * [38316b5] zshrc: Send error output to devnull in grep-option detection
+
+  [ Moviuro ]
+  * [e8f18fb] zshrc: actually check that ls options exist before adding
+    them to the alias
+  * [dffa817] zshrc: actually check that grep options exist before adding
+    them to the alias
+  * [0731b9e] zshrc: updated OS recognition functions
+  * [287c348] zshrc: rewrite battery function
+  * [18b7e04] zshrc: renamed allcaps variable
+  * [0d77c12] zshrc: converted to UTF-8
+  * [22f465a] zshrc: added OpenBSD support for battery info
+  * [05479b2] zshrc: added FreeBSD support for battery info
+  * [dedf36c] zshrc: moved the unsupported OSes for the battery info in
+    the battery function
+  * [9d4d764] grmlzshrc.5: added the new OS recognition functions
+  * [7f858dc] zshrc: added Darwin support for battery info
+  * [20b695d] grmlzshrc.5: updated GRML_DISPLAY_BATTERY information
+
+  [ Michael Prokop ]
+  * [da3a6e6] Run wrap-and-sort on the debian directory
+  * [ad16216] zshrc: make sure to not alias already aliased ls commands
+  * [4ebe650] grmlzshrc.5: minor typo fixes and update timestamp
+
+ -- Michael Prokop <mika@grml.org>  Thu, 18 Sep 2014 12:21:58 +0200
+
 grml-etc-core (0.9.6) grml-testing; urgency=medium
 
   [ Michael Prokop ]
