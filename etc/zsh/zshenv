@@ -55,11 +55,10 @@ if [[ -r /etc/gentoo-release ]] ; then
         PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/local/sbin:/usr/local/bin:/usr/NX/bin:$PATH"
     fi
 else
-# support extra software in special directory outside of squashfs environment in live-cd mode
+    # support extra scripts/software in special directory outside of squashfs environment in live mode
     if [[ -f /etc/grml_cd ]] ; then
-       [[ -r /cdrom/addons ]]      && ADDONS=':/cdrom/addons'
-       [[ -r /live/image/addons ]] && ADDONS=':/live/image/addons'
-       [[ -r /etc/grml/my_path ]]  && ADDONS=":$(cat /etc/grml/my_path)"
+        [[ -r /lib/live/mount/medium/scripts ]] && ADDONS=':/lib/live/mount/medium/scripts'
+        [[ -r /etc/grml/my_path ]] && ADDONS=":$(cat /etc/grml/my_path)"
     fi
 
     if (( EUID != 0 )); then
