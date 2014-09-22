@@ -43,38 +43,65 @@ if [[ -f /etc/grml_cd ]] ; then
     fi
 fi
 
-# set $PATH
+## set $PATH
 # gentoo users have to source /etc/profile.env
 if [[ -r /etc/gentoo-release ]] ; then
-
     [[ -r /etc/profile.env ]] && source /etc/profile.env
+fi
 
-    if (( EUID != 0 )); then
-        PATH="$HOME/bin:/bin:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/usr/NX/bin:$PATH"
-    else
-        PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/local/sbin:/usr/local/bin:/usr/NX/bin:$PATH"
-    fi
-else
-    # support extra scripts/software in special directory outside of squashfs environment in live mode
-    if [[ -f /etc/grml_cd ]] ; then
-        [[ -r /lib/live/mount/medium/scripts ]] && ADDONS=':/lib/live/mount/medium/scripts'
-        [[ -r /etc/grml/my_path ]] && ADDONS=":$(cat /etc/grml/my_path)"
-    fi
-
-    if (( EUID != 0 )); then
-        PATH="$HOME/bin:/bin:/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games:/usr/NX/bin$ADDONS"
-    else
-        PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/local/sbin:/usr/local/bin:/usr/NX/bin$ADDONS"
-    fi
+# support extra scripts/software in special directory outside of squashfs environment in live mode
+if [[ -f /etc/grml_cd ]] ; then
+    [[ -r /lib/live/mount/medium/scripts ]] && ADDONS='/lib/live/mount/medium/scripts'
+    [[ -r /etc/grml/my_path ]] && ADDONS="$(cat /etc/grml/my_path)"
 fi
 
 # Solaris
 case $(uname 2>/dev/null) in
   SunOS)
-     PATH="/usr/bin:/usr/sbin:/usr/ccs/bin:/opt/SUNWspro/bin:/usr/ucb:/usr/sfw/bin:/usr/gnu/bin:/usr/openwin/bin:/opt/csw/bin:/opt/swf/bin:/sbin:/usr/sbin:~/bin"
-     # LD_LIBRARY_PATH="/opt/csw/lib:/opt/sfw/lib:/usr/lib:/usr/local/lib:/usr/ccs/lib:/usr/openwin/lib:/usr/ucb/lib"
-     # MANPATH="$MANPATH:/opt/csw/man:/usr/man:/usr/share/man:/usr/local/man:/opt/sfw/man"
+    path=(
+      /usr/bin
+      /usr/sbin
+      /usr/ccs/bin
+      /opt/SUNWspro/bin
+      /usr/ucb
+      /usr/sfw/bin
+      /usr/gnu/bin
+      /usr/openwin/bin
+      /opt/csw/bin
+      /sbin
+      ~/bin
+    )
 esac
+
+# generic $PATH handling
+if (( EUID != 0 )); then
+  path=(
+    $HOME/bin
+    /usr/local/bin
+    /usr/bin
+    /bin
+    /usr/local/sbin
+    /usr/sbin
+    /sbin
+    /usr/local/games
+    /usr/games
+    "${ADDONS}"
+    "${path[@]}"
+  )
+else
+  path=(
+    /sbin
+    /bin
+    /usr/sbin
+    /usr/bin
+    /usr/local/sbin
+    /usr/local/bin
+    "${ADDONS}"
+    "${path[@]}"
+  )
+fi
+
+typeset -U path
 
 # less (:=pager) options:
 #  export LESS=C
