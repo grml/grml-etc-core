@@ -79,11 +79,14 @@ esac
 
 # less (:=pager) options:
 #  export LESS=C
-if [[ -x /usr/bin/lesspipe.sh ]] ; then
-    export LESSOPEN="|lesspipe.sh %s"
-elif [[ -x /usr/bin/lesspipe ]] ; then
+typeset -a lp; lp=( ${^path}/lesspipe(N) )
+if (( $#lp > 0 )) && [[ -x $lp[1] ]] ; then
     export LESSOPEN="|lesspipe %s"
+elif [[ -x /usr/bin/lesspipe.sh ]] ; then
+    export LESSOPEN="|lesspipe.sh %s"
 fi
+unset lp
+
 export READNULLCMD=${PAGER:-/usr/bin/pager}
 
 # allow zeroconf for distcc
