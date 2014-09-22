@@ -1,3 +1,13 @@
+grml-etc-core (0.10.1) grml-testing; urgency=medium
+
+  * [7d3c439] zshenv: switch preference order of lesspipe.sh vs lesspipe
+  * [59deacc] zshenv: update live system paths for usage of $ADDONS inside
+    $PATH
+  * [737b243] zshenv: rework and unify $PATH handling
+  * [4868174] Bump Standards-Version to 3.9.6
+
+ -- Michael Prokop <mika@grml.org>  Mon, 22 Sep 2014 14:20:49 +0200
+
 grml-etc-core (0.10.0) grml-testing; urgency=medium
 
   [ Frank Terbeck ]
