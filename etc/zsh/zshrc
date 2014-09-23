@@ -1697,10 +1697,10 @@ fi
 
 batteryopenbsd(){
 GRML_BATTERY_LEVEL=''
-local batfull batwarn batnow num
+local bat batfull batwarn batnow num
 for num in 0 1 ; do
     bat=$(sysctl -n hw.sensors.acpibat${num})
-    if [[ ! -z $bat ]]; then
+    if [[ -n $bat ]]; then
         batfull=${"$(sysctl -n hw.sensors.acpibat${num}.amphour0)"%% *}
         batwarn=${"$(sysctl -n hw.sensors.acpibat${num}.amphour1)"%% *}
         batnow=${"$(sysctl -n hw.sensors.acpibat${num}.amphour3)"%% *}
