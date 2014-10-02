@@ -1,3 +1,14 @@
+grml-etc-core (0.10.2) grml-testing; urgency=medium
+
+  [ Moviuro ]
+  * [db42ab7] zshrc: Added a missing test on OSX battery function
+  * [0aea68e] zshrc: little fixes for batteryopenbsd function
+
+  [ Michael Prokop ]
+  * [f95ed49] zshrc: drop templ/tt hash definitions
+
+ -- Michael Prokop <mika@grml.org>  Thu, 02 Oct 2014 11:40:52 +0200
+
 grml-etc-core (0.10.1) grml-testing; urgency=medium
 
   * [7d3c439] zshenv: switch preference order of lesspipe.sh vs lesspipe
