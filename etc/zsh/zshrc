@@ -1729,8 +1729,8 @@ GRML_BATTERY_LEVEL=''
 local num
 local -A table
 for num in 0 1 ; do
-    table=( ${=${${${${${(M)${(f)"$(acpiconf -i $num)"}:#(State|Remaining capacity):*}%%( ##|%)}//:[ $'\t']##/@}// /-}//@/ }} )
-    if [[ $table[State] != "not-present" ]] ; then
+    table=( ${=${${${${${(M)${(f)"$(acpiconf -i $num 2>&1)"}:#(State|Remaining capacity):*}%%( ##|%)}//:[ $'\t']##/@}// /-}//@/ }} )
+    if [[ -n $table ]] && [[ $table[State] != "not-present" ]] ; then
         case $table[State] in
             *discharging*)
                 if (( $table[Remaining-capacity] < 20 )) ; then
