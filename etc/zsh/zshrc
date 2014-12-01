@@ -3027,6 +3027,12 @@ bk() {
             cp -a "$1" "$1_$(date --iso-8601=m)"
         elif isopenbsd; then
             cp -R "$1" "$1_$(date "+%FT%H:%M")"
+        elif isfreebsd; then
+            if [[ -d "$1" ]] && [[ "$1" == */ ]]; then
+                echo "cowardly refusing to copy $1 's content; see cp(1)" >&2; return 1
+            else
+                cp -a "$1" "$1_$(date "+%FT%H:%M")"
+            fi
         else;
             echo 'sorry, not yet implemented, send a patch!' >&2
         fi
