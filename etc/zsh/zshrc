@@ -1393,7 +1393,6 @@ bind2maps emacs             -- Left   backward-char
 bind2maps       viins vicmd -- Left   vi-backward-char
 bind2maps emacs             -- Right  forward-char
 bind2maps       viins vicmd -- Right  vi-forward-char
-bind2maps       viins vicmd -- Right  vi-forward-char
 #k# Perform abbreviation expansion
 bind2maps emacs viins       -- -s '^x.' zleiab
 #k# Display list of abbreviations that would expand
