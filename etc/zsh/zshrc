@@ -3020,20 +3020,59 @@ fi
 bk() {
     emulate -L zsh
     local current_date=$(date -u "+%Y-%m-%dT%H:%M:%SZ")
-    while (( $# > 0 )); do
-        if islinux; then
-            cp -a "$1" "$1_$current_date"
-        elif isfreebsd; then
-            if [[ -d "$1" ]] && [[ "$1" == */ ]]; then
-                echo "cowardly refusing to copy $1 's content; see cp(1)" >&2; return 1
-            else
-                cp -a "$1" "$1_$current_date"
-            fi
-        else;
-            cp -pR "$1" "$1_$current_date"
-        fi
-        shift
+    local keep move verbose result
+    usage() {
+        cat << EOT
+bk [-hcmv] FILE [FILE ...]
+Backup a file or folder in place and append the timestamp
+
+Usage:
+-h    Display this help text
+-c    Keep the file/folder as is, create a copy backup using cp(1) (default)
+-m    Move the file/folder, using mv(1)
+-v    Verbose
+
+The -c and -m options can't be used at the same time. If both specified, the
+last one is used.
+
+The return code is the sum of all cp/mv return codes.
+EOT
+    }
+    keep=1
+    while getopts ":hcmv" opt; do
+        case $opt in
+            c) unset move && (( ++keep ));;
+            m) unset keep && (( ++move ));;
+            v) verbose="-v";;
+            h) usage;;
+            \?) usage >&2; return 1;;
+        esac
     done
+    shift "$((OPTIND-1))"
+    if (( keep > 0 )); then
+        while (( $# > 0 )); do
+            if islinux; then
+                cp $verbose -a "$1" "$1_$current_date"
+            elif isfreebsd; then
+                if [[ -d "$1" ]] && [[ "$1" == */ ]]; then
+                    echo "cowardly refusing to copy $1 's content; see cp(1)" >&2; return 1
+                else
+                    cp $verbose -a "$1" "$1_$current_date"
+                fi
+            else;
+                cp $verbose -pR "$1" "$1_$current_date"
+            fi
+            (( result += $? ))
+            shift
+        done
+    elif (( move > 0 )); then
+        while (( $# > 0 )); do
+            mv $verbose "$1" "$1_$current_date"
+            (( result += $? ))
+            shift
+        done
+    fi
+    return $result
 }
 
 #f5# cd to directoy and list files
