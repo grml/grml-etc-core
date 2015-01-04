@@ -3051,23 +3051,17 @@ EOT
     shift "$((OPTIND-1))"
     if (( keep > 0 )); then
         while (( $# > 0 )); do
-            if islinux; then
-                cp $verbose -a "$1" "$1_$current_date"
-            elif isfreebsd; then
-                if [[ -d "$1" ]] && [[ "$1" == */ ]]; then
-                    echo "cowardly refusing to copy $1 's content; see cp(1)" >&2; return 1
-                else
-                    cp $verbose -a "$1" "$1_$current_date"
-                fi
+            if islinux || isfreebsd; then
+                cp $verbose -a "${1%/}" "${1%/}_$current_date"
             else;
-                cp $verbose -pR "$1" "$1_$current_date"
+                cp $verbose -pR "${1%/}" "${1%/}_$current_date"
             fi
             (( result += $? ))
             shift
         done
     elif (( move > 0 )); then
         while (( $# > 0 )); do
-            mv $verbose "$1" "$1_$current_date"
+            mv $verbose "${1%/}" "${1%/}_$current_date"
             (( result += $? ))
             shift
         done
