@@ -3020,29 +3020,35 @@ fi
 bk() {
     emulate -L zsh
     local current_date=$(date -u "+%Y-%m-%dT%H:%M:%SZ")
-    local keep move verbose result
+    local clean keep move verbose result
+    setopt extended_glob
     usage() {
         cat << EOT
 bk [-hcmv] FILE [FILE ...]
+bk -r [-v] [FILE [FILE ...]]
 Backup a file or folder in place and append the timestamp
+Remove backups of a file or folder, or all backups in the current directory
 
 Usage:
 -h    Display this help text
 -c    Keep the file/folder as is, create a copy backup using cp(1) (default)
 -m    Move the file/folder, using mv(1)
+-r    Remove backups of the specified file or directory, using rm(1). If none
+      is provided, remove all backups in the current directory.
 -v    Verbose
 
-The -c and -m options can't be used at the same time. If both specified, the
-last one is used.
+The -c, -r and -m options are mutually exclusive. If specified at the same time,
+the last one is used.
 
-The return code is the sum of all cp/mv return codes.
+The return code is the sum of all cp/mv/rm return codes.
 EOT
     }
     keep=1
-    while getopts ":hcmv" opt; do
+    while getopts ":hcmrv" opt; do
         case $opt in
-            c) unset move && (( ++keep ));;
-            m) unset keep && (( ++move ));;
+            c) unset move clean && (( ++keep ));;
+            m) unset keep clean && (( ++move ));;
+            r) unset move keep && (( ++clean ));;
             v) verbose="-v";;
             h) usage;;
             \?) usage >&2; return 1;;
@@ -3065,6 +3071,17 @@ EOT
             (( result += $? ))
             shift
         done
+    elif (( clean > 0 )); then
+        if (( $# > 0 )); then
+            while (( $# > 0 )); do
+                rm $verbose -rf "${1%/}"_[0-9](#c4,)-(0[0-9]|1[0-2])-([0-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3])(:[0-5][0-9])(#c2)Z
+                (( result += $? ))
+                shift
+            done
+        else
+            rm $verbose -rf *_[0-9](#c4,)-(0[0-9]|1[0-2])-([0-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3])(:[0-5][0-9])(#c2)Z
+            (( result += $? ))
+        fi
     fi
     return $result
 }
