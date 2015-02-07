@@ -3062,7 +3062,7 @@ EOT
         while (( $# > 0 )); do
             if islinux || isfreebsd; then
                 cp $verbose -a "${1%/}" "${1%/}_$current_date"
-            else;
+            else
                 cp $verbose -pR "${1%/}" "${1%/}_$current_date"
             fi
             (( result += $? ))
