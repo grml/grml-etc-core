@@ -2589,7 +2589,7 @@ if [[ -r /etc/debian_version ]] ; then
     # get a root shell as normal user in live-cd mode:
     if isgrmlcd && [[ $UID -ne 0 ]] ; then
        alias su="sudo su"
-     fi
+    fi
 
     #a1# Take a look at the syslog: \kbd{\$PAGER /var/log/syslog}
     salias llog="$PAGER /var/log/syslog"     # take a look at the syslog
