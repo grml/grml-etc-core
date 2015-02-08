@@ -3060,7 +3060,7 @@ EOT
     shift "$((OPTIND-1))"
     if (( keep > 0 )); then
         while (( $# > 0 )); do
-            if islinux || isfreebsd; then
+            if islinux || isfreebsd; then
                 cp $verbose -a "${1%/}" "${1%/}_$current_date"
             else
                 cp $verbose -pR "${1%/}" "${1%/}_$current_date"
