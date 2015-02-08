@@ -561,9 +561,9 @@ else start a new screen.  This is especially useful for roadwarriors using GNU
 screen and ssh.
 
 : **bk()**
-Simple backup of a file or directory using cp(1). The target file name is the
-original name plus a time stamp attached. Symlinks and file attributes like mode,
-ownership and timestamps are preserved.
+Simple backup management of a file or directory using standard unix programs.
+The target file name is the original name plus a time stamp attached. Symlinks
+and file attributes like mode, ownership and timestamps are preserved.
 
 : **cdrecord()**
 If the original cdrecord is not installed, issues a warning to the user to
