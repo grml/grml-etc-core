@@ -1,3 +1,29 @@
+grml-etc-core (0.11.0) grml-testing; urgency=medium
+
+  [ Moviuro ]
+  * [d53b088] zshrc: began rewriting bk()
+  * [39b7de0] zshrc: bk() gets support for multiple files/folders
+  * [0ac05d2] zshrc: bk() gets FreeBSD support
+  * [43be944] zshrc: updating bk()
+  * [9a532dd] zshrc: removed duplicate line
+  * [4c996b3] zshrc: Fixed OpenBSD battery function
+  * [cd79c20] zshrc: bk() update
+  * [8075930] zshrc: bk() now works on directories with trailing /
+  * [a66d7b8] zshrc: bk gets a remove option that cleans backups
+  * [1df56b4] zshrc: using `<' instead of `cat'
+  * [c9a74e7] zshrc: removed extra `;'
+  * [6313103] zshrc: Fix indentation
+  * [426e2a3] zshrc: remove weird whitespace
+  * [c0280d1] grmlzshrc.t2t: update bk() information
+
+  [ Michael Prokop ]
+  * [e020ae7] zshrc: drop j alias (used for 'jobs -l') [Closes: issue1338]
+
+  [ Christian Sturm ]
+  * [8b1e798] zshrc: read host for ssh command completion from config
+
+ -- Michael Prokop <mika@grml.org>  Mon, 09 Feb 2015 06:29:07 +0100
+
 grml-etc-core (0.10.3) grml-testing; urgency=medium
 
   [ Moviuro ]
