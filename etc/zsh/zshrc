@@ -1010,6 +1010,7 @@ abk=(
     'LL'   '|& less -r'
     'M'    '| most'
     'N'    '&>/dev/null'           #d (No Output)
+    'NE'   '|& grep '${grep_options:+"${grep_options[*]}"}' -vE "^\s*(#|$)"' #d (Silence comments and empty lines)
     'R'    '| tr A-z N-za-m'       #d (ROT13)
     'SL'   '| sort | less'
     'S'    '| sort -u'
