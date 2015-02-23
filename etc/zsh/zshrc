@@ -3027,12 +3027,12 @@ fi
 bk() {
     emulate -L zsh
     local current_date=$(date -u "+%Y-%m-%dT%H:%M:%SZ")
-    local clean keep move verbose result
+    local clean keep move verbose result all
     setopt extended_glob
     usage() {
         cat << EOT
 bk [-hcmv] FILE [FILE ...]
-bk -r [-v] [FILE [FILE ...]]
+bk -r [-av] [FILE [FILE ...]]
 Backup a file or folder in place and append the timestamp
 Remove backups of a file or folder, or all backups in the current directory
 
@@ -3042,6 +3042,7 @@ Usage:
 -m    Move the file/folder, using mv(1)
 -r    Remove backups of the specified file or directory, using rm(1). If none
       is provided, remove all backups in the current directory.
+-a    Remove all (even hidden) backups.
 -v    Verbose
 
 The -c, -r and -m options are mutually exclusive. If specified at the same time,
@@ -3051,8 +3052,9 @@ The return code is the sum of all cp/mv/rm return codes.
 EOT
     }
     keep=1
-    while getopts ":hcmrv" opt; do
+    while getopts ":hacmrv" opt; do
         case $opt in
+            a) (( all++ ));;
             c) unset move clean && (( ++keep ));;
             m) unset keep clean && (( ++move ));;
             r) unset move keep && (( ++clean ));;
@@ -3086,7 +3088,11 @@ EOT
                 shift
             done
         else
-            rm $verbose -rf *_[0-9](#c4,)-(0[0-9]|1[0-2])-([0-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3])(:[0-5][0-9])(#c2)Z
+            if (( all > 0 )); then
+                rm $verbose -rf *_[0-9](#c4,)-(0[0-9]|1[0-2])-([0-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3])(:[0-5][0-9])(#c2)Z(D)
+            else
+                rm $verbose -rf *_[0-9](#c4,)-(0[0-9]|1[0-2])-([0-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3])(:[0-5][0-9])(#c2)Z
+            fi
             (( result += $? ))
         fi
     fi
