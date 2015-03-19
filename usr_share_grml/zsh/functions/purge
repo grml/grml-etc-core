@@ -22,7 +22,7 @@ FILES=(
     \#*\#(.N)
     *.o(.N)
     a.out(.N)
-    (*.|)core(.N)
+    (*.|)core(|.<->)(.N)
     *.cmo(.N)
     *.cmi(.N)
     .*.swp(.N)
