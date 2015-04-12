@@ -358,12 +358,12 @@ ZSH_NO_DEFAULT_LOCALE=${ZSH_NO_DEFAULT_LOCALE:-0}
 typeset -ga ls_options
 typeset -ga grep_options
 if ls --color=auto / >/dev/null 2>&1; then
-    ls_options=( --color=auto )
+    ls_options+=( --color=auto )
 elif ls -G / >/dev/null 2>&1; then
-    ls_options=( -G )
+    ls_options+=( -G )
 fi
 if grep --color=auto -q "a" <<< "a" >/dev/null 2>&1; then
-    grep_options=( --color=auto )
+    grep_options+=( --color=auto )
 fi
 
 # utility functions
