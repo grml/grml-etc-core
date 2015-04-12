@@ -114,58 +114,45 @@ fi
 # check for version/system
 # check for versions (compatibility reasons)
 is4(){
-    [[ $ZSH_VERSION == <4->* ]] && return 0
-    return 1
+    [[ $ZSH_VERSION == <4->* ]]
 }
 
 is41(){
-    [[ $ZSH_VERSION == 4.<1->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
+    [[ $ZSH_VERSION == 4.<1->* || $ZSH_VERSION == <5->* ]]
 }
 
 is42(){
-    [[ $ZSH_VERSION == 4.<2->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
+    [[ $ZSH_VERSION == 4.<2->* || $ZSH_VERSION == <5->* ]]
 }
 
 is425(){
-    [[ $ZSH_VERSION == 4.2.<5->* || $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
+    [[ $ZSH_VERSION == 4.2.<5->* || $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]]
 }
 
 is43(){
-    [[ $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
+    [[ $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]]
 }
 
 is433(){
-    [[ $ZSH_VERSION == 4.3.<3->* || $ZSH_VERSION == 4.<4->* \
-                                 || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
+    [[ $ZSH_VERSION == 4.3.<3->* || $ZSH_VERSION == 4.<4->* || $ZSH_VERSION == <5->* ]]
 }
 
 is437(){
-    [[ $ZSH_VERSION == 4.3.<7->* || $ZSH_VERSION == 4.<4->* \
-                                 || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
+    [[ $ZSH_VERSION == 4.3.<7->* || $ZSH_VERSION == 4.<4->* || $ZSH_VERSION == <5->* ]]
 }
 
 is439(){
-    [[ $ZSH_VERSION == 4.3.<9->* || $ZSH_VERSION == 4.<4->* \
-                                 || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
+    [[ $ZSH_VERSION == 4.3.<9->* || $ZSH_VERSION == 4.<4->* || $ZSH_VERSION == <5->* ]]
 }
 
 #f1# Checks whether or not you're running grml
 isgrml(){
-    [[ -f /etc/grml_version ]] && return 0
-    return 1
+    [[ -f /etc/grml_version ]]
 }
 
 #f1# Checks whether or not you're running a grml cd
 isgrmlcd(){
-    [[ -f /etc/grml_cd ]] && return 0
-    return 1
+    [[ -f /etc/grml_cd ]]
 }
 
 if isgrml ; then
@@ -358,12 +345,12 @@ ZSH_NO_DEFAULT_LOCALE=${ZSH_NO_DEFAULT_LOCALE:-0}
 typeset -ga ls_options
 typeset -ga grep_options
 if ls --color=auto / >/dev/null 2>&1; then
-    ls_options=( --color=auto )
+    ls_options+=( --color=auto )
 elif ls -G / >/dev/null 2>&1; then
-    ls_options=( -G )
+    ls_options+=( -G )
 fi
 if grep --color=auto -q "a" <<< "a" >/dev/null 2>&1; then
-    grep_options=( --color=auto )
+    grep_options+=( --color=auto )
 fi
 
 # utility functions
@@ -2442,17 +2429,16 @@ fi
 # do we have GNU ls with color-support?
 if [[ "$TERM" != dumb ]]; then
     #a1# List files with colors (\kbd{ls -F \ldots})
-    alias ls='command ls -F '${ls_options:+"${ls_options[*]}"}
+    alias ls="command ls ${ls_options:+${ls_options[*]}}"
     #a1# List all files, with colors (\kbd{ls -la \ldots})
-    alias la='command ls -la '${ls_options:+"${ls_options[*]}"}
+    alias la="command ls -la ${ls_options:+${ls_options[*]}}"
     #a1# List files with long colored list, without dotfiles (\kbd{ls -l \ldots})
-    alias ll='command ls -l '${ls_options:+"${ls_options[*]}"}
+    alias ll="command ls -l ${ls_options:+${ls_options[*]}}"
     #a1# List files with long colored list, human readable sizes (\kbd{ls -hAl \ldots})
-    alias lh='command ls -hAl '${ls_options:+"${ls_options[*]}"}
+    alias lh="command ls -hAl ${ls_options:+${ls_options[*]}}"
     #a1# List files with long colored list, append qualifier to filenames (\kbd{ls -lF \ldots})\\&\quad(\kbd{/} for directories, \kbd{@} for symlinks ...)
-    alias l='command ls -lF '${ls_options:+"${ls_options[*]}"}
+    alias l="command ls -l ${ls_options:+${ls_options[*]}}"
 else
-    alias ls='command ls -F'
     alias la='command ls -la'
     alias ll='command ls -l'
     alias lh='command ls -hAl'
@@ -3027,12 +3013,12 @@ fi
 bk() {
     emulate -L zsh
     local current_date=$(date -u "+%Y-%m-%dT%H:%M:%SZ")
-    local clean keep move verbose result
+    local clean keep move verbose result all
     setopt extended_glob
     usage() {
         cat << EOT
 bk [-hcmv] FILE [FILE ...]
-bk -r [-v] [FILE [FILE ...]]
+bk -r [-av] [FILE [FILE ...]]
 Backup a file or folder in place and append the timestamp
 Remove backups of a file or folder, or all backups in the current directory
 
@@ -3042,6 +3028,7 @@ Usage:
 -m    Move the file/folder, using mv(1)
 -r    Remove backups of the specified file or directory, using rm(1). If none
       is provided, remove all backups in the current directory.
+-a    Remove all (even hidden) backups.
 -v    Verbose
 
 The -c, -r and -m options are mutually exclusive. If specified at the same time,
@@ -3051,8 +3038,9 @@ The return code is the sum of all cp/mv/rm return codes.
 EOT
     }
     keep=1
-    while getopts ":hcmrv" opt; do
+    while getopts ":hacmrv" opt; do
         case $opt in
+            a) (( all++ ));;
             c) unset move clean && (( ++keep ));;
             m) unset keep clean && (( ++move ));;
             r) unset move keep && (( ++clean ));;
@@ -3086,7 +3074,11 @@ EOT
                 shift
             done
         else
-            rm $verbose -rf *_[0-9](#c4,)-(0[0-9]|1[0-2])-([0-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3])(:[0-5][0-9])(#c2)Z
+            if (( all > 0 )); then
+                rm $verbose -rf *_[0-9](#c4,)-(0[0-9]|1[0-2])-([0-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3])(:[0-5][0-9])(#c2)Z(D)
+            else
+                rm $verbose -rf *_[0-9](#c4,)-(0[0-9]|1[0-2])-([0-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3])(:[0-5][0-9])(#c2)Z
+            fi
             (( result += $? ))
         fi
     fi
