@@ -418,23 +418,22 @@ salias() {
     emulate -L zsh
     local only=0 ; local multi=0
     local key val
-    while [[ $1 == -* ]] ; do
-        case $1 in
-            (-o) only=1 ;;
-            (-a) multi=1 ;;
-            (--) shift ; break ;;
-            (-h)
-                printf 'usage: salias [-h|-o|-a] <alias-expression>\n'
+    while getopts ":hao" opt; do
+        case $opt in
+            o) only=1 ;;
+            a) multi=1 ;;
+            h)
+                printf 'usage: salias [-hoa] <alias-expression>\n'
                 printf '  -h      shows this help text.\n'
                 printf '  -a      replace '\'' ; '\'' sequences with '\'' ; sudo '\''.\n'
                 printf '          be careful using this option.\n'
                 printf '  -o      only sets an alias if a preceding sudo would be needed.\n'
                 return 0
                 ;;
-            (*) printf "unkown option: '%s'\n" "$1" ; return 1 ;;
+            *) salias -h >&2; return 1 ;;
         esac
-        shift
     done
+    shift "$((OPTIND-1))"
 
     if (( ${#argv} > 1 )) ; then
         printf 'Too many arguments %s\n' "${#argv}"
