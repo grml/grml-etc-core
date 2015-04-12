@@ -3028,8 +3028,15 @@ bk() {
     local current_date=$(date -u "+%Y-%m-%dT%H:%M:%SZ")
     local clean keep move verbose result all
     setopt extended_glob
-    usage() {
-        cat << EOT
+    keep=1
+    while getopts ":hacmrv" opt; do
+        case $opt in
+            a) (( all++ ));;
+            c) unset move clean && (( ++keep ));;
+            m) unset keep clean && (( ++move ));;
+            r) unset move keep && (( ++clean ));;
+            v) verbose="-v";;
+            h) cat << EOT
 bk [-hcmv] FILE [FILE ...]
 bk -r [-av] [FILE [FILE ...]]
 Backup a file or folder in place and append the timestamp
@@ -3049,17 +3056,8 @@ the last one is used.
 
 The return code is the sum of all cp/mv/rm return codes.
 EOT
-    }
-    keep=1
-    while getopts ":hacmrv" opt; do
-        case $opt in
-            a) (( all++ ));;
-            c) unset move clean && (( ++keep ));;
-            m) unset keep clean && (( ++move ));;
-            r) unset move keep && (( ++clean ));;
-            v) verbose="-v";;
-            h) usage;;
-            \?) usage >&2; return 1;;
+; return 0;;
+            \?) bk -h >&2; return 1;;
         esac
     done
     shift "$((OPTIND-1))"
