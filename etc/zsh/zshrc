@@ -340,6 +340,8 @@ ZSH_NO_DEFAULT_LOCALE=${ZSH_NO_DEFAULT_LOCALE:-0}
 
 typeset -ga ls_options
 typeset -ga grep_options
+# We try to output ls with colors: if working, then add the --color=auto option; (GNU, SunOS)
+# Else, test if -G is a recognized option: if yes, we assume that it does the coloring (FreeBSD)
 if ls --color=auto / >/dev/null 2>&1; then
     ls_options=( --color=auto )
 elif ls -G / >/dev/null 2>&1; then
