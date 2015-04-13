@@ -1,3 +1,27 @@
+grml-etc-core (0.11.2) grml-testing; urgency=medium
+
+  [ Frank Terbeck ]
+  * [77ce18f] zshrc: Fix broken variable assignment [Closes: issue1347]
+
+  [ Csillag Tamas ]
+  * [eb5f508] zshrc: add issolaris()
+
+  [ Moviuro ]
+  * [d338dea] zshrc: new bk() option '-ra' to removal all (even hidden)
+    backups
+  * [bd49c00] zshrc: don't overwrite {ls,grep}_options set in .zshrc.pre
+  * [2065da5] zshrc: simplify ls alias setup; remove -F from ls aliases
+
+  [ Michael Prokop ]
+  * [28618c1] zshrc: drop '-F' from ls alias 'l' also when running in dump
+    $TERM
+  * [4780a0e] zshrc/grmlzshrc.t2t: update docs related to '-F' removal
+    from ls aliases
+  * [aeb06b2] minimal-shellrc: sync ls related alias behaviour with main
+    zshrc
+
+ -- Michael Prokop <mika@grml.org>  Mon, 13 Apr 2015 09:27:37 +0200
+
 grml-etc-core (0.11.1) grml-testing; urgency=medium
 
   [ Frank Terbeck ]
