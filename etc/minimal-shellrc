@@ -30,8 +30,8 @@ set -o bgnice        \
 
 # aliases for various command shortcuts
 alias ls='ls --color=auto'  # we're on grml, so we do have GNU ls.
-alias ll='ls -lFb'
-alias la='ls -LaFb'
+alias ll='ls -l --color=auto'
+alias la='ls -la --color=auto'
 alias pu='ps -fu $USER'
 
 ## Keybindings
