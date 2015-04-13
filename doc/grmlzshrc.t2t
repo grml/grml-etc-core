@@ -901,7 +901,7 @@ Runs the function H-Glob() to expand or explain wildcards.
 : **j** (//jobs -l//)
 Prints status of jobs in the current shell session in long format.
 
-: **l** (//ls -lF --color=auto//)
+: **l** (//ls -l --color=auto//)
 Lists files in long output format with indicator for filetype appended
 to filename. If the terminal supports it, with colored output.
 
@@ -923,7 +923,7 @@ Lists files in long colored output format.
 : **llog** (//$PAGER /var/log/syslog//)
 Opens syslog in pager.
 
-: **ls** (//ls -CF --color=auto//)
+: **ls** (//ls -C --color=auto//)
 Lists directory, entries are listed by columns and an indicator for
 file type is appended to each file name. Additionally the output is
 colored, if the terminal supports it.
