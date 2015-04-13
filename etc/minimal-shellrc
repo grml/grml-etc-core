@@ -29,9 +29,9 @@ set -o bgnice        \
     -o trackall
 
 # aliases for various command shortcuts
-alias ls='ls --color=auto'  # we're on grml, so we do have GNU ls.
-alias ll='ls -l --color=auto'
-alias la='ls -la --color=auto'
+alias ls='command ls --color=auto'  # we're on grml, so we do have GNU ls.
+alias ll='command ls -l --color=auto'
+alias la='command ls -la --color=auto'
 alias pu='ps -fu $USER'
 
 ## Keybindings
