@@ -2455,7 +2455,7 @@ else
     alias la='command ls -la'
     alias ll='command ls -l'
     alias lh='command ls -hAl'
-    alias l='command ls -lF'
+    alias l='command ls -l'
 fi
 
 alias mdstat='cat /proc/mdstat'
