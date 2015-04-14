@@ -2061,7 +2061,7 @@ function grml_theme_has_token () {
 }
 
 function GRML_theme_add_token_usage () {
-    cat <<__EOF__
+    cat <<__EOF0__
   Usage: grml_theme_add_token <name> [-f|-i] <token/function> [<pre> <post>]
 
     <name> is the name for the newly added token. If the \`-f' or \`-i' options
@@ -2102,7 +2102,7 @@ function GRML_theme_add_token_usage () {
 
     After that, you will be able to use a changed \`items' style to
     assemble your prompt.
-__EOF__
+__EOF0__
 }
 
 function grml_theme_add_token () {
@@ -2609,12 +2609,12 @@ fi
 if [[ -L /usr/bin/cdrecord ]] || ! check_com -c cdrecord; then
     if check_com -c wodim; then
         cdrecord() {
-            cat <<EOMESS
+            cat <<__EOF0__
 cdrecord is not provided under its original name by Debian anymore.
 See #377109 in the BTS of Debian for more details.
 
 Please use the wodim binary instead
-EOMESS
+__EOF0__
             return 1
         }
     fi
@@ -3035,7 +3035,7 @@ bk() {
             m) unset keep clean && (( ++move ));;
             r) unset move keep && (( ++clean ));;
             v) verbose="-v";;
-            h) cat << EOT
+            h) cat <<__EOF0__
 bk [-hcmv] FILE [FILE ...]
 bk -r [-av] [FILE [FILE ...]]
 Backup a file or folder in place and append the timestamp
@@ -3054,7 +3054,7 @@ The -c, -r and -m options are mutually exclusive. If specified at the same time,
 the last one is used.
 
 The return code is the sum of all cp/mv/rm return codes.
-EOT
+__EOF0__
 return 0;;
             \?) bk -h >&2; return 1;;
         esac
