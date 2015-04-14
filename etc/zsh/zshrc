@@ -3025,7 +3025,7 @@ fi
 bk() {
     emulate -L zsh
     local current_date=$(date -u "+%Y-%m-%dT%H:%M:%SZ")
-    local clean keep move verbose result all
+    local clean keep move verbose result all to_bk
     setopt extended_glob
     keep=1
     while getopts ":hacmrv" opt; do
@@ -3055,21 +3055,23 @@ the last one is used.
 
 The return code is the sum of all cp/mv/rm return codes.
 EOT
-; return 0;;
+return 0;;
             \?) bk -h >&2; return 1;;
         esac
     done
     shift "$((OPTIND-1))"
     if (( keep > 0 )); then
-        while (( $# > 0 )); do
-            if islinux || isfreebsd; then
-                cp $verbose -a "${1%/}" "${1%/}_$current_date"
-            else
-                cp $verbose -pR "${1%/}" "${1%/}_$current_date"
-            fi
-            (( result += $? ))
-            shift
-        done
+        if islinux || isfreebsd; then
+            for to_bk in "$@"; do
+                cp $verbose -a "${to_bk%/}" "${to_bk%/}_$current_date"
+                (( result += $? ))
+            done
+        else
+            for to_bk in "$@"; do
+                cp $verbose -pR "${to_bk%/}" "${to_bk%/}_$current_date"
+                (( result += $? ))
+            done
+        fi
     elif (( move > 0 )); then
         while (( $# > 0 )); do
             mv $verbose "${1%/}" "${1%/}_$current_date"
@@ -3078,10 +3080,9 @@ EOT
         done
     elif (( clean > 0 )); then
         if (( $# > 0 )); then
-            while (( $# > 0 )); do
-                rm $verbose -rf "${1%/}"_[0-9](#c4,)-(0[0-9]|1[0-2])-([0-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3])(:[0-5][0-9])(#c2)Z
+            for to_bk in "$@"; do
+                rm $verbose -rf "${to_bk%/}"_[0-9](#c4,)-(0[0-9]|1[0-2])-([0-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3])(:[0-5][0-9])(#c2)Z
                 (( result += $? ))
-                shift
             done
         else
             if (( all > 0 )); then
