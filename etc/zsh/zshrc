@@ -3298,8 +3298,10 @@ simple-extract() {
                 WGET_CMD="curl -L -k -s -o -"
             elif check_com wget; then
                 WGET_CMD="wget -q -O - --no-check-certificate"
+            elif check_com fetch; then
+                WGET_CMD="fetch -q -o -"
             else
-                print "ERROR: neither wget nor curl is installed" >&2
+                print "ERROR: neither wget, curl nor fetch is installed" >&2
                 RC=$((RC+4))
                 continue
             fi
