@@ -1875,7 +1875,7 @@ fi
 # below, which gets called when the user does this: prompt -h grml
 
 function prompt_grml_help () {
-    cat <<__EOF0__
+    <<__EOF0__
   prompt grml
 
     This is the prompt as used by the grml-live system <http://grml.org>. It is
@@ -1932,7 +1932,7 @@ __EOF0__
 }
 
 function prompt_grml-chroot_help () {
-    cat <<__EOF0__
+    <<__EOF0__
   prompt grml-chroot
 
     This is a variation of the grml prompt, see: prompt -h grml
@@ -1946,7 +1946,7 @@ __EOF0__
 }
 
 function prompt_grml-large_help () {
-    cat <<__EOF0__
+    <<__EOF0__
   prompt grml-large
 
     This is a variation of the grml prompt, see: prompt -h grml
@@ -2061,7 +2061,7 @@ function grml_theme_has_token () {
 }
 
 function GRML_theme_add_token_usage () {
-    cat <<__EOF0__
+    <<__EOF0__
   Usage: grml_theme_add_token <name> [-f|-i] <token/function> [<pre> <post>]
 
     <name> is the name for the newly added token. If the \`-f' or \`-i' options
@@ -2609,7 +2609,7 @@ fi
 if [[ -L /usr/bin/cdrecord ]] || ! check_com -c cdrecord; then
     if check_com -c wodim; then
         cdrecord() {
-            cat <<__EOF0__
+            <<__EOF0__
 cdrecord is not provided under its original name by Debian anymore.
 See #377109 in the BTS of Debian for more details.
 
@@ -3035,7 +3035,7 @@ bk() {
             m) unset keep clean && (( ++move ));;
             r) unset move keep && (( ++clean ));;
             v) verbose="-v";;
-            h) cat <<__EOF0__
+            h) <<__EOF0__
 bk [-hcmv] FILE [FILE ...]
 bk -r [-av] [FILE [FILE ...]]
 Backup a file or folder in place and append the timestamp
