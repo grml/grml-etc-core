@@ -3295,9 +3295,9 @@ simple-extract() {
 
         elif [[ "$ARCHIVE" == (#s)(https|http|ftp)://* ]] ; then
             if check_com curl; then
-                WGET_CMD="curl -L -k -s -o -"
+                WGET_CMD="curl -L -s -o -"
             elif check_com wget; then
-                WGET_CMD="wget -q -O - --no-check-certificate"
+                WGET_CMD="wget -q -O -"
             else
                 print "ERROR: neither wget nor curl is installed" >&2
                 RC=$((RC+4))
