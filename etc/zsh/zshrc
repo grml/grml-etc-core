@@ -2578,7 +2578,8 @@ if [[ -r /etc/debian_version ]] ; then
     #a3# Execute \kbd{aptitude install}
     salias ati="aptitude install"
     #a3# Execute \kbd{apt-get upgrade}
-    salias ag="apt-get upgrade"
+    # We make sure that the program `ag' is not installed and available in $PATH
+    (( $+commands[ag] )) && salias agg="apt-get upgrade" || salias ag="apt-get upgrade"
     #a3# Execute \kbd{apt-get update}
     salias au="apt-get update"
     #a3# Execute \kbd{aptitude update ; aptitude safe-upgrade}
