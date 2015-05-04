@@ -3165,12 +3165,12 @@ if (( $#grep_options > 0 )); then
 fi
 
 # Translate DE<=>EN
-# 'translate' looks up fot a word in a file with language-to-language
+# 'translate' looks up a word in a file with language-to-language
 # translations (field separator should be " : "). A typical wordlist looks
-# like at follows:
-#  | english-word : german-transmission
+# like the following:
+#  | english-word : german-translation
 # It's also only possible to translate english to german but not reciprocal.
-# Use the following oneliner to turn back the sort order:
+# Use the following oneliner to reverse the sort order:
 #  $ awk -F ':' '{ print $2" : "$1" "$3 }' \
 #    /usr/local/lib/words/en-de.ISO-8859-1.vok > ~/.translate/de-en.ISO-8859-1.vok
 #f5# Translates a word
