@@ -506,6 +506,7 @@ xcat() {
 xunfunction() {
     emulate -L zsh
     local -a funcs
+    local func
     funcs=(salias xcat xsource xunfunction zrcautoload zrcautozle)
     for func in $funcs ; do
         [[ -n ${functions[$func]} ]] \
@@ -530,6 +531,7 @@ fi
 for var in LANG LC_ALL LC_MESSAGES ; do
     [[ -n ${(P)var} ]] && export $var
 done
+builtin unset -v var
 
 # set some variables
 if check_com -c vim ; then
@@ -606,7 +608,7 @@ typeset -U path cdpath fpath manpath
 is4 && \
 for mod in parameter complist deltochar mathfunc ; do
     zmodload -i zsh/${mod} 2>/dev/null || print "Notice: no ${mod} available :("
-done
+done && builtin unset -v mod
 
 # autoload zsh modules when they are referenced
 if is4 ; then
@@ -1135,6 +1137,7 @@ help_zle_parse_keybindings()
 
     if [[ -r $HELP_ZLE_CACHE_FILE ]]; then
         local load_cache=0
+        local f
         for f ($HELPZLE_KEYBINDING_FILES) [[ $f -nt $HELP_ZLE_CACHE_FILE ]] && load_cache=1
         [[ $load_cache -eq 0 ]] && . $HELP_ZLE_CACHE_FILE && return
     fi
@@ -1176,7 +1179,7 @@ help_zle_parse_keybindings()
     typeset -g -a help_zle_lines
     typeset -g help_zle_sln=1
 
-    local k v
+    local k v f cline
     local lastkeybind_desc contents     #last description starting with #k# that we found
     local num_lines_elapsed=0            #number of lines between last description and keybinding
     #search config files in the order they a called (and thus the order in which they overwrite keybindings)
@@ -1456,6 +1459,7 @@ if zrcgotwidget history-incremental-pattern-search-backward; then
     do
         bind2maps emacs viins vicmd -- -s $seq $wid
     done
+    builtin unset -v seq wid
 fi
 
 if zrcgotkeymap menuselect; then
@@ -2473,6 +2477,7 @@ alias term2utf="echo 'Setting terminal to utf-8 mode'; print -n '\e%G'"
 [[ -n ${aliases[utf2iso]} ]] && unalias utf2iso
 utf2iso() {
     if isutfenv ; then
+        local ENV
         for ENV in $(env | command grep -i '.utf') ; do
             eval export "$(echo $ENV | sed 's/UTF-8/iso885915/ ; s/utf8/iso885915/')"
         done
@@ -2483,6 +2488,7 @@ utf2iso() {
 [[ -n ${aliases[iso2utf]} ]] && unalias iso2utf
 iso2utf() {
     if ! isutfenv ; then
+        local ENV
         for ENV in $(env | command grep -i '\.iso') ; do
             eval export "$(echo $ENV | sed 's/iso.*/UTF-8/ ; s/ISO.*/UTF-8/')"
         done
@@ -2824,6 +2830,7 @@ if [[ -d /etc/init.d || -d /etc/service ]] ; then
         eval "$i() { __start_stop $i \"\$1\" \"\$2\" ; }"
         compdef _grmlinitd $i
     done
+    builtin unset -v i
 fi
 
 #f1# Provides useful information on globbing
@@ -2938,7 +2945,8 @@ ssl-cert-info() {
 }
 
 # make sure our environment is clean regarding colors
-for color in BLUE RED GREEN CYAN YELLOW MAGENTA WHITE ; unset $color
+for var in BLUE RED GREEN CYAN YELLOW MAGENTA WHITE ; unset $var
+builtin unset -v var
 
 # "persistent history"
 # just write important commands you always need to ~/.important_commands
@@ -3196,7 +3204,7 @@ trans() {
 simple-extract() {
     emulate -L zsh
     setopt extended_glob noclobber
-    local DELETE_ORIGINAL DECOMP_CMD USES_STDIN USES_STDOUT GZTARGET WGET_CMD
+    local ARCHIVE DELETE_ORIGINAL DECOMP_CMD USES_STDIN USES_STDOUT GZTARGET WGET_CMD
     local RC=0
     zparseopts -D -E "d=DELETE_ORIGINAL"
     for ARCHIVE in "${@}"; do
@@ -3477,6 +3485,7 @@ if check_com -c hg ; then
     #f5# GNU like diff for mercurial
     hgdi() {
         emulate -L zsh
+        local i
         for i in $(hg status -marn "$@") ; diff -ubwd <(hg cat "$i") "$i"
     }
 
