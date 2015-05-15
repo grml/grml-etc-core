@@ -19,9 +19,9 @@ Or, on operating systems without wget:
 
     # IMPORTANT: please note that you might override existing
     # configuration files in the current working directory!
-    curl -o .screenrc     http://git.grml.org/f/grml-etc-core/etc/grml/screenrc_generic
-    curl -o .vimrc        http://git.grml.org/f/grml-etc-core/etc/vim/vimrc
-    curl -o .zshrc        http://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
+    curl -Lo .screenrc    http://git.grml.org/f/grml-etc-core/etc/grml/screenrc_generic
+    curl -Lo .vimrc       http://git.grml.org/f/grml-etc-core/etc/vim/vimrc
+    curl -Lo .zshrc       http://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
 
 
 Further information is available from http://grml.org/console/
