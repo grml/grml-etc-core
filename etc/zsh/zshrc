@@ -2765,16 +2765,98 @@ is4 && nt() {
 freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
 compdef _functions freload
 
-#f1# List symlinks in detail (more detailed version of 'readlink -f' and 'whence -s')
+#
+# Usage:
+#
+#      e.g.:   a -> b -> c -> d  ....
+#
+#      sll a
+#
+#
+#      if parameter is given with leading '=', lookup $PATH for parameter and resolve that
+#
+#      sll =java
+#
+#      Note: limit for recursive symlinks on linux:
+#            http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/fs/namei.c?id=refs/heads/master#l808
+#            This limits recursive symlink follows to 8,
+#            while limiting consecutive symlinks to 40.
+#
+#      When resolving and displaying information about symlinks, no check is made
+#      that the displayed information does make any sense on your OS.
+#      We leave that decission to the user.
+#
+#      The zstat module is used to detect symlink loops. zstat is available since zsh4.
+#      With an older zsh you will need to abort with <C-c> in that case.
+#      When a symlink loop is detected, a warning ist printed and further processing is stopped.
+#
+#      Module zstat is loaded by default in grml zshrc, no extra action needed for that.
+#
+#      Known bugs:
+#      If you happen to come accross a symlink that points to a destination on an other partition
+#      with the same inode number, that will be marked as symlink loop though it is not.
+#      Two hints for this situation:
+#      I)  Play lottery the same day, as you seem to be rather lucky right now.
+#      II) Send patches.
+#
+#      return status:
+#      0 upon success
+#      1 file/dir not accesible
+#      2 symlink loop detected
+#
+#f1# List symlinks in detail (more detailed version of 'readlink -f', 'whence -s' and 'namei -l')
 sll() {
-    [[ -z "$1" ]] && printf 'Usage: %s <file(s)>\n' "$0" && return 1
-    local file
-    for file in "$@" ; do
+    if [[ -z ${1} ]] ; then
+        printf 'Usage: %s <symlink(s)>\n' "${0}"
+        return 1
+    fi
+
+    local file jumpd curdir
+    local -i RTN LINODE i
+    local -a SEENINODES
+    curdir="${PWD}"
+    RTN=0
+
+    for file in "${@}" ; do
+        SEENINODES=()
+        ls -l "${file:a}"   || RTN=1
+
         while [[ -h "$file" ]] ; do
-            ls -l $file
+            if is4 ; then
+                LINODE=$(zstat -L +inode "${file}")
+                for i in ${SEENINODES} ; do
+                    if (( ${i} == ${LINODE} )) ; then
+                        builtin cd "${curdir}"
+                        print "link loop detected, aborting!"
+                        return 2
+                    fi
+                done
+                SEENINODES+=${LINODE}
+            fi
+            jumpd="${file:h}"
+            file="${file:t}"
+
+            if [[ -d ${jumpd} ]] ; then
+                builtin cd "${jumpd}"  || RTN=1
+            fi
             file=$(readlink "$file")
+
+            jumpd="${file:h}"
+            file="${file:t}"
+
+            if [[ -d ${jumpd} ]] ; then
+                builtin cd "${jumpd}"  || RTN=1
+            fi
+
+            ls -l "${PWD}/${file}"     || RTN=1
         done
+        shift 1
+        if (( ${#} >= 1 )) ; then
+            print ""
+        fi
+        builtin cd "${curdir}"
     done
+    return ${RTN}
 }
 
 # TODO: Is it supported to use pager settings like this?
