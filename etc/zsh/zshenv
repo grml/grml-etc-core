@@ -85,19 +85,20 @@ if (( EUID != 0 )); then
     /sbin
     /usr/local/games
     /usr/games
-    "${ADDONS}"
-    "${path[@]}"
+    ${ADDONS}
+    ${path[@]}
   )
 else
   path=(
+    $HOME/bin
+    /usr/local/sbin
+    /usr/local/bin
     /sbin
     /bin
     /usr/sbin
     /usr/bin
-    /usr/local/sbin
-    /usr/local/bin
-    "${ADDONS}"
-    "${path[@]}"
+    ${ADDONS}
+    ${path[@]}
   )
 fi
 
