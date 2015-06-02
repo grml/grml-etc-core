@@ -85,8 +85,8 @@ if (( EUID != 0 )); then
     /sbin
     /usr/local/games
     /usr/games
-    ${ADDONS}
-    ${path[@]}
+    "${ADDONS}"
+    "${path[@]}"
   )
 else
   path=(
@@ -97,10 +97,12 @@ else
     /bin
     /usr/sbin
     /usr/bin
-    ${ADDONS}
-    ${path[@]}
+    "${ADDONS}"
+    "${path[@]}"
   )
 fi
+
+path=( "${path[@]:#}" )
 
 typeset -U path
 
