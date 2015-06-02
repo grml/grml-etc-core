@@ -90,16 +90,19 @@ if (( EUID != 0 )); then
   )
 else
   path=(
+    $HOME/bin
+    /usr/local/sbin
+    /usr/local/bin
     /sbin
     /bin
     /usr/sbin
     /usr/bin
-    /usr/local/sbin
-    /usr/local/bin
     "${ADDONS}"
     "${path[@]}"
   )
 fi
+
+path=( "${path[@]:#}" )
 
 typeset -U path
 
