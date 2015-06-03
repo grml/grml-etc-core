@@ -3137,10 +3137,8 @@ mkcd() {
 
 #f5# Create temporary directory and \kbd{cd} to it
 cdt() {
-    local t
-    t=$(mktemp -d)
-    echo "$t"
-    builtin cd "$t"
+    builtin cd "$(mktemp -d)"
+    builtin pwd
 }
 
 #f5# List files which have been accessed within the last {\it n} days, {\it n} defaults to 1
