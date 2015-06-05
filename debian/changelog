@@ -1,3 +1,39 @@
+grml-etc-core (0.12.0) grml-testing; urgency=medium
+
+  [ Thomas 'Moviuro' Berger ]
+  * [8945506] zshrc: we use getopts on salias()
+  * [cbe11aa] zshrc: bk(): better usage/help handling
+  * [9c33cea] minimal-shellrc: make sure that aliases refer to 'command ls'
+  * [386c0c4] zshrc: bk(): don't use while but for
+  * [8e8677d] zshrc: unify cat<< syntax
+  * [b9a7056] zshrc: `cat' is not needed in the `cat <<' syntax
+  * [dbd02d7] zshrc: add support for `fetch' in simple-extract()
+  * [46c2d10] zshrc: simplify cdt()
+  * [d6c9e08] README.md: curl(1) now follows redirects
+
+  [ Michael Vetter ]
+  * [2b66bf6] zshrc: Correct comment sentences
+
+  [ Michael Prokop ]
+  * [43d4533] zshrc: drop insecure options from curl/wget cmdlines in
+    simple-extract()
+
+  [ Thilo Six ]
+  * [fdb957e] zshrc: avoid cluttering environment [Closes: issue1350]
+
+  [ Christian Hesse ]
+  * [e3f3b08] zshrc: fix ssh remote host name completion with more
+    than one pattern
+
+  [ Dr. András Korn ]
+  * [6948820] zshenv: avoid placing empty components in PATH; reorder
+    root's PATH
+
+  [ Frank Terbeck ]
+  * [c4db6d7] zshrc: add static version of add-zsh-hook
+
+ -- Michael Prokop <mika@grml.org>  Sat, 06 Jun 2015 01:42:49 +0200
+
 grml-etc-core (0.11.2) grml-testing; urgency=medium
 
   [ Frank Terbeck ]
