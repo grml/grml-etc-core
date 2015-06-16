@@ -702,7 +702,7 @@ Example usages:
 ```
 
 : **profile()**
-Runs a command in $SHELL with profiling enabled (See startup variable
+Runs a command in zsh with profiling enabled (See startup variable
 ZSH_PROFILE_RC above).
 
 : **salias()**
