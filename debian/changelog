@@ -1,3 +1,15 @@
+grml-etc-core (0.12.1) grml-testing; urgency=medium
+
+  [ Thilo Six ]
+  * [9cbfcb4] zshrc: sll() now detects symlink loops +
+    additionaly display details about final link target
+
+  [ Michael Prokop ]
+  * [a5468f8] zshrc: no longer explicitly set SHELL
+  * [5a529cf] doc: replace unused $SHELL with zsh
+
+ -- Michael Prokop <mika@grml.org>  Tue, 16 Jun 2015 11:10:52 +0200
+
 grml-etc-core (0.12.0) grml-testing; urgency=medium
 
   [ Thomas 'Moviuro' Berger ]
