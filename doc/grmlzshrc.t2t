@@ -402,10 +402,6 @@ already set otherwise.
 : **PAGER**
 Set less(1) as default pager, if not already set to something different.
 
-: **SHELL**
-Set explicitly to /bin/zsh, to prevent certain terminal emulators to
-default to /bin/sh or /bin/bash.
-
 
 == OPTIONS ==
 Apart from zsh's default options, //grmlzshrc// sets some options
