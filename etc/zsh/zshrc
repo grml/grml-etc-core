@@ -2946,12 +2946,12 @@ edfunc() {
 compdef _functions edfunc
 
 # use it e.g. via 'Restart apache2'
-#m# f6 Start() \kbd{/etc/init.d/\em{process}}\quad\kbd{start}
-#m# f6 Restart() \kbd{/etc/init.d/\em{process}}\quad\kbd{restart}
-#m# f6 Stop() \kbd{/etc/init.d/\em{process}}\quad\kbd{stop}
-#m# f6 Reload() \kbd{/etc/init.d/\em{process}}\quad\kbd{reload}
-#m# f6 Force-Reload() \kbd{/etc/init.d/\em{process}}\quad\kbd{force-reload}
-#m# f6 Status() \kbd{/etc/init.d/\em{process}}\quad\kbd{status}
+#m# f6 Start() \kbd{service \em{process}}\quad\kbd{start}
+#m# f6 Restart() \kbd{service \em{process}}\quad\kbd{restart}
+#m# f6 Stop() \kbd{service \em{process}}\quad\kbd{stop}
+#m# f6 Reload() \kbd{service \em{process}}\quad\kbd{reload}
+#m# f6 Force-Reload() \kbd{service \em{process}}\quad\kbd{force-reload}
+#m# f6 Status() \kbd{service \em{process}}\quad\kbd{status}
 if [[ -d /etc/init.d || -d /etc/service ]] ; then
     __start_stop() {
         local action_="${1:l}"  # e.g Start/Stop/Restart
@@ -2972,8 +2972,12 @@ if [[ -d /etc/init.d || -d /etc/service ]] ; then
                 *) $SUDO "/etc/init.d/$service_" "${action_}" "$param_" ;;
             esac
         else
-            # sysvinit
-            $SUDO "/etc/init.d/$service_" "${action_}" "$param_"
+            # sysv/sysvinit-utils, upstart
+            if check_com -c service ; then
+              $SUDO service "$service_" "${action_}" "$param_"
+            else
+              $SUDO "/etc/init.d/$service_" "${action_}" "$param_"
+            fi
         fi
     }
 
