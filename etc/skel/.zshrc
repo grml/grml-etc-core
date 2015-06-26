@@ -104,6 +104,9 @@ fi
 ## add `|' to output redirections in the history
 #setopt histallowclobber
 
+## try to avoid the 'zsh: no matches found...'
+#setopt nonomatch
+
 ## warning if file exists ('cat /dev/null > ~/.zshrc')
 #setopt NO_clobber
 

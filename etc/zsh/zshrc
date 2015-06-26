@@ -388,9 +388,6 @@ setopt extended_glob
 # display PID when suspending processes as well
 setopt longlistjobs
 
-# try to avoid the 'zsh: no matches found...'
-setopt nonomatch
-
 # report the status of backgrounds jobs immediately
 setopt notify
 
