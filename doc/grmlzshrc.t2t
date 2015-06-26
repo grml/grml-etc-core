@@ -127,6 +127,51 @@ The **DIRSTACKFILE** is loaded each time zsh starts, therefore freshly started
 zshs inherit the dirstack of the zsh that most recently updated
 **DIRSTACKFILE**.
 
+It is possible to apply a filter to the names of directories that will be
+committed to the persistent dirstack file. There are two ways to configure this
+filter: A general function based filter and a pattern based filter. Both are
+setup via styles in the **':grml:chpwd:dirstack'** context.
+
+To use a function based filter set the //filter// style for that context to the
+name of a function to call every time a directory name is to be added to the
+persistent dirstack. If the function's return value signals success (ie. return
+value "0"), the directory name is filtered out and **not** added to the
+persistent stack. Example:
+\
+```
+function my_dirstack_filter() { [[ $1 == /tmp(|/*) ]] }
+zstyle ':grml:chpwd:dirstack' filter my_dirstack_filter
+```
+
+The pattern based filter uses a list of patterns passed to the //exclude//
+style in the aforementioned context. Each pattern is tested and the first that
+matches will keep the directory name from being added to the persistent stack.
+If none of the patterns matches, the name is added. example:
+\
+```
+zstyle ':grml:chpwd:dirstack' exclude "/tmp(|/*)" "$HOME/tmp(|/*)"
+```
+
+The function based filter is more general, the pattern based filter easier to
+set up. If both filter variants are used at the same time, the function based
+filter will be executed //before// the pattern based one.
+
+If you would like to apply your filters while //loading// the persistent
+dirstack file, set the //filter-on-load// boolean style (the default is
+//false//):
+\
+```
+zstyle ':grml:chpwd:dirstack' filter-on-load true
+```
+
+Setting the //filter-on-load// needs to be done in ".zshrc.pre" because the
+style needs to be set when the main setup is executing! The other styles do not
+have this limitation, but the initial filtering will obviously be done using
+the filters that are configured **at** **that** **point**. The rule of thumb
+is: If you want to filter on load, setup everything in ".zshrc.pre" otherwise
+".zshrc.local" works just as well.
+
+
 == DIRECTORY BASED PROFILES ==
 
 If you need to perform certain actions each time you enter certain
