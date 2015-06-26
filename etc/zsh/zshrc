@@ -528,30 +528,6 @@ salias() {
     return 0
 }
 
-# a "print -l ${(u)foo}"-workaround for pre-4.2.0 shells
-# usage: uprint foo
-#   Where foo is the *name* of the parameter you want printed.
-#   Note that foo is no typo; $foo would be wrong here!
-if ! is42 ; then
-    uprint () {
-        emulate -L zsh
-        local -a u
-        local w
-        local parameter=$1
-
-        if [[ -z ${parameter} ]] ; then
-            printf 'usage: uprint <parameter>\n'
-            return 1
-        fi
-
-        for w in ${(P)parameter} ; do
-            [[ -z ${(M)u:#$w} ]] && u=( $u $w )
-        done
-
-        builtin print -l $u
-    }
-fi
-
 # Check if we can read given files and source those we can.
 xsource() {
     if (( ${#argv} < 1 )) ; then
@@ -1619,6 +1595,31 @@ isgrmlcd && SAVEHIST=1000 || SAVEHIST=10000 # useful for setopt append_history
 DIRSTACKSIZE=${DIRSTACKSIZE:-20}
 DIRSTACKFILE=${DIRSTACKFILE:-${ZDOTDIR:-${HOME}}/.zdirs}
 
+typeset -gaU GRML_PERSISTENT_DIRSTACK
+function grml_dirstack_filter() {
+    local -a exclude
+    local filter entry
+    if zstyle -s ':grml:chpwd:dirstack' filter filter; then
+        $filter $1 && return 0
+    fi
+    if zstyle -a ':grml:chpwd:dirstack' exclude exclude; then
+        for entry in "${exclude[@]}"; do
+            [[ $1 == ${~entry} ]] && return 0
+        done
+    fi
+    return 1
+}
+
+chpwd() {
+    (( $DIRSTACKSIZE <= 0 )) && return
+    [[ -z $DIRSTACKFILE ]] && return
+    grml_dirstack_filter $PWD && return
+    GRML_PERSISTENT_DIRSTACK=(
+        $PWD "${(@)GRML_PERSISTENT_DIRSTACK[1,$DIRSTACKSIZE]}"
+    )
+    builtin print -l ${GRML_PERSISTENT_DIRSTACK} >! ${DIRSTACKFILE}
+}
+
 if [[ -f ${DIRSTACKFILE} ]] && [[ ${#dirstack[*]} -eq 0 ]] ; then
     # Enabling NULL_GLOB via (N) weeds out any non-existing
     # directories from the saved dir-stack file.
@@ -1627,16 +1628,18 @@ if [[ -f ${DIRSTACKFILE} ]] && [[ ${#dirstack[*]} -eq 0 ]] ; then
     [[ -d $dirstack[1] ]] && cd $dirstack[1] && cd $OLDPWD
 fi
 
-chpwd() {
-    if (( $DIRSTACKSIZE <= 0 )) || [[ -z $DIRSTACKFILE ]]; then return; fi
-    local -a my_stack
-    my_stack=( ${PWD} ${dirstack} )
-    if is42 ; then
-        builtin print -l ${(u)my_stack} >! ${DIRSTACKFILE}
-    else
-        uprint my_stack >! ${DIRSTACKFILE}
-    fi
-}
+if zstyle -T ':grml:chpwd:dirstack' filter-on-load; then
+    for i in "${dirstack[@]}"; do
+        if ! grml_dirstack_filter "$i"; then
+            GRML_PERSISTENT_DIRSTACK=(
+                "${GRML_PERSISTENT_DIRSTACK[@]}"
+                $i
+            )
+        fi
+    done
+else
+    GRML_PERSISTENT_DIRSTACK=( "${dirstack[@]}" )
+fi
 
 # directory based profiles
 
