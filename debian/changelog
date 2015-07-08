@@ -1,3 +1,18 @@
+grml-etc-core (0.12.2) grml-testing; urgency=medium
+
+  [ Michael Prokop ]
+  * [33bc6db] zshrc: Start/Restart/Stop/... functions: use `service`
+    wrapper if available
+  * [016955c] zshrc: drop 'setopt nonomatch' configuration
+
+  [ Frank Terbeck ]
+  * [ef0f249] Weed out non-existing directories when loading DIRSTACKFILE
+  * [cdbb53b] Marking an array for export serves no purpose
+  * [4ac3e89] Rewrite large parts of persistent dirstack handling
+  * [5297e36] Documentation for configuring persistent dirstack filters
+
+ -- Michael Prokop <mika@grml.org>  Wed, 08 Jul 2015 10:31:42 +0200
+
 grml-etc-core (0.12.1) grml-testing; urgency=medium
 
   [ Thilo Six ]
