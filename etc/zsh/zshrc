@@ -1617,7 +1617,7 @@ chpwd() {
     builtin print -l ${GRML_PERSISTENT_DIRSTACK} >! ${DIRSTACKFILE}
 }
 
-if [[ -f ${DIRSTACKFILE} ]] && [[ ${#dirstack[*]} -eq 0 ]] ; then
+if [[ -f ${DIRSTACKFILE} ]]; then
     # Enabling NULL_GLOB via (N) weeds out any non-existing
     # directories from the saved dir-stack file.
     dirstack=( ${(f)"$(< $DIRSTACKFILE)"}(N) )
