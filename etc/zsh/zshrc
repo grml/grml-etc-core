@@ -1622,7 +1622,7 @@ if [[ -f ${DIRSTACKFILE} ]] && [[ ${#dirstack[*]} -eq 0 ]] ; then
     # directories from the saved dir-stack file.
     dirstack=( ${(f)"$(< $DIRSTACKFILE)"}(N) )
     # "cd -" won't work after login by just setting $OLDPWD, so
-    [[ -d $dirstack[1] ]] && cd $dirstack[1] && cd $OLDPWD
+    [[ -d $dirstack[1] ]] && cd -q $dirstack[1] && cd -q $OLDPWD
 fi
 
 if zstyle -T ':grml:chpwd:dirstack' filter-on-load; then
