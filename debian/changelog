@@ -1,3 +1,11 @@
+grml-etc-core (0.12.3) grml-testing; urgency=medium
+
+  [ Frank Terbeck ]
+  * [cdc48e8] zshrc, dirstack: Avoid chpwd() upon the very first cd calls
+  * [ead1a06] zshrc, dirstack: Remove useless test
+
+ -- Michael Prokop <mika@grml.org>  Tue, 11 Aug 2015 12:28:16 +0200
+
 grml-etc-core (0.12.2) grml-testing; urgency=medium
 
   [ Michael Prokop ]
