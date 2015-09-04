@@ -75,7 +75,7 @@ if [[ -z ${mode} ]] ; then
     if [[ mode == 'author' ]] && [[ -z ${author} ]] ; then
         local a
         zstyle -s "${lookup_context}" default-author a || a='Joe User'
-        author="&as_uauthors=$(LOOKUP_encode $a})"
+        author="&as_uauthors=$(LOOKUP_encode $a)"
     fi
 fi
 

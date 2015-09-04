@@ -31,6 +31,8 @@ function LOOKUP_help_${backend}() {
     # gmane backend help {{{
     LOOKUP_guard || return 1
     printf 'usage: %s <query>\n' ${backend}
+    printf '  -G        Open group (like gmane.emacs.orgmode) in gmane'\''s browser mode\n'
+    printf '            Completion will offer bookmarked groups.\n'
     printf '  -l        search for original list names (like zsh-workers)\n'
     printf '  -s        match gmane group names (like comp.shell)\n'
     printf '  -L        list-mode; do not open a browser, just print the results\n'
@@ -73,6 +75,7 @@ function LOOKUP_help_${backend}() {
     printf ' %% lookup %s -g gmane.comp.shells.fish.user zsh\n' ${backend}
     printf ' %% lookup %s -L -l zsh-workers\n' ${backend}
     printf ' %% lookup %s -L -s openbsd\n' ${backend}
+    printf ' %% lookup %s -G gmane.emacs.orgmode\n' ${backend}
     #}}}
 }
 LOOKUP_help && return 0
@@ -116,6 +119,7 @@ if [[ -n ${lookup_complete} ]] ; then
     }
 
     comp_args=(
+        '-G[browse gmane group]:group name:__lookup_'${backend}'_group_bookmarks'
         '-l[search for original list names]:list name:'
         '-s[match gmane group names]:group name:'
         '-L[switch to list-mode]'
@@ -143,6 +147,7 @@ zstyle -s "${lookup_context}" default-oper operation    || operation='and'
 
 # parse options
 lu_parseopts_args=(
+    G   bool
     l   bool
     m   bool
     s   bool
@@ -245,7 +250,10 @@ function LOOKUP_beh_${backend}_list() {
 
 # make the actual queries
 LOOKUP_encode -q
-if [[ ${opts[-l]} == 'yes' ]] ; then
+if [[ ${opts[-G]} == 'yes' ]] ; then
+    LOOKUP_browser "http://news.gmane.org/${QUERY}"
+    ret="$?"
+elif [[ ${opts[-l]} == 'yes' ]] ; then
     if [[ ${list_mode} == 'yes' ]] ; then
         LOOKUP_beh_${backend}_list 'list' ${QUERY}
         ret="$?"
