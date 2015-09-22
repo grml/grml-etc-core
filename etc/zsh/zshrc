@@ -2504,16 +2504,14 @@ hash -d www=/var/www
 if check_com -c screen ; then
     if [[ $UID -eq 0 ]] ; then
         if [[ -r /etc/grml/screenrc ]]; then
-            alias screen="${commands[screen]} -c /etc/grml/screenrc"
+            alias screen='screen -c /etc/grml/screenrc'
         fi
-    elif [[ -r $HOME/.screenrc ]] ; then
-        alias screen="${commands[screen]} -c $HOME/.screenrc"
-    else
+    elif [[ ! -r $HOME/.screenrc ]] ; then
         if [[ -r /etc/grml/screenrc_grml ]]; then
-            alias screen="${commands[screen]} -c /etc/grml/screenrc_grml"
+            alias screen='screen -c /etc/grml/screenrc_grml'
         else
             if [[ -r /etc/grml/screenrc ]]; then
-                alias screen="${commands[screen]} -c /etc/grml/screenrc"
+                alias screen='screen -c /etc/grml/screenrc'
             fi
         fi
     fi
