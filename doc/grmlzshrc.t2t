@@ -1020,11 +1020,11 @@ Executes the commands on the versioned patch queue from current repository.
 : **rmcdir** (//'cd ..; rmdir $OLDPWD || cd $OLDPWD//)
 rmdir current working directory
 
-: **screen** (///usr/bin/screen -c ${HOME}/.screenrc//)
+: **screen** (//screen -c file//)
 If invoking user is root, starts screen session with /etc/grml/screenrc
-as config file. If invoked by a regular user, start a screen session
-with users .screenrc config if it exists, else use /etc/grml/screenrc_grml
-as configuration.
+as config file. If invoked by a regular user and users .screenc does not exist,
+starts screen with /etc/grml/screenrc_grml config if it exists, else fallbacks
+to /etc/grml/screenrc.
 
 : **su** (//sudo su//)
 If user is running a Grml live system, don't ask for any password, if she
