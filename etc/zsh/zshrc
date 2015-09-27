@@ -3515,17 +3515,6 @@ _simple_extract()
 compdef _simple_extract simple-extract
 alias se=simple-extract
 
-#f5# Set all ulimit parameters to \kbd{unlimited}
-allulimit() {
-    ulimit -c unlimited
-    ulimit -d unlimited
-    ulimit -f unlimited
-    ulimit -l unlimited
-    ulimit -n unlimited
-    ulimit -s unlimited
-    ulimit -t unlimited
-}
-
 #f5# Change the xterm title from within GNU-screen
 xtrename() {
     emulate -L zsh
