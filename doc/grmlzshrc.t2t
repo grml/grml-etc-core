@@ -589,9 +589,6 @@ Lists files in current directory, which have been accessed within the
 last N days. N is an integer to be passed as first and only argument.
 If no argument is specified N is set to 1.
 
-: **allulimit()**
-Sets all ulimit values to "unlimited".
-
 : **any()**
 Lists processes matching given pattern.
 
