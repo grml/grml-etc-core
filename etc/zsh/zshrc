@@ -2703,11 +2703,10 @@ __EOF0__
     fi
 fi
 
-# Use hard limits, except for a smaller stack and no core dumps
-unlimit
-is425 && limit stack 8192
-isgrmlcd && limit core 0 # important for a live-cd-system
-limit -s
+if isgrmlcd; then
+    # No core dumps: important for a live-cd-system
+    limit -s core 0
+fi
 
 # grmlstuff
 grmlstuff() {
