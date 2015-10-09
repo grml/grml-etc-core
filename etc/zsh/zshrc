@@ -1587,8 +1587,6 @@ function command_not_found_handler() {
 
 # history
 
-ZSHDIR=${ZDOTDIR:-${HOME}/.zsh}
-
 #v#
 HISTFILE=${ZDOTDIR:-${HOME}}/.zsh_history
 isgrmlcd && HISTSIZE=500  || HISTSIZE=5000
