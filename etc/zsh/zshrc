@@ -805,9 +805,16 @@ grmlcomp() {
     # command for process lists, the local web server details and host completion
     zstyle ':completion:*:urls' local 'www' '/var/www/' 'public_html'
 
-    # caching
-    [[ -d $ZSHDIR/cache ]] && zstyle ':completion:*' use-cache yes && \
-                            zstyle ':completion::complete:*' cache-path $ZSHDIR/cache/
+    # Some functions, like _apt and _dpkg, are very slow. We can use a cache in
+    # order to speed things up
+    if [[ ${GRML_COMP_CACHING:-yes} == yes ]]; then
+        GRML_COMP_CACHE_DIR=${GRML_COMP_CACHE_DIR:-${ZDOTDIR:-$HOME}/.cache}
+        if [[ ! -d ${GRML_COMP_CACHE_DIR} ]]; then
+            command mkdir -p "${GRML_COMP_CACHE_DIR}"
+        fi
+        zstyle ':completion:*' use-cache  yes
+        zstyle ':completion:*:complete:*' cache-path "${GRML_COMP_CACHE_DIR}"
+    fi
 
     # host completion
     if is42 ; then

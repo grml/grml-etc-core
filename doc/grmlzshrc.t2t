@@ -55,6 +55,15 @@ Deprecated. Use **GRML_DISPLAY_BATTERY** instead.
 A non zero value activates a handler, which is called when a command can not
 be found. The handler is defined by GRML_ZSH_CNF_HANDLER (see below).
 
+: **GRML_COMP_CACHING**
+If set to //yes// (the default), the setup will enable zsh's completion caching
+mechanism, with the caching data being placed into //$GRML_COMP_CACHE_DIR//.
+
+: **GRML_COMP_CACHE_DIR**
+This defines where zsh's completion caching data will be placed, if
+//$GRML_COMP_CACHING// is active. The default is //${ZDOTDIR:-$HOME}/.cache//.
+The setup will ensure the directory exists before attempting to use it.
+
 : **GRML_DISPLAY_BATTERY**
 If set to a value greater than zero, //grmlzshrc// will put the battery status
 into the right hand side interactive prompt. Supported OSes are //GNU/Linux//,
