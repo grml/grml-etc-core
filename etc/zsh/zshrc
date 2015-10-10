@@ -3133,10 +3133,14 @@ for var in BLUE RED GREEN CYAN YELLOW MAGENTA WHITE ; unset $var
 builtin unset -v var
 
 # "persistent history"
-# just write important commands you always need to ~/.important_commands
+# just write important commands you always need to $GRML_IMPORTANT_COMMANDS
+# defaults for backward compatibility to ~/.important_commands
 if [[ -r ~/.important_commands ]] ; then
-    fc -R ~/.important_commands
+    GRML_IMPORTANT_COMMANDS=~/.important_commands
+else
+    GRML_IMPORTANT_COMMANDS=${GRML_IMPORTANT_COMMANDS:-${ZDOTDIR:-${HOME}}/.important_commands}
 fi
+[[ -r ${GRML_IMPORTANT_COMMANDS} ]] && builtin fc -R ${GRML_IMPORTANT_COMMANDS}
 
 # load the lookup subsystem if it's available on the system
 zrcautoload lookupinit && lookupinit

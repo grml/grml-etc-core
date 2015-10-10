@@ -448,8 +448,9 @@ to: **'zsh: <repository name>'** via zsh's vcs_info.
 
 == PERSISTENT HISTORY ==
 If you got commands you consider important enough to be included in every
-shell's history, you can put them into ~/.important_commands and they will be
-available via the usual history lookup widgets.
+shell's history, you can put them into $GRML_IMPORTANT_COMMANDS (which defaults
+for backward compatibility to ~/.important_commands) and they will be available
+via the usual history lookup widgets.
 
 
 = REFERENCE =
