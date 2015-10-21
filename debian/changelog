@@ -1,3 +1,23 @@
+grml-etc-core (0.12.4) grml-testing; urgency=medium
+
+  [ Frank Terbeck ]
+  * [e1f02ea] zshrc: Update Lookup functions from upstream
+  * [7e40be9] zshrc: Remove "allulimit" function
+  * [76fb54b] zshrc: Leave all limits alone
+  * [64794a6] grmlzshrc.5: Remove documentation for allulimit
+  * [fd3a55f] zshrc: Add more robustness to completion caching setup
+    [Closes: issue1933]
+  * [ea0e7e8] zshrc: Remove unused parameter $ZSHDIR
+
+  [ Bernhard Tittelbach ]
+  * [4e16818] tmux: background a window, reload config, improve binding
+
+  [ Dmitri Vereshchagin ]
+  * [d0c99ea] zshrc: fix screen alias
+  * [21c8c5c] grmlzshrc.t2t: update docs on screen alias
+
+ -- Michael Prokop <mika@grml.org>  Wed, 21 Oct 2015 23:22:38 +0200
+
 grml-etc-core (0.12.3) grml-testing; urgency=medium
 
   [ Frank Terbeck ]
