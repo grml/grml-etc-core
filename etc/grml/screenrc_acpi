@@ -128,13 +128,13 @@
   bind X lockscreen
 
 # 030511 Workaround for stupid machines without xmodmap ;-)
-  bindkey -t °a stuff "ä"
-  bindkey -t °A stuff "Ä"
-  bindkey -t °o stuff "ö"
-  bindkey -t °O stuff "Ö"
-  bindkey -t °u stuff "ü"
-  bindkey -t °U stuff "Ü"
-  bindkey -t °s stuff "ß"
+  bindkey -t Â°a stuff "Ã¤"
+  bindkey -t Â°A stuff "Ã„"
+  bindkey -t Â°o stuff "Ã¶"
+  bindkey -t Â°O stuff "Ã–"
+  bindkey -t Â°u stuff "Ã¼"
+  bindkey -t Â°U stuff "Ãœ"
+  bindkey -t Â°s stuff "ÃŸ"
 
   msgwait 1
   version
