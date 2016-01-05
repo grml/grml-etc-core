@@ -1,3 +1,16 @@
+grml-etc-core (0.12.5) grml-testing; urgency=medium
+
+  [ Sebastian Boehm ]
+  * [50c5b14] tmux: remove obsolete mouse-select-pane option
+
+  [ Michael Prokop ]
+  * [08c9c9c] Switch screenrc_* to UTF8 encoding
+
+  [ Frank Terbeck ]
+  * [c1d264c] Sync to zsh-lookup upstream repository
+
+ -- Michael Prokop <mika@grml.org>  Tue, 05 Jan 2016 22:44:31 +0100
+
 grml-etc-core (0.12.4) grml-testing; urgency=medium
 
   [ Frank Terbeck ]
