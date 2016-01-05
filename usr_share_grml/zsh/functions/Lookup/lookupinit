@@ -23,6 +23,10 @@ function lookup() {
     local -ix lookup_remote lookup_printout lookup_use_qh lookup_help
     local -ax args
     local -Ax lookup_communicate lu_parseopts_args opts
+    # Silence a few warnings for now.
+    # See http://www.zsh.org/mla/workers/2015/msg03364.html for details.
+    local -a match mbegin mend
+    local MATCH; integer MBEGIN MEND
 
     backend='-init-'
     lookup_ei='-main-'
