@@ -436,6 +436,12 @@ if ls --color=auto / >/dev/null 2>&1; then
 elif ls -G / >/dev/null 2>&1; then
     ls_options+=( -G )
 fi
+
+# Natural sorting order on GNU ls(1)
+if ls -v / >/dev/null 2>&1; then
+    ls_options+=( -v )
+fi
+
 if grep --color=auto -q "a" <<< "a" >/dev/null 2>&1; then
     grep_options+=( --color=auto )
 fi
