@@ -441,7 +441,8 @@ elif ls -G / >/dev/null 2>&1; then
 fi
 
 # Natural sorting order on GNU ls(1)
-if ls -v / >/dev/null 2>&1; then
+# OSX and IllumOS have a -v option that is not natural sorting
+if islinux && ls -v / >/dev/null 2>&1; then
     ls_options+=( -v )
 fi
 
