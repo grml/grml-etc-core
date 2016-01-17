@@ -442,7 +442,7 @@ fi
 
 # Natural sorting order on GNU ls(1)
 # OSX and IllumOS have a -v option that is not natural sorting
-if islinux && ls -v / >/dev/null 2>&1; then
+if ls --version |& grep -q 'GNU' >/dev/null 2>&1 && ls -v / >/dev/null 2>&1; then
     ls_options+=( -v )
 fi
 
