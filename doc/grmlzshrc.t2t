@@ -136,6 +136,14 @@ The **DIRSTACKFILE** is loaded each time zsh starts, therefore freshly started
 zshs inherit the dirstack of the zsh that most recently updated
 **DIRSTACKFILE**.
 
+If you would like to //disable// the persistent dirstack feature altogether,
+you can do that by setting the boolean //enable// style to //false// in the
+right context (the default is //true//):
+\
+```
+zstyle ':grml:chpwd:dirstack' enable false
+```
+
 It is possible to apply a filter to the names of directories that will be
 committed to the persistent dirstack file. There are two ways to configure this
 filter: A general function based filter and a pattern based filter. Both are
