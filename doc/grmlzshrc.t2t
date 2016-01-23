@@ -181,12 +181,15 @@ dirstack file, set the //filter-on-load// boolean style (the default is
 zstyle ':grml:chpwd:dirstack' filter-on-load true
 ```
 
-Setting the //filter-on-load// needs to be done in ".zshrc.pre" because the
-style needs to be set when the main setup is executing! The other styles do not
-have this limitation, but the initial filtering will obviously be done using
-the filters that are configured **at** **that** **point**. The rule of thumb
-is: If you want to filter on load, setup everything in ".zshrc.pre" otherwise
-".zshrc.local" works just as well.
+Setting the //filter-on-load// and //enable// styles needs to be done in
+".zshrc.pre" because the styles need to be set when the main setup is
+executing! The other styles do not have this limitation, but enabling the
+system as well as the initial filtering will obviously be done using settings
+and filters that are configured **at** **that** **point**.
+
+With respect to //filter-on-load//, the rule of thumb is: If you want to filter
+on load, setup everything in ".zshrc.pre" otherwise ".zshrc.local" works just
+as well.
 
 
 == DIRECTORY BASED PROFILES ==
