@@ -1630,7 +1630,7 @@ if [[ -f ${DIRSTACKFILE} ]]; then
     [[ -d $dirstack[1] ]] && cd -q $dirstack[1] && cd -q $OLDPWD
 fi
 
-if zstyle -T ':grml:chpwd:dirstack' filter-on-load; then
+if zstyle -t ':grml:chpwd:dirstack' filter-on-load; then
     for i in "${dirstack[@]}"; do
         if ! grml_dirstack_filter "$i"; then
             GRML_PERSISTENT_DIRSTACK=(
