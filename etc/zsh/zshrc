@@ -2543,7 +2543,10 @@ else
     alias l='command ls -l'
 fi
 
-alias mdstat='cat /proc/mdstat'
+if [[ -r /proc/mdstat ]]; then
+    alias mdstat='cat /proc/mdstat'
+fi
+
 alias ...='cd ../../'
 
 # generate alias named "$KERNELVERSION-reboot" so you can use boot with kexec:
