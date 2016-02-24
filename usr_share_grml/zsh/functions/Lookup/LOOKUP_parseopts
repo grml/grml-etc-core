@@ -81,6 +81,7 @@ if [[ $1 == -* ]] && [[ $1 != ${firstarg} ]] ; then
     return 1
 fi
 for o in ${(k)opts} ; do
+    local mbegin mend
     match=()
     : ${o/(#b)-(*)/}
     char="${match[1]}"
