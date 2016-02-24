@@ -2655,28 +2655,30 @@ Enjoy your grml system with the zsh!$reset_color"
 
 # debian stuff
 if [[ -r /etc/debian_version ]] ; then
-    #a3# Execute \kbd{apt-cache search}
-    alias acs='apt-cache search'
-    #a3# Execute \kbd{apt-cache show}
-    alias acsh='apt-cache show'
-    #a3# Execute \kbd{apt-cache policy}
-    alias acp='apt-cache policy'
-    #a3# Execute \kbd{apt-get dist-upgrade}
-    salias adg="apt-get dist-upgrade"
-    #a3# Execute \kbd{apt-get install}
-    salias agi="apt-get install"
-    #a3# Execute \kbd{aptitude install}
-    salias ati="aptitude install"
-    #a3# Execute \kbd{apt-get upgrade}
-    salias ag="apt-get upgrade"
-    #a3# Execute \kbd{apt-get update}
-    salias au="apt-get update"
-    #a3# Execute \kbd{aptitude update ; aptitude safe-upgrade}
-    salias -a up="aptitude update ; aptitude safe-upgrade"
-    #a3# Execute \kbd{dpkg-buildpackage}
-    alias dbp='dpkg-buildpackage'
-    #a3# Execute \kbd{grep-excuses}
-    alias ge='grep-excuses'
+    if [[ -z "$GRML_NO_APT_ALIASES" ]]; then
+        #a3# Execute \kbd{apt-cache search}
+        alias acs='apt-cache search'
+        #a3# Execute \kbd{apt-cache show}
+        alias acsh='apt-cache show'
+        #a3# Execute \kbd{apt-cache policy}
+        alias acp='apt-cache policy'
+        #a3# Execute \kbd{apt-get dist-upgrade}
+        salias adg="apt-get dist-upgrade"
+        #a3# Execute \kbd{apt-get install}
+        salias agi="apt-get install"
+        #a3# Execute \kbd{aptitude install}
+        salias ati="aptitude install"
+        #a3# Execute \kbd{apt-get upgrade}
+        salias ag="apt-get upgrade"
+        #a3# Execute \kbd{apt-get update}
+        salias au="apt-get update"
+        #a3# Execute \kbd{aptitude update ; aptitude safe-upgrade}
+        salias -a up="aptitude update ; aptitude safe-upgrade"
+        #a3# Execute \kbd{dpkg-buildpackage}
+        alias dbp='dpkg-buildpackage'
+        #a3# Execute \kbd{grep-excuses}
+        alias ge='grep-excuses'
+    fi
 
     # get a root shell as normal user in live-cd mode:
     if isgrmlcd && [[ $UID -ne 0 ]] ; then
@@ -3135,7 +3137,7 @@ export COLORTERM="yes"
 
 # general
 #a2# Execute \kbd{du -sch}
-alias da='du -sch'
+[[ -n "$GRML_NO_SMALL_ALIASES" ]] || alias da='du -sch'
 
 # listing stuff
 #a2# Execute \kbd{ls -lSrah}
@@ -3519,7 +3521,7 @@ _simple_extract()
         '*:Archive Or Uri:__archive_or_uri'
 }
 compdef _simple_extract simple-extract
-alias se=simple-extract
+[[ -n "$GRML_NO_SMALL_ALIASES" ]] || alias se=simple-extract
 
 #f5# Change the xterm title from within GNU-screen
 xtrename() {
@@ -3652,7 +3654,7 @@ if check_com -c hg ; then
     alias hbp='hg-buildpackage'
 
     # execute commands on the versioned patch-queue from the current repos
-    alias mq='hg -R $(readlink -f $(hg root)/.hg/patches)'
+    [[ -n "$GRML_NO_SMALL_ALIASES" ]] || alias mq='hg -R $(readlink -f $(hg root)/.hg/patches)'
 
     # diffstat for specific version of a mercurial repository
     #   hgstat      => display diffstat between last revision and tip
