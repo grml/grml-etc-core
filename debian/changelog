@@ -1,3 +1,19 @@
+grml-etc-core (0.12.6) grml-testing; urgency=medium
+
+  [ Frank Terbeck ]
+  * [df5ece4] zshrc: Make the default of 'filter-on-load' match docs
+  * [d005e0b] zshrc: Add a setting to avoid the persistent dirstack
+    feature to be activated
+  * [95d0e2f] grmlzshrc.5: Clarify where to set the enable style
+
+  [ Thilo Six ]
+  * [ebd9d16] zshrc: check_com() fixed and zshified
+
+  [ Michael Prokop ]
+  * [80e5721] Bump Standards-Version to 3.9.7
+
+ -- Michael Prokop <mika@grml.org>  Sat, 30 Apr 2016 23:39:33 +0200
+
 grml-etc-core (0.12.5) grml-testing; urgency=medium
 
   [ Sebastian Boehm ]
