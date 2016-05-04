@@ -1613,6 +1613,7 @@ if zstyle -T ':grml:chpwd:dirstack' enable; then
     }
 
     chpwd() {
+        (( ZSH_SUBSHELL )) && return
         (( $DIRSTACKSIZE <= 0 )) && return
         [[ -z $DIRSTACKFILE ]] && return
         grml_dirstack_filter $PWD && return
