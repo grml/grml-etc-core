@@ -390,7 +390,7 @@ By default, **grml** is used, unless //$GRMLPROMPT// is set to a value larger
 than zero, in which case **grml-large** is used. Lastly, if //$GRML_CHROOT// is
 non-empty, **grml-chroot** is used.
 
-As usual, with promtinit themes, the user may switch to a different theme using
+As usual, with promptinit themes, the user may switch to a different theme using
 the //prompt// utility:
 \
 ```
