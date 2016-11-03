@@ -73,6 +73,15 @@ into the right hand side interactive prompt. Supported OSes are //GNU/Linux//,
 This variable contains the handler to be used by COMMAND_NOT_FOUND (see above)
 and defaults to "/usr/share/command-not-found/command-not-found".
 
+: **GRML_NO_APT_ALIASES**
+A non-empty value inhibits the definition of apt-specific short aliases,
+such as ag, agi, ati etc.
+
+: **GRML_NO_SMALL_ALIASES**
+A non-empty value inhibits the definition of 2-letter aliases such as da.
+ls, ll, la and other common ls-related aliases are exempt from this, as are
+the aliases inhibited by GRML_NO_APT_ALIASES.
+
 : **GRMLSMALL_SPECIFIC**
 Set this to zero to remove items in zsh config, which do not work in
 grml-small.
