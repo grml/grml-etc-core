@@ -1,3 +1,29 @@
+grml-etc-core (0.13.0) grml-testing; urgency=medium
+
+  [ Daniel Hahler ]
+  * [9dbdd75] zshrc: dirstack: skip for ZSH_SUBSHELL
+
+  [ Frank Terbeck ]
+  * [a1d579b] zshrc: clean up fallback prompt code
+  * [dbcbf31] doc/grmlzshrc: fix typo in grmlzshrc manual
+
+  [ Bernhard Tittelbach ]
+  * [1278480] zshrc: purge: c dependency files
+  * [0219e4b] zshrc: purge: latexfiles
+
+  [ Nicolas Braud-Santoni ]
+  * [6646b26] zshrc: do not alias 'mdstat' when /proc/mdstat doesn't exist
+  * [a8df509] zshrc: Make ambiguous aliases optional
+  * [1ce2c6d] doc/grmlzshrc: Document GRML_NO_{APT,SMALL}_ALIASES
+
+  [ Michael Prokop ]
+  * [aaa1e7f] Support systemd-style output via lsb-functions
+  * [2ee956e] lsb-functions: include support for grml_colors handling
+  * [07492e0] Bump Standards-Version to 3.9.8
+  * [3ca2a63] Bump debian/compat version to 9
+
+ -- Michael Prokop <mika@grml.org>  Fri, 13 Jan 2017 14:03:57 +0100
+
 grml-etc-core (0.12.6) grml-testing; urgency=medium
 
   [ Frank Terbeck ]
