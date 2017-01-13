@@ -30,12 +30,6 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-if [ "$(cat /proc/1/comm 2>/dev/null)" = "systemd" ] ; then
-  SYSTEMD=true
-else
-  SYSTEMD=false
-fi
-
 # log_*() functions {{{
 TPUT="${TPUT:-"/usr/bin/tput"}"
 
@@ -419,9 +413,9 @@ ewend() {
 }
 #}}}
 
-# if we're using systemd then redfine functions for
-# output in systemd style
-if $SYSTEMD ; then
+# if we're using systemd then redefine functions
+# for output in systemd style
+if [ "$(cat /proc/1/comm 2>/dev/null)" = "systemd" ] ; then
   einfo() {
     printf "[  ${GREEN}OK${NORMAL}  ] %s\n" "$*"
   }
@@ -438,8 +432,5 @@ if $SYSTEMD ; then
     :
   }
 fi
-
-# don't expose unneeded local variables
-unset SYSTEMD
 
 # vim: ft=sh tw=80 ts=4 foldmethod=marker
