@@ -180,6 +180,11 @@ if [ -r /proc/cmdline ] ; then
 fi
 [ -n "$NOCOLORS" ] && RC_NOCOLOR='yes'
 RC_NOCOLOR="${RC_NOCOLOR:-no}"
+if [ "$RC_NOCOLOR" = "no" ] ; then
+  if [ -r /etc/grml_colors ] ; then
+    . /etc/grml_colors
+  fi
+fi
 
 # Can the terminal handle endcols?
 if [ "${RC_NOCOLOR}" = "yes" ]; then
