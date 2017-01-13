@@ -5,22 +5,32 @@
 # License:       This file is licensed under the GPL v2.
 ################################################################################
 
+# don't use highlighed colors under systemd to match its style
+if [ "$(cat /proc/1/comm 2>/dev/null)" = "systemd" ] ; then
+  HIGHLIGHT=0
+else
+  HIGHLIGHT=1
+fi
+
 # ANSI COLORS
 CRE="[K"
 NORMAL="[0;39m"
 # RED: Failure or error message
-RED="[1;31m"
+RED="[${HIGHLIGHT};31m"
 # GREEN: Success message
-GREEN="[1;32m"
+GREEN="[${HIGHLIGHT};32m"
 # YELLOW: Descriptions
-YELLOW="[1;33m"
+YELLOW="[${HIGHLIGHT};33m"
 # BLUE: System messages
-BLUE="[1;34m"
+BLUE="[${HIGHLIGHT};34m"
 # MAGENTA: Found devices or drivers
-MAGENTA="[1;35m"
+MAGENTA="[${HIGHLIGHT};35m"
 # CYAN: Questions
-CYAN="[1;36m"
+CYAN="[${HIGHLIGHT};36m"
 # BOLD WHITE: Hint
-WHITE="[1;37m"
+WHITE="[${HIGHLIGHT};37m"
+
+# don't expose unneeded local variables
+unset HIGHLIGHT
 
 ## END OF FILE #################################################################
