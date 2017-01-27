@@ -2685,10 +2685,17 @@ if [[ -r /etc/debian_version ]] ; then
        alias su="sudo su"
     fi
 
-    #a1# Take a look at the syslog: \kbd{\$PAGER /var/log/syslog}
-    salias llog="$PAGER /var/log/syslog"     # take a look at the syslog
-    #a1# Take a look at the syslog: \kbd{tail -f /var/log/syslog}
-    salias tlog="tail -f /var/log/syslog"    # follow the syslog
+fi
+
+# use /var/log/syslog iff present, fallback to journalctl otherwise
+if [ -e /var/log/syslog ] ; then
+  #a1# Take a look at the syslog: \kbd{\$PAGER /var/log/syslog || journalctl}
+  salias llog="$PAGER /var/log/syslog"     # take a look at the syslog
+  #a1# Take a look at the syslog: \kbd{tail -f /var/log/syslog || journalctl}
+  salias tlog="tail -f /var/log/syslog"    # follow the syslog
+elif check_com -c journalctl ; then
+  salias llog="journalctl"
+  salias tlog="journalctl -f"
 fi
 
 # sort installed Debian-packages by size
