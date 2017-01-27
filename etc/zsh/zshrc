@@ -1761,7 +1761,13 @@ local batteries bat capacity
 batteries=( /sys/class/power_supply/BAT*(N) )
 if (( $#batteries > 0 )) ; then
     for bat in $batteries ; do
-        capacity=$(< $bat/capacity)
+        if [[ -e $bat/capacity ]]; then
+            capacity=$(< $bat/capacity)
+        else
+            typeset -F energy_full=$(< $bat/energy_full)
+            typeset -F energy_now=$(< $bat/energy_now)
+            typeset -i capacity=$(( 100 * $energy_now / $energy_full))
+        fi
         case $(< $bat/status) in
         Charging)
             GRML_BATTERY_LEVEL+=" ^"
