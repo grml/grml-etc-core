@@ -1,3 +1,13 @@
+grml-etc-core (0.13.2) grml-testing; urgency=medium
+
+  * [b2556e7] zshrc: fall back to journalctl with llog + tlog aliases
+    if /var/log/syslog doesn't exist
+  * [875b6d6] zshrc: support systems without capacity file in
+    batterylinux() [Closes: issue1333] Thanks to Axel Beckert
+    for the patch
+
+ -- Michael Prokop <mika@grml.org>  Fri, 27 Jan 2017 16:17:15 +0100
+
 grml-etc-core (0.13.1) grml-testing; urgency=medium
 
   * [274a68f] lsb-functions: avoid usage of SYSTEMD variable
