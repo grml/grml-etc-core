@@ -615,13 +615,9 @@ isdarwin && xsource /sw/bin/init.sh
 # load our function and completion directories
 for fdir in /usr/share/grml/zsh/completion /usr/share/grml/zsh/functions; do
     fpath=( ${fdir} ${fdir}/**/*(/N) ${fpath} )
-    if [[ ${fdir} == '/usr/share/grml/zsh/functions' ]] ; then
-        for func in ${fdir}/**/[^_]*[^~](N.) ; do
-            zrcautoload ${func:t}
-        done
-    fi
 done
-unset fdir func
+unset -v fdir
+autoload -U /usr/share/grml/zsh/functions/**/[^_]*[^~](N.:t)
 
 # support colors in less
 export LESS_TERMCAP_mb=$'\E[01;31m'
