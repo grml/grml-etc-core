@@ -2824,8 +2824,8 @@ function sll () {
     fi
 
     local file jumpd curdir
-    local -i RTN LINODE i
-    local -a SEENINODES
+    local -i 10 RTN LINODE i
+    local -a    SEENINODES
     curdir="${PWD}"
     RTN=0
 
@@ -2838,8 +2838,8 @@ function sll () {
                 LINODE=$(zstat -L +inode "${file}")
                 for i in ${SEENINODES} ; do
                     if (( ${i} == ${LINODE} )) ; then
-                        builtin cd "${curdir}"
-                        print "link loop detected, aborting!"
+                        builtin cd -q "${curdir}"
+                        print 'link loop detected, aborting!'
                         return 2
                     fi
                 done
@@ -2849,7 +2849,7 @@ function sll () {
             file="${file:t}"
 
             if [[ -d ${jumpd} ]] ; then
-                builtin cd "${jumpd}"  || RTN=1
+                builtin cd -q "${jumpd}"  || RTN=1
             fi
             file=$(readlink "$file")
 
@@ -2857,7 +2857,7 @@ function sll () {
             file="${file:t}"
 
             if [[ -d ${jumpd} ]] ; then
-                builtin cd "${jumpd}"  || RTN=1
+                builtin cd -q "${jumpd}"  || RTN=1
             fi
 
             ls -l "${PWD}/${file}"     || RTN=1
@@ -2866,7 +2866,7 @@ function sll () {
         if (( ${#} >= 1 )) ; then
             print ""
         fi
-        builtin cd "${curdir}"
+        builtin cd -q "${curdir}"
     done
     return ${RTN}
 }
