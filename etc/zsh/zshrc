@@ -618,7 +618,7 @@ for fdir in /usr/share/grml/zsh/completion /usr/share/grml/zsh/functions; do
 done
 typeset -aU ffiles
 ffiles=(/usr/share/grml/zsh/functions/**/[^_]*[^~](N.:t))
-(( ${#files} > 0 )) && autoload -U "${ffiles[@]}"
+(( ${#ffiles} > 0 )) && autoload -U "${ffiles[@]}"
 unset -v fdir ffiles
 
 # support colors in less
