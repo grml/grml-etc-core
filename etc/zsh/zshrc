@@ -3126,7 +3126,7 @@ function ssl-cert-info () {
 }
 
 # make sure our environment is clean regarding colors
-builtin unset -v BLUE RED GREEN CYAN YELLOW MAGENTA WHITE
+builtin unset -v BLUE RED GREEN CYAN YELLOW MAGENTA WHITE NO_COLOR
 
 # "persistent history"
 # just write important commands you always need to $GRML_IMPORTANT_COMMANDS
