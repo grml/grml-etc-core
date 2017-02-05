@@ -643,7 +643,7 @@ REPORTTIME=5
 watch=(notme root)
 
 # automatically remove duplicates from these arrays
-typeset -U path cdpath fpath manpath
+typeset -U path PATH cdpath CDPATH fpath FPATH manpath MANPATH
 
 # Load a few modules
 is4 && \
@@ -3129,8 +3129,7 @@ ssl-cert-info() {
 }
 
 # make sure our environment is clean regarding colors
-for var in BLUE RED GREEN CYAN YELLOW MAGENTA WHITE ; unset $var
-builtin unset -v var
+builtin unset -v BLUE RED GREEN CYAN YELLOW MAGENTA WHITE
 
 # "persistent history"
 # just write important commands you always need to $GRML_IMPORTANT_COMMANDS
