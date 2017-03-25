@@ -1,3 +1,28 @@
+grml-etc-core (0.14.0) grml-testing; urgency=medium
+
+  [ Thilo Six ]
+  * [cedfc98] make location of file .important_commands configurable
+    keeping backward compatibility
+  * [fbdbd82] fix usage of 'typeset -U'
+  * [57c97bc] use function keyword through out the code
+  * [bec2df1] add missing run-help-*
+  * [b71bff0] also unset NO_COLOR
+  * [6b946fe] small fix for sll()
+  * [76bfaf8] reduce unneeded filesystem seeks
+  * [1e990f9] only try to autoload, when there actually is s.th. to
+
+  [ Frank Terbeck ]
+  * [c5383b1] Test the correct parameter for non-emptiness
+  * [38a1b61] Handle volatile characters in prompts with promptsubst set
+
+  [ Michael Prokop ]
+  * [ecfca56] zshrc: use apt for agi/adg/ag/au aliases, fall back to apt-
+    get. Thanks to Karl Voit for the suggestion
+  * [2210c9b] zshrc: fix space<->tab indention issue for commit
+    ecfca564173
+
+ -- Michael Prokop <mika@grml.org>  Sat, 25 Mar 2017 17:52:14 +0100
+
 grml-etc-core (0.13.2) grml-testing; urgency=medium
 
   * [b2556e7] zshrc: fall back to journalctl with llog + tlog aliases
