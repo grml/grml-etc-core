@@ -2255,7 +2255,7 @@ grml_theme_add_token: Token `%s'\'' exists! Giving up!\n\n' $name
     fi
 }
 
-function grml_typeset_and_wrap () {
+function grml_wrap_reply () {
     emulate -L zsh
     local target="$1"
     local new="$2"
@@ -2263,14 +2263,16 @@ function grml_typeset_and_wrap () {
     local right="$4"
 
     if (( ${+parameters[$new]} )); then
-        typeset -g "${target}=${(P)target}${left}${(P)new}${right}"
+        REPLY="${left}${(P)new}${right}"
+    else
+        REPLY=''
     fi
 }
 
 function grml_prompt_addto () {
     emulate -L zsh
     local target="$1"
-    local lr it apre apost new v
+    local lr it apre apost new v REPLY
     local -a items
     shift
 
@@ -2284,21 +2286,21 @@ function grml_prompt_addto () {
             || apost=${grml_prompt_post_default[$it]}
         zstyle -s ":prompt:${grmltheme}:${lr}:items:$it" token new \
             || new=${grml_prompt_token_default[$it]}
-        typeset -g "${target}=${(P)target}${apre}"
         if (( ${+grml_prompt_token_function[$it]} )); then
             ${grml_prompt_token_function[$it]} $it
-            typeset -g "${target}=${(P)target}${REPLY}"
         else
             case $it in
             battery)
-                grml_typeset_and_wrap $target $new '' ''
+                grml_wrap_reply $target $new '' ''
                 ;;
             change-root)
-                grml_typeset_and_wrap $target $new '(' ')'
+                grml_wrap_reply $target $new '(' ')'
                 ;;
             grml-chroot)
                 if [[ -n ${(P)new} ]]; then
-                    typeset -g "${target}=${(P)target}(CHROOT)"
+                    REPLY="$CHROOT"
+                else
+                    REPLY=''
                 fi
                 ;;
             vcs)
@@ -2308,14 +2310,33 @@ function grml_prompt_addto () {
                     vcscalled=1
                 fi
                 if (( ${+parameters[$v]} )) && [[ -n "${(P)v}" ]]; then
-                    typeset -g "${target}=${(P)target}${(P)v}"
+                    REPLY="${(P)v}"
+                else
+                    REPLY=''
                 fi
                 ;;
-            *) typeset -g "${target}=${(P)target}${new}" ;;
+            *) REPLY="$new" ;;
             esac
         fi
-        typeset -g "${target}=${(P)target}${apost}"
+        # Strip volatile characters per item. This is off by default. See the
+        # global stripping code a few lines below for details.
+        if [[ -o prompt_subst ]] && zstyle -t ":prompt:${grmltheme}:${lr}:items:$it" \
+                                           strip-sensitive-characters
+        then
+            REPLY="${REPLY//[$\`]/}"
+        fi
+        typeset -g "${target}=${(P)target}${apre}${REPLY}${apost}"
     done
+
+    # Per default, strip volatile characters (in the prompt_subst case)
+    # globally. If the option is off, the style has no effect. For more
+    # control, this can be turned off and stripping can be configured on a
+    # per-item basis (see above).
+    if [[ -o prompt_subst ]] && zstyle -T ":prompt:${grmltheme}:${lr}:setup" \
+                                       strip-sensitive-characters
+    then
+        typeset -g "${target}=${${(P)target}//[$\`]/}"
+    fi
 }
 
 function prompt_grml_precmd () {
