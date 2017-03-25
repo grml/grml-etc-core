@@ -2001,6 +2001,19 @@ function prompt_grml_help () {
           accordingly. Default (left): rc change-root user at host path vcs
           percent; Default (right): sad-smiley
 
+        - strip-sensitive-characters (boolean): If the \`prompt_subst' option
+          is active in zsh, the shell performs lots of expansions on prompt
+          variable strings, including command substitution. So if you don't
+          control where some of your prompt strings is coming from, this is
+          an exploitable weakness. Grml's zsh setup does not set this option
+          and it is off in the shell in zsh-mode by default. If it *is* turned
+          on however, this style becomes active, and there are two flavours of
+          it: On per default is a global variant in the '*:setup' context. This
+          strips characters after the whole prompt string was constructed. There
+          is a second variant in the '*:items:<item>', that is off by default.
+          It allows fine grained control over which items' data is stripped.
+          The characters that are stripped are: \$ and \`.
+
     Available styles in 'items:<item>' are: pre, post. These are strings that
     are inserted before (pre) and after (post) the item in question. Thus, the
     following would cause the user name to be printed in red instead of the
