@@ -3727,7 +3727,7 @@ fi # end of check whether we have the 'hg'-executable
 
 if (( GRMLSMALL_SPECIFIC > 0 )) && isgrmlsmall ; then
 
-    unset abk[V]
+    unset abk[V]        &> /dev/null
     unalias    'V'      &> /dev/null
     unfunction vman     &> /dev/null
     unfunction viless   &> /dev/null
