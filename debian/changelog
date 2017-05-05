@@ -1,3 +1,17 @@
+grml-etc-core (0.14.1) grml-testing; urgency=medium
+
+  [ Frank Terbeck ]
+  * [5352f45] prompt_grml: Add documentation for strip-sensitive-
+    characters
+
+  [ Michael Prokop ]
+  * [b9bdbb1] zshrc: avoid "no matches found: abk[V]" on grml-small
+    systems
+  * [a81b118] zshrc: avoid "no matches found: abk[V]" on grml-small
+    systems, fixup. Thanks to Frank Terbeck <ft@grml.org>
+
+ -- Michael Prokop <mika@grml.org>  Fri, 05 May 2017 10:52:44 +0200
+
 grml-etc-core (0.14.0) grml-testing; urgency=medium
 
   [ Thilo Six ]
