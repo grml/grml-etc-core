@@ -86,7 +86,7 @@
 " set autowrite         " Automatically save before commands like :next and :make
 " When switching between different buffers you can't use undo without 'set hidden':
   set hidden            " Hide buffers when they are abandoned
-" set mouse=a           " Enable mouse usage (all modes) in terminals
+  set mouse=            " Disable mouse usage (being "a" AKA all modes in Vim >=8) in terminals
   set wildmenu          " command-line completion operates in an enhanced mode
 
   set pastetoggle=<f11>               " don't change text when copy/pasting
