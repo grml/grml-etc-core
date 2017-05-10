@@ -45,8 +45,8 @@ function mountit
 
     local all_options_=""
 
-    if [[ $options_ == "--bind" ]]; then
-        all_options_="--bind $type_"
+    if [[ $options_ == "--rbind" ]]; then
+        all_options_="--rbind $type_"
     else
         all_options_="-t $type_ none"
     fi
@@ -56,7 +56,7 @@ function mountit
 function umount_all
 {
     for i in $MOUNTED_; do
-        umount "${DEST_}/$i"
+        umount --recursive "${DEST_}/$i"
     done
 }
 
@@ -87,7 +87,7 @@ fi
 
 mountit "proc"  "proc"
 mountit "sysfs" "sys"
-mountit "/dev"   "dev"   "--bind"
+mountit "/dev"   "dev"   "--rbind"
 
 WROTE_DEBIAN_CHROOT=""
 if [ ! -f "$DEST_"/etc/debian_chroot ]; then
