@@ -107,9 +107,6 @@
   bind 'O' login off
   bind '}' history
 
-  bind G screen -t 'google'    w3m www.google.com
-  bind H screen -t HeiseTicker w3m www.heise.de/newsticker/pda/data/paket4.html
-
 # Paste - use 'P' instead of ']':
 # bind P # unbound by default
   bind P paste .
