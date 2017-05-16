@@ -1,3 +1,14 @@
+grml-etc-core (0.14.2) grml-testing; urgency=medium
+
+  * [536ce6b] vimrc: disable mouse usage in all modes, being the default
+    in Vim >=8
+  * [46d7290] tmux: drop deprecated status-utf8 option. Thanks to Timo
+    Boettcher for forwarding the bug report
+  * [ad9e192] screenrc: drop keybindings G (google) + H (heise.de) Thanks
+    to Ralf Moll for reporting
+
+ -- Michael Prokop <mika@grml.org>  Tue, 16 May 2017 15:15:10 +0200
+
 grml-etc-core (0.14.1) grml-testing; urgency=medium
 
   [ Frank Terbeck ]
