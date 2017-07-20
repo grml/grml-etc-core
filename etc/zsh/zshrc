@@ -1477,7 +1477,7 @@ bind2maps emacs viins       -- -s ' ' magic-space
 #k# Trigger menu-complete
 bind2maps emacs viins       -- -s '\ei' menu-complete  # menu completion via esc-i
 #k# Insert a timestamp on the command line (yyyy-mm-dd)
-bind2maps emacs viins       -- -s '^ed' insert-datestamp
+bind2maps emacs viins       -- -s '\ed' insert-datestamp
 #k# Insert last typed word
 bind2maps emacs viins       -- -s "\em" insert-last-typed-word
 #k# A smart shortcut for \kbd{fg<enter>}
