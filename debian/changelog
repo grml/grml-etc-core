@@ -1,3 +1,12 @@
+grml-etc-core (0.14.3) grml-testing; urgency=medium
+
+  [ Frank Terbeck ]
+  * [f98b046] Bind insert-datestamp to "ESC d" (Alt-d on many terminals)
+    instead of "Ctrl-e d"
+  * [65ac134] Move insert-datestamp to "C-x d" from "M-d"
+
+ -- Michael Prokop <mika@grml.org>  Thu, 07 Sep 2017 09:49:47 +0200
+
 grml-etc-core (0.14.2) grml-testing; urgency=medium
 
   * [536ce6b] vimrc: disable mouse usage in all modes, being the default
