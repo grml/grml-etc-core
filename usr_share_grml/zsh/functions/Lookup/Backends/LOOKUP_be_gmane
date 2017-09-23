@@ -63,7 +63,7 @@ function LOOKUP_help_${backend}() {
     printf '    gname.group.name:description\n'
     printf ' The '\'':description'\'' part is optional.\n'
     printf ' That way you can search for group names (using -L, -l and -s) and put\n'
-    printf ' your prefered groups into that file. That way you get rid of a lot of\n'
+    printf ' your preferred groups into that file. That way you get rid of a lot of\n'
     printf ' typing by using completion: %% lu gmane -g <tab>\n'
     printf '\nExamples:\n'
     printf ' %% zstyle '\'':lookup:*:%s:*'\'' list-default    true\n' ${backend}

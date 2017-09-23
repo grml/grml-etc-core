@@ -151,7 +151,7 @@ log_end_msg() {
 # initialisation {{{
 # internal variables
 
-# Dont output to stdout?
+# Don't output to stdout?
 RC_QUIET_STDOUT="no"
 
 # Default values for e-message indentation and dots
@@ -159,7 +159,7 @@ RC_INDENTATION=''
 RC_DEFAULT_INDENT=2
 #RC_DOT_PATTERN=' .'
 RC_DOT_PATTERN=''
-# dont output to stdout?
+# don't output to stdout?
 rc_quiet_stdout="no"
 
 # default values for e-message indentation and dots

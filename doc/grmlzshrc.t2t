@@ -580,7 +580,7 @@ Use case: you type "mv abc ~/testa/testb/testc/" and remember that the
 directory does not exist yet -> press **CTRL-xM** and problem solved.
 
 : **CTRL-x-p**
-Searches the last occurence of string before the cursor in the command history.
+Searches the last occurrence of string before the cursor in the command history.
 
 : **CTRL-x-z**
 Display help on keybindings and zsh line editor. Press consecutively to page through content.
@@ -592,7 +592,7 @@ Brings a job, which got suspended with CTRL-z back to foreground.
 === Customisation ===
 
 To customise keybindings, you can just use zsh's bindkey utility. However, if
-you plan to to use the `//zle-line-init//' or `//zle-line-finish//' hooks
+you plan to use the `//zle-line-init//' or `//zle-line-finish//' hooks
 yourself, make sure you call the following functions in the respective hook:
 
 - **zle-line-init**: //zle-smkx//
@@ -778,7 +778,7 @@ Runs a command in zsh with profiling enabled (See startup variable
 ZSH_PROFILE_RC above).
 
 : **salias()**
-Creates an alias whith sudo prepended, if $EUID is not zero. Run "salias -h"
+Creates an alias with sudo prepended, if $EUID is not zero. Run "salias -h"
 for details. See also xunfunction() below.
 
 : **simple-extract()**

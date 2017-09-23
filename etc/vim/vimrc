@@ -212,7 +212,7 @@ if version >= 700
   "  highlight SpellRare   term=reverse   ctermbg=13 gui=undercurl guisp=Magenta   " rare word
   "  highlight SpellLocale term=underline ctermbg=11 gui=undercurl guisp=DarkCyan  " word only exists in other region
 
-  " set maximum number of suggestions listed to top 10 items:
+  " set maximum number of suggestions listed top 10 items:
   set sps=best,10
 
   " highlight matching parens:

@@ -51,7 +51,7 @@ _insert_kept() {
     fi
 }
 
-# now bind it to keys and enable completition
+# now bind it to keys and enable completion
 zle -C insert-kept-result complete-word _generic
 zle -C expand-kept-result complete-word _generic
 zstyle ':completion:*-kept-result:*' completer _insert_kept

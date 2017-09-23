@@ -1186,7 +1186,7 @@ function help_zle_parse_keybindings () {
         [[ $load_cache -eq 0 ]] && . $HELP_ZLE_CACHE_FILE && return
     fi
 
-    #fill with default keybindings, possibly to be overwriten in a file later
+    #fill with default keybindings, possibly to be overwritten in a file later
     #Note that due to zsh inconsistency on escaping assoc array keys, we encase the key in '' which we will remove later
     local -A help_zle_keybindings
     help_zle_keybindings['<Ctrl>@']="set MARK"
@@ -1239,7 +1239,7 @@ function help_zle_parse_keybindings () {
             #             ignores lines that are commentend out
             #             grabs first in '' or "" enclosed string with length between 1 and 6 characters
             elif [[ "$cline" == [^#]#(bind2maps[[:space:]](*)-s|bindkey|compdef -k)[[:space:]](*)(#b)(\"((?)(#c1,6))\"|\'((?)(#c1,6))\')(#B)(*)  ]]; then
-                #description prevously found ? description not more than 2 lines away ? keybinding not empty ?
+                #description previously found ? description not more than 2 lines away ? keybinding not empty ?
                 if [[ -n $lastkeybind_desc && $num_lines_elapsed -lt 2 && -n $match[1] ]]; then
                     #substitute keybinding string with something readable
                     k=${${${${${${${match[1]/\\e\^h/<Alt><BS>}/\\e\^\?/<Alt><BS>}/\\e\[5~/<PageUp>}/\\e\[6~/<PageDown>}//(\\e|\^\[)/<Alt>}//\^/<Ctrl>}/3~/<Alt><Del>}
@@ -2063,7 +2063,7 @@ function grml_prompt_setup () {
     autoload -Uz vcs_info
     # The following autoload is disabled for now, since this setup includes a
     # static version of the ‘add-zsh-hook’ function above. It needs to be
-    # reenabled as soon as that static definition is removed again.
+    # re-enabled as soon as that static definition is removed again.
     #autoload -Uz add-zsh-hook
     add-zsh-hook precmd prompt_$1_precmd
 }
@@ -2518,7 +2518,7 @@ function grml_control_xterm_title () {
 
 # The following autoload is disabled for now, since this setup includes a
 # static version of the ‘add-zsh-hook’ function above. It needs to be
-# reenabled as soon as that static definition is removed again.
+# re-enabled as soon as that static definition is removed again.
 #zrcautoload add-zsh-hook || add-zsh-hook () { :; }
 if [[ $NOPRECMD -eq 0 ]]; then
     add-zsh-hook precmd grml_reset_screen_title
@@ -2844,7 +2844,7 @@ compdef _functions freload
 #      Module zstat is loaded by default in grml zshrc, no extra action needed for that.
 #
 #      Known bugs:
-#      If you happen to come accross a symlink that points to a destination on an other partition
+#      If you happen to come across a symlink that points to a destination on another partition
 #      with the same inode number, that will be marked as symlink loop though it is not.
 #      Two hints for this situation:
 #      I)  Play lottery the same day, as you seem to be rather lucky right now.
@@ -3327,7 +3327,7 @@ return 0;;
     return $result
 }
 
-#f5# cd to directoy and list files
+#f5# cd to directory and list files
 function cl () {
     emulate -L zsh
     cd $1 && ls -a
@@ -3344,7 +3344,7 @@ function cd () {
     fi
 }
 
-#f5# Create Directoy and \kbd{cd} to it
+#f5# Create Directory and \kbd{cd} to it
 function mkcd () {
     if (( ARGC != 1 )); then
         printf 'usage: mkcd <new-directory>\n'
