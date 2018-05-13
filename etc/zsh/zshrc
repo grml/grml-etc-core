@@ -2691,22 +2691,24 @@ Enjoy your grml system with the zsh!$reset_color"
 # debian stuff
 if [[ -r /etc/debian_version ]] ; then
     if [[ -z "$GRML_NO_APT_ALIASES" ]]; then
-        #a3# Execute \kbd{apt-cache search}
-        alias acs='apt-cache search'
-        #a3# Execute \kbd{apt-cache show}
-        alias acsh='apt-cache show'
         #a3# Execute \kbd{apt-cache policy}
         alias acp='apt-cache policy'
         if check_com -c apt ; then
+          #a3# Execute \kbd{apt search}
+          alias acs='apt search'
+          #a3# Execute \kbd{apt show}
+          alias acsh='apt show'
           #a3# Execute \kbd{apt dist-upgrade}
           salias adg="apt dist-upgrade"
           #a3# Execute \kbd{apt upgrade}
           salias ag="apt upgrade"
           #a3# Execute \kbd{apt install}
           salias agi="apt install"
-          #a3# Execute \kbd{apt-get update}
+          #a3# Execute \kbd{apt update}
           salias au="apt update"
         else
+          alias acs='apt-cache search'
+          alias acsh='apt-cache show'
           salias adg="apt-get dist-upgrade"
           salias ag="apt-get upgrade"
           salias agi="apt-get install"
