@@ -1892,15 +1892,25 @@ typeset -A grml_vcs_coloured_formats
 typeset -A grml_vcs_plain_formats
 
 grml_vcs_plain_formats=(
-    format "(%s%)-[%b] "    "zsh: %r"
-    actionformat "(%s%)-[%b|%a] " "zsh: %r"
+    format "(%s%)-[%b%u%c%m] "    "zsh: %r"
+    actionformat "(%s%)-[%b%u%c%m|%a] " "zsh: %r"
     rev-branchformat "%b:%r"
+    stagedstr "|C"
+    unstagedstr "|!!"
+    untracked_append_string "|U"
+    stashlength_append_string "|S"
+    push_pending_append_string "|P"
 )
 
 grml_vcs_coloured_formats=(
-    format "${MAGENTA}(${NO_COLOR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${MAGENTA}]${NO_COLOR} "
-    actionformat "${MAGENTA}(${NO_COLOR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOR} "
+    format "${MAGENTA}(${NO_COLOR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b%u%c%m${MAGENTA}]${NO_COLOR} "
+    actionformat "${MAGENTA}(${NO_COLOR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b%u%c%m${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOR} "
     rev-branchformat "%b${RED}:${YELLOW}%r"
+    stagedstr "${YELLOW}|${RED}C${NO_COLOR}"
+    unstagedstr "${YELLOW}|${RED}!!${NO_COLOR}"
+    untracked_append_string "${YELLOW}|${RED}U"
+    stashlength_append_string "${YELLOW}|${RED}S"
+    push_pending_append_string "${YELLOW}|${RED}P"
 )
 
 typeset GRML_VCS_COLOUR_MODE=xxx
@@ -1923,20 +1933,65 @@ function grml_vcs_info_set_formats () {
         AF=${grml_vcs_coloured_formats[actionformat]}
         F=${grml_vcs_coloured_formats[format]}
         BF=${grml_vcs_coloured_formats[rev-branchformat]}
+        ST=${grml_vcs_coloured_formats[stagedstr]}
+        UN=${grml_vcs_coloured_formats[unstagedstr]}
+        UNTRACKED_APPEND_STRING=${grml_vcs_coloured_formats[untracked_append_string]}
+        STASHLENGTH_APPEND_STRING=${grml_vcs_coloured_formats[stashlength_append_string]}
+        PUSH_PENDING_APPEND_STRING=${grml_vcs_coloured_formats[push_pending_append_string]}
         GRML_VCS_COLOUR_MODE=coloured
     else
         AF=${grml_vcs_plain_formats[actionformat]}
         F=${grml_vcs_plain_formats[format]}
         BF=${grml_vcs_plain_formats[rev-branchformat]}
+        ST=${grml_vcs_plain_formats[stagedstr]}
+        UN=${grml_vcs_plain_formats[unstagedstr]}
+        UNTRACKED_APPEND_STRING=${grml_vcs_plain_formats[untracked_append_string]}
+        STASHLENGTH_APPEND_STRING=${grml_vcs_plain_formats[stashlength_append_string]}
+        PUSH_PENDING_APPEND_STRING=${grml_vcs_plain_formats[push_pending_append_string]}
         GRML_VCS_COLOUR_MODE=plain
     fi
 
+    # configuring vcs_info (especially for git) according to
+    # http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Version-Control-Information
+    zstyle ':vcs_info:*'              check-for-changes true
+    #zstyle ':vcs_info:*'              debug true
+    zstyle ':vcs_info:*'              stagedstr     "$ST"
+    zstyle ':vcs_info:*'              unstagedstr   "$UN"
     zstyle ':vcs_info:*'              actionformats "$AF" "zsh: %r"
     zstyle ':vcs_info:*'              formats       "$F"  "zsh: %r"
     zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat  "$BF"
+    zstyle ':vcs_info:git+set-message:*' hooks git_more_info
     return 0
 }
 
+function +vi-git_more_info() {
+    local UNTRACKED_APPEND=""
+    local STASHLENGTH_APPEND=""
+    local PUSH_PENDING_APPEND=""
+
+    LANG=C git status 2>&1 | grep "Untracked files:" > /dev/null
+    if [[ $? -eq 0 ]]; then
+        UNTRACKED_APPEND=${UNTRACKED_APPEND_STRING}
+    fi
+
+    local STASHLENGTH=$(LANG=C git stash list 2> /dev/null | wc -l)
+    if [[ $STASHLENGTH -gt 0 ]]; then
+        STASHLENGTH_APPEND="${STASHLENGTH_APPEND_STRING}${STASHLENGTH}"
+    fi
+
+    local COMMITS_TO_PUSH=0
+    if [[ $(LANG=C git status 2>/dev/null | grep "Your branch is ahead") =~ " by ([0-9]+) commit" ]]; then
+        COMMITS_TO_PUSH=$MATCH
+        COMMITS_TO_PUSH=${COMMITS_TO_PUSH:s/ by /}
+        COMMITS_TO_PUSH=${COMMITS_TO_PUSH:s/ commit/}
+    fi
+    if [[ $COMMITS_TO_PUSH -gt 0 ]]; then
+        PUSH_PENDING_APPEND="${PUSH_PENDING_APPEND_STRING}${COMMITS_TO_PUSH}"
+    fi
+
+    hook_com[misc]="${UNTRACKED_APPEND}${STASHLENGTH_APPEND}${PUSH_PENDING_APPEND}"
+    return 0
+}
 # Change vcs_info formats for the grml prompt. The 2nd format sets up
 # $vcs_info_msg_1_ to contain "zsh: repo-name" used to set our screen title.
 if [[ "$TERM" == dumb ]] ; then
