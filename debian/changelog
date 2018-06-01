@@ -1,3 +1,25 @@
+grml-etc-core (0.15.0) grml-testing; urgency=medium
+
+  [ Moviuro ]
+  * [b78f11c] zshrc: Enable ls(1)'s natural sorting if available
+  * [2735a11] zshrc: Add comments about the ls_ and grep_options we set
+  * [c06666b] zshrc: add the islinux() test before testing for ls -v
+    switch
+  * [1fa194e] zshrc: test if ls is GNU ls instead of islinux()
+
+  [ Michael Prokop ]
+  * [2f64ae0] Fix a bunch of typos
+  * [dcba02c] zshrc: use `apt` instead of `apt-get` also for search + show
+  * [e7f2321] Bump debian/compat to 10
+  * [28b01b1] Build-Depend on debhelper (>= 10~)
+  * [4ccc5ba] Bump Standards-Version to 4.1.4
+
+  [ Frank Terbeck ]
+  * [c0a2a4d] Make a couple of history parameters adhere to presets
+  * [af65087] Partly revert c0a2a4d again
+
+ -- Michael Prokop <mika@grml.org>  Fri, 01 Jun 2018 16:12:41 +0200
+
 grml-etc-core (0.14.3) grml-testing; urgency=medium
 
   [ Frank Terbeck ]
