@@ -2,7 +2,7 @@ Source: grml-etc-core
 Section: grml
 Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
-Build-Depends: debhelper (>= 5),
+Build-Depends: debhelper (>= 10~),
                txt2tags
 Standards-Version: 3.9.8
 Homepage: http://git.grml.org/?p=grml-etc-core.git
