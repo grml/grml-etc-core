@@ -1219,7 +1219,7 @@ function help_zle_parse_keybindings () {
     help_zle_keybindings['<Alt><arg>']="repeat next cmd/char <arg> times (<Alt>-<Alt>1<Alt>0a -> -10 times 'a')"
     help_zle_keybindings['<Alt>u']="make next word Uppercase"
     help_zle_keybindings['<Alt>l']="make next word lowercase"
-    help_zle_keybindings['<Ctrl>xd']="preview expansion under cursor"
+    help_zle_keybindings['<Ctrl>xG']="preview expansion under cursor"
     help_zle_keybindings['<Alt>q']="push current CL into background, freeing it. Restore on next CL"
     help_zle_keybindings['<Alt>.']="insert (and interate through) last word from prev CLs"
     help_zle_keybindings['<Alt>,']="complete word from newer history (consecutive hits)"
