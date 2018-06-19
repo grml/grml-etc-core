@@ -3268,7 +3268,7 @@ fi
 #f5# Backup \kbd{file_or_folder {\rm to} file_or_folder\_timestamp}
 function bk () {
     emulate -L zsh
-    local current_date=$(date -u "+%Y-%m-%dT%H:%M:%SZ")
+    local current_date=$(date +"%Y-%m-%dT%H:%M:%S%z")
     local clean keep move verbose result all to_bk
     setopt extended_glob
     keep=1
