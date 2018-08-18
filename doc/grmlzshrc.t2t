@@ -131,6 +131,38 @@ obtained with the zprof builtin command (see zshmodules(1) for details).
 Specifies the location of the completion dump file. Default: $HOME/.zcompdump.
 
 
+= GRML-ZSHRC SPECIFIC STYLES =
+
+Styles are a context sensitive configuration mechanism included with zsh. The
+shell uses it extensively in sub-systems like the completion and the VCS info
+system. It lives outside of the classic shell variable namespace, so it avoids
+polluting it. New functionality in grml's zshrc will likely use styles instead
+of variables. Some features of the setup (like the directory stack handling)
+already use styles. Those styles are documented with the specific features.
+This section documents more general styles.
+
+== Context: :grml:completion:compinit ==
+This context revolves around the zshrc's //compinit// function call, that
+initialises zsh's function based completion system.
+
+: **arguments**
+This style allows the injection of arguments to the command line that is used
+to run compinit. It is a list style and its default is the empty list. Using
+this style, it's possible to add **-i** to //compinit// in order to disable
+//compaudit//.
+\
+```
+zstyle ':grml:completion:compinit' arguments -i
+```
+\
+Only do this, if you know what sort of security checks are disabled if
+//compaudit// is not active and if that's acceptable with your specific setup.
+\
+This style has to be set at the point that Grml's zshrc runs //compinit//. A
+possible way to achieve this is to set it in //~/.zshrc.pre// (see AUXILIARY
+FILES below for details).
+
+
 = FEATURE DESCRIPTION =
 This is an in depth description of non-standard features implemented by
 //grmlzshrc//.
