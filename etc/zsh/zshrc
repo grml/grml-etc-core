@@ -1892,22 +1892,22 @@ typeset -A grml_vcs_coloured_formats
 typeset -A grml_vcs_plain_formats
 
 grml_vcs_plain_formats=(
-    format "(%s%)-[%b%u%c%m] "    "zsh: %r"
-    actionformat "(%s%)-[%b%u%c%m|%a] " "zsh: %r"
+    format "(%s%)-[%b%m] "    "zsh: %r"
+    actionformat "(%s%)-[%b%m|%a] " "zsh: %r"
     rev-branchformat "%b:%r"
-    stagedstr "|C"
-    unstagedstr "|!!"
+    added_append_string "|C"
+    modified_append_string "|!!"
     untracked_append_string "|U"
     stashlength_append_string "|S"
     push_pending_append_string "|P"
 )
 
 grml_vcs_coloured_formats=(
-    format "${MAGENTA}(${NO_COLOR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b%u%c%m${MAGENTA}]${NO_COLOR} "
-    actionformat "${MAGENTA}(${NO_COLOR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b%u%c%m${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOR} "
+    format "${MAGENTA}(${NO_COLOR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b%m${MAGENTA}]${NO_COLOR} "
+    actionformat "${MAGENTA}(${NO_COLOR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b%m${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOR} "
     rev-branchformat "%b${RED}:${YELLOW}%r"
-    stagedstr "${YELLOW}|${RED}C${NO_COLOR}"
-    unstagedstr "${YELLOW}|${RED}!!${NO_COLOR}"
+    added_append_string "${YELLOW}|${RED}C${NO_COLOR}"
+    modified_append_string "${YELLOW}|${RED}!!${NO_COLOR}"
     untracked_append_string "${YELLOW}|${RED}U"
     stashlength_append_string "${YELLOW}|${RED}S"
     push_pending_append_string "${YELLOW}|${RED}P"
@@ -1933,8 +1933,8 @@ function grml_vcs_info_set_formats () {
         AF=${grml_vcs_coloured_formats[actionformat]}
         F=${grml_vcs_coloured_formats[format]}
         BF=${grml_vcs_coloured_formats[rev-branchformat]}
-        ST=${grml_vcs_coloured_formats[stagedstr]}
-        UN=${grml_vcs_coloured_formats[unstagedstr]}
+        ADDED_APPEND_STRING=${grml_vcs_coloured_formats[added_append_string]}
+        MODIFIED_APPEND_STRING=${grml_vcs_coloured_formats[modified_append_string]}
         UNTRACKED_APPEND_STRING=${grml_vcs_coloured_formats[untracked_append_string]}
         STASHLENGTH_APPEND_STRING=${grml_vcs_coloured_formats[stashlength_append_string]}
         PUSH_PENDING_APPEND_STRING=${grml_vcs_coloured_formats[push_pending_append_string]}
@@ -1943,8 +1943,8 @@ function grml_vcs_info_set_formats () {
         AF=${grml_vcs_plain_formats[actionformat]}
         F=${grml_vcs_plain_formats[format]}
         BF=${grml_vcs_plain_formats[rev-branchformat]}
-        ST=${grml_vcs_plain_formats[stagedstr]}
-        UN=${grml_vcs_plain_formats[unstagedstr]}
+        ADDED_APPEND_STRING=${grml_vcs_plain_formats[added_append_string]}
+        MODIFIED_APPEND_STRING=${grml_vcs_plain_formats[modified_append_string]}
         UNTRACKED_APPEND_STRING=${grml_vcs_plain_formats[untracked_append_string]}
         STASHLENGTH_APPEND_STRING=${grml_vcs_plain_formats[stashlength_append_string]}
         PUSH_PENDING_APPEND_STRING=${grml_vcs_plain_formats[push_pending_append_string]}
@@ -1953,10 +1953,7 @@ function grml_vcs_info_set_formats () {
 
     # configuring vcs_info (especially for git) according to
     # http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Version-Control-Information
-    zstyle ':vcs_info:*'              check-for-changes true
     #zstyle ':vcs_info:*'              debug true
-    zstyle ':vcs_info:*'              stagedstr     "$ST"
-    zstyle ':vcs_info:*'              unstagedstr   "$UN"
     zstyle ':vcs_info:*'              actionformats "$AF" "zsh: %r"
     zstyle ':vcs_info:*'              formats       "$F"  "zsh: %r"
     zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat  "$BF"
@@ -1965,11 +1962,25 @@ function grml_vcs_info_set_formats () {
 }
 
 function +vi-git_more_info() {
+    local ADDED_APPEND=""
+    local MODIFIED_APPEND=""
     local UNTRACKED_APPEND=""
     local STASHLENGTH_APPEND=""
     local PUSH_PENDING_APPEND=""
 
-    LANG=C git status 2>&1 | grep "Untracked files:" > /dev/null
+    local GIT_STATUS=$(LANG=C git status 2>&1)
+
+    echo $GIT_STATUS | grep "new file:" > /dev/null
+    if [[ $? -eq 0 ]]; then
+        ADDED_APPEND=${ADDED_APPEND_STRING}
+    fi
+
+    echo $GIT_STATUS | grep "modified:" > /dev/null
+    if [[ $? -eq 0 ]]; then
+        MODIFIED_APPEND=${MODIFIED_APPEND_STRING}
+    fi
+
+    echo $GIT_STATUS | grep "Untracked files:" > /dev/null
     if [[ $? -eq 0 ]]; then
         UNTRACKED_APPEND=${UNTRACKED_APPEND_STRING}
     fi
@@ -1980,7 +1991,7 @@ function +vi-git_more_info() {
     fi
 
     local COMMITS_TO_PUSH=0
-    if [[ $(LANG=C git status 2>/dev/null | grep "Your branch is ahead") =~ " by ([0-9]+) commit" ]]; then
+    if [[ $(echo $GIT_STATUS | grep "Your branch is ahead") =~ " by ([0-9]+) commit" ]]; then
         COMMITS_TO_PUSH=$MATCH
         COMMITS_TO_PUSH=${COMMITS_TO_PUSH:s/ by /}
         COMMITS_TO_PUSH=${COMMITS_TO_PUSH:s/ commit/}
@@ -1989,7 +2000,7 @@ function +vi-git_more_info() {
         PUSH_PENDING_APPEND="${PUSH_PENDING_APPEND_STRING}${COMMITS_TO_PUSH}"
     fi
 
-    hook_com[misc]="${UNTRACKED_APPEND}${STASHLENGTH_APPEND}${PUSH_PENDING_APPEND}"
+    hook_com[misc]="${ADDED_APPEND}${MODIFIED_APPEND}${UNTRACKED_APPEND}${STASHLENGTH_APPEND}${PUSH_PENDING_APPEND}"
     return 0
 }
 # Change vcs_info formats for the grml prompt. The 2nd format sets up
