@@ -1967,8 +1967,9 @@ function +vi-git_more_info() {
     local UNTRACKED_APPEND=""
     local STASHLENGTH_APPEND=""
     local PUSH_PENDING_APPEND=""
+    local GIT_STATUS=""
 
-    local GIT_STATUS=$(LANG=C git status 2>&1)
+    GIT_STATUS=$(LANG=C git status 2>&1)
 
     echo $GIT_STATUS | grep "new file:" > /dev/null
     if [[ $? -eq 0 ]]; then
