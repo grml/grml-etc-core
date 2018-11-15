@@ -1,3 +1,20 @@
+grml-etc-core (0.15.1) grml-testing; urgency=medium
+
+  [ Bernhard Tittelbach ]
+  * [8998637] zshrc: fix default keybinding help
+
+  [ Darshaka Pathirana ]
+  * [a5f5b62] bk(): Remove the separators between the units of time
+
+  [ Frank Terbeck ]
+  * [5f07a91] Add a style in order to amend compinit's command line
+
+  [ Michael Prokop ]
+  * [371dddd] Bump Standards-Version to 4.2.1
+  * [10ecab7] Switch Homepage + Vcs-Browser headers from http to https
+
+ -- Michael Prokop <mika@grml.org>  Thu, 15 Nov 2018 09:57:51 +0100
+
 grml-etc-core (0.15.0) grml-testing; urgency=medium
 
   [ Moviuro ]
