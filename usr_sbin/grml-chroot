@@ -90,10 +90,15 @@ if [ ! -d "$DEST_" ]; then
 fi
 
 
-mountit "proc"  "proc"
-mountit "sysfs" "sys"
-mountit "/dev"   "dev"   "--bind"
-mountit "devpts" "dev/pts"
+
+if [ -f "$DEST_"/proc/cmdline ] ; then
+    echo "Looks like $DEST_ already has filesystems mounted, skipping."
+else
+    mountit "proc"  "proc"
+    mountit "sysfs" "sys"
+    mountit "/dev"   "dev"   "--bind"
+    mountit "devpts" "dev/pts"
+fi
 
 WROTE_DEBIAN_CHROOT=""
 if [ ! -f "$DEST_"/etc/debian_chroot ]; then
