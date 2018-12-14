@@ -1,3 +1,11 @@
+grml-etc-core (0.15.2) grml-testing; urgency=medium
+
+  * [31037e9] grml-lang zsh completion: add dvorak, es, fr, it + jp to
+    list of supported languages. Thanks to Christian Haase for the bug
+    report
+
+ -- Michael Prokop <mika@grml.org>  Fri, 14 Dec 2018 12:18:27 +0100
+
 grml-etc-core (0.15.1) grml-testing; urgency=medium
 
   [ Bernhard Tittelbach ]
