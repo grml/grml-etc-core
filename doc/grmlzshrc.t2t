@@ -910,21 +910,21 @@ With no arguments prints out the priorities of each source. If a package name
 is given, it displays detailed information about the priority selection of the
 package.
 
-: **acs** (//apt-cache search//)
+: **acs** (//apt search//)
 Searches debian package lists for the regular expression provided as argument.
 The search includes package names and descriptions. Prints out name and short
 description of matching packages.
 
-: **acsh** (//apt-cache show//)
+: **acsh** (//apt show//)
 Shows the package records for the packages provided as arguments.
 
-: **adg** (//apt-get dist-upgrade//)
+: **adg** (//apt dist-upgrade//)
 Performs an upgrade of all installed packages. Also tries to automatically
 handle changing dependencies with new versions of packages. As this may change
 the install status of (or even remove) installed packages, it is potentially
 dangerous to use dist-upgrade; invoked by sudo, if necessary.
 
-: **ag** (//apt-get upgrade//)
+: **ag** (//apt upgrade//)
 Downloads and installs the newest versions of all packages currently installed
 on the system. Under no circumstances are currently installed packages removed,
 or packages not already installed retrieved and installed. New versions of
@@ -932,11 +932,11 @@ currently installed packages that cannot be upgraded without changing the instal
 status of another package will be left at their current version. An update must
 be performed first (see au below); run by sudo, if necessary.
 
-: **agi** (//apt-get install//)
+: **agi** (//apt install//)
 Downloads and installs or upgrades the packages given on the command line.
 If a hyphen is appended to the package name, the identified package will be
 removed if it is installed. Similarly a plus sign can be used to designate a
-package to install. This may be useful to override decisions made by apt-get's
+package to install. This may be useful to override decisions made by apt's
 conflict resolution system.
 A specific version of a package can be selected for installation by following
 the package name with an equals and the version of the package to select. This
@@ -947,9 +947,9 @@ Gets invoked by sudo, if user id is not 0.
 
 : **ati** (//aptitude install//)
 Aptitude is a terminal-based package manager with a command line mode similar to
-apt-get (see agi above); invoked by sudo, if necessary.
+apt (see agi above); invoked by sudo, if necessary.
 
-: **au** (//apt-get update//)
+: **au** (//apt update//)
 Resynchronizes the package index files from their sources. The indexes of
 available packages are fetched from the location(s) specified in
 /etc/apt/sources.list. An update should always be performed before an
