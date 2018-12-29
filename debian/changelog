@@ -1,3 +1,13 @@
+grml-etc-core (0.15.3) grml-testing; urgency=medium
+
+  [ Frank Terbeck ]
+  * [5e0079d] zsh: In grml-small hint at drill instead of dig
+
+  [ Michael Prokop ]
+  * [d5d683c] doc/grmlzshrc.t2t: replace `apt-get` with `apt`
+
+ -- Michael Prokop <mika@grml.org>  Sat, 29 Dec 2018 15:43:07 +0100
+
 grml-etc-core (0.15.2) grml-testing; urgency=medium
 
   * [31037e9] grml-lang zsh completion: add dvorak, es, fr, it + jp to
