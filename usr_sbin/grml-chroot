@@ -98,6 +98,9 @@ else
     mountit "sysfs" "sys"
     mountit "/dev"   "dev"   "--bind"
     mountit "devpts" "dev/pts"
+    if [ -d "$DEST_"/run/udev ] && [ -d /run/udev ] ; then
+      mountit "/run/udev" "/run/udev" "--bind"
+    fi
 fi
 
 WROTE_DEBIAN_CHROOT=""
