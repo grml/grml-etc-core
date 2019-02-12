@@ -3733,6 +3733,9 @@ if check_com -c hg ; then
 
 fi # end of check whether we have the 'hg'-executable
 
+# disable bracketed paste mode for dumb terminals
+[[ "$TERM" == dumb ]] && unset zle_bracketed_paste
+
 # grml-small cleanups and workarounds
 
 # The following is used to remove zsh-config-items that do not work
