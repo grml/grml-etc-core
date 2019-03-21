@@ -1,3 +1,15 @@
+grml-etc-core (0.16.0) grml-testing; urgency=medium
+
+  [ Sebastian Boehm ]
+  * [1d73467] Disable bracketed paste mode for dumb terminals
+
+  [ Michael Prokop ]
+  * [7df9a4a] zshenv: switch default mount point from
+    /lib/live/mount/medium to /run/live/medium
+  * [60494a4] Bump Standards-Version to 4.3.0
+
+ -- Michael Prokop <mika@grml.org>  Thu, 21 Mar 2019 12:23:24 +0100
+
 grml-etc-core (0.15.3) grml-testing; urgency=medium
 
   [ Frank Terbeck ]
