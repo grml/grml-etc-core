@@ -51,8 +51,8 @@ fi
 
 # support extra scripts/software in special directory outside of squashfs environment in live mode
 if [[ -f /etc/grml_cd ]] ; then
-    [[ -r /lib/live/mount/medium/scripts ]] && ADDONS='/lib/live/mount/medium/scripts'
-    [[ -r /etc/grml/my_path ]] && ADDONS="$(cat /etc/grml/my_path)"
+  [[ -r /run/live/medium/scripts ]] && ADDONS='/run/live/medium/scripts'
+  [[ -r /etc/grml/my_path ]] && ADDONS="$(cat /etc/grml/my_path)"
 fi
 
 # Solaris
