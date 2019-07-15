@@ -2525,7 +2525,7 @@ function grml_cmd_to_screen_title () {
 function grml_control_xterm_title () {
     case $TERM in
         (xterm*|rxvt*)
-            set_title "${(%):-"%n@%m:"}" "$1"
+            set_title "${(%):-"%n@%m:"}" "$2"
             ;;
     esac
 }
