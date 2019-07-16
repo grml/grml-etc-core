@@ -2481,7 +2481,7 @@ function info_print () {
     esc_end="$2"
     shift 2
     printf '%s' ${esc_begin}
-    printf '%s' "$*"
+    printf '%s' "${*//[$'\n']}"
     printf '%s' "${esc_end}"
 }
 
