@@ -1962,6 +1962,15 @@ function grml_vcs_info_set_formats () {
 }
 
 function +vi-git_more_info() {
+    # if you want to disable the extended VCS infos in your prompt
+    # (e. g. because of lagging prompts in large git repos on old hardware)
+    # please put 'GRML_EXTENDED_VCS_INFO=0' into your .zshrc.pre
+
+    GRML_EXTENDED_VCS_INFO=${GRML_EXTENDED_VCS_INFO:-1}
+    if [[ $GRML_EXTENDED_VCS_INFO -eq 0 ]]; then
+        return 0
+    fi
+
     local ADDED_APPEND=""
     local MODIFIED_APPEND=""
     local UNTRACKED_APPEND=""
