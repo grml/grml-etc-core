@@ -140,7 +140,7 @@
 # To get screen to add lines to xterm's scrollback buffer, uncomment the
 # following termcapinfo line which tells xterm to use the normal screen buffer
 # (which has scrollback), not the alternate screen buffer.
-  termcapinfo xterm|xterms|xs|rxvt ti@:te@
+  termcapinfo xterm|xterm-256color|xterms|xs|rxvt ti@:te@
 
 # Welcome the user:
   echo "welcome BoFH!"
