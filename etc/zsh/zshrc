@@ -1900,6 +1900,7 @@ grml_vcs_plain_formats=(
     untracked_append_string "|U"
     stashlength_append_string "|S"
     push_pending_append_string "|P"
+    unknown_append_string "|?"
 )
 
 grml_vcs_coloured_formats=(
@@ -1911,6 +1912,7 @@ grml_vcs_coloured_formats=(
     untracked_append_string "${YELLOW}|${RED}U"
     stashlength_append_string "${YELLOW}|${RED}S"
     push_pending_append_string "${YELLOW}|${RED}P"
+    unknown_append_string "${YELLOW}|${RED}?${NO_COLOR}"
 )
 
 typeset GRML_VCS_COLOUR_MODE=xxx
@@ -1938,6 +1940,7 @@ function grml_vcs_info_set_formats () {
         UNTRACKED_APPEND_STRING=${grml_vcs_coloured_formats[untracked_append_string]}
         STASHLENGTH_APPEND_STRING=${grml_vcs_coloured_formats[stashlength_append_string]}
         PUSH_PENDING_APPEND_STRING=${grml_vcs_coloured_formats[push_pending_append_string]}
+        UNKNOWN_APPEND_STRING=${grml_vcs_coloured_formats[unknown_append_string]}
         GRML_VCS_COLOUR_MODE=coloured
     else
         AF=${grml_vcs_plain_formats[actionformat]}
@@ -1948,6 +1951,7 @@ function grml_vcs_info_set_formats () {
         UNTRACKED_APPEND_STRING=${grml_vcs_plain_formats[untracked_append_string]}
         STASHLENGTH_APPEND_STRING=${grml_vcs_plain_formats[stashlength_append_string]}
         PUSH_PENDING_APPEND_STRING=${grml_vcs_plain_formats[push_pending_append_string]}
+        UNKNOWN_APPEND_STRING=${grml_vcs_plain_formats[unknown_append_string]}
         GRML_VCS_COLOUR_MODE=plain
     fi
 
@@ -1963,7 +1967,7 @@ function grml_vcs_info_set_formats () {
 
 function +vi-git_more_info() {
     # if you want to disable the extended VCS infos in your prompt
-    # (e. g. because of lagging prompts in large git repos on old hardware)
+    # (e. g. because of lagging prompts in large git repos or on old hardware)
     # please put 'GRML_EXTENDED_VCS_INFO=0' into your .zshrc.pre
 
     GRML_EXTENDED_VCS_INFO=${GRML_EXTENDED_VCS_INFO:-1}
@@ -1971,46 +1975,62 @@ function +vi-git_more_info() {
         return 0
     fi
 
+    # to avoid lagging prompts in very large git repos or on old hardware
+    # the expensive git call times out after $GRML_VCS_TIMEOUT seconds
+    # and the prompt is extended by "|?"
+    # default is 2 seconds
+    # you can set your own value by putting into you .zshrc.pre something like
+    # GRML_VCS_TIMEOUT=4
+    GRML_VCS_TIMEOUT=${GRML_VCS_TIMEOUT:-2}
+
     local ADDED_APPEND=""
     local MODIFIED_APPEND=""
     local UNTRACKED_APPEND=""
     local STASHLENGTH_APPEND=""
     local PUSH_PENDING_APPEND=""
+    local UNKNOWN_APPEND=""
     local GIT_STATUS=""
+    local GIT_STATUS_RC=-1
 
-    GIT_STATUS=$(LANG=C git status 2>&1)
+    GIT_STATUS=$(LANG=C timeout $GRML_VCS_TIMEOUT git status 2>&1)
+    GIT_STATUS_RC=$?
 
-    echo $GIT_STATUS | grep "new file:" > /dev/null
-    if [[ $? -eq 0 ]]; then
-        ADDED_APPEND=${ADDED_APPEND_STRING}
+    if [[ $GIT_STATUS_RC -eq 124 ]]; then
+        UNKNOWN_APPEND=${UNKNOWN_APPEND_STRING}
+        hook_com[misc]="${UNKNOWN_APPEND}"
+    else
+        echo $GIT_STATUS | grep "new file:" > /dev/null
+        if [[ $? -eq 0 ]]; then
+            ADDED_APPEND=${ADDED_APPEND_STRING}
+        fi
+
+        echo $GIT_STATUS | grep "modified:" > /dev/null
+        if [[ $? -eq 0 ]]; then
+            MODIFIED_APPEND=${MODIFIED_APPEND_STRING}
+        fi
+
+        echo $GIT_STATUS | grep "Untracked files:" > /dev/null
+        if [[ $? -eq 0 ]]; then
+            UNTRACKED_APPEND=${UNTRACKED_APPEND_STRING}
+        fi
+
+        local STASHLENGTH=$(LANG=C git stash list 2> /dev/null | wc -l)
+        if [[ $STASHLENGTH -gt 0 ]]; then
+            STASHLENGTH_APPEND="${STASHLENGTH_APPEND_STRING}${STASHLENGTH}"
+        fi
+
+        local COMMITS_TO_PUSH=0
+        if [[ $(echo $GIT_STATUS | grep "Your branch is ahead") =~ " by ([0-9]+) commit" ]]; then
+            COMMITS_TO_PUSH=$MATCH
+            COMMITS_TO_PUSH=${COMMITS_TO_PUSH:s/ by /}
+            COMMITS_TO_PUSH=${COMMITS_TO_PUSH:s/ commit/}
+        fi
+        if [[ $COMMITS_TO_PUSH -gt 0 ]]; then
+            PUSH_PENDING_APPEND="${PUSH_PENDING_APPEND_STRING}${COMMITS_TO_PUSH}"
+        fi
+
+        hook_com[misc]="${ADDED_APPEND}${MODIFIED_APPEND}${UNTRACKED_APPEND}${STASHLENGTH_APPEND}${PUSH_PENDING_APPEND}"
     fi
-
-    echo $GIT_STATUS | grep "modified:" > /dev/null
-    if [[ $? -eq 0 ]]; then
-        MODIFIED_APPEND=${MODIFIED_APPEND_STRING}
-    fi
-
-    echo $GIT_STATUS | grep "Untracked files:" > /dev/null
-    if [[ $? -eq 0 ]]; then
-        UNTRACKED_APPEND=${UNTRACKED_APPEND_STRING}
-    fi
-
-    local STASHLENGTH=$(LANG=C git stash list 2> /dev/null | wc -l)
-    if [[ $STASHLENGTH -gt 0 ]]; then
-        STASHLENGTH_APPEND="${STASHLENGTH_APPEND_STRING}${STASHLENGTH}"
-    fi
-
-    local COMMITS_TO_PUSH=0
-    if [[ $(echo $GIT_STATUS | grep "Your branch is ahead") =~ " by ([0-9]+) commit" ]]; then
-        COMMITS_TO_PUSH=$MATCH
-        COMMITS_TO_PUSH=${COMMITS_TO_PUSH:s/ by /}
-        COMMITS_TO_PUSH=${COMMITS_TO_PUSH:s/ commit/}
-    fi
-    if [[ $COMMITS_TO_PUSH -gt 0 ]]; then
-        PUSH_PENDING_APPEND="${PUSH_PENDING_APPEND_STRING}${COMMITS_TO_PUSH}"
-    fi
-
-    hook_com[misc]="${ADDED_APPEND}${MODIFIED_APPEND}${UNTRACKED_APPEND}${STASHLENGTH_APPEND}${PUSH_PENDING_APPEND}"
     return 0
 }
 # Change vcs_info formats for the grml prompt. The 2nd format sets up
