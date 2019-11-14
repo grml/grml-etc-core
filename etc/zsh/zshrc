@@ -895,7 +895,7 @@ zle -N end-of-somewhere beginning-or-end-of-somewhere
 
 # add a command line to the shells history without executing it
 function commit-to-history () {
-    print -s ${(z)BUFFER}
+    print -rs ${(z)BUFFER}
     zle send-break
 }
 zle -N commit-to-history
