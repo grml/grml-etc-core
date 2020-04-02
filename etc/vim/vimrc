@@ -28,16 +28,13 @@ let g:skip_defaults_vim=1
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
-" Allow backspacing over everything in insert mode.
-set backspace=indent,eol,start
-
-set history=200		" keep 200 lines of command line history
-set ruler		" show the cursor position all the time
-set showcmd		" display incomplete commands
-set wildmenu		" display completion matches in a status line
-
-set ttimeout		" time out for key codes
-set ttimeoutlen=100	" wait up to 100ms after Esc for special key
+set backspace=indent,eol,start  " allow backspacing over everything in insert mode.
+set history=200                 " keep 200 lines of command line history
+set ruler                       " show the cursor position all the time
+set showcmd                     " display incomplete commands
+set ttimeoutlen=100             " wait up to 100ms after Esc for special key
+set ttimeout                    " time out for key codes
+set wildmenu                    " display completion matches in a status line
 
 " Show @@@ in the last line if it is truncated.
 set display=truncate
@@ -131,7 +128,6 @@ endif
 
 "" Begin of custom Grml configuration {
   set autoindent                            " always set autoindenting on
-  set backspace=2                           " specificy what <BS>, CTRL-W, etc. can do in Insert mode
   set dictionary=/usr/share/dict/word       " used with CTRL-X CTRL-K
   set esckeys                               " recognize keys that start with <Esc> in insert mode
   set formatoptions=cqrt                    " list of flags that tell how automatic formatting works
