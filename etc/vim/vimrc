@@ -205,53 +205,24 @@ endif
 
 " Suffixes that get lower priority when doing tab completion for filenames.
 " These are files we are not likely to want to edit or read.
-  set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
-
-" If using a dark background within the editing area and syntax highlighting
-" turn on this option as well
-  set background=dark
-
-" Uncomment the following to have Vim jump to the last position when
-" reopening a file
-" if has("autocmd")
-"   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-"     \| exe "normal g'\"" | endif
-" endif
-
-" Load indentation rules according to the detected filetype.
-" Per default Debian Vim only load filetype specific
-" plugins.
-  if has("autocmd")
-    filetype indent on
-  endif
-
-" In many terminal emulators the mouse works just fine.  By enabling it you
-" can position the cursor, Visually select and scroll with the mouse.
-" if has('mouse')
-"   set mouse=a
-" endif
-" We prefer to disable the mouse usage though and use what we're used
-" from older Vim versions:
-  if has('mouse')
-    set mouse=
-  endif
+" set suffixes=.bak,~,.o,.h,.info,.swp,.obj
+  set suffixes=.bak,~,.o,.h,.info,.swp,.obj,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
 
 " set the screen hardstatus to vim(filename.ext)
   if ((&term =~ '^screen') && ($VIM_PLEASE_SET_TITLE =~ '^yes$') || has('gui_running'))
     set t_ts=k
     set t_fs=\
     set title
-    autocmd BufEnter * let &titlestring = "vim(" . expand("%:t") . ")"
+    if has("autocmd")
+      autocmd BufEnter * let &titlestring = "vim(" . expand("%:t") . ")"
+    endif
     let &titleold = fnamemodify(&shell, ":t")
   endif
 
 " autocommands:
-" when the file type is "mail" then set the textwidth to "70":
   if has("autocmd")
-     au FileType mail   set tw=70
-" When editing a file, always jump to the last cursor position
-"  au BufReadPost * if line("'\"") | exe "'\"" | endif
-     autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif
+     " when the file type is "mail" then set the textwidth to "70":
+     autocmd FileType mail   set tw=70
   endif
 
 " some useful mappings:
@@ -360,6 +331,21 @@ endif
   endif
 
 " source user-specific local configuration file
+"
+" NOTE: If this vimrc file is used as system vimrc the initialization of Vim looks like this:
+"
+"   `system-vimrc (this file) + /etc/vim/vimrc.local + $HOME/.vimrc.local -> user-vimrc`
+"
+" This means that user-vimrc overrides the settings set in `$HOME/.vimrc.local`.
+"
+" If this file is used as user-vimrc the initialization of Vim looks like this
+"
+"   `system-vimrc + /etc/vim/vimrc.local -> user-vimrc (this file) + /etc/vim/vimrc.local + $HOME/.vimrc.local`
+"
+" This means that `/etc/vim/vimrc.local` + `$HOME/.vimrc.local` overrides the
+" settings set in the user-vimrc (and `/etc/vim/vimrc.local` is sourced twice).
+"
+" Either way, this might or might not be something a user would expect.
   if filereadable(expand("$HOME/.vimrc.local"))
     source $HOME/.vimrc.local
   endif
