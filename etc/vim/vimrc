@@ -170,7 +170,7 @@ endif
 " Vim default.
 
   set autoindent                            " always set autoindenting on
-  set dictionary=/usr/share/dict/word       " used with CTRL-X CTRL-K
+  set dictionary=/usr/share/dict/words      " used with CTRL-X CTRL-K
   set esckeys                               " recognize keys that start with <Esc> in insert mode
   set formatoptions=cqrt                    " list of flags that tell how automatic formatting works
   set laststatus=2                          " when to use a status line for the last window
