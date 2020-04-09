@@ -154,6 +154,20 @@ endif
 " | End of defaults.vim related stuff }
 
 " Begin of custom Grml configuration {
+" The Grml-Team believes that the options and configuration values which override
+" the Vim defaults are useful and helpful for our users.
+"
+" A lot of options are Grml defaults since the very start and we cleaned up as
+" much as possible but if you do not like any of these settings feel free to
+" change them back in your user vimrc or file a bug and tell us to change the
+" default.
+"
+" The idea behind commented out options and configuration values is to show
+" you interesting settings you should know about but we did not set them by
+" default because they might have to much of an impact for everyone.
+"
+" If a commented option precedes an option set by us it usually shows the
+" Vim default.
 
   set autoindent                            " always set autoindenting on
   set dictionary=/usr/share/dict/word       " used with CTRL-X CTRL-K
