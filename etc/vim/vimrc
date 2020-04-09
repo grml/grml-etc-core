@@ -153,7 +153,8 @@ endif
 
 " | End of defaults.vim related stuff }
 
-"" Begin of custom Grml configuration {
+" Begin of custom Grml configuration {
+
   set autoindent                            " always set autoindenting on
   set dictionary=/usr/share/dict/word       " used with CTRL-X CTRL-K
   set esckeys                               " recognize keys that start with <Esc> in insert mode
@@ -166,24 +167,23 @@ endif
   set shortmess=at                          " list of flags to make messages shorter
   set showmatch                             " show matching brackets.
   set textwidth=0                           " don't wrap lines by default
-  set viminfo=%,'50,\"100,:100,n~/.viminfo  " what to store in .viminfo file
+  set viminfo=%,'100,<100,s10,h             " what to store in .viminfo file
   set visualbell                            " use a visual bell instead of beeping
   set whichwrap=<,>,h,l                     " list of flags specifying which commands wrap to another line
 
-" set noet                                  " use appropriate number of spaces to insert a <Tab>
+" set expandtab                             " Use appropriate number of spaces to insert a <Tab>
 " set linebreak                             " Don't wrap words by default
-" set ignorecase                            " Do case insensitive matching
-" set smartcase                             " Do smart case matching
+  set ignorecase                            " Do case insensitive matching
+  set smartcase                             " Do smart case matching
 " set autowrite                             " Automatically save before commands like :next and :make
-" set comments=b:#,:%,fb:-,n:>,n:)          " definition of what comment lines look like
 " set nodigraph                             " enter characters that normally cannot be entered by an ordinary keyboard
 
 " list of strings used for list mode
-" set list listchars=tab:»·,trail:·
-" set list listchars=tab:»·
+" set list listchars=eol:$
   set listchars=eol:$,precedes:«,extends:»,tab:»·,trail:·
 
 " list of file names to search for tags
+" set tags=./tags,tags
   set tags=./tags,./TAGS,tags,TAGS,../tags,../../tags,../../../tags,../../../../tags
 
 " When switching between different buffers you can't use undo without 'set hidden':
@@ -323,7 +323,6 @@ if version >= 700
   "  highlight PmenuThumb cterm=reverse  gui=reverse guifg=Black   guibg=#AAAAAA  " thumb of the scrollbar
 endif
 
-
 " To enable persistent undo uncomment following section.
 " The undo files will be stored in $HOME/.cache/vim
 
@@ -342,7 +341,6 @@ endif
 " endif
 
 " Source a global configuration file if available
-" Deprecated by Debian but still supported by grml
   if filereadable("/etc/vim/vimrc.local")
     source /etc/vim/vimrc.local
   endif
@@ -351,6 +349,7 @@ endif
   if filereadable(expand("$HOME/.vimrc.local"))
     source $HOME/.vimrc.local
   endif
-"" End of custom Grml configuration }
+
+" End of custom Grml configuration }
 
 "# END OF FILE #################################################################
