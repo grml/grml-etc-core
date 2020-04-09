@@ -18,23 +18,40 @@
 " properly set to work with the Vim-related packages available in Debian.
 runtime! debian.vim
 
-"" Begin of defaults.vim related stuff {
-" Do *not* source $VIMRUNTIME/defaults.vim, since that prevents overwriting
-" values we want to set in this file, instead we set settings similar to
-" what can be found in default.vim below
+" | Begin of defaults.vim related stuff {
+" |
+" | Comments starting with a bar ('|') are added by the Grml-Team
+" | and the settings below override the default.vim configuration everything
+" | else is copied from $VIMRUNTIME/defaults.vim.
+" |
+" | Do *not* source $VIMRUNTIME/defaults.vim (in case no user vimrc is found),
+" | since that prevents overwriting values we want to set in this file,
+" | instead we set settings similar to what can be found in default.vim below
 let g:skip_defaults_vim=1
 
 " Use Vim settings, rather than Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
-set nocompatible
+" Avoid side effects when it was already reset.
+if &compatible
+  set nocompatible
+endif
 
-set backspace=indent,eol,start  " allow backspacing over everything in insert mode.
-set history=200                 " keep 200 lines of command line history
-set ruler                       " show the cursor position all the time
-set showcmd                     " display incomplete commands
-set ttimeoutlen=100             " wait up to 100ms after Esc for special key
-set ttimeout                    " time out for key codes
-set wildmenu                    " display completion matches in a status line
+" When the +eval feature is missing, the set command above will be skipped.
+" Use a trick to reset compatible only when the +eval feature is missing.
+silent! while 0
+  set nocompatible
+silent! endwhile
+
+" Allow backspacing over everything in insert mode.
+set backspace=indent,eol,start
+
+set history=200		" keep 200 lines of command line history
+set ruler		" show the cursor position all the time
+set showcmd		" display incomplete commands
+set wildmenu		" display completion matches in a status line
+
+set ttimeout		" time out for key codes
+set ttimeoutlen=100	" wait up to 100ms after Esc for special key
 
 " Show @@@ in the last line if it is truncated.
 set display=truncate
@@ -51,7 +68,6 @@ endif
 " Do not recognize octal numbers for Ctrl-A and Ctrl-X, most users find it
 " confusing.
 set nrformats-=octal
-" set nformats=bin,octal,hex
 
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries.
 if has('win32')
@@ -67,22 +83,32 @@ map Q gq
 " Revert with ":iunmap <C-U>".
 inoremap <C-U> <C-G>u<C-U>
 
+" In many terminal emulators the mouse works just fine.  By enabling it you
+" can position the cursor, Visually select and scroll with the mouse.
+"
+" | We prefer to disable the mouse usage though and use what we're used
+" | from older Vim versions.
+" |
+" | if has('mouse')
+" |   set mouse=a
+" | endif
+if has('mouse')
+  set mouse=
+endif
+
 " Switch syntax highlighting on when the terminal has colors or when using the
 " GUI (which always has colors).
 if &t_Co > 2 || has("gui_running")
-  " Just load the main syntax file when Vim was compiled with "+syntax".
-  if has("syntax")
-    " Revert with ":syntax off".
-    syntax on
-  endif
+  " Revert with ":syntax off".
+  syntax on
 
   " I like highlighting strings inside C comments.
   " Revert with ":unlet c_comment_strings".
   let c_comment_strings=1
 endif
 
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
+" Only do this part when Vim was compiled with the +eval feature.
+if 1
 
   " Enable file type detection.
   " Use the default filetype settings, so that mail gets 'tw' set to 72,
@@ -97,16 +123,17 @@ if has("autocmd")
     au!
 
     " When editing a file, always jump to the last known cursor position.
-    " Don't do it when the position is invalid or when inside an event handler
-    " (happens when dropping a file on gvim).
+    " Don't do it when the position is invalid, when inside an event handler
+    " (happens when dropping a file on gvim) and for a commit message (it's
+    " likely a different one than last time).
     autocmd BufReadPost *
-      \ if line("'\"") >= 1 && line("'\"") <= line("$") |
-      \   exe "normal! g`\"" |
-      \ endif
+      \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+      \ |   exe "normal! g`\""
+      \ | endif
 
   augroup END
 
-endif " has("autocmd")
+endif
 
 " Convenient command to see the difference between the current buffer and the
 " file it was loaded from, thus the changes you made.
@@ -124,7 +151,7 @@ if has('langmap') && exists('+langremap')
   set nolangremap
 endif
 
-"" End of defaults.vim related stuff }
+" | End of defaults.vim related stuff }
 
 "" Begin of custom Grml configuration {
   set autoindent                            " always set autoindenting on
