@@ -12,7 +12,7 @@ all: $(MANPAGES) $(HTMLPAGES)
 
 .t2t.html:
 	@printf 'TXT2TAGS %s > %s\n' "$<" "$@"
-	@txt2tags --target xhtml --css-sugar --style t2t-modern.css -o- $< \
+	@txt2tags --target html --style t2t-modern.css -o- $< \
 | sed -e '/^$$/d' -e 's/^\\$$//' > $@
 
 clean:
