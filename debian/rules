@@ -17,17 +17,15 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp
-
-	dh_clean 
+	dh_prep
 	rm -rf debian/grml-etc-core/
 	(cd $(CURDIR)/doc && $(MAKE) clean)
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k 
+	dh_prep
 	dh_installdirs
-
 	# Add here commands to install the package into debian/grml-etc-core.
 	cp -a etc/ debian/grml-etc-core/
 	cp -a usr_share_grml/ debian/grml-etc-core/usr/share/grml
