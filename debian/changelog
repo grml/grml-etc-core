@@ -1,3 +1,20 @@
+grml-etc-core (0.16.2) grml-testing; urgency=medium
+
+  [ Doan Tran Cong Danh ]
+  * [2c241ec] zsh: commit-to-history: keep escaped character
+
+  [ Michael Prokop ]
+  * [675c85b] zshrc: support PAGER='less -Mr' usage and fall back to vi if
+    LESSOPEN is unset. Thanks to András Korn for review and improvement
+    suggestions
+  * [7ece114] doc: adjust txt2tags usage for versions >=3.3
+  * [b4ea931] Bump Standards-Version to 4.5.0
+  * [5b98679] Bump Debian compat version to 12, using debhelper-compat
+    approach
+  * [9cb82a3] Execute 'wrap-and-sort -a -t -s' on debian/
+
+ -- Michael Prokop <mika@grml.org>  Tue, 12 May 2020 17:09:53 +0200
+
 grml-etc-core (0.16.1) grml-testing; urgency=medium
 
   [ Doan Tran Cong Danh ]
