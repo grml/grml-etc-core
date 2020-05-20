@@ -1,3 +1,12 @@
+grml-etc-core (0.17.0) grml-testing; urgency=medium
+
+  [ Darshaka Pathirana ]
+  * [31dc671] vimrc: Major rework of the Grml configuration. Thanks to
+    Michael Prokop (@mika) for the initial work
+  * [c2cbdb0] tmux.conf: Fix unknown key: confirm-before error message
+
+ -- Michael Prokop <mika@grml.org>  Wed, 20 May 2020 17:24:49 +0200
+
 grml-etc-core (0.16.2) grml-testing; urgency=medium
 
   [ Doan Tran Cong Danh ]
