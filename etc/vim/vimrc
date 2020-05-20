@@ -16,127 +16,216 @@
 
 " This line should not be removed as it ensures that various options are
 " properly set to work with the Vim-related packages available in Debian.
-  runtime! debian.vim
+runtime! debian.vim
 
-" Uncomment the next line to make Vim more Vi-compatible
-" NOTE: debian.vim sets 'nocompatible', but only if debian.vim is available,
-" so let's make sure we run in nocompatible mode:
+" | Begin of defaults.vim related stuff {
+" |
+" | Comments starting with a bar ('|') are added by the Grml-Team
+" | and the settings below override the default.vim configuration everything
+" | else is copied from $VIMRUNTIME/defaults.vim.
+" |
+" | Do *not* source $VIMRUNTIME/defaults.vim (in case no user vimrc is found),
+" | since that prevents overwriting values we want to set in this file,
+" | instead we set settings similar to what can be found in default.vim below
+let g:skip_defaults_vim=1
+
+" Use Vim settings, rather than Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
+" Avoid side effects when it was already reset.
+if &compatible
   set nocompatible
+endif
 
-" Setting 'compatible' changes numerous
-" options, so any other options should be set AFTER setting 'compatible'.
-" set compatible
+" When the +eval feature is missing, the set command above will be skipped.
+" Use a trick to reset compatible only when the +eval feature is missing.
+silent! while 0
+  set nocompatible
+silent! endwhile
 
-  set backspace=indent,eol,start        " more powerful backspacing
+" Allow backspacing over everything in insert mode.
+set backspace=indent,eol,start
 
-" Now we set some defaults for the editor
-  set autoindent        " always set autoindenting on
-" set linebreak         " Don't wrap words by default
-  set textwidth=0       " Don't wrap lines by default
-  set nobackup          " Don't keep a backup file
-  set viminfo='20,\"50  " read/write a .viminfo file, don't store more than
-                        " 50 lines of registers
-  set history=50        " keep 50 lines of command line history
-  set ruler             " show the cursor position all the time
+set history=200		" keep 200 lines of command line history
+set ruler		" show the cursor position all the time
+set showcmd		" display incomplete commands
+set wildmenu		" display completion matches in a status line
+
+set ttimeout		" time out for key codes
+set ttimeoutlen=100	" wait up to 100ms after Esc for special key
+
+" Show @@@ in the last line if it is truncated.
+set display=truncate
+
+" Show a few lines of context around the cursor.  Note that this makes the
+" text scroll if you mouse-click near the start or end of the window.
+set scrolloff=5
+
+" Do incremental searching when it's possible to timeout.
+if has('reltime')
+  set incsearch
+endif
+
+" Do not recognize octal numbers for Ctrl-A and Ctrl-X, most users find it
+" confusing.
+set nrformats-=octal
+
+" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries.
+if has('win32')
+  set guioptions-=t
+endif
+
+" Don't use Ex mode, use Q for formatting.
+" Revert with ":unmap Q".
+map Q gq
+
+" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
+" so that you can undo CTRL-U after inserting a line break.
+" Revert with ":iunmap <C-U>".
+inoremap <C-U> <C-G>u<C-U>
+
+" In many terminal emulators the mouse works just fine.  By enabling it you
+" can position the cursor, Visually select and scroll with the mouse.
+"
+" | We prefer to disable the mouse usage though and use what we're used
+" | from older Vim versions.
+" |
+" | if has('mouse')
+" |   set mouse=a
+" | endif
+if has('mouse')
+  set mouse=
+endif
+
+" Switch syntax highlighting on when the terminal has colors or when using the
+" GUI (which always has colors).
+if &t_Co > 2 || has("gui_running")
+  " Revert with ":syntax off".
+  syntax on
+
+  " I like highlighting strings inside C comments.
+  " Revert with ":unlet c_comment_strings".
+  let c_comment_strings=1
+endif
+
+" Only do this part when Vim was compiled with the +eval feature.
+if 1
+
+  " Enable file type detection.
+  " Use the default filetype settings, so that mail gets 'tw' set to 72,
+  " 'cindent' is on in C files, etc.
+  " Also load indent files, to automatically do language-dependent indenting.
+  " Revert with ":filetype off".
+  filetype plugin indent on
+
+  " Put these in an autocmd group, so that you can revert them with:
+  " ":augroup vimStartup | au! | augroup END"
+  augroup vimStartup
+    au!
+
+    " When editing a file, always jump to the last known cursor position.
+    " Don't do it when the position is invalid, when inside an event handler
+    " (happens when dropping a file on gvim) and for a commit message (it's
+    " likely a different one than last time).
+    autocmd BufReadPost *
+      \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+      \ |   exe "normal! g`\""
+      \ | endif
+
+  augroup END
+
+endif
+
+" Convenient command to see the difference between the current buffer and the
+" file it was loaded from, thus the changes you made.
+" Only define it when not defined already.
+" Revert with: ":delcommand DiffOrig".
+if !exists(":DiffOrig")
+  command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
+		  \ | wincmd p | diffthis
+endif
+
+if has('langmap') && exists('+langremap')
+  " Prevent that the langmap option applies to characters that result from a
+  " mapping.  If set (default), this may break plugins (but it's backward
+  " compatible).
+  set nolangremap
+endif
+
+" | End of defaults.vim related stuff }
+
+" Begin of custom Grml configuration {
+" The Grml-Team believes that the options and configuration values which override
+" the Vim defaults are useful and helpful for our users.
+"
+" A lot of options are Grml defaults since the very start and we cleaned up as
+" much as possible but if you do not like any of these settings feel free to
+" change them back in your user vimrc or file a bug and tell us to change the
+" default.
+"
+" The idea behind commented out options and configuration values is to show
+" you interesting settings you should know about but we did not set them by
+" default because they might have to much of an impact for everyone.
+"
+" If a commented option precedes an option set by us it usually shows the
+" Vim default.
+
+  set autoindent                            " always set autoindenting on
+  set dictionary=/usr/share/dict/words      " used with CTRL-X CTRL-K
+  set esckeys                               " recognize keys that start with <Esc> in insert mode
+  set formatoptions=cqrt                    " list of flags that tell how automatic formatting works
+  set laststatus=2                          " when to use a status line for the last window
+  set nobackup                              " don't keep a backup file
+  set noerrorbells                          " don't ring the bell (beep or screen flash) for error messages
+  set nostartofline                         " keep cursor in the same column (if possible) when moving cursor
+  set pastetoggle=<f11>                     " don't change text when copy/pasting
+  set shortmess=at                          " list of flags to make messages shorter
+  set showmatch                             " show matching brackets.
+  set textwidth=0                           " don't wrap lines by default
+  set viminfo=%,'100,<100,s10,h             " what to store in .viminfo file
+  set visualbell                            " use a visual bell instead of beeping
+  set whichwrap=<,>,h,l                     " list of flags specifying which commands wrap to another line
+
+" set expandtab                             " Use appropriate number of spaces to insert a <Tab>
+" set linebreak                             " Don't wrap words by default
+  set ignorecase                            " Do case insensitive matching
+  set smartcase                             " Do smart case matching
+" set autowrite                             " Automatically save before commands like :next and :make
+" set nodigraph                             " enter characters that normally cannot be entered by an ordinary keyboard
+
+" list of strings used for list mode
+" set list listchars=eol:$
+  set listchars=eol:$,precedes:Â«,extends:Â»,tab:Â»Â·,trail:Â·
+
+" list of file names to search for tags
+" set tags=./tags,tags
+  set tags=./tags,./TAGS,tags,TAGS,../tags,../../tags,../../../tags,../../../../tags
+
+" When switching between different buffers you can't use undo without 'set hidden':
+  set hidden                                " Hide buffers when they are abandoned
 
 " Suffixes that get lower priority when doing tab completion for filenames.
 " These are files we are not likely to want to edit or read.
-  set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
+" set suffixes=.bak,~,.o,.h,.info,.swp,.obj
+  set suffixes=.bak,~,.o,.h,.info,.swp,.obj,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
 
-" Vim5 and later versions support syntax highlighting.
-" Just load the main syntax file when Vim was compiled with "+syntax".
-  if has("syntax")
-     syntax on
-  endif
-
-" Debian uses compressed helpfiles. We must inform vim that the main
-" helpfiles is compressed. Other helpfiles are stated in the tags-file.
-" set helpfile=$VIMRUNTIME/doc/help.txt.gz
-
-" If using a dark background within the editing area and syntax highlighting
-" turn on this option as well
-  set background=dark
-
-" begin of grml specials:
-"  set list listchars=tab:»·
-"  set listchars=eol:$,precedes:«,extends:»,tab:··,trail:·
-" end of grml specials
-
-" Uncomment the following to have Vim jump to the last position when
-" reopening a file
-" if has("autocmd")
-"   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-"     \| exe "normal g'\"" | endif
-" endif
-
-" Uncomment the following to have Vim load indentation rules according to the
-" detected filetype. Per default Debian Vim only load filetype specific
-" plugins.
-  if has("autocmd")
-    filetype indent on
-  endif
-
-" The following are commented out as they cause vim to behave a lot
-" differently from regular Vi. They are highly recommended though.
-  set showcmd           " Show (partial) command in status line.
-  set showmatch         " Show matching brackets.
-" set ignorecase        " Do case insensitive matching
-" set smartcase         " Do smart case matching
-" set incsearch         " Incremental search
-" set autowrite         " Automatically save before commands like :next and :make
-" When switching between different buffers you can't use undo without 'set hidden':
-  set hidden            " Hide buffers when they are abandoned
-  set mouse=            " Disable mouse usage (being "a" AKA all modes in Vim >=8) in terminals
-  set wildmenu          " command-line completion operates in an enhanced mode
-
-  set pastetoggle=<f11>               " don't change text when copy/pasting
-  set dictionary=/usr/share/dict/word " used with CTRL-X CTRL-K
-
-""" set the screen hardstatus to vim(filename.ext)
+" set the screen hardstatus to vim(filename.ext)
   if ((&term =~ '^screen') && ($VIM_PLEASE_SET_TITLE =~ '^yes$') || has('gui_running'))
     set t_ts=k
     set t_fs=\
     set title
-    autocmd BufEnter * let &titlestring = "vim(" . expand("%:t") . ")"
+    if has("autocmd")
+      autocmd BufEnter * let &titlestring = "vim(" . expand("%:t") . ")"
+    endif
     let &titleold = fnamemodify(&shell, ":t")
   endif
 
-" turn these ON:
-  set ek vb
-" set digraph
-" turn these OFF ("no" prefix):
-  set nodigraph noeb noet nosol
-" non-toggles:
-  set bs=2 fo=cqrt ls=2 shm=at ww=<,>,h,l
-" set bs=2 fo=cqrt ls=2 shm=at tw=72 ww=<,>,h,l
-  set comments=b:#,:%,fb:-,n:>,n:)
-"  set list listchars=tab:»·,trail:·
-  set listchars=eol:$,precedes:«,extends:»,tab:»·,trail:·
-  set viminfo=%,'50,\"100,:100,n~/.viminfo
-  set tags=./tags,./TAGS,tags,TAGS,../tags,../../tags,../../../tags,../../../../tags
-
 " autocommands:
-" when the file type is "mail" then set the textwidth to "70":
   if has("autocmd")
-     au FileType mail   set tw=70
-" When editing a file, always jump to the last cursor position
-"  au BufReadPost * if line("'\"") | exe "'\"" | endif
-     autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif
+     " when the file type is "mail" then set the textwidth to "70":
+     autocmd FileType mail   set tw=70
   endif
 
-" some colors - as an example "white on black" [use bold fonts]:
-"  hi normal   ctermfg=white  ctermbg=black guifg=white  guibg=black
-"  hi nontext  ctermfg=blue   ctermbg=black guifg=blue   guibg=black
-" set t_Co=256                " number of colors
-
 " some useful mappings:
-
-" with F7 copy all current buffer to clipboard, or a selection.
-" with shift-F7, paste all clipboard contents
-" see: http://www.vim.org/tips/tip.php?tip_id=964
-  map   <F7>  :w !xclip<CR><CR>
-  vmap  <F7>  "*y
-  map <S-F7>  :r!xclip -o<CR>
 
 " remove/delete trailing whitespace:
   nmap ;tr :%s/\s\+$//
@@ -149,27 +238,6 @@
 " update timestamp
   iab YDATE <C-R>=strftime("%a %b %d %T %Z %Y")<CR>
   map ,L  1G/Latest change:\s*/e+1<CR>CYDATE<ESC>
-
-" the shell in a box mode. found in posting by Stefan `Sec` Zehl
-" in newsgroup de.alt.sysadmin.recovery, msg­id:  <df7lhe$2hup$1@ice.42.org>
-" Requires zsh for "print -P $PS1" / replace if needed.
-" Your prompt should end in > (and only contain one)
-" so run something like:
-"   % export PS1='%n@%m > '
-" in your zsh, press ',l' and <enter> for running commands, end mode via <esc>
-  map __start :imap <C-V><C-M> <C-O>__cmd<C-V>\|imap <C-V><ESC> <C-V><ESC>__end<C-M>
-  noremap __end :iunmap <C-V><CR>\|iunmap <C-V><ESC><C-M>:"Vish ended.<C-M>
-  noremap __cmd 0<ESC>f>ly$:r !<C-R>";print -P $PS1<C-M>A
-  noremap __scmd :r !print -P $PS1<c-M>A
-  map ,l __start__scmd
-
-" Kill quote spaces (when quoting a quote)
-  map ,kqs mz:%s/^> >/>>/<cr>
-
-" Interface to Mercurial Version Control
-  if filereadable( "/usr/share/doc/mercurial/examples/vim/hg-menu.vim" )
-    source /usr/share/doc/mercurial/examples/vim/hg-menu.vim
-  endif
 
 " Vim 7 brings cool new features - see ':he version7'!
 " The coolest features of Vim7 by mika
@@ -213,7 +281,7 @@ if version >= 700
   "  highlight SpellLocale term=underline ctermbg=11 gui=undercurl guisp=DarkCyan  " word only exists in other region
 
   " set maximum number of suggestions listed top 10 items:
-  set sps=best,10
+  set spellsuggest=best,10
 
   " highlight matching parens:
   " set matchpairs=(:),[:],{:},< :>
@@ -240,7 +308,6 @@ if version >= 700
   "  highlight PmenuThumb cterm=reverse  gui=reverse guifg=Black   guibg=#AAAAAA  " thumb of the scrollbar
 endif
 
-
 " To enable persistent undo uncomment following section.
 " The undo files will be stored in $HOME/.cache/vim
 
@@ -259,13 +326,30 @@ endif
 " endif
 
 " Source a global configuration file if available
-" Deprecated by Debian but still supported by grml
   if filereadable("/etc/vim/vimrc.local")
     source /etc/vim/vimrc.local
   endif
 
 " source user-specific local configuration file
+"
+" NOTE: If this vimrc file is used as system vimrc the initialization of Vim looks like this:
+"
+"   `system-vimrc (this file) + /etc/vim/vimrc.local + $HOME/.vimrc.local -> user-vimrc`
+"
+" This means that user-vimrc overrides the settings set in `$HOME/.vimrc.local`.
+"
+" If this file is used as user-vimrc the initialization of Vim looks like this
+"
+"   `system-vimrc + /etc/vim/vimrc.local -> user-vimrc (this file) + /etc/vim/vimrc.local + $HOME/.vimrc.local`
+"
+" This means that `/etc/vim/vimrc.local` + `$HOME/.vimrc.local` overrides the
+" settings set in the user-vimrc (and `/etc/vim/vimrc.local` is sourced twice).
+"
+" Either way, this might or might not be something a user would expect.
   if filereadable(expand("$HOME/.vimrc.local"))
     source $HOME/.vimrc.local
   endif
+
+" End of custom Grml configuration }
+
 "# END OF FILE #################################################################
