@@ -1864,7 +1864,7 @@ done
 function batterydarwin () {
 GRML_BATTERY_LEVEL=''
 local -a table
-table=( ${$(pmset -g ps)[(w)7,8]%%(\%|);} )
+table=( ${$(pmset -g ps)[(w)8,9]%%(\%|);} )
 if [[ -n $table[2] ]] ; then
     case $table[2] in
         charging)
