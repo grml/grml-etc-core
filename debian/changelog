@@ -1,3 +1,18 @@
+grml-etc-core (0.17.1) grml-testing; urgency=medium
+
+  [ Garrett Holmstrom ]
+  * [640f2a0] zshrc: Fix darwin battery info field selection
+
+  [ Michael Prokop ]
+  * [7642276] zshsrc + zshenv: support hostnamectl iff hostname isn't
+    present
+
+  [ Darshaka Pathirana ]
+  * [da9a55e] tmux.conf: Fix /etc/tmux.conf:19: unknown key: \\ error
+    message
+
+ -- Michael Prokop <mika@grml.org>  Wed, 27 May 2020 11:21:20 +0200
+
 grml-etc-core (0.17.0) grml-testing; urgency=medium
 
   [ Darshaka Pathirana ]
