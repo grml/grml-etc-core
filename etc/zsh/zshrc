@@ -843,6 +843,8 @@ function grmlcomp () {
       localname=$(hostname)
     elif check_com hostnamectl ; then
       localname=$(hostnamectl --static)
+    else
+      localname="$(uname -n)"
     fi
 
     hosts=(
@@ -2522,6 +2524,8 @@ function grml_maintain_name () {
       localname=$(hostname)
     elif check_com hostnamectl ; then
       localname=$(hostnamectl --static)
+    else
+      localname="$(uname -n)"
     fi
 
     # set hostname if not running on local machine
