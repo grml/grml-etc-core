@@ -27,7 +27,11 @@ runtime! debian.vim
 " | Do *not* source $VIMRUNTIME/defaults.vim (in case no user vimrc is found),
 " | since that prevents overwriting values we want to set in this file,
 " | instead we set settings similar to what can be found in default.vim below
-let g:skip_defaults_vim=1
+" |
+" | Only do this part when Vim was compiled with the +eval feature.
+if 1
+  let g:skip_defaults_vim=1
+endif
 
 " Use Vim settings, rather than Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
@@ -54,7 +58,10 @@ set ttimeout		" time out for key codes
 set ttimeoutlen=100	" wait up to 100ms after Esc for special key
 
 " Show @@@ in the last line if it is truncated.
-set display=truncate
+" | This features is only available in later versions
+if has("patch-7.4.2115")
+  set display=truncate
+endif
 
 " Show a few lines of context around the cursor.  Note that this makes the
 " text scroll if you mouse-click near the start or end of the window.
@@ -194,7 +201,11 @@ endif
 
 " list of strings used for list mode
 " set list listchars=eol:$
-  set listchars=eol:$,precedes:«,extends:»,tab:»·,trail:·
+  if (&encoding =~ 'utf-8')
+    set listchars=eol:$,precedes:«,extends:»,tab:»·,trail:·
+  else
+    set listchars=eol:$
+  endif
 
 " list of file names to search for tags
 " set tags=./tags,tags
