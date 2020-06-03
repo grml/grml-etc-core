@@ -27,13 +27,9 @@
 
 # set environment variables (important for autologin on tty)
 if [ -n "${HOSTNAME}" ] ; then
-  export HOSTNAME="${HOSTNAME}"
-elif [[ -x $(which hostname) ]] ; then
-  export HOSTNAME="$(hostname)"
-elif [[ -x $(which hostnamectl) ]] ; then
-  export HOSTNAME="$(hostnamectl --static)"
+    export HOSTNAME="${HOSTNAME}"
 else
-  export HOSTNAME="$(uname -n)"
+    export HOSTNAME="$(uname -n)"
 fi
 
 # make sure /usr/bin/id is available
