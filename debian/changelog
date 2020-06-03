@@ -1,3 +1,18 @@
+grml-etc-core (0.17.2) grml-testing; urgency=medium
+
+  [ Moviuro ]
+  * [4124996] zshenv, zshrc: add fallback to uname for HOSTNAME
+
+  [ Michael Prokop ]
+  * [94d6068] vimrc: support vim-tiny and older versions of vim
+  * [99ad5c1] zshrc: rely only on `uname -n` for $HOSTNAME handling.
+    Thanks to Darshaka Pathirana and Chris Hofstaedtler
+
+  [ ur4t ]
+  * [606e4c8] zshrc: add zstd support for simple-extract()
+
+ -- Michael Prokop <mika@grml.org>  Wed, 03 Jun 2020 16:50:12 +0200
+
 grml-etc-core (0.17.1) grml-testing; urgency=medium
 
   [ Garrett Holmstrom ]
