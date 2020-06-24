@@ -1,3 +1,10 @@
+grml-etc-core (0.17.3) grml-testing; urgency=medium
+
+  [ Darshaka Pathirana ]
+  * [d336df8] zshrc: add function grml-remote-support
+
+ -- Michael Prokop <mika@grml.org>  Wed, 24 Jun 2020 12:33:37 +0200
+
 grml-etc-core (0.17.2) grml-testing; urgency=medium
 
   [ Moviuro ]
