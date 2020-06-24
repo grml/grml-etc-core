@@ -2817,6 +2817,17 @@ graphic chipset."
             return 1
         }
     fi
+
+    if check_com -c tmate && check_com -c qrencode ; then
+        function grml-remote-support() {
+            tmate -L grml-remote-support new -s grml-remote-support -d
+            tmate -L grml-remote-support wait tmate-ready
+            tmate -L grml-remote-support display -p '#{tmate_ssh}' | qrencode -t ANSI
+            echo "tmate session: $(tmate -L grml-remote-support display -p '#{tmate_ssh}')"
+            echo
+            echo "Scan this QR code and send it to your support team."
+        }
+    fi
 }
 
 # now run the functions
