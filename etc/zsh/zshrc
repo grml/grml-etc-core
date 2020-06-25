@@ -2016,14 +2016,19 @@ function prompt_grml_help () {
 
     The styles:
 
-        - use-rprompt (boolean): If \`true' (the default), print a sad smiley
-          in $RPROMPT if the last command a returned non-successful error code.
+        - use-rprompt (boolean): If \`true' (the default), then print the defined
+          items (empty by default) in $RPROMPT.
+          For example to enable the sad-smiley in $RPROMPT using the grml prompt
+          this can be achieved via:
+
+             zstyle ':prompt:grml:right:setup' items sad-smiley
+
           (This in only valid if <left-or-right> is "right"; ignored otherwise)
 
         - items (list): The list of items used in the prompt. If \`vcs' is
           present in the list, the theme's code invokes \`vcs_info'
           accordingly. Default (left): rc change-root user at host path vcs
-          percent; Default (right): sad-smiley
+          percent; Default (right): none (being unset)
 
         - strip-sensitive-characters (boolean): If the \`prompt_subst' option
           is active in zsh, the shell performs lots of expansions on prompt
@@ -2078,7 +2083,7 @@ function prompt_grml-large_help () {
 
         - left: rc jobs history shell-level change-root time date newline user
                 at host path vcs percent
-        - right: sad-smiley
+        - right: none (being unset)
 __EOF0__
 }
 
@@ -2383,7 +2388,7 @@ function prompt_grml_precmd () {
     local grmltheme=grml
     local -a left_items right_items
     left_items=(rc change-root user at host path vcs percent)
-    right_items=(sad-smiley)
+    right_items=()
 
     prompt_grml_precmd_worker
 }
@@ -2404,7 +2409,7 @@ function prompt_grml-large_precmd () {
     local -a left_items right_items
     left_items=(rc jobs history shell-level change-root time date newline
                 user at host path vcs percent)
-    right_items=(sad-smiley)
+    right_items=()
 
     prompt_grml_precmd_worker
 }
