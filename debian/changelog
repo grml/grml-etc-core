@@ -1,3 +1,14 @@
+grml-etc-core (0.17.4) grml-testing; urgency=medium
+
+  [ Michael Prokop ]
+  * [401702a] zshrc: enable transient_rprompt to fix sad-smiley situation
+    in rprompt. Thanks to Frank Terbeck
+
+  [ Simon Bruder ]
+  * [e1db4fe] zshrc: set title in alacritty
+
+ -- Michael Prokop <mika@grml.org>  Fri, 10 Jul 2020 10:53:48 +0200
+
 grml-etc-core (0.17.3) grml-testing; urgency=medium
 
   [ Darshaka Pathirana ]
