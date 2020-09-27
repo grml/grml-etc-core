@@ -108,6 +108,65 @@ if [[ $ZSH_PROFILE_RC -gt 0 ]] ; then
     zmodload zsh/zprof
 fi
 
+typeset -A GRML_STATUS_FEATURES
+
+function grml_status_feature () {
+    emulate -L zsh
+    local f=$1
+    local -i success=$2
+    if (( success == 0 )); then
+        GRML_STATUS_FEATURES[$f]=success
+    else
+        GRML_STATUS_FEATURES[$f]=failure
+    fi
+    return 0
+}
+
+function grml_status_features () {
+    emulate -L zsh
+    local mode=${1:-+-}
+    local this
+    if [[ $mode == -h ]] || [[ $mode == --help ]]; then
+        cat <<EOF
+grml_status_features [-h|--help|-|+|+-|FEATURE]
+
+Prints a summary of features the grml setup is trying to load. The
+result of loading a feature is recorded. This function lets you query
+the result.
+
+The function takes one argument: "-h" or "--help" to display this help
+text, "+" to display a list of all successfully loaded features, "-" for
+a list of all features that failed to load. "+-" to show a list of all
+features with their statuses.
+
+Any other word is considered to by a feature and prints its status.
+
+The default mode is "+-".
+EOF
+        return 0
+    fi
+    if [[ $mode != - ]] && [[ $mode != + ]] && [[ $mode != +- ]]; then
+        this="${GRML_STATUS_FEATURES[$mode]}"
+        if [[ -z $this ]]; then
+            printf 'unknown\n'
+            return 1
+        else
+            printf '%s\n' $this
+        fi
+        return 0
+    fi
+    for key in ${(ok)GRML_STATUS_FEATURES}; do
+        this="${GRML_STATUS_FEATURES[$key]}"
+        if [[ $this == success ]] && [[ $mode == *+* ]]; then
+            printf '%-16s %s\n' $key $this
+        fi
+        if [[ $this == failure ]] && [[ $mode == *-* ]]; then
+            printf '%-16s %s\n' $key $this
+        fi
+    done
+    return 0
+}
+
 # load .zshrc.pre to give the user the chance to overwrite the defaults
 [[ -r ${ZDOTDIR:-${HOME}}/.zshrc.pre ]] && source ${ZDOTDIR:-${HOME}}/.zshrc.pre
 
@@ -657,7 +716,8 @@ typeset -U path PATH cdpath CDPATH fpath FPATH manpath MANPATH
 # Load a few modules
 is4 && \
 for mod in parameter complist deltochar mathfunc ; do
-    zmodload -i zsh/${mod} 2>/dev/null || print "Notice: no ${mod} available :("
+    zmodload -i zsh/${mod} 2>/dev/null
+    grml_status_feature mod:$mod $?
 done && builtin unset -v mod
 
 # autoload zsh modules when they are referenced
@@ -672,10 +732,11 @@ COMPDUMPFILE=${COMPDUMPFILE:-${ZDOTDIR:-${HOME}}/.zcompdump}
 if zrcautoload compinit ; then
     typeset -a tmp
     zstyle -a ':grml:completion:compinit' arguments tmp
-    compinit -d ${COMPDUMPFILE} "${tmp[@]}" || print 'Notice: no compinit available :('
+    compinit -d ${COMPDUMPFILE} "${tmp[@]}"
+    grml_status_feature compinit $?
     unset tmp
 else
-    print 'Notice: no compinit available :('
+    grml_status_feature compinit 1
     function compdef { }
 fi
 
@@ -2433,6 +2494,7 @@ function grml_prompt_fallback () {
 }
 
 if zrcautoload promptinit && promptinit 2>/dev/null ; then
+    grml_status_feature promptinit 0
     # Since we define the required functions in here and not in files in
     # $fpath, we need to stick the theme's name into `$prompt_themes'
     # ourselves, since promptinit does not pick them up otherwise.
@@ -2440,7 +2502,7 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
     # Also, keep the array sorted...
     prompt_themes=( "${(@on)prompt_themes}" )
 else
-    print 'Notice: no promptinit available :('
+    grml_status_feature promptinit 1
     grml_prompt_fallback
     function precmd () { (( ${+functions[vcs_info]} )) && vcs_info; }
 fi
@@ -3842,6 +3904,8 @@ if (( GRMLSMALL_SPECIFIC > 0 )) && isgrmlsmall ; then
 fi
 
 zrclocal
+
+unfunction grml_status_feature
 
 ## genrefcard.pl settings
 

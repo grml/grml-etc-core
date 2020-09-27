@@ -719,6 +719,16 @@ Edit given shell function.
 : **freload()**
 Reloads an autoloadable shell function (See autoload in zshbuiltins(1)).
 
+: **grml_status_features()**
+Prints a summary of features the grml setup is trying to load. The result of
+loading a feature is recorded. This function lets you query the result. The
+function takes one argument: "-h" or "--help" to display this help text, "+" to
+display a list of all successfully loaded features, "-" for a list of all
+features that failed to load. "+-" to show a list of all features with their
+statuses. Any other word is considered to by a feature and prints its status.
+
+The default mode is "+-".
+
 : **grml_vcs_info_toggle_colour()**
 Toggles between coloured and uncoloured formats in vcs_info configuration.
 This is useful with prompts that break if colour codes are in vcs_info
