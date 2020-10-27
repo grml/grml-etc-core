@@ -13,6 +13,7 @@ To use the most important files for your user, use the following commands:
     wget -O .screenrc     http://git.grml.org/f/grml-etc-core/etc/grml/screenrc_generic
     wget -O .vimrc        http://git.grml.org/f/grml-etc-core/etc/vim/vimrc
     wget -O .zshrc        http://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
+    wget -O .tmux.conf    http://git.grml.org/f/grml-etc-core/etc/tmux.conf
 
 
 Or, on operating systems without wget:
@@ -22,6 +23,7 @@ Or, on operating systems without wget:
     curl -Lo .screenrc    http://git.grml.org/f/grml-etc-core/etc/grml/screenrc_generic
     curl -Lo .vimrc       http://git.grml.org/f/grml-etc-core/etc/vim/vimrc
     curl -Lo .zshrc       http://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
+    curl -Lo .tmux.conf   http://git.grml.org/f/grml-etc-core/etc/tmux.conf
 
 
 Further information is available from http://grml.org/console/
