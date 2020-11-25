@@ -2663,23 +2663,24 @@ if check_com -c screen ; then
     fi
 fi
 
+LS="$(builtin whence -p ls)"
 # do we have GNU ls with color-support?
 if [[ "$TERM" != dumb ]]; then
     #a1# List files with colors (\kbd{ls \ldots})
-    alias ls="command ls ${ls_options:+${ls_options[*]}}"
+    alias ls="$LS ${ls_options:+${ls_options[*]}}"
     #a1# List all files, with colors (\kbd{ls -la \ldots})
-    alias la="command ls -la ${ls_options:+${ls_options[*]}}"
+    alias la="$LS -la ${ls_options:+${ls_options[*]}}"
     #a1# List files with long colored list, without dotfiles (\kbd{ls -l \ldots})
-    alias ll="command ls -l ${ls_options:+${ls_options[*]}}"
+    alias ll="$LS -l ${ls_options:+${ls_options[*]}}"
     #a1# List files with long colored list, human readable sizes (\kbd{ls -hAl \ldots})
-    alias lh="command ls -hAl ${ls_options:+${ls_options[*]}}"
+    alias lh="$LS -hAl ${ls_options:+${ls_options[*]}}"
     #a1# List files with long colored list, append qualifier to filenames (\kbd{ls -l \ldots})\\&\quad(\kbd{/} for directories, \kbd{@} for symlinks ...)
-    alias l="command ls -l ${ls_options:+${ls_options[*]}}"
+    alias l="$LS -l ${ls_options:+${ls_options[*]}}"
 else
-    alias la='command ls -la'
-    alias ll='command ls -l'
-    alias lh='command ls -hAl'
-    alias l='command ls -l'
+    alias la="$LS -la"
+    alias ll="$LS -l"
+    alias lh="$LS -hAl"
+    alias l="$LS -l"
 fi
 
 if [[ -r /proc/mdstat ]]; then
@@ -3323,35 +3324,37 @@ export COLORTERM="yes"
 
 # listing stuff
 #a2# Execute \kbd{ls -lSrah}
-alias dir="command ls -lSrah"
+alias dir="$LS -lSrah"
 #a2# Only show dot-directories
-alias lad='command ls -d .*(/)'
+alias lad="$LS -d .*(/)"
 #a2# Only show dot-files
-alias lsa='command ls -a .*(.)'
+alias lsa="$LS -a .*(.)"
 #a2# Only files with setgid/setuid/sticky flag
-alias lss='command ls -l *(s,S,t)'
+alias lss="$LS -l *(s,S,t)"
 #a2# Only show symlinks
-alias lsl='command ls -l *(@)'
+alias lsl="$LS -l *(@)"
 #a2# Display only executables
-alias lsx='command ls -l *(*)'
+alias lsx="$LS -l *(*)"
 #a2# Display world-{readable,writable,executable} files
-alias lsw='command ls -ld *(R,W,X.^ND/)'
+alias lsw="$LS -ld *(R,W,X.^ND/)"
 #a2# Display the ten biggest files
-alias lsbig="command ls -flh *(.OL[1,10])"
+alias lsbig="$LS -flh *(.OL[1,10])"
 #a2# Only show directories
-alias lsd='command ls -d *(/)'
+alias lsd="$LS -d *(/)"
 #a2# Only show empty directories
-alias lse='command ls -d *(/^F)'
+alias lse="$LS -d *(/^F)"
 #a2# Display the ten newest files
-alias lsnew="command ls -rtlh *(D.om[1,10])"
+alias lsnew="$LS -rtlh *(D.om[1,10])"
 #a2# Display the ten oldest files
-alias lsold="command ls -rtlh *(D.Om[1,10])"
+alias lsold="$LS -rtlh *(D.Om[1,10])"
 #a2# Display the ten smallest files
-alias lssmall="command ls -Srl *(.oL[1,10])"
+alias lssmall="$LS -Srl *(.oL[1,10])"
 #a2# Display the ten newest directories and ten newest .directories
-alias lsnewdir="command ls -rthdl *(/om[1,10]) .*(D/om[1,10])"
+alias lsnewdir="$LS -rthdl *(/om[1,10]) .*(D/om[1,10])"
 #a2# Display the ten oldest directories and ten oldest .directories
-alias lsolddir="command ls -rthdl *(/Om[1,10]) .*(D/Om[1,10])"
+alias lsolddir="$LS -rthdl *(/Om[1,10]) .*(D/Om[1,10])"
+
+builtin unset -v LS
 
 # some useful aliases
 #a2# Remove current empty directory. Execute \kbd{cd ..; rmdir \$OLDCWD}
