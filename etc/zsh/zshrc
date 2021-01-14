@@ -3569,6 +3569,11 @@ function simple-extract () {
                 USES_STDIN=true
                 USES_STDOUT=false
                 ;;
+            *tar.lrz)
+                DECOMP_CMD="lrzuntar"
+                USES_STDIN=false
+                USES_STDOUT=false
+                ;;
             *tar)
                 DECOMP_CMD="tar -xvf -"
                 USES_STDIN=true
@@ -3616,6 +3621,11 @@ function simple-extract () {
                 ;;
             *zst)
                 DECOMP_CMD="zstd -d -c -"
+                USES_STDIN=true
+                USES_STDOUT=true
+                ;;
+            *lrz)
+                DECOMP_CMD="lrunzip -"
                 USES_STDIN=true
                 USES_STDOUT=true
                 ;;
