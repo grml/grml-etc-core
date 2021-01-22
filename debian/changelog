@@ -1,3 +1,21 @@
+grml-etc-core (0.18.0) grml-testing; urgency=medium
+
+  [ Michael Prokop ]
+  * [30fc297] zshrc: url-quote-magic depends on bracketed-paste-magic
+    since zsh 5.1
+  * [1cf6c0a] README.md: use https everywhere + adjust ordering
+
+  [ Frank Terbeck ]
+  * [e01bb8f] Don't print messages when a feature can't be loaded
+
+  [ Darshaka Pathirana ]
+  * [79dd104] README.md: Add tmux.conf to the "most important files" list
+
+  [ lunik1 ]
+  * [86f2a9b] zshrc: add lrzip support for simple-extract()
+
+ -- Michael Prokop <mika@grml.org>  Fri, 22 Jan 2021 13:29:22 +0100
+
 grml-etc-core (0.17.4) grml-testing; urgency=medium
 
   [ Michael Prokop ]
