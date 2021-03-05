@@ -6,14 +6,14 @@
 # License:       This file is licensed under the GPL v2.
 ################################################################################
 
-PROG_NAME_=$(basename $0)
+PROG_NAME_=$(basename "$0")
 DEST_=""
 MOUNTED_=""     # all mounted destinations
 
 
 function die
 {
-    echo "Error: $@" >&2
+    echo "Error: $*" >&2
     exit 1
 }
 
@@ -50,12 +50,13 @@ function mountit
     else
         all_options_="-t $type_ none"
     fi
-    mount $all_options_ "${DEST_}/$dest_" && storeMounts "$dest_"
+    mount "$all_options_" "${DEST_}/$dest_" && storeMounts "$dest_"
 }
 
 function umount_all
 {
-    local reverse=$(echo $MOUNTED_ | awk '{ for (i=NF; i>1; i--) printf("%s ",$i); print $1; }')
+    local reverse
+    reverse=$(echo "$MOUNTED_" | awk '{ for (i=NF; i>1; i--) printf("%s ",$i); print $1; }')
     for i in $reverse; do
         umount "${DEST_}/$i"
     done
@@ -72,14 +73,14 @@ while getopts "h" opt; do
         ?) printUsage; exit 64 ;;
     esac
 done
-shift $(($OPTIND - 1))
+shift $((OPTIND - 1))
 
 if (( $# < 1 )); then
     printUsage
     die "Wrong number of arguments."
 fi
 
-if ! which awk >/dev/null 2>&1 ; then
+if ! command -v awk >/dev/null 2>&1 ; then
   die "No awk binary found, required for execution."
 fi
 
@@ -122,7 +123,7 @@ else
 fi
 umount_all
 
-if [ ! -z "$WROTE_DEBIAN_CHROOT" ]; then
+if [ -n "$WROTE_DEBIAN_CHROOT" ]; then
     rm "$DEST_"/etc/debian_chroot
 fi
 
