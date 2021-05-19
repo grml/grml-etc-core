@@ -1200,10 +1200,15 @@ zle -N grml-zsh-fg
 # run command line as user root via sudo:
 function sudo-command-line () {
     [[ -z $BUFFER ]] && zle up-history
-    if [[ $BUFFER != sudo\ * ]]; then
-        BUFFER="sudo $BUFFER"
-        CURSOR=$(( CURSOR+5 ))
+    local cmd="sudo "
+    if [[ ${BUFFER} == ${cmd}* ]]; then
+        CURSOR=$(( CURSOR-${#cmd} ))
+        BUFFER="${BUFFER#$cmd}"
+    else
+        BUFFER="${cmd}${BUFFER}"
+        CURSOR=$(( CURSOR+${#cmd} ))
     fi
+    zle reset-prompt
 }
 zle -N sudo-command-line
 
