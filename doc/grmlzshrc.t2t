@@ -547,11 +547,6 @@ duration (in seconds) to the history file.
 Whenever a command completion is attempted, make sure the entire command
 path is hashed first. This makes the first completion slower.
 
-: **histignorealldups** <grml>
-If a new command line being added to the history list duplicates an
-older one, the older command is removed from the list, even if it is
-not the previous event.
-
 : **histignorespace** <grml>
 Remove command lines from the history list when the first character on
 the line is a space, or when one of the expanded aliases contains a

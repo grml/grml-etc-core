@@ -122,6 +122,9 @@ fi
 ## Allow comments even in interactive shells
 #setopt interactivecomments
 
+## if a new command line being added to the history list duplicates an older
+## one, the older command is removed from the list
+#is4 && setopt histignorealldups
 
 ## compsys related snippets ##
 
