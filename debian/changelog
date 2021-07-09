@@ -1,3 +1,14 @@
+grml-etc-core (0.19.0) grml-testing; urgency=medium
+
+  [ a-wing ]
+  * [e7927a8] zshrc: change sudo-command-line switch 'sudo'
+  * [6a2a0dc] zshrc: improve sudo-command-line
+
+  [ Michael Prokop ]
+  * [b6246bb] zshrc: no longer set histignorealldups
+
+ -- Michael Prokop <mika@grml.org>  Fri, 09 Jul 2021 09:13:02 +0200
+
 grml-etc-core (0.18.0) grml-testing; urgency=medium
 
   [ Michael Prokop ]
