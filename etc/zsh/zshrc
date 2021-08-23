@@ -901,14 +901,7 @@ function grmlcomp () {
     fi
 
     local localname
-    if check_com hostname ; then
-      localname=$(hostname)
-    elif check_com hostnamectl ; then
-      localname=$(hostnamectl --static)
-    else
-      localname="$(uname -n)"
-    fi
-
+    localname="$(uname -n)"
     hosts=(
         "${localname}"
         "$_ssh_config_hosts[@]"
