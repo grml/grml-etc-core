@@ -2676,6 +2676,11 @@ else
     alias l='command ls -l'
 fi
 
+# use ip from iproute2 with color support
+if ip --color=auto addr >/dev/null 2>&1; then
+    alias ip='command ip --color=auto'
+fi
+
 if [[ -r /proc/mdstat ]]; then
     alias mdstat='cat /proc/mdstat'
 fi
