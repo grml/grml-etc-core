@@ -2411,7 +2411,7 @@ function grml_prompt_addto () {
             vcs)
                 v="vcs_info_msg_${new}_"
                 if (( ! vcscalled )); then
-                    vcs_info
+                    vcs_info 2>/dev/null
                     vcscalled=1
                 fi
                 if (( ${+parameters[$v]} )) && [[ -n "${(P)v}" ]]; then
