@@ -3312,7 +3312,14 @@ zrcautoload lookupinit && lookupinit
 # variables
 
 # set terminal property (used e.g. by msgid-chooser)
-export COLORTERM="yes"
+case "${COLORTERM}" in
+  truecolor)
+    # do not overwrite
+    ;;
+  *)
+    export COLORTERM="yes"
+    ;;
+esac
 
 # aliases
 
