@@ -100,6 +100,10 @@ A value of zero turns off checking.
 : **NOCOR**
 Non zero values deactivate automatic correction of commands.
 
+: **NOETCHOSTS**
+Non zero values deactivate parsing of "/etc/hosts" disabling host completion
+using file's contents.
+
 : **NOMENU**
 If set to zero (default), allows selection from a menu, if there are at least
 five possible options of completion.
