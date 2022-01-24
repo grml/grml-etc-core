@@ -1,3 +1,30 @@
+grml-etc-core (0.19.1) grml-testing; urgency=medium
+
+  [ Bhoppi Chaw ]
+  * [95639b9] zshrc: remove dependency of hostname[ctl]
+
+  [ Michael Prokop ]
+  * [42cdb33] zshrc: support setting title in foot terminal emulator.
+    Thanks to Alexander Kobel for the patch
+  * [69255e6] zshrc: do not unconditionally overwrite $COLORTERM (Closes:
+    #131)
+
+  [ Christian Hesse ]
+  * [ae49957] zshrc: use ip from iproute2 with color support
+  * [2b1cff4] zshrc: make ip touch interface lo only
+
+  [ Roman Volosatovs ]
+  * [f444c52] zshrc: add `NOETCHOSTS` parameter
+
+  [ Atrate ]
+  * [27e32fa] zshrc: ignore hosts set to invalid/loopback addresses for
+    $_etc_hosts
+
+  [ Pásztor János ]
+  * [e54fa78] zshrc: fix ip command coloring
+
+ -- Michael Prokop <mika@grml.org>  Mon, 24 Jan 2022 16:59:15 +0100
+
 grml-etc-core (0.19.0) grml-testing; urgency=medium
 
   [ a-wing ]
