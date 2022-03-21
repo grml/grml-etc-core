@@ -1,3 +1,10 @@
+grml-etc-core (0.19.2) grml-testing; urgency=medium
+
+  [ Frank Terbeck ]
+  * [4a3593b] doc: Error out properly when a generator fails
+
+ -- Michael Prokop <mika@grml.org>  Mon, 21 Mar 2022 16:22:05 +0100
+
 grml-etc-core (0.19.1) grml-testing; urgency=medium
 
   [ Bhoppi Chaw ]
