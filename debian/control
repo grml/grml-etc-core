@@ -2,7 +2,7 @@ Source: grml-scripts-core
 Section: utils
 Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
-Build-Depends: debhelper (>= 5), dietlibc-dev
+Build-Depends: debhelper-compat (= 12), dietlibc-dev
 Standards-Version: 3.9.4
 Homepage: http://git.grml.org/?p=grml-scripts-core.git
 Vcs-git: git://git.grml.org/grml-scripts-core.git
