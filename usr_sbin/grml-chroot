@@ -43,14 +43,14 @@ function mountit
     local dest_="$2"
     local options_="$3"
 
-    local all_options_=""
+    local all_options_=()
 
     if [[ $options_ == "--bind" ]]; then
-        all_options_="--bind $type_"
+        all_options_+=(--bind "$type_")
     else
-        all_options_="-t $type_ none"
+        all_options_+=(-t "$type_" none)
     fi
-    mount "$all_options_" "${DEST_}/$dest_" && storeMounts "$dest_"
+    mount "${all_options_[@]}" "${DEST_}/$dest_" && storeMounts "$dest_"
 }
 
 function umount_all
