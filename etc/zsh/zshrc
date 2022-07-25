@@ -3470,14 +3470,27 @@ function cl () {
     cd $1 && ls -a
 }
 
-# smart cd function, allows switching to /etc when running 'cd /etc/fstab'
+# smart cd function, allows switching to /etc when running 'cd /etc/fstab',
+# `cd /etc/fst` or `cd /etc/*tab`
 function cd () {
-    if (( ${#argv} == 1 )) && [[ -f ${1} ]]; then
-        [[ ! -e ${1:h} ]] && return 1
-        print "Correcting ${1} to ${1:h}"
+    # zsh's builtin cd has multiple switches and behaviors, see zshbuiltins(1)
+    if builtin cd "$@"; then
+        :
+    # we bail out if options were passed to cd and the builtin failed
+    elif [[ $1 =~ '[+-].*' ]]; then
+        return 1
+    # if cd failed and it was not given weird flags, it might actually be that
+    # we need to intervene
+    # builtin cd fails with too many arguments
+    elif [[ -d ${1} ]]; then
+        print "Correcting $@ to $1"
+        builtin cd ${1}
+    # we help correct a typo or cd-ing to not a dir by looking at the parent
+    elif [[ -d ${1:h} ]]; then
+        print "Correcting $@ to ${1:h}" >&2
         builtin cd ${1:h}
     else
-        builtin cd "$@"
+        return 1
     fi
 }
 
