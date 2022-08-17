@@ -1,3 +1,13 @@
+grml-etc-core (0.19.3) grml-testing; urgency=medium
+
+  [ Darshaka Pathirana ]
+  * [2060f8d] tmux.conf: source user-specific local conf file
+    ~/.tmux.conf.local
+  * [591479d] tmux.conf: Add bind-key J to join marked pane to active
+    window
+
+ -- Michael Prokop <mika@grml.org>  Wed, 17 Aug 2022 13:22:38 +0200
+
 grml-etc-core (0.19.2) grml-testing; urgency=medium
 
   [ Frank Terbeck ]
