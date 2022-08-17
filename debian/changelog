@@ -1,3 +1,9 @@
+grml-scripts-core (2.1.1) unstable; urgency=medium
+
+  * [c37cbe7] Drop debian/compat and switch to debhelper-compat approach
+
+ -- Michael Prokop <mika@grml.org>  Wed, 17 Aug 2022 13:24:57 +0200
+
 grml-scripts-core (2.1.0) unstable; urgency=low
 
   * [5f4620e] Update lesspipe.sh to upstream version 1.82
