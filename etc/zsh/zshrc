@@ -898,7 +898,7 @@ function grmlcomp () {
         if [[ -r ~/.ssh/config ]] ; then
             _ssh_config_hosts=(${${(s: :)${(ps:\t:)${${(@M)${(f)"$(<$HOME/.ssh/config)"}:#Host *}#Host }}}:#*[*?]*})
         fi
-    else
+
         if [[ -r ~/.ssh/known_hosts ]] ; then
             _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*})
         fi
