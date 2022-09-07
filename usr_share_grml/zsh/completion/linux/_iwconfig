@@ -2,8 +2,8 @@
 
 _wlan_interfaces() {
     local intf
-    intf=$(iwconfig |& egrep 'IEEE 802.11[abg]' | cut -d' ' -f1 | tr ' ' \\n )
-    # intf=$( fgrep ': ' < /proc/net/wireless | cut -d: -f1 | tr \\n ' ' | tr -s " \t" )
+    intf=$(iwconfig |& grep -E 'IEEE 802.11[abg]' | cut -d' ' -f1 | tr ' ' \\n )
+    # intf=$( grep -F ': ' < /proc/net/wireless | cut -d: -f1 | tr \\n ' ' | tr -s " \t" )
     _wanted interfaces expl 'wireless network interface' \
         compadd ${intf}
 }
