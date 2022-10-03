@@ -2848,7 +2848,7 @@ if [ -e /var/log/syslog ] ; then
   #a1# Take a look at the syslog: \kbd{\$PAGER /var/log/syslog || journalctl}
   salias llog="$PAGER /var/log/syslog"     # take a look at the syslog
   #a1# Take a look at the syslog: \kbd{tail -f /var/log/syslog || journalctl}
-  salias tlog="tail -f /var/log/syslog"    # follow the syslog
+  salias tlog="tail --follow=name /var/log/syslog"    # follow the syslog
 elif check_com -c journalctl ; then
   salias llog="journalctl"
   salias tlog="journalctl -f"
