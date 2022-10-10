@@ -1,3 +1,17 @@
+grml-etc-core (0.19.4) grml-testing; urgency=medium
+
+  [ Hanabishi ]
+  * [e27d360] Fix a typo in `zshrc`
+
+  [ Michael Prokop ]
+  * [220d6ff] zshrc: refactor and convert host completion one-liner into
+    multi-line
+  * [f3f1387] zshrc: fix grmlcomp conditionals, fixup for 220d6ffa
+  * [0895266] iwconfig zsh completion: replace egrep usage with grep -E
+  * [5065224] zshrc: run tlog alias with --follow=name
+
+ -- Michael Prokop <mika@grml.org>  Mon, 10 Oct 2022 19:00:20 +0200
+
 grml-etc-core (0.19.3) grml-testing; urgency=medium
 
   [ Darshaka Pathirana ]
