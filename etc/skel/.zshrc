@@ -184,6 +184,7 @@ fi
 #alias -g G='|grep'
 #alias -g H='|head'
 #alias -g Hl=' --help |& less -r'
+#alias -g J='|jq'
 #alias -g K='|keep'
 #alias -g L='|less'
 #alias -g LL='|& less -r'
