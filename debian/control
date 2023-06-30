@@ -5,7 +5,7 @@ Maintainer: Michael Prokop <mika@grml.org>
 Build-Depends:
  debhelper-compat (= 12),
  txt2tags,
-Standards-Version: 4.5.0
+Standards-Version: 4.6.2
 Homepage: https://git.grml.org/?p=grml-etc-core.git
 Vcs-git: git://git.grml.org/grml-etc-core.git
 Vcs-Browser: https://git.grml.org/?p=grml-etc-core.git
