@@ -1,3 +1,15 @@
+grml-etc-core (0.19.6) grml-testing; urgency=medium
+
+  [ Michael Prokop ]
+  * [74a8efd] etc/skel/.zshrc: suggest J as global alias for jq usage.
+    Thanks to Christopher Bock
+  * [393fbcb] Bump Standards-Version to 4.6.2
+
+  [ Christopher Bock ]
+  * [b973152] zshrc: weather: fixed outdated url and test -d
+
+ -- Michael Prokop <mika@grml.org>  Fri, 30 Jun 2023 12:55:29 +0200
+
 grml-etc-core (0.19.5) grml-testing; urgency=medium
 
   [ Darshaka Pathirana ]
