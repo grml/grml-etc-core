@@ -17,7 +17,7 @@ local PLACE="${1:u}"
 local DIR="${HOME}/.weather"
 local LOG="${DIR}/log"
 
-if [[ -d ${DIR} ]]; then
+if ! [[ -d ${DIR} ]]; then
     print -n "Creating ${DIR}: "
     mkdir ${DIR}
     print 'done'
@@ -27,7 +27,7 @@ print "Retrieving information for ${PLACE}:"
 print
 cd ${DIR} && \
   wget -T 10 --no-verbose --output-file=$LOG --timestamping \
-       http://weather.noaa.gov/pub/data/observations/metar/decoded/$PLACE.TXT
+       https://tgftp.nws.noaa.gov/data/observations/metar/decoded/$PLACE.TXT
 
 if [[ $? -eq 0 ]]; then
     if [[ -n "$VERBOSE" ]] ; then
