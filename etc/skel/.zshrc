@@ -332,7 +332,7 @@ fi
 #getanames ()  { perl -ne 'while ( m/a name="([^"]*)"/gc ) { print $1, "\n"; }' $* }
 #getforms ()   { perl -ne 'while ( m:(\</?(input|form|select|option).*?\>):gic ) { print $1, "\n"; }' $* }
 #getstrings () { perl -ne 'while ( m/"(.*?)"/gc ) { print $1, "\n"; }' $*}
-#getanchors () { perl -ne 'while ( m/«([^«»\n]+)»/gc ) { print $1, "\n"; }' $* }
+#getanchors () { perl -ne 'while ( m/Â«([^Â«Â»\n]+)Â»/gc ) { print $1, "\n"; }' $* }
 #showINC ()    { perl -e 'for (@INC) { printf "%d %s\n", $i++, $_ }' }
 #vimpm ()      { vim `perldoc -l $1 | sed -e 's/pod$/pm/'` }
 #vimhelp ()    { vim -c "help $1" -c on -c "au! VimEnter *" }
