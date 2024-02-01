@@ -1381,7 +1381,6 @@ zle -N help-zle
 ## complete word from currently visible Screen or Tmux buffer.
 if check_com -c screen || check_com -c tmux; then
     function _complete_screen_display () {
-        [[ "$TERM" != "screen" ]] && return 1
 
         local TMPFILE=$(mktemp)
         local -U -a _screen_display_wordlist
@@ -1392,8 +1391,9 @@ if check_com -c screen || check_com -c tmux; then
             #works, but crashes tmux below version 1.4
             #luckily tmux -V option to ask for version, was also added in 1.4
             tmux -V &>/dev/null || return
-            tmux -q capture-pane \; save-buffer -b 0 $TMPFILE \; delete-buffer -b 0
+            tmux -q capture-pane -b 0 \; save-buffer -b 0 $TMPFILE \; delete-buffer -b 0
         else
+            [[ "$TERM" != "screen" ]] && return
             screen -X hardcopy $TMPFILE
             # screen sucks, it dumps in latin1, apparently always. so recode it
             # to system charset
