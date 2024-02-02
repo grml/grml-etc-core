@@ -1,3 +1,14 @@
+grml-etc-core (0.19.7) grml-testing; urgency=medium
+
+  [ Michael Prokop ]
+  * [ae34c42] etc/skel/.zshrc: set file encoding to UTF8.
+    Thanks to flobee for the bug report
+
+  [ Bernhard Tittelbach ]
+  * [326ca58] zshrc: bugfix for _complete_screen_display when using tmux
+
+ -- Michael Prokop <mika@grml.org>  Fri, 02 Feb 2024 12:27:36 +0100
+
 grml-etc-core (0.19.6) grml-testing; urgency=medium
 
   [ Michael Prokop ]
