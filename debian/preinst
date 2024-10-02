@@ -26,7 +26,7 @@ case "$1" in
         # move files from package grml-etc to grml-etc-core, make sure
         # we don't lose any files...
         for file in /etc/zsh/zlogin /etc/zsh/zprofile /etc/zsh/zshenv /etc/zsh/zshrc \
-                    /etc/zsh/zlogout /etc/vim/vimrc /etc/tmux.conf; do
+                    /etc/vim/vimrc /etc/tmux.conf; do
              [ -e "$file".original ] || cp -f "$file" "${file}.tmp.$TMP" 2>/dev/null || true
              backup_conffile $file && \
              [ -f "$file" ] && rm $file && \
@@ -45,6 +45,12 @@ case "$1" in
             dpkg-divert --remove --rename --package grml-etc-core /etc/skel/.zshrc
         fi
 
+	# we no longer ship /etc/zsh/zlogout, so make sure we don't leave it behind
+	# on any updated system
+        if dpkg-divert --list grml-etc-core 2>/dev/null | grep -q '/etc/zsh/zlogout' ; then
+            mv -f /etc/zsh/zlogout /etc/zsh/zlogout.old && \
+            dpkg-divert --remove --rename --package grml-etc-core /etc/zsh/zlogout
+        fi
     ;;
     *)
         echo "preinst called with unknown argument $1" >&2
