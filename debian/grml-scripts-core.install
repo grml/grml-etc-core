@@ -1,0 +1,3 @@
+usr_bin/* usr/bin/
+compile/cpu-screen usr/bin/
+compile/ip-screen usr/bin/
