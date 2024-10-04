@@ -18,6 +18,7 @@ Depends:
  dash,
  grml-etc-core,
  less,
+ libio-interface-perl,
  lockfile-progs,
  perl,
  screen,
@@ -27,7 +28,7 @@ Conflicts:
 Description: reusable core scripts for the Grml system
  This package includes some core scripts for the Grml system.
  .
- Currently, this package includes code2color, cpu-screen, ip-screen
+ Currently, this package includes code2color, cpu-screen
  and lesspipe.sh, a more full-featured replacement for the standard
  Debian lesspipe.
  .

@@ -1,4 +1,4 @@
-PROGS = ip-screen cpu-screen
+PROGS = cpu-screen
 
 #ifndef CFLAGS
 CFLAGS = -O2 -Wall -s
@@ -13,9 +13,6 @@ CC = gcc
 #endif
 
 all: $(PROGS)
-
-ip-screen: ip-screen.c
-	diet $(CC) $(CFLAGS) -o $@ $^
 
 cpu-screen: cpu-screen.c
 	diet $(CC) $(CFLAGS) -o $@ $^
