@@ -2,7 +2,9 @@ Source: grml-scripts-core
 Section: utils
 Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
-Build-Depends: debhelper-compat (= 12), dietlibc-dev
+Build-Depends:
+ debhelper-compat (= 12),
+ dietlibc-dev,
 Standards-Version: 3.9.4
 Homepage: http://git.grml.org/?p=grml-scripts-core.git
 Vcs-git: git://git.grml.org/grml-scripts-core.git
@@ -12,8 +14,16 @@ Bugs: mailto:bugs@grml.org
 
 Package: grml-scripts-core
 Architecture: any
-Depends: ${misc:Depends}, less, dash, perl, screen, grml-etc-core, lockfile-progs
-Conflicts: grml-scripts (<< 1.4.3)
+Depends:
+ dash,
+ grml-etc-core,
+ less,
+ lockfile-progs,
+ perl,
+ screen,
+ ${misc:Depends},
+Conflicts:
+ grml-scripts (<< 1.4.3),
 Description: reusable core scripts for the Grml system
  This package includes some core scripts for the Grml system.
  .

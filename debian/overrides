@@ -1,4 +1,0 @@
-grml-scripts-core: script-with-language-extension usr/bin/cpu-screen.sh
-grml-scripts-core: script-with-language-extension usr/bin/lesspipe.sh
-grml-scripts-core: statically-linked-binary usr/bin/cpu-screen
-grml-scripts-core: statically-linked-binary usr/bin/ip-screen

@@ -1,63 +1,17 @@
 #!/usr/bin/make -f
-# -*- makefile -*-
-# Sample debian/rules that uses debhelper.
-# GNU copyright 1997 to 1999 by Joey Hess.
 
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+%:
+	dh $@
 
-build: build-stamp
+override_dh_auto_clean:
+	rm -rf $(CURDIR)/debian/grml-scripts/
+	make -C compile clean
+	dh_auto_clean
 
-build-stamp:
-	dh_testdir
-	( cd $(CURDIR)/compile/ && make )
-	touch build-stamp
+override_dh_auto_configure:
 
-clean:
-	dh_testdir
-	dh_testroot
-	rm -f build-stamp
+override_dh_auto_build:
+	make -C compile
 
-	# Add here commands to clean up after the build process.
-	rm -rf $(CURDIR)/debian/grml-scripts-core/
-	( cd compile && make clean )
+override_dh_auto_install:
 
-	dh_clean
-
-install: build
-	dh_testdir
-	dh_testroot
-	dh_prep
-	dh_installdirs
-
-	# Add here commands to install the package into debian/grml-scripts-core.
-	cp -a usr_bin/*         debian/grml-scripts-core/usr/bin/
-	install -m 755 compile/cpu-screen             debian/grml-scripts-core/usr/bin/cpu-screen
-	install -m 755 compile/ip-screen              debian/grml-scripts-core/usr/bin/ip-screen
-
-# Build architecture-independent files here.
-binary-indep:
-
-# Build architecture-dependent files here.
-binary-arch: build install
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs
-	dh_installdocs
-	dh_installman manpages/grml-scripts-core.1
-	dh_link /usr/share/man/man1/grml-scripts-core.1.gz /usr/share/man/man1/code2color.1.gz \
-		/usr/share/man/man1/grml-scripts-core.1.gz /usr/share/man/man1/cpu-screen.1.gz \
-		/usr/share/man/man1/grml-scripts-core.1.gz /usr/share/man/man1/ip-screen.1.gz \
-		/usr/share/man/man1/grml-scripts-core.1.gz /usr/share/man/man1/lesspipe.sh.1.gz
-	dh_strip
-	dh_compress
-	mkdir -p $(CURDIR)/debian/grml-scripts-core/usr/share/lintian/overrides/
-	cp -av debian/overrides $(CURDIR)/debian/grml-scripts-core/usr/share/lintian/overrides/grml-scripts-core
-	dh_fixperms
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install
