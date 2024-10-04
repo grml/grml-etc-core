@@ -1,3 +1,2 @@
-grml-scripts-core: statically-linked-binary [usr/bin/cpu-screen]
 grml-scripts-core: bugs-field-does-not-refer-to-debian-infrastructure mailto:bugs@grml.org
 grml-scripts-core: script-with-language-extension [usr/bin/lesspipe.sh]
