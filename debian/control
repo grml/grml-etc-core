@@ -6,9 +6,9 @@ Build-Depends:
  debhelper-compat (= 12),
  txt2tags,
 Standards-Version: 4.6.2
-Homepage: https://git.grml.org/?p=grml-etc-core.git
-Vcs-git: git://git.grml.org/grml-etc-core.git
-Vcs-Browser: https://git.grml.org/?p=grml-etc-core.git
+Homepage: https://github.com/grml/grml-etc-core
+Vcs-Git: https://github.com/grml/grml-etc-core.git
+Vcs-Browser: https://github.com/grml/grml-etc-core
 Origin: Grml
 Bugs: mailto:bugs@grml.org
 
