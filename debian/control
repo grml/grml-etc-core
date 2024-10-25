@@ -6,9 +6,9 @@ Build-Depends:
  debhelper-compat (= 12),
  dietlibc-dev,
 Standards-Version: 3.9.4
-Homepage: http://git.grml.org/?p=grml-scripts-core.git
-Vcs-git: git://git.grml.org/grml-scripts-core.git
-Vcs-Browser: http://git.grml.org/?p=grml-scripts-core.git
+Homepage: https://github.com/grml/grml-scripts-core
+Vcs-Git: https://github.com/grml/grml-scripts-core.git
+Vcs-Browser: https://github.com/grml/grml-scripts-core
 Origin: Grml
 Bugs: mailto:bugs@grml.org
 
