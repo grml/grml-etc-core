@@ -4,7 +4,6 @@ Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
 Build-Depends:
  debhelper-compat (= 12),
- dietlibc-dev,
 Standards-Version: 3.9.4
 Homepage: https://github.com/grml/grml-scripts-core
 Vcs-Git: https://github.com/grml/grml-scripts-core.git
@@ -13,11 +12,12 @@ Origin: Grml
 Bugs: mailto:bugs@grml.org
 
 Package: grml-scripts-core
-Architecture: any
+Architecture: all
 Depends:
  dash,
  grml-etc-core,
  less,
+ libio-interface-perl,
  lockfile-progs,
  perl,
  screen,
@@ -27,9 +27,7 @@ Conflicts:
 Description: reusable core scripts for the Grml system
  This package includes some core scripts for the Grml system.
  .
- Currently, this package includes code2color, cpu-screen, ip-screen
- and lesspipe.sh, a more full-featured replacement for the standard
- Debian lesspipe.
+ Currently, this package includes cpu-screen.
  .
  This package can be used on plain Debian systems as well. It is
  intended as a complement to grml-etc-core.
