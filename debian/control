@@ -27,9 +27,7 @@ Conflicts:
 Description: reusable core scripts for the Grml system
  This package includes some core scripts for the Grml system.
  .
- Currently, this package includes code2color, cpu-screen
- and lesspipe.sh, a more full-featured replacement for the standard
- Debian lesspipe.
+ Currently, this package includes cpu-screen.
  .
  This package can be used on plain Debian systems as well. It is
  intended as a complement to grml-etc-core.
