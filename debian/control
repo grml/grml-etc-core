@@ -5,6 +5,7 @@ Maintainer: Michael Prokop <mika@grml.org>
 Build-Depends:
  debhelper-compat (= 12),
 Standards-Version: 3.9.4
+Rules-Requires-Root: no
 Homepage: https://github.com/grml/grml-scripts-core
 Vcs-Git: https://github.com/grml/grml-scripts-core.git
 Vcs-Browser: https://github.com/grml/grml-scripts-core
