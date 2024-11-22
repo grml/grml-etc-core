@@ -8,7 +8,7 @@
 
 set -e
 
-TO_UNDIVERT1="zlogin zlogout zprofile zshenv zshrc"
+TO_UNDIVERT1="zlogin zprofile zshenv zshrc"
 TO_UNDIVERT2=".zshrc"
 TO_UNDIVERT3="vimrc"
 
