@@ -1,3 +1,24 @@
+grml-scripts-core (2.1.2) unstable; urgency=medium
+
+  [ Chris Hofstaedtler ]
+  * [acdf5f9] Use dh sequencer
+  * [9b2d62b] Update lintian overrides
+  * [5218add] debian: Apply wrap-and-sort -kast
+  * [32b79b4] debian: update Vcs-Git and Vcs-Browser
+  * [8bc8f27] Remove ip-screen
+  * [80bf961] Replace cpu-screen C source with Perl
+  * [4f063e7] Make package Architecture: all
+  * [f1fa980] Drop code2color, lesspipe.sh
+  * [095c30e] Remove unused overrides from d/rules
+  * [b6cf13a] Stop building binary packages using root
+  * [8a46942] Ship debian/gbp.conf for gbp usage
+  * [a008002] d/control: bump Standards-Version to 4.7.0
+
+  [ Darshaka Pathirana ]
+  * [535def5] Re-introdude ip-screen
+
+ -- Chris Hofstaedtler <ch@grml.org>  Fri, 22 Nov 2024 23:01:13 +0100
+
 grml-scripts-core (2.1.1) unstable; urgency=medium
 
   * [c37cbe7] Drop debian/compat and switch to debhelper-compat approach
