@@ -6,7 +6,7 @@
 ################################################################################
 
   backtick 1 0 60   /usr/bin/cpu-screen
-  backtick 2 0 60   /usr/bin/ip-screen
+  backtick 2 0 60   sh -c "hostname -I | sed -e 's/ [\^ ]*:.*$//;s/ / | /g;s/ | $//'"
   caption always "%{+b rk}$USER@%{wk}%H | %{yk}(load: %l |%{rk} cpu: %1` | %{Gk}net: %2`)  %-21=%{wk}%D %Y-%m-%d %0c"
   hardstatus alwayslastline "%{wr}%n%f %t %{kw} | %?%-Lw%?%{wb}%n*%f %t%?(%u)%?%{kw}%?%+Lw%? %{wk}"
 
