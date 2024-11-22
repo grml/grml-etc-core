@@ -28,7 +28,7 @@ Conflicts:
 Description: reusable core scripts for the Grml system
  This package includes some core scripts for the Grml system.
  .
- Currently, this package includes cpu-screen.
+ Currently, this package includes cpu-screen and ip-screen.
  .
  This package can be used on plain Debian systems as well. It is
  intended as a complement to grml-etc-core.
