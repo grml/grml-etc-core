@@ -1,3 +1,17 @@
+grml-etc-core (0.19.8) grml-testing; urgency=medium
+
+  [ Michael Prokop ]
+  * [43592e3] Stop shipping /etc/zsh/zlogout to avoid clearing terminal
+    screen
+  * [57ee36a] debian/preinst: drop deprecated dpkg-divert
+  * [707f6c6] Ship debian/gbp.conf for gbp usage
+
+  [ Chris Hofstaedtler ]
+  * [3808820] debian: update Vcs-Git and Vcs-Browser
+  * [1e0b93d] Add .github/FUNDING.yml
+
+ -- Michael Prokop <mika@grml.org>  Fri, 22 Nov 2024 12:40:32 +0100
+
 grml-etc-core (0.19.7) grml-testing; urgency=medium
 
   [ Michael Prokop ]
