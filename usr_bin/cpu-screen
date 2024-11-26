@@ -41,14 +41,22 @@ sub count_cpus() {
 
 
 my $cpu_count = count_cpus();
-if ($cpu_count != 1) {
-  print("$cpu_count * ");
-}
-
 my $cpu_freq = cpu_cur_frequency();
+
 if ($cpu_freq == 0) {
-  print("[ cpufreq n/a ]\n");
+  print("$cpu_count\n");
+} elsif ($cpu_count == 1) {
+  my $max_cpu_freq = cpu_max_frequency();
+  if ($cpu_freq == $max_cpu_freq) {
+    printf("$cpu_freq\n");
+  } else {
+    printf("$cpu_freq / $max_cpu_freq\n");
+  }
 } else {
   my $max_cpu_freq = cpu_max_frequency();
-  printf("$cpu_freq / $max_cpu_freq\n");
+  if ($cpu_freq == $max_cpu_freq) {
+    printf("$cpu_count * $cpu_freq\n");
+  } else {
+    printf("$cpu_count * $cpu_freq / $max_cpu_freq\n");
+  }
 }
