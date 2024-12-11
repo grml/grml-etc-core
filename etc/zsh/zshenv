@@ -128,8 +128,5 @@ export READNULLCMD=${PAGER:-/usr/bin/pager}
 # allow zeroconf for distcc
 export DISTCC_HOSTS="+zeroconf"
 
-# MAKEDEV should be usable on udev as well by default:
-export WRITE_ON_UDEV=yes
-
 ## END OF FILE #################################################################
 # vim:filetype=zsh foldmethod=marker autoindent expandtab shiftwidth=4
