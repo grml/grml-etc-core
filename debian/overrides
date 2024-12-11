@@ -1,3 +1,0 @@
-grml-etc-core: unknown-section grml
-grml-etc-core: diversion-for-unknown-file *&&[-f*.dpkg-bak]&&mv-f*.dpkg-bak* preinst:35
-grml-etc-core: orphaned-diversion *&&[-f*.dpkg-bak]&&mv-f*.dpkg-bak* preinst

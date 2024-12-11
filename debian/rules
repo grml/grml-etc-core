@@ -1,58 +1,13 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
-# Sample debian/rules that uses debhelper.
-# GNU copyright 1997 to 1999 by Joey Hess.
 
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+%:
+	dh $@
 
-build: build-stamp
 
-build-stamp:
-	dh_testdir
+after_dh_auto_clean:
+	$(MAKE) -C doc clean
 
-	touch build-stamp
+override_dh_auto_build:
+	$(MAKE) -C doc all
 
-clean:
-	dh_testdir
-	dh_testroot
-	rm -f build-stamp
-	dh_prep
-	rm -rf debian/grml-etc-core/
-	(cd $(CURDIR)/doc && $(MAKE) clean)
-
-install: build
-	dh_testdir
-	dh_testroot
-	dh_prep
-	dh_installdirs
-	# Add here commands to install the package into debian/grml-etc-core.
-	cp -a etc/ debian/grml-etc-core/
-	cp -a usr_share_grml/ debian/grml-etc-core/usr/share/grml
-
-# Build architecture-dependent files here.
-binary-arch: build install
-# We have nothing to do by default.
-
-# Build architecture-independent files here.
-binary-indep: build install
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs 
-	dh_installdocs
-	(cd $(CURDIR)/doc && $(MAKE) all)
-	dh_installman $(CURDIR)/doc/grmlzshrc.5
-	dh_compress
-	mkdir -p debian/grml-etc-core/usr/share/lintian/overrides/
-	cp -av debian/overrides debian/grml-etc-core/usr/share/lintian/overrides/grml-etc-core
-	dh_fixperms
-	dh_installdeb
-	#find debian/grml-etc-core/etc -type f ! -name \*.xpm ! -name \*.png -print | \
-	#sed -e 's#^debian/grml-etc-core##g' > debian/grml-etc-core/DEBIAN/conffiles
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install
