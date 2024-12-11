@@ -1,0 +1,5 @@
+grml-etc-core: unknown-section grml
+grml-etc-core: diversion-for-unknown-file
+grml-etc-core: orphaned-diversion
+grml-etc-core: package-contains-file-in-etc-skel
+grml-etc-core: bugs-field-does-not-refer-to-debian-infrastructure mailto:bugs@grml.org

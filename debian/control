@@ -21,10 +21,12 @@ Conflicts:
 Replaces:
  vim-common,
 Depends:
+ ${misc:Depends},
  vim | nvi | editor,
 Recommends:
  grml-scripts-core,
 Pre-Depends:
+ ${misc:Pre-Depends},
  zsh,
 Description: core etcetera files for the Grml system
  This package includes some /etc files for the
