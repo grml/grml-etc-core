@@ -1,3 +1,19 @@
+grml-etc-core (0.19.9) grml-testing; urgency=medium
+
+  [ unknowndevQwQ ]
+  * [7465ffb] fix(zshrc): keep existing history restrictions
+
+  [ Michael Prokop ]
+  * [81096c8] zshrc: increase HISTSIZE + SAVEHIST to our defaults also for
+    live system
+
+  [ Chris Hofstaedtler ]
+  * [0592fb8] MAKEDEV is gone from Debian
+  * [b7b9ce0] zshenv: add ~/.local/bin to default PATH
+  * [b511093] debian: use modern build system
+
+ -- Chris Hofstaedtler <ch@grml.org>  Sat, 14 Dec 2024 12:42:55 +0100
+
 grml-etc-core (0.19.8) grml-testing; urgency=medium
 
   [ Michael Prokop ]
