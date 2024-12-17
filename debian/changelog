@@ -1,3 +1,11 @@
+grml-etc-core (0.19.10) grml-testing; urgency=medium
+
+  * [9e786ae] Revert "zshrc: increase HISTSIZE + SAVEHIST to our defaults
+    also for live system"
+  * [9fbdc02] Revert "fix(zshrc): keep existing history restrictions"
+
+ -- Michael Prokop <mika@grml.org>  Tue, 17 Dec 2024 08:34:06 +0100
+
 grml-etc-core (0.19.9) grml-testing; urgency=medium
 
   [ unknowndevQwQ ]
