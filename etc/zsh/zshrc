@@ -1681,8 +1681,11 @@ function command_not_found_handler () {
 
 #v#
 HISTFILE=${HISTFILE:-${ZDOTDIR:-${HOME}}/.zsh_history}
-isgrmlcd && HISTSIZE=500  || HISTSIZE=5000
-isgrmlcd && SAVEHIST=1000 || SAVEHIST=10000 # useful for setopt append_history
+# override settings only if the defaults from zsh are in place
+if [[ -z $HISTSIZE || $HISTSIZE -eq 30 ]] ; then
+  HISTSIZE=5000
+  SAVEHIST=10000  # useful for setopt append_history
+fi
 
 # dirstack handling
 
