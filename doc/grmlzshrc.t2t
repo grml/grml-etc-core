@@ -90,8 +90,7 @@ grml-small.
 Where zsh saves the history. Default: ${HOME}/.zsh_history.
 
 : **HISTSIZE**
-Number of commands to be kept in the history. On a Grml-CD this defaults to
-500, on a hard disk installation to 5000.
+Number of commands to be kept in the history. Default: 5000
 
 : **MAILCHECK**
 Sets the frequency in seconds for zsh to check for new mail. Defaults to 30.
@@ -117,8 +116,7 @@ Show time (user, system and cpu) used by external commands, if they run longer
 than the defined number of seconds (default: 5).
 
 : **SAVEHIST**
-Number of commands to be stored in ${HISTFILE}. Defaults to 1000 on a Grml-CD
-and to 10000 on an installation on hard disk.
+Number of commands to be stored in ${HISTFILE}. Default: 10000
 
 : **watch**
 As in tcsh(1) an array of login/logout events to be reported by the shell
