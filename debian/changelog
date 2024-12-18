@@ -1,3 +1,10 @@
+grml-etc-core (0.19.11) grml-testing; urgency=medium
+
+  * [0ecf486] zshrc: set HISTSIZE + SAVEHIST only if not yet set or being
+    set to zsh upstream default
+
+ -- Michael Prokop <mika@grml.org>  Wed, 18 Dec 2024 21:50:27 +0100
+
 grml-etc-core (0.19.10) grml-testing; urgency=medium
 
   * [9e786ae] Revert "zshrc: increase HISTSIZE + SAVEHIST to our defaults
