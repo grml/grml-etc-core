@@ -125,8 +125,5 @@ unset lp
 
 export READNULLCMD=${PAGER:-/usr/bin/pager}
 
-# allow zeroconf for distcc
-export DISTCC_HOSTS="+zeroconf"
-
 ## END OF FILE #################################################################
 # vim:filetype=zsh foldmethod=marker autoindent expandtab shiftwidth=4
