@@ -769,10 +769,8 @@ function grmlcomp () {
         : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(grep -v '^0\.0\.0\.0\|^127\.0\.0\.1\|^::1 ' /etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}}
     fi
 
-    local localname
-    localname="$(uname -n)"
     hosts=(
-        "${localname}"
+        "$HOST"
         "$_ssh_config_hosts[@]"
         "$_ssh_hosts[@]"
         "$_etc_hosts[@]"
