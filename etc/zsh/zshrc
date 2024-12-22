@@ -3170,11 +3170,6 @@ if check_com isutfenv && check_com luit ; then
         isutfenv && [[ -n "$LANG" ]] && \
             alias aterm="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit aterm"
     fi
-
-    if check_com -c centericq ; then
-        isutfenv && [[ -n "$LANG" ]] && \
-            alias centericq="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit centericq"
-    fi
 fi
 
 # useful functions
