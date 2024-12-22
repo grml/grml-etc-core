@@ -3161,11 +3161,6 @@ alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/nu
 
 # work around non utf8 capable software in utf environment via $LANG and luit
 if check_com isutfenv && check_com luit ; then
-    if check_com -c mrxvt ; then
-        isutfenv && [[ -n "$LANG" ]] && \
-            alias mrxvt="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit mrxvt"
-    fi
-
     if check_com -c aterm ; then
         isutfenv && [[ -n "$LANG" ]] && \
             alias aterm="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit aterm"
