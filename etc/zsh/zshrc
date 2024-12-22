@@ -545,10 +545,12 @@ check_com -c dircolors && eval $(dircolors -b)
 isdarwin && export CLICOLOR=1
 isfreebsd && export CLICOLOR=1
 
-# do MacPorts setup on darwin
+# Setup PATH from system defaults on macOS.
+if [[ -x /usr/libexec/path_helper ]]; then
+    eval $(/usr/libexec/path_helper -s)
+fi
+# Add MacPorts PATH on darwin/macOS.
 if isdarwin && [[ -d /opt/local ]]; then
-    # Note: PATH gets set in /etc/zprofile on Darwin, so this can't go into
-    # zshenv.
     PATH="/opt/local/bin:/opt/local/sbin:$PATH"
     MANPATH="/opt/local/share/man:$MANPATH"
 fi
