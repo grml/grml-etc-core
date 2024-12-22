@@ -657,11 +657,6 @@ Simple backup management of a file or directory using standard unix programs.
 The target file name is the original name plus a time stamp attached. Symlinks
 and file attributes like mode, ownership and timestamps are preserved.
 
-: **cdrecord()**
-If the original cdrecord is not installed, issues a warning to the user to
-use the wodim binary instead. Wodim is the debian fork of Joerg Schillings
-cdrecord.
-
 : **cdt()**
 Creates a temporary directory using mktemp. Then changes current
 working directory to it.

@@ -2671,21 +2671,6 @@ if check_com -c dpkg-query ; then
     alias debs-by-size="dpkg-query -Wf 'x \${Installed-Size} \${Package} \${Status}\n' | sed -ne '/^x  /d' -e '/^x \(.*\) install ok installed$/s//\1/p' | sort -nr"
 fi
 
-# if cdrecord is a symlink (to wodim) or isn't present at all warn:
-if [[ -L /usr/bin/cdrecord ]] || ! check_com -c cdrecord; then
-    if check_com -c wodim; then
-        function cdrecord () {
-            <<__EOF0__
-cdrecord is not provided under its original name by Debian anymore.
-See #377109 in the BTS of Debian for more details.
-
-Please use the wodim binary instead
-__EOF0__
-            return 1
-        }
-    fi
-fi
-
 if isgrmlcd; then
     # No core dumps: important for a live-cd-system
     limit -s core 0
