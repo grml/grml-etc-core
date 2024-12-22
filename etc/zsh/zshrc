@@ -177,16 +177,6 @@ function is51 () {
     return 1
 }
 
-function is42 () {
-    [[ $ZSH_VERSION == 4.<2->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-function is425 () {
-    [[ $ZSH_VERSION == 4.2.<5->* || $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
 function is43 () {
     [[ $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
     return 1
@@ -278,21 +268,21 @@ isgrml && function checkhome () {
     fi
 }
 
-# check for zsh v4.1+
+# check for zsh v4.2+
 
-if ! [[ ${ZSH_VERSION} == 4.<1->.<->*    \
+if ! [[ ${ZSH_VERSION} == 4.<2->.<->*    \
      || ${ZSH_VERSION} == <5->.<->*   ]] ; then
 
     printf '-!-\n'
     printf '-!- In this configuration we try to make use of features, that\n'
-    printf '-!- require version 4.1 of the shell; That way this setup can be\n'
+    printf '-!- require version 4.2 of the shell; That way this setup can be\n'
     printf '-!- used with a wide range of zsh versions, while using fairly\n'
     printf '-!- advanced features in all supported versions.\n'
     printf '-!-\n'
     printf '-!- However, you are running zsh version %s.\n' "$ZSH_VERSION"
     printf '-!-\n'
     printf '-!- While this *may* work, it might as well fail.\n'
-    printf '-!- Please consider updating to at least version 4.1 of zsh.\n'
+    printf '-!- Please consider updating to at least version 4.2 of zsh.\n'
     printf '-!-\n'
     printf '-!- DO NOT EXPECT THIS TO WORK FLAWLESSLY!\n'
     printf '-!- If it does today, you'\''ve been lucky.\n'
@@ -799,21 +789,17 @@ function grmlcomp () {
     fi
 
     # host completion
-    _etc_hosts=()
     _ssh_config_hosts=()
+    if [[ -r ~/.ssh/config ]] ; then
+        _ssh_config_hosts=(${${(s: :)${(ps:\t:)${${(@M)${(f)"$(<$HOME/.ssh/config)"}:#Host *}#Host }}}:#*[*?]*})
+    fi
     _ssh_hosts=()
-    if is42 ; then
-        if [[ -r ~/.ssh/config ]] ; then
-            _ssh_config_hosts=(${${(s: :)${(ps:\t:)${${(@M)${(f)"$(<$HOME/.ssh/config)"}:#Host *}#Host }}}:#*[*?]*})
-        fi
-
-        if [[ -r ~/.ssh/known_hosts ]] ; then
-            _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*})
-        fi
-
-        if [[ -r /etc/hosts ]] && [[ "$NOETCHOSTS" -eq 0 ]] ; then
-            : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(grep -v '^0\.0\.0\.0\|^127\.0\.0\.1\|^::1 ' /etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}}
-        fi
+    if [[ -r ~/.ssh/known_hosts ]] ; then
+        _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*})
+    fi
+    _etc_hosts=()
+    if [[ -r /etc/hosts ]] && [[ "$NOETCHOSTS" -eq 0 ]] ; then
+        : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(grep -v '^0\.0\.0\.0\|^127\.0\.0\.1\|^::1 ' /etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}}
     fi
 
     local localname
