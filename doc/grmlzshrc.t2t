@@ -634,10 +634,6 @@ section.
 //grmlzshrc// comes with a wide array of defined shell functions to ease the
 user's life.
 
-: **855resolution()**
-If 915resolution is available, issues a warning to the user to run it instead
-to modify the resolution on intel graphics chipsets.
-
 : **accessed()**
 Lists files in current directory, which have been accessed within the
 last N days. N is an integer to be passed as first and only argument.

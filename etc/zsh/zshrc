@@ -2678,15 +2678,6 @@ fi
 
 # grmlstuff
 function grmlstuff () {
-# people should use 'grml-x'!
-    if check_com -c 915resolution; then
-        function 855resolution () {
-            echo "Please use 915resolution as resolution modifying tool for Intel \
-graphic chipset."
-            return -1
-        }
-    fi
-
     #a1# Output version of running grml
     alias grml-version='cat /etc/grml_version'
 
