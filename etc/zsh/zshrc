@@ -552,8 +552,6 @@ if isdarwin && [[ -d /opt/local ]]; then
     PATH="/opt/local/bin:/opt/local/sbin:$PATH"
     MANPATH="/opt/local/share/man:$MANPATH"
 fi
-# do Fink setup on darwin
-isdarwin && xsource /sw/bin/init.sh
 
 # load our function and completion directories
 for fdir in /usr/share/grml/zsh/completion /usr/share/grml/zsh/functions; do
