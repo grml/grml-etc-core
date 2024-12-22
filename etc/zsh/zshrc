@@ -170,13 +170,6 @@ EOF
 # load .zshrc.pre to give the user the chance to overwrite the defaults
 [[ -r ${ZDOTDIR:-${HOME}}/.zshrc.pre ]] && source ${ZDOTDIR:-${HOME}}/.zshrc.pre
 
-# check for version/system
-# check for versions (compatibility reasons)
-function is51 () {
-    [[ $ZSH_VERSION == 5.<1->* ]] && return 0
-    return 1
-}
-
 #f1# Checks whether or not you're running grml
 function isgrml () {
     [[ -f /etc/grml_version ]] && return 0
@@ -245,21 +238,21 @@ isgrml && function checkhome () {
     fi
 }
 
-# check for zsh v5+
+# check for zsh v5.1+
 
-if ! [[ ${ZSH_VERSION} == 5.<0->.<->*    \
+if ! [[ ${ZSH_VERSION} == 5.<1->*        \
      || ${ZSH_VERSION} == <6->.<->*   ]] ; then
 
     printf '-!-\n'
     printf '-!- In this configuration we try to make use of features, that\n'
-    printf '-!- require version 5.0 of the shell; That way this setup can be\n'
+    printf '-!- require version 5.1 of the shell; That way this setup can be\n'
     printf '-!- used with a wide range of zsh versions, while using fairly\n'
     printf '-!- advanced features in all supported versions.\n'
     printf '-!-\n'
     printf '-!- However, you are running zsh version %s.\n' "$ZSH_VERSION"
     printf '-!-\n'
     printf '-!- While this *may* work, it might as well fail.\n'
-    printf '-!- Please consider updating to at least version 5.0 of zsh.\n'
+    printf '-!- Please consider updating to at least version 5.1 of zsh.\n'
     printf '-!-\n'
     printf '-!- DO NOT EXPECT THIS TO WORK FLAWLESSLY!\n'
     printf '-!- If it does today, you'\''ve been lucky.\n'
@@ -1523,13 +1516,8 @@ zrcautoload zed
 # else
 #    print 'Notice: no url-quote-magic available :('
 # fi
-if is51 ; then
-  # url-quote doesn't work without bracketed-paste-magic since Zsh 5.1
-  alias url-quote='autoload -U bracketed-paste-magic url-quote-magic;
-                   zle -N bracketed-paste bracketed-paste-magic; zle -N self-insert url-quote-magic'
-else
-  alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magic'
-fi
+alias url-quote='autoload -U bracketed-paste-magic url-quote-magic;
+                 zle -N bracketed-paste bracketed-paste-magic; zle -N self-insert url-quote-magic'
 
 #m# k ESC-h Call \kbd{run-help} for the 1st word on the command line
 alias run-help >&/dev/null && unalias run-help

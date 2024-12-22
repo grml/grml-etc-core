@@ -20,7 +20,7 @@ as //grmlzshrc// throughout this document) for the amazing unix shell zsh
 (http://zsh.sourceforge.net). This is the reference manual for that
 setup.
 
-To use //grmlzshrc//, you need at least version 5.0 of zsh (although not all
+To use //grmlzshrc//, you need at least version 5.1 of zsh (although not all
 features are enabled in every version).
 
 //grmlzshrc// behaves differently depending on which user loads it. For the
