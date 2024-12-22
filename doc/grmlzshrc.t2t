@@ -20,8 +20,7 @@ as //grmlzshrc// throughout this document) for the amazing unix shell zsh
 (http://zsh.sourceforge.net). This is the reference manual for that
 setup.
 
-To use //grmlzshrc//, you need at least version 5.1 of zsh (although not all
-features are enabled in every version).
+To use //grmlzshrc//, you need at least version 5.1 of zsh.
 
 //grmlzshrc// behaves differently depending on which user loads it. For the
 root user (**EUID** == 0) only a subset of features is loaded by default. This
@@ -346,10 +345,6 @@ the function.
 When the system switches from one profile to another, it executes a function
 named "chpwd_leave_profile_<PREVIOUS-PROFILE-NAME>()" before calling the
 profile-function for the new profile.
-
-
-=== Version requirement ===
-This feature requires zsh //4.3.3// or newer.
 
 
 == ACCEPTLINE WRAPPER ==
@@ -842,9 +837,6 @@ Translates a word from german to english (-D) or vice versa (-E).
 
 : **uchange()**
 Shows upstreams changelog of a given package in $PAGER.
-
-: **uprint()**
-Works around the "print -l ${(u)foo}"-limitation on zsh older than 4.2.
 
 : **utf2iso()**
 Changes every occurrence of the string UTF-8 or utf-8 in environment
