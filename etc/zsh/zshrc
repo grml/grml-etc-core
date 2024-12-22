@@ -177,29 +177,6 @@ function is51 () {
     return 1
 }
 
-function is43 () {
-    [[ $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-function is433 () {
-    [[ $ZSH_VERSION == 4.3.<3->* || $ZSH_VERSION == 4.<4->* \
-                                 || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-function is437 () {
-    [[ $ZSH_VERSION == 4.3.<7->* || $ZSH_VERSION == 4.<4->* \
-                                 || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-function is439 () {
-    [[ $ZSH_VERSION == 4.3.<9->* || $ZSH_VERSION == 4.<4->* \
-                                 || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
 #f1# Checks whether or not you're running grml
 function isgrml () {
     [[ -f /etc/grml_version ]] && return 0
@@ -268,21 +245,21 @@ isgrml && function checkhome () {
     fi
 }
 
-# check for zsh v4.2+
+# check for zsh v5+
 
-if ! [[ ${ZSH_VERSION} == 4.<2->.<->*    \
-     || ${ZSH_VERSION} == <5->.<->*   ]] ; then
+if ! [[ ${ZSH_VERSION} == 5.<0->.<->*    \
+     || ${ZSH_VERSION} == <6->.<->*   ]] ; then
 
     printf '-!-\n'
     printf '-!- In this configuration we try to make use of features, that\n'
-    printf '-!- require version 4.2 of the shell; That way this setup can be\n'
+    printf '-!- require version 5.0 of the shell; That way this setup can be\n'
     printf '-!- used with a wide range of zsh versions, while using fairly\n'
     printf '-!- advanced features in all supported versions.\n'
     printf '-!-\n'
     printf '-!- However, you are running zsh version %s.\n' "$ZSH_VERSION"
     printf '-!-\n'
     printf '-!- While this *may* work, it might as well fail.\n'
-    printf '-!- Please consider updating to at least version 4.2 of zsh.\n'
+    printf '-!- Please consider updating to at least version 5.0 of zsh.\n'
     printf '-!-\n'
     printf '-!- DO NOT EXPECT THIS TO WORK FLAWLESSLY!\n'
     printf '-!- If it does today, you'\''ve been lucky.\n'
@@ -1637,8 +1614,6 @@ fi
 
 # directory based profiles
 
-if is433 ; then
-
 # chpwd_profiles(): Directory Profiles, Quickstart:
 #
 # In .zshrc.local:
@@ -1674,41 +1649,17 @@ function chpwd_profiles () {
 
 chpwd_functions=( ${chpwd_functions} chpwd_profiles )
 
-fi # is433
-
 # Prompt setup for grml:
 
-# set colors for use in prompts (modern zshs allow for the use of %F{red}foo%f
-# in prompts to get a red "foo" embedded, but it's good to keep these for
-# backwards compatibility).
-if is437; then
-    BLUE="%F{blue}"
-    RED="%F{red}"
-    GREEN="%F{green}"
-    CYAN="%F{cyan}"
-    MAGENTA="%F{magenta}"
-    YELLOW="%F{yellow}"
-    WHITE="%F{white}"
-    NO_COLOR="%f"
-elif zrcautoload colors && colors 2>/dev/null ; then
-    BLUE="%{${fg[blue]}%}"
-    RED="%{${fg_bold[red]}%}"
-    GREEN="%{${fg[green]}%}"
-    CYAN="%{${fg[cyan]}%}"
-    MAGENTA="%{${fg[magenta]}%}"
-    YELLOW="%{${fg[yellow]}%}"
-    WHITE="%{${fg[white]}%}"
-    NO_COLOR="%{${reset_color}%}"
-else
-    BLUE=$'%{\e[1;34m%}'
-    RED=$'%{\e[1;31m%}'
-    GREEN=$'%{\e[1;32m%}'
-    CYAN=$'%{\e[1;36m%}'
-    WHITE=$'%{\e[1;37m%}'
-    MAGENTA=$'%{\e[1;35m%}'
-    YELLOW=$'%{\e[1;33m%}'
-    NO_COLOR=$'%{\e[0m%}'
-fi
+# set colors for use in prompts.
+BLUE="%F{blue}"
+RED="%F{red}"
+GREEN="%F{green}"
+CYAN="%F{cyan}"
+MAGENTA="%F{magenta}"
+YELLOW="%F{yellow}"
+WHITE="%F{white}"
+NO_COLOR="%f"
 
 # First, the easy ones: PS2..4:
 
@@ -1866,16 +1817,6 @@ fi
 # gather version control information for inclusion in a prompt
 
 if zrcautoload vcs_info; then
-    # `vcs_info' in zsh versions 4.3.10 and below have a broken `_realpath'
-    # function, which can cause a lot of trouble with our directory-based
-    # profiles. So:
-    if [[ ${ZSH_VERSION} == 4.3.<-10> ]] ; then
-        function VCS_INFO_realpath () {
-            setopt localoptions NO_shwordsplit chaselinks
-            ( builtin cd -q $1 2> /dev/null && pwd; )
-        }
-    fi
-
     zstyle ':vcs_info:*' max-exports 2
 
     if [[ -o restricted ]]; then
@@ -2413,37 +2354,30 @@ else
     function precmd () { (( ${+functions[vcs_info]} )) && vcs_info; }
 fi
 
-if is437; then
-    # The prompt themes use modern features of zsh, that require at least
-    # version 4.3.7 of the shell. Use the fallback otherwise.
-    if [[ $GRML_DISPLAY_BATTERY -gt 0 ]]; then
-        zstyle ':prompt:grml:right:setup' items sad-smiley battery
-        add-zsh-hook precmd battery
-    fi
-    if [[ "$TERM" == dumb ]] ; then
-        zstyle ":prompt:grml(|-large|-chroot):*:items:grml-chroot" pre ''
-        zstyle ":prompt:grml(|-large|-chroot):*:items:grml-chroot" post ' '
-        for i in rc user path jobs history date time shell-level; do
-            zstyle ":prompt:grml(|-large|-chroot):*:items:$i" pre ''
-            zstyle ":prompt:grml(|-large|-chroot):*:items:$i" post ''
-        done
-        unset i
-        zstyle ':prompt:grml(|-large|-chroot):right:setup' use-rprompt false
-    elif (( EUID == 0 )); then
-        zstyle ':prompt:grml(|-large|-chroot):*:items:user' pre '%B%F{red}'
-    fi
+if [[ $GRML_DISPLAY_BATTERY -gt 0 ]]; then
+    zstyle ':prompt:grml:right:setup' items sad-smiley battery
+    add-zsh-hook precmd battery
+fi
+if [[ "$TERM" == dumb ]] ; then
+    zstyle ":prompt:grml(|-large|-chroot):*:items:grml-chroot" pre ''
+    zstyle ":prompt:grml(|-large|-chroot):*:items:grml-chroot" post ' '
+    for i in rc user path jobs history date time shell-level; do
+        zstyle ":prompt:grml(|-large|-chroot):*:items:$i" pre ''
+        zstyle ":prompt:grml(|-large|-chroot):*:items:$i" post ''
+    done
+    unset i
+    zstyle ':prompt:grml(|-large|-chroot):right:setup' use-rprompt false
+elif (( EUID == 0 )); then
+    zstyle ':prompt:grml(|-large|-chroot):*:items:user' pre '%B%F{red}'
+fi
 
-    # Finally enable one of the prompts.
-    if [[ -n $GRML_CHROOT ]]; then
-        prompt grml-chroot
-    elif [[ $GRMLPROMPT -gt 0 ]]; then
-        prompt grml-large
-    else
-        prompt grml
-    fi
+# Finally enable one of the prompts.
+if [[ -n $GRML_CHROOT ]]; then
+    prompt grml-chroot
+elif [[ $GRMLPROMPT -gt 0 ]]; then
+    prompt grml-large
 else
-    grml_prompt_fallback
-    function precmd () { (( ${+functions[vcs_info]} )) && vcs_info; }
+    prompt grml
 fi
 
 # make sure to use right prompt only when not running a command
