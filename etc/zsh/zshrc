@@ -3159,14 +3159,6 @@ alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/nu
 #a2# scp with StrictHostKeyChecking=no \\&\quad and UserKnownHostsFile unset
 alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 
-# work around non utf8 capable software in utf environment via $LANG and luit
-if check_com isutfenv && check_com luit ; then
-    if check_com -c aterm ; then
-        isutfenv && [[ -n "$LANG" ]] && \
-            alias aterm="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit aterm"
-    fi
-fi
-
 # useful functions
 
 #f5# Backup \kbd{file_or_folder {\rm to} file_or_folder\_timestamp}
