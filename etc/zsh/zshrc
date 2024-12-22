@@ -177,11 +177,6 @@ function is51 () {
     return 1
 }
 
-function is41 () {
-    [[ $ZSH_VERSION == 4.<1->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
 function is42 () {
     [[ $ZSH_VERSION == 4.<2->* || $ZSH_VERSION == <5->* ]] && return 0
     return 1
@@ -283,20 +278,21 @@ isgrml && function checkhome () {
     fi
 }
 
-# check for zsh v4.0+
+# check for zsh v4.1+
 
-if ! [[ ${ZSH_VERSION} == <4->.<->*   ]] ; then
+if ! [[ ${ZSH_VERSION} == 4.<1->.<->*    \
+     || ${ZSH_VERSION} == <5->.<->*   ]] ; then
 
     printf '-!-\n'
     printf '-!- In this configuration we try to make use of features, that\n'
-    printf '-!- require version 4.0 of the shell; That way this setup can be\n'
+    printf '-!- require version 4.1 of the shell; That way this setup can be\n'
     printf '-!- used with a wide range of zsh versions, while using fairly\n'
     printf '-!- advanced features in all supported versions.\n'
     printf '-!-\n'
     printf '-!- However, you are running zsh version %s.\n' "$ZSH_VERSION"
     printf '-!-\n'
     printf '-!- While this *may* work, it might as well fail.\n'
-    printf '-!- Please consider updating to at least version 4.0 of zsh.\n'
+    printf '-!- Please consider updating to at least version 4.1 of zsh.\n'
     printf '-!-\n'
     printf '-!- DO NOT EXPECT THIS TO WORK FLAWLESSLY!\n'
     printf '-!- If it does today, you'\''ve been lucky.\n'
@@ -2465,7 +2461,7 @@ else
 fi
 
 # make sure to use right prompt only when not running a command
-is41 && setopt transient_rprompt
+setopt transient_rprompt
 
 # Terminal-title wizardry
 
