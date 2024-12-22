@@ -170,56 +170,6 @@ EOF
 # load .zshrc.pre to give the user the chance to overwrite the defaults
 [[ -r ${ZDOTDIR:-${HOME}}/.zshrc.pre ]] && source ${ZDOTDIR:-${HOME}}/.zshrc.pre
 
-# check for version/system
-# check for versions (compatibility reasons)
-function is51 () {
-    [[ $ZSH_VERSION == 5.<1->* ]] && return 0
-    return 1
-}
-
-function is4 () {
-    [[ $ZSH_VERSION == <4->* ]] && return 0
-    return 1
-}
-
-function is41 () {
-    [[ $ZSH_VERSION == 4.<1->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-function is42 () {
-    [[ $ZSH_VERSION == 4.<2->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-function is425 () {
-    [[ $ZSH_VERSION == 4.2.<5->* || $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-function is43 () {
-    [[ $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-function is433 () {
-    [[ $ZSH_VERSION == 4.3.<3->* || $ZSH_VERSION == 4.<4->* \
-                                 || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-function is437 () {
-    [[ $ZSH_VERSION == 4.3.<7->* || $ZSH_VERSION == 4.<4->* \
-                                 || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-function is439 () {
-    [[ $ZSH_VERSION == 4.3.<9->* || $ZSH_VERSION == 4.<4->* \
-                                 || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
 #f1# Checks whether or not you're running grml
 function isgrml () {
     [[ -f /etc/grml_version ]] && return 0
@@ -288,22 +238,21 @@ isgrml && function checkhome () {
     fi
 }
 
-# check for zsh v3.1.7+
+# check for zsh v5.1+
 
-if ! [[ ${ZSH_VERSION} == 3.1.<7->*      \
-     || ${ZSH_VERSION} == 3.<2->.<->*    \
-     || ${ZSH_VERSION} == <4->.<->*   ]] ; then
+if ! [[ ${ZSH_VERSION} == 5.<1->*        \
+     || ${ZSH_VERSION} == <6->.<->*   ]] ; then
 
     printf '-!-\n'
-    printf '-!- In this configuration we try to make use of features, that only\n'
-    printf '-!- require version 3.1.7 of the shell; That way this setup can be\n'
+    printf '-!- In this configuration we try to make use of features, that\n'
+    printf '-!- require version 5.1 of the shell; That way this setup can be\n'
     printf '-!- used with a wide range of zsh versions, while using fairly\n'
     printf '-!- advanced features in all supported versions.\n'
     printf '-!-\n'
     printf '-!- However, you are running zsh version %s.\n' "$ZSH_VERSION"
     printf '-!-\n'
     printf '-!- While this *may* work, it might as well fail.\n'
-    printf '-!- Please consider updating to at least version 3.1.7 of zsh.\n'
+    printf '-!- Please consider updating to at least version 5.1 of zsh.\n'
     printf '-!-\n'
     printf '-!- DO NOT EXPECT THIS TO WORK FLAWLESSLY!\n'
     printf '-!- If it does today, you'\''ve been lucky.\n'
@@ -330,90 +279,12 @@ function zrcautoload () {
     done
 
     (( ffound == 0 )) && return 1
-    if [[ $ZSH_VERSION == 3.1.<6-> || $ZSH_VERSION == <4->* ]] ; then
-        autoload -U ${ffile} || return 1
-    else
-        autoload ${ffile} || return 1
-    fi
+    autoload -U ${ffile} || return 1
     return 0
 }
 
-# The following is the ‘add-zsh-hook’ function from zsh upstream. It is
-# included here to make the setup work with older versions of zsh (prior to
-# 4.3.7) in which this function had a bug that triggers annoying errors during
-# shell startup. This is exactly upstreams code from f0068edb4888a4d8fe94def,
-# with just a few adjustments in coding style to make the function look more
-# compact. This definition can be removed as soon as we raise the minimum
-# version requirement to 4.3.7 or newer.
-function add-zsh-hook () {
-    # Add to HOOK the given FUNCTION.
-    # HOOK is one of chpwd, precmd, preexec, periodic, zshaddhistory,
-    # zshexit, zsh_directory_name (the _functions subscript is not required).
-    #
-    # With -d, remove the function from the hook instead; delete the hook
-    # variable if it is empty.
-    #
-    # -D behaves like -d, but pattern characters are active in the function
-    # name, so any matching function will be deleted from the hook.
-    #
-    # Without -d, the FUNCTION is marked for autoload; -U is passed down to
-    # autoload if that is given, as are -z and -k. (This is harmless if the
-    # function is actually defined inline.)
-    emulate -L zsh
-    local -a hooktypes
-    hooktypes=(
-        chpwd precmd preexec periodic zshaddhistory zshexit
-        zsh_directory_name
-    )
-    local usage="Usage: $0 hook function\nValid hooks are:\n  $hooktypes"
-    local opt
-    local -a autoopts
-    integer del list help
-    while getopts "dDhLUzk" opt; do
-        case $opt in
-        (d) del=1 ;;
-        (D) del=2 ;;
-        (h) help=1 ;;
-        (L) list=1 ;;
-        ([Uzk]) autoopts+=(-$opt) ;;
-        (*) return 1 ;;
-        esac
-    done
-    shift $(( OPTIND - 1 ))
-    if (( list )); then
-        typeset -mp "(${1:-${(@j:|:)hooktypes}})_functions"
-        return $?
-    elif (( help || $# != 2 || ${hooktypes[(I)$1]} == 0 )); then
-        print -u$(( 2 - help )) $usage
-        return $(( 1 - help ))
-    fi
-    local hook="${1}_functions"
-    local fn="$2"
-    if (( del )); then
-        # delete, if hook is set
-        if (( ${(P)+hook} )); then
-            if (( del == 2 )); then
-                set -A $hook ${(P)hook:#${~fn}}
-            else
-                set -A $hook ${(P)hook:#$fn}
-            fi
-            # unset if no remaining entries --- this can give better
-            # performance in some cases
-            if (( ! ${(P)#hook} )); then
-                unset $hook
-            fi
-        fi
-    else
-        if (( ${(P)+hook} )); then
-            if (( ${${(P)hook}[(I)$fn]} == 0 )); then
-                set -A $hook ${(P)hook} $fn
-            fi
-        else
-            set -A $hook $fn
-        fi
-        autoload $autoopts -- $fn
-    fi
-}
+# Autoload zsh's hook system early, so we can use it whenever we need.
+zrcautoload add-zsh-hook || add-zsh-hook () { :; }
 
 # Load is-at-least() for more precise version checks Note that this test will
 # *always* fail, if the is-at-least function could not be marked for
@@ -427,7 +298,7 @@ zrcautoload is-at-least || function is-at-least () { return 1 }
 setopt append_history
 
 # import new commands from the history file also in other zsh-session
-is4 && setopt share_history
+setopt share_history
 
 # save each command's beginning timestamp and the duration to the history file
 setopt extended_history
@@ -716,18 +587,15 @@ watch=(notme root)
 typeset -U path PATH cdpath CDPATH fpath FPATH manpath MANPATH
 
 # Load a few modules
-is4 && \
 for mod in parameter complist deltochar mathfunc ; do
     zmodload -i zsh/${mod} 2>/dev/null
     grml_status_feature mod:$mod $?
 done && builtin unset -v mod
 
 # autoload zsh modules when they are referenced
-if is4 ; then
-    zmodload -a  zsh/stat    zstat
-    zmodload -a  zsh/zpty    zpty
-    zmodload -ap zsh/mapfile mapfile
-fi
+zmodload -a  zsh/stat    zstat
+zmodload -a  zsh/zpty    zpty
+zmodload -ap zsh/mapfile mapfile
 
 # completion system
 COMPDUMPFILE=${COMPDUMPFILE:-${ZDOTDIR:-${HOME}}/.zcompdump}
@@ -744,7 +612,7 @@ fi
 
 # completion system
 
-# called later (via is4 && grmlcomp)
+# called later (via grmlcomp)
 # note: use 'zstyle' for getting current settings
 #         press ^xh (control-x h) for getting tags in context; ^x? (control-x ?) to run complete_debug with trace output
 function grmlcomp () {
@@ -891,21 +759,17 @@ function grmlcomp () {
     fi
 
     # host completion
-    _etc_hosts=()
     _ssh_config_hosts=()
+    if [[ -r ~/.ssh/config ]] ; then
+        _ssh_config_hosts=(${${(s: :)${(ps:\t:)${${(@M)${(f)"$(<$HOME/.ssh/config)"}:#Host *}#Host }}}:#*[*?]*})
+    fi
     _ssh_hosts=()
-    if is42 ; then
-        if [[ -r ~/.ssh/config ]] ; then
-            _ssh_config_hosts=(${${(s: :)${(ps:\t:)${${(@M)${(f)"$(<$HOME/.ssh/config)"}:#Host *}#Host }}}:#*[*?]*})
-        fi
-
-        if [[ -r ~/.ssh/known_hosts ]] ; then
-            _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*})
-        fi
-
-        if [[ -r /etc/hosts ]] && [[ "$NOETCHOSTS" -eq 0 ]] ; then
-            : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(grep -v '^0\.0\.0\.0\|^127\.0\.0\.1\|^::1 ' /etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}}
-        fi
+    if [[ -r ~/.ssh/known_hosts ]] ; then
+        _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*})
+    fi
+    _etc_hosts=()
+    if [[ -r /etc/hosts ]] && [[ "$NOETCHOSTS" -eq 0 ]] ; then
+        : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(grep -v '^0\.0\.0\.0\|^127\.0\.0\.1\|^::1 ' /etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}}
     fi
 
     local localname
@@ -1652,13 +1516,8 @@ zrcautoload zed
 # else
 #    print 'Notice: no url-quote-magic available :('
 # fi
-if is51 ; then
-  # url-quote doesn't work without bracketed-paste-magic since Zsh 5.1
-  alias url-quote='autoload -U bracketed-paste-magic url-quote-magic;
-                   zle -N bracketed-paste bracketed-paste-magic; zle -N self-insert url-quote-magic'
-else
-  alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magic'
-fi
+alias url-quote='autoload -U bracketed-paste-magic url-quote-magic;
+                 zle -N bracketed-paste bracketed-paste-magic; zle -N self-insert url-quote-magic'
 
 #m# k ESC-h Call \kbd{run-help} for the 1st word on the command line
 alias run-help >&/dev/null && unalias run-help
@@ -1743,8 +1602,6 @@ fi
 
 # directory based profiles
 
-if is433 ; then
-
 # chpwd_profiles(): Directory Profiles, Quickstart:
 #
 # In .zshrc.local:
@@ -1780,41 +1637,17 @@ function chpwd_profiles () {
 
 chpwd_functions=( ${chpwd_functions} chpwd_profiles )
 
-fi # is433
-
 # Prompt setup for grml:
 
-# set colors for use in prompts (modern zshs allow for the use of %F{red}foo%f
-# in prompts to get a red "foo" embedded, but it's good to keep these for
-# backwards compatibility).
-if is437; then
-    BLUE="%F{blue}"
-    RED="%F{red}"
-    GREEN="%F{green}"
-    CYAN="%F{cyan}"
-    MAGENTA="%F{magenta}"
-    YELLOW="%F{yellow}"
-    WHITE="%F{white}"
-    NO_COLOR="%f"
-elif zrcautoload colors && colors 2>/dev/null ; then
-    BLUE="%{${fg[blue]}%}"
-    RED="%{${fg_bold[red]}%}"
-    GREEN="%{${fg[green]}%}"
-    CYAN="%{${fg[cyan]}%}"
-    MAGENTA="%{${fg[magenta]}%}"
-    YELLOW="%{${fg[yellow]}%}"
-    WHITE="%{${fg[white]}%}"
-    NO_COLOR="%{${reset_color}%}"
-else
-    BLUE=$'%{\e[1;34m%}'
-    RED=$'%{\e[1;31m%}'
-    GREEN=$'%{\e[1;32m%}'
-    CYAN=$'%{\e[1;36m%}'
-    WHITE=$'%{\e[1;37m%}'
-    MAGENTA=$'%{\e[1;35m%}'
-    YELLOW=$'%{\e[1;33m%}'
-    NO_COLOR=$'%{\e[0m%}'
-fi
+# set colors for use in prompts.
+BLUE="%F{blue}"
+RED="%F{red}"
+GREEN="%F{green}"
+CYAN="%F{cyan}"
+MAGENTA="%F{magenta}"
+YELLOW="%F{yellow}"
+WHITE="%F{white}"
+NO_COLOR="%f"
 
 # First, the easy ones: PS2..4:
 
@@ -1972,16 +1805,6 @@ fi
 # gather version control information for inclusion in a prompt
 
 if zrcautoload vcs_info; then
-    # `vcs_info' in zsh versions 4.3.10 and below have a broken `_realpath'
-    # function, which can cause a lot of trouble with our directory-based
-    # profiles. So:
-    if [[ ${ZSH_VERSION} == 4.3.<-10> ]] ; then
-        function VCS_INFO_realpath () {
-            setopt localoptions NO_shwordsplit chaselinks
-            ( builtin cd -q $1 2> /dev/null && pwd; )
-        }
-    fi
-
     zstyle ':vcs_info:*' max-exports 2
 
     if [[ -o restricted ]]; then
@@ -2162,10 +1985,6 @@ __EOF0__
 function grml_prompt_setup () {
     emulate -L zsh
     autoload -Uz vcs_info
-    # The following autoload is disabled for now, since this setup includes a
-    # static version of the ‘add-zsh-hook’ function above. It needs to be
-    # re-enabled as soon as that static definition is removed again.
-    #autoload -Uz add-zsh-hook
     add-zsh-hook precmd prompt_$1_precmd
 }
 
@@ -2523,41 +2342,34 @@ else
     function precmd () { (( ${+functions[vcs_info]} )) && vcs_info; }
 fi
 
-if is437; then
-    # The prompt themes use modern features of zsh, that require at least
-    # version 4.3.7 of the shell. Use the fallback otherwise.
-    if [[ $GRML_DISPLAY_BATTERY -gt 0 ]]; then
-        zstyle ':prompt:grml:right:setup' items sad-smiley battery
-        add-zsh-hook precmd battery
-    fi
-    if [[ "$TERM" == dumb ]] ; then
-        zstyle ":prompt:grml(|-large|-chroot):*:items:grml-chroot" pre ''
-        zstyle ":prompt:grml(|-large|-chroot):*:items:grml-chroot" post ' '
-        for i in rc user path jobs history date time shell-level; do
-            zstyle ":prompt:grml(|-large|-chroot):*:items:$i" pre ''
-            zstyle ":prompt:grml(|-large|-chroot):*:items:$i" post ''
-        done
-        unset i
-        zstyle ':prompt:grml(|-large|-chroot):right:setup' use-rprompt false
-    elif (( EUID == 0 )); then
-        zstyle ':prompt:grml(|-large|-chroot):*:items:user' pre '%B%F{red}'
-    fi
+if [[ $GRML_DISPLAY_BATTERY -gt 0 ]]; then
+    zstyle ':prompt:grml:right:setup' items sad-smiley battery
+    add-zsh-hook precmd battery
+fi
+if [[ "$TERM" == dumb ]] ; then
+    zstyle ":prompt:grml(|-large|-chroot):*:items:grml-chroot" pre ''
+    zstyle ":prompt:grml(|-large|-chroot):*:items:grml-chroot" post ' '
+    for i in rc user path jobs history date time shell-level; do
+        zstyle ":prompt:grml(|-large|-chroot):*:items:$i" pre ''
+        zstyle ":prompt:grml(|-large|-chroot):*:items:$i" post ''
+    done
+    unset i
+    zstyle ':prompt:grml(|-large|-chroot):right:setup' use-rprompt false
+elif (( EUID == 0 )); then
+    zstyle ':prompt:grml(|-large|-chroot):*:items:user' pre '%B%F{red}'
+fi
 
-    # Finally enable one of the prompts.
-    if [[ -n $GRML_CHROOT ]]; then
-        prompt grml-chroot
-    elif [[ $GRMLPROMPT -gt 0 ]]; then
-        prompt grml-large
-    else
-        prompt grml
-    fi
+# Finally enable one of the prompts.
+if [[ -n $GRML_CHROOT ]]; then
+    prompt grml-chroot
+elif [[ $GRMLPROMPT -gt 0 ]]; then
+    prompt grml-large
 else
-    grml_prompt_fallback
-    function precmd () { (( ${+functions[vcs_info]} )) && vcs_info; }
+    prompt grml
 fi
 
 # make sure to use right prompt only when not running a command
-is41 && setopt transient_rprompt
+setopt transient_rprompt
 
 # Terminal-title wizardry
 
@@ -2626,10 +2438,6 @@ function grml_control_xterm_title () {
     esac
 }
 
-# The following autoload is disabled for now, since this setup includes a
-# static version of the ‘add-zsh-hook’ function above. It needs to be
-# re-enabled as soon as that static definition is removed again.
-#zrcautoload add-zsh-hook || add-zsh-hook () { :; }
 if [[ $NOPRECMD -eq 0 ]]; then
     add-zsh-hook precmd grml_reset_screen_title
     add-zsh-hook precmd grml_vcs_to_screen_title
@@ -2918,11 +2726,11 @@ graphic chipset."
 
 # now run the functions
 isgrml && checkhome
-is4    && isgrml    && grmlstuff
-is4    && grmlcomp
+isgrml && grmlstuff
+grmlcomp
 
 # keephack
-is4 && xsource "/etc/zsh/keephack"
+xsource "/etc/zsh/keephack"
 
 # wonderful idea of using "e" glob qualifier by Peter Stephenson
 # You use it as follows:
@@ -2931,7 +2739,7 @@ is4 && xsource "/etc/zsh/keephack"
 # This lists all the files in the current directory newer than the reference file.
 # You can also specify the reference file inline; note quotes:
 # $ ls -l *(e:'nt ~/.zshenv':)
-is4 && function nt () {
+function nt () {
     if [[ -n $1 ]] ; then
         local NTREF=${~1}
     fi
@@ -2965,8 +2773,7 @@ compdef _functions freload
 #      that the displayed information does make any sense on your OS.
 #      We leave that decission to the user.
 #
-#      The zstat module is used to detect symlink loops. zstat is available since zsh4.
-#      With an older zsh you will need to abort with <C-c> in that case.
+#      The zstat module is used to detect symlink loops.
 #      When a symlink loop is detected, a warning ist printed and further processing is stopped.
 #
 #      Module zstat is loaded by default in grml zshrc, no extra action needed for that.
@@ -3001,17 +2808,16 @@ function sll () {
         ls -l "${file:a}"   || RTN=1
 
         while [[ -h "$file" ]] ; do
-            if is4 ; then
-                LINODE=$(zstat -L +inode "${file}")
-                for i in ${SEENINODES} ; do
-                    if (( ${i} == ${LINODE} )) ; then
-                        builtin cd -q "${curdir}"
-                        print 'link loop detected, aborting!'
-                        return 2
-                    fi
-                done
-                SEENINODES+=${LINODE}
-            fi
+            LINODE=$(zstat -L +inode "${file}")
+            for i in ${SEENINODES} ; do
+                if (( ${i} == ${LINODE} )) ; then
+                    builtin cd -q "${curdir}"
+                    print 'link loop detected, aborting!'
+                    return 2
+                fi
+            done
+            SEENINODES+=${LINODE}
+
             jumpd="${file:h}"
             file="${file:t}"
 
