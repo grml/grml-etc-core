@@ -2088,10 +2088,6 @@ __EOF0__
 function grml_prompt_setup () {
     emulate -L zsh
     autoload -Uz vcs_info
-    # The following autoload is disabled for now, since this setup includes a
-    # static version of the ‘add-zsh-hook’ function above. It needs to be
-    # re-enabled as soon as that static definition is removed again.
-    #autoload -Uz add-zsh-hook
     add-zsh-hook precmd prompt_$1_precmd
 }
 
