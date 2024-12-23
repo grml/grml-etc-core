@@ -25,13 +25,6 @@
 # no xsource() here because it's only created in zshrc! (which is good)
 [[ -r /etc/environment ]] && source /etc/environment
 
-# set environment variables (important for autologin on tty)
-if [ -n "${HOSTNAME}" ] ; then
-    export HOSTNAME="${HOSTNAME}"
-else
-    export HOSTNAME="$(uname -n)"
-fi
-
 # make sure /usr/bin/id is available
 if [[ -x /usr/bin/id ]] ; then
     [[ -z "$USER" ]]          && export USER=$(/usr/bin/id -un)
