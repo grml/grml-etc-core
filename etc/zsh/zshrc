@@ -541,9 +541,6 @@ export MAIL=${MAIL:-/var/mail/$USER}
 
 # color setup for ls:
 check_com -c dircolors && eval $(dircolors -b)
-# color setup for ls on OS X / FreeBSD:
-isdarwin && export CLICOLOR=1
-isfreebsd && export CLICOLOR=1
 
 # do MacPorts setup on darwin
 if isdarwin && [[ -d /opt/local ]]; then
@@ -552,8 +549,6 @@ if isdarwin && [[ -d /opt/local ]]; then
     PATH="/opt/local/bin:/opt/local/sbin:$PATH"
     MANPATH="/opt/local/share/man:$MANPATH"
 fi
-# do Fink setup on darwin
-isdarwin && xsource /sw/bin/init.sh
 
 # load our function and completion directories
 for fdir in /usr/share/grml/zsh/completion /usr/share/grml/zsh/functions; do
@@ -2671,21 +2666,6 @@ if check_com -c dpkg-query ; then
     alias debs-by-size="dpkg-query -Wf 'x \${Installed-Size} \${Package} \${Status}\n' | sed -ne '/^x  /d' -e '/^x \(.*\) install ok installed$/s//\1/p' | sort -nr"
 fi
 
-# if cdrecord is a symlink (to wodim) or isn't present at all warn:
-if [[ -L /usr/bin/cdrecord ]] || ! check_com -c cdrecord; then
-    if check_com -c wodim; then
-        function cdrecord () {
-            <<__EOF0__
-cdrecord is not provided under its original name by Debian anymore.
-See #377109 in the BTS of Debian for more details.
-
-Please use the wodim binary instead
-__EOF0__
-            return 1
-        }
-    fi
-fi
-
 if isgrmlcd; then
     # No core dumps: important for a live-cd-system
     limit -s core 0
@@ -2693,15 +2673,6 @@ fi
 
 # grmlstuff
 function grmlstuff () {
-# people should use 'grml-x'!
-    if check_com -c 915resolution; then
-        function 855resolution () {
-            echo "Please use 915resolution as resolution modifying tool for Intel \
-graphic chipset."
-            return -1
-        }
-    fi
-
     #a1# Output version of running grml
     alias grml-version='cat /etc/grml_version'
 
@@ -3185,24 +3156,6 @@ alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/nu
 #a2# scp with StrictHostKeyChecking=no \\&\quad and UserKnownHostsFile unset
 alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 
-# work around non utf8 capable software in utf environment via $LANG and luit
-if check_com isutfenv && check_com luit ; then
-    if check_com -c mrxvt ; then
-        isutfenv && [[ -n "$LANG" ]] && \
-            alias mrxvt="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit mrxvt"
-    fi
-
-    if check_com -c aterm ; then
-        isutfenv && [[ -n "$LANG" ]] && \
-            alias aterm="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit aterm"
-    fi
-
-    if check_com -c centericq ; then
-        isutfenv && [[ -n "$LANG" ]] && \
-            alias centericq="LANG=${LANG/(#b)(*)[.@]*/$match[1].iso885915} luit centericq"
-    fi
-fi
-
 # useful functions
 
 #f5# Backup \kbd{file_or_folder {\rm to} file_or_folder\_timestamp}
@@ -3566,51 +3519,6 @@ function xtrename () {
     fi
     print -n "\eP\e]0;${1}\C-G\e\\"
     return 0
-}
-
-# Create small urls via http://goo.gl using curl(1).
-# API reference: https://code.google.com/apis/urlshortener/
-function zurl () {
-    emulate -L zsh
-    setopt extended_glob
-
-    if [[ -z $1 ]]; then
-        print "USAGE: zurl <URL>"
-        return 1
-    fi
-
-    local PN url prog api json contenttype item
-    local -a data
-    PN=$0
-    url=$1
-
-    # Prepend 'http://' to given URL where necessary for later output.
-    if [[ ${url} != http(s|)://* ]]; then
-        url='http://'${url}
-    fi
-
-    if check_com -c curl; then
-        prog=curl
-    else
-        print "curl is not available, but mandatory for ${PN}. Aborting."
-        return 1
-    fi
-    api='https://www.googleapis.com/urlshortener/v1/url'
-    contenttype="Content-Type: application/json"
-    json="{\"longUrl\": \"${url}\"}"
-    data=(${(f)"$($prog --silent -H ${contenttype} -d ${json} $api)"})
-    # Parse the response
-    for item in "${data[@]}"; do
-        case "$item" in
-            ' '#'"id":'*)
-                item=${item#*: \"}
-                item=${item%\",*}
-                printf '%s\n' "$item"
-                return 0
-                ;;
-        esac
-    done
-    return 1
 }
 
 #f2# Find history events by search pattern and list them by date.
