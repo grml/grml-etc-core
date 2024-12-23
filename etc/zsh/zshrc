@@ -2368,6 +2368,14 @@ setopt transient_rprompt
 
 # Terminal-title wizardry
 
+function inside_multiplexer () {
+    case "$TERM" in
+        screen|screen-*) return 0 ;;
+        tmux|tmux-*)     return 0 ;;
+    esac
+    return 1
+}
+
 function ESC_print () {
     info_print $'\ek' $'\e\\' "$@"
 }
