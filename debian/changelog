@@ -1,3 +1,34 @@
+grml-etc-core (0.19.12) grml-testing; urgency=medium
+
+  [ Chris Hofstaedtler ]
+  * [6d821ff] Drop DISTCC_HOSTS variable
+  * [fb88e68] zshrc: remove add-zsh-hook from grml_prompt_setup
+  * [66aeaa8] zshrc: require zsh version 4.0
+  * [d0b7969] zshrc: require zsh version 4.1
+  * [7f94fd2] zshrc: require zsh version 4.2
+  * [6d47828] zshrc: require zsh version 5.0
+  * [4be747b] zshrc: require zsh version 5.1
+  * [8cef718] zshrc: remove cdrecord function
+  * [3773037] zshrc: remove 855resolution function
+  * [34d456e] zshrc: remove fink init on macOS
+  * [add76e5] zshrc: drop centericq workaround
+  * [f7a30f7] zshrc: drop mrxvt workaround
+  * [9d56198] zshrc: drop aterm workaround
+  * [49531c1] zshrc: remove zurl function
+  * [0e4083d] zshrc: remove fink init on macOS
+  * [4d8fae2] zshrc: use path_helper on macOS
+  * [38d1737] zshrc: stop setting CLICOLOR
+  * [804e183] zshrc: remove grml_maintain_name.
+    Thanks to Frank Terbeck
+  * [0eab465] zshenv: stop setting HOSTNAME
+  * [3ea59e8] zshrc: use $HOST instead of forking to uname -n
+
+  [ Frank Terbeck ]
+  * [35297c5] zshrc: remove copy of add-zsh-hook
+  * [f2a418e] doc: remove old version info
+
+ -- Chris Hofstaedtler <ch@grml.org>  Mon, 23 Dec 2024 15:58:19 +0100
+
 grml-etc-core (0.19.11) grml-testing; urgency=medium
 
   * [0ecf486] zshrc: set HISTSIZE + SAVEHIST only if not yet set or being
