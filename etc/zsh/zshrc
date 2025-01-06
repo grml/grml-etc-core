@@ -3367,6 +3367,11 @@ function simple-extract () {
                 ;;
             *7z)
                 DECOMP_CMD="7z x"
+                if ! check_com 7z; then
+                    if check_com "7zz"; then DECOMP_CMD="7zz x"
+                    elif check_com "7zr"; then DECOMP_CMD="7zr x"
+                    fi
+                fi
                 USES_STDIN=false
                 USES_STDOUT=false
                 ;;
