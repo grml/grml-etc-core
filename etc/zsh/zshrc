@@ -2629,6 +2629,9 @@ if [[ -r /etc/debian_version ]] ; then
         alias dbp='dpkg-buildpackage'
         #a3# Execute \kbd{grep-excuses}
         alias ge='grep-excuses'
+        if check_com -c apt-file ; then
+          alias afs='apt-file search'
+        fi
     fi
 
     # get a root shell as normal user in live-cd mode:
