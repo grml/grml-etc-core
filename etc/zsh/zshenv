@@ -25,21 +25,6 @@
 # no xsource() here because it's only created in zshrc! (which is good)
 [[ -r /etc/environment ]] && source /etc/environment
 
-# make sure /usr/bin/id is available
-if [[ -x /usr/bin/id ]] ; then
-    [[ -z "$USER" ]]          && export USER=$(/usr/bin/id -un)
-    [[ $LOGNAME == LOGIN ]] && LOGNAME=$(/usr/bin/id -un)
-fi
-
-# workaround for live-cd mode as $HOME is not set via rungetty
-if [[ -f /etc/grml_cd ]] ; then
-    if (( EUID == 0 )); then
-        export HOME=/root
-    else
-        export HOME=/home/$USER
-    fi
-fi
-
 ## set $PATH
 # gentoo users have to source /etc/profile.env
 if [[ -r /etc/gentoo-release ]] ; then
