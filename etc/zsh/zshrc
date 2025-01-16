@@ -212,10 +212,6 @@ function isopenbsd () {
     [[ $GRML_OSTYPE == "OpenBSD" ]]
 }
 
-function issolaris () {
-    [[ $GRML_OSTYPE == "SunOS" ]]
-}
-
 #f1# are we running within an utf environment?
 function isutfenv () {
     case "$LANG $CHARSET $LANGUAGE" in
