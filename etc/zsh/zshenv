@@ -52,24 +52,6 @@ if [[ -f /etc/grml_cd ]] ; then
   [[ -r /etc/grml/my_path ]] && ADDONS="$(cat /etc/grml/my_path)"
 fi
 
-# Solaris
-case $(uname 2>/dev/null) in
-  SunOS)
-    path=(
-      /usr/bin
-      /usr/sbin
-      /usr/ccs/bin
-      /opt/SUNWspro/bin
-      /usr/ucb
-      /usr/sfw/bin
-      /usr/gnu/bin
-      /usr/openwin/bin
-      /opt/csw/bin
-      /sbin
-      ~/bin
-    )
-esac
-
 # generic $PATH handling
 if (( EUID != 0 )); then
   path=(
