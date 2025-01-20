@@ -1,3 +1,14 @@
+grml-etc-core (0.19.13) grml-testing; urgency=medium
+
+  [ Christopher Bock ]
+  * [f406388] zsh aliases: add afs(apt-file search)
+
+  [ Chris Hofstaedtler ]
+  * [f394bcd] zshenv: drop live-cd only hacks
+  * [05ea006] zsh: drop solaris support
+
+ -- Chris Hofstaedtler <ch@grml.org>  Tue, 21 Jan 2025 00:47:42 +0100
+
 grml-etc-core (0.19.12) grml-testing; urgency=medium
 
   [ Chris Hofstaedtler ]
