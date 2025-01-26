@@ -959,10 +959,6 @@ Prints version of running grml.
 : **hbp** (//hg-buildpackage//)
 Helper program to maintain Debian packages with mercurial.
 
-: **http** (//python -m SimpleHTTPServer//)
-Basic HTTP server implemented in python. Listens on port 8000/tcp and
-serves current directory. Implements GET and HEAD methods.
-
 : **insecscp** (//scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"//)
 scp with possible man-in-the-middle attack enabled. This is convenient, if the targets
 host key changes frequently, for example on virtualized test- or development-systems.
