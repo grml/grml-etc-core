@@ -858,6 +858,7 @@ arguments for details.
 
 : **xunfunction()**
 Removes the functions salias, xcat, xsource, xunfunction and zrcautoload.
+**Deprecated.**
 
 : **zrcautoload()**
 Wrapper around the autoload builtin. Loads the definitions of functions
