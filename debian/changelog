@@ -1,3 +1,14 @@
+grml-etc-core (0.19.14) grml-testing; urgency=medium
+
+  [ Christopher Bock ]
+  * [e887095] zshrc: remove not existing alias http
+
+  [ Chris Hofstaedtler ]
+  * [dfd67c2] zshrc: remove "hbp" alias
+  * [b262ddc] zshrc: deprecate xunfunction
+
+ -- Chris Hofstaedtler <ch@grml.org>  Tue, 28 Jan 2025 00:37:55 +0100
+
 grml-etc-core (0.19.13) grml-testing; urgency=medium
 
   [ Christopher Bock ]
