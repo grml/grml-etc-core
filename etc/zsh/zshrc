@@ -490,11 +490,13 @@ function xcat () {
 }
 
 # Remove these functions again, they are of use only in these
-# setup files. This should be called at the end of .zshrc.
+# setup files.
 function xunfunction () {
     emulate -L zsh
     local -a funcs
     local func
+    # TODO: Remove xunfunction in 2025.
+    echo "W: xunfunction is deprecated. Please remove it from your configuration."
     funcs=(salias xcat xsource xunfunction zrcautoload zrcautozle)
     for func in $funcs ; do
         [[ -n ${functions[$func]} ]] \
