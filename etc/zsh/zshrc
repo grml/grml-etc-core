@@ -3568,10 +3568,6 @@ if check_com -c hg ; then
         for i in $(hg status -marn "$@") ; diff -ubwd <(hg cat "$i") "$i"
     }
 
-    # build debian package
-    #a2# Alias for \kbd{hg-buildpackage}
-    alias hbp='hg-buildpackage'
-
     # execute commands on the versioned patch-queue from the current repos
     [[ -n "$GRML_NO_SMALL_ALIASES" ]] || alias mq='hg -R $(readlink -f $(hg root)/.hg/patches)'
 
