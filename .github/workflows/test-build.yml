@@ -1,0 +1,33 @@
+name: test-build
+on:
+  pull_request:
+  push:
+
+concurrency:
+  group: "${{ github.ref }}"
+  cancel-in-progress: true
+jobs:
+  build-debian:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Update changelog"
+        run: |
+          set -ex
+          OLD_VERSION=$(dpkg-parsechangelog -SVersion)
+          SOURCE=$(dpkg-parsechangelog -SSource)
+          cat > debian/changelog <<EOT
+          ${SOURCE} (${OLD_VERSION}+autobuild${GITHUB_RUN_NUMBER}) UNRELEASED; urgency=medium
+
+            * Automated Build
+
+           -- Automated Build <builder@localhost>  $(date -R)
+          EOT
+      - uses: jtdor/build-deb-action@v1
+      - name: Archive build result
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb
+          if-no-files-found: error
+          path: |
+            debian/artifacts/*
