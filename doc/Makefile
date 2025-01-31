@@ -23,7 +23,4 @@ all: $(MANPAGES) $(HTMLPAGES)
 clean:
 	rm -f *.5 *.html *.gz *.pre *.tmp *~
 
-online: all
-	scp grmlzshrc.html t2t-modern.css grml:/var/www/grml/zsh/
-
-.PHONY: all clean online
+.PHONY: all clean
