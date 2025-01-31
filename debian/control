@@ -6,6 +6,7 @@ Build-Depends:
  asciidoctor,
  debhelper-compat (= 12),
 Standards-Version: 4.6.2
+Rules-Requires-Root: no
 Homepage: https://github.com/grml/grml-etc-core
 Vcs-Git: https://github.com/grml/grml-etc-core.git
 Vcs-Browser: https://github.com/grml/grml-etc-core
