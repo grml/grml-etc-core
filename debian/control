@@ -3,8 +3,8 @@ Section: grml
 Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
 Build-Depends:
+ asciidoctor,
  debhelper-compat (= 12),
- txt2tags,
 Standards-Version: 4.6.2
 Homepage: https://github.com/grml/grml-etc-core
 Vcs-Git: https://github.com/grml/grml-etc-core.git
