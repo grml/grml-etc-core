@@ -31,3 +31,28 @@ jobs:
           if-no-files-found: error
           path: |
             debian/artifacts/*
+
+  zsh-refcard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install texlive
+        run: |
+          set -ex
+          sudo apt update
+          sudo apt install -y texlive-fonts-recommended texlive-latex-recommended
+      - name: Build grml-zsh-refcard
+        run: |
+          set -ex
+          git clone --depth 1 https://github.com/grml/grml-gen-zshrefcard
+          cd grml-gen-zshrefcard
+          ./genrefcard.pl < ../etc/zsh/zshrc > grml-zsh-refcard.tex
+          pdflatex grml-zsh-refcard.tex
+      - name: Archive build result
+        uses: actions/upload-artifact@v4
+        with:
+          name: zsh-refcard
+          if-no-files-found: error
+          path: |
+            grml-gen-zshrefcard/grml-zsh-refcard.tex
+            grml-gen-zshrefcard/grml-zsh-refcard.pdf
