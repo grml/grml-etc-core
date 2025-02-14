@@ -2629,6 +2629,7 @@ if [[ -r /etc/debian_version ]] ; then
         alias ge='grep-excuses'
         if check_com -c apt-file ; then
           alias afs='apt-file search'
+          alias afl='apt-file list'
         fi
     fi
 

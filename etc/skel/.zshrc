@@ -194,6 +194,7 @@ fi
 #alias -g SL='| sort | less'
 #alias -g S='| sort'
 #alias -g T='|tail'
+#alias -g TS='|ts "%F %H:%M:%.S"'
 #alias -g V='| vim -'
 
 ## instead of global aliase it might be better to use grmls $abk assoc array, whose contents are expanded after pressing ,.
