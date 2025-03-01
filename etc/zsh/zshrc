@@ -2619,14 +2619,18 @@ if [[ -r /etc/debian_version ]] ; then
           salias agi="apt-get install"
           salias au="apt-get update"
         fi
-        #a3# Execute \kbd{aptitude install}
-        salias ati="aptitude install"
-        #a3# Execute \kbd{aptitude update ; aptitude safe-upgrade}
-        salias -a up="aptitude update ; aptitude safe-upgrade"
+        if check_com -c aptitude ; then
+          #a3# Execute \kbd{aptitude install}
+          salias ati="aptitude install"
+          #a3# Execute \kbd{aptitude update ; aptitude safe-upgrade}
+          salias -a up="aptitude update ; aptitude safe-upgrade"
+        fi
         #a3# Execute \kbd{dpkg-buildpackage}
         alias dbp='dpkg-buildpackage'
         #a3# Execute \kbd{grep-excuses}
-        alias ge='grep-excuses'
+        if check_com -c grep-excuses ; then
+          alias ge='grep-excuses'
+        fi
         if check_com -c apt-file ; then
           alias afs='apt-file search'
           alias afl='apt-file list'
