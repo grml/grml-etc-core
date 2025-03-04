@@ -1,3 +1,27 @@
+grml-etc-core (0.19.15) grml-testing; urgency=medium
+
+  [ Chris Hofstaedtler ]
+  * [9c94b6d] doc/Makefile: drop unused target for copying to grml.org
+  * [c90ace6] Switch manpage source to asciidoc
+  * [6087977] README: add link to grmlzshrc manpage
+  * [a6e6c1b] README: resync install instructions with grml.org/console
+  * [186fa1d] d/control: Set Rules-Requires-Root: no
+  * [e8cf5d9] CI: add ci .deb build step
+  * [68d0f5d] CI: build grml-zsh-refcard
+
+  [ Christopher Bock ]
+  * [bdd546a] zshrc: alias afl for apt-file list
+  * [6213267] etc/skel/.zshrc: global alias TZ for timestamp/ts(1)
+  * [392c92a] etc/zsh/zshrc: only alias if command is present
+
+  [ Darshaka Pathirana ]
+  * [76c99aa] tmux: status-right: Show IP addresses (similar to our GNU/screen
+    configuration)
+  * [1082849] tmux: status-right: Show IP addresses (similar to our GNU/screen
+    configuration)
+
+ -- Chris Hofstaedtler <ch@grml.org>  Tue, 04 Mar 2025 23:26:36 +0100
+
 grml-etc-core (0.19.14) grml-testing; urgency=medium
 
   [ Christopher Bock ]
