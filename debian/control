@@ -1,4 +1,4 @@
-Source: grml-etc-core
+Source: grml-console
 Section: grml
 Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
@@ -7,31 +7,18 @@ Build-Depends:
  debhelper-compat (= 12),
 Standards-Version: 4.6.2
 Rules-Requires-Root: no
-Homepage: https://github.com/grml/grml-etc-core
-Vcs-Git: https://github.com/grml/grml-etc-core.git
-Vcs-Browser: https://github.com/grml/grml-etc-core
+Homepage: https://github.com/grml/grml-console
+Vcs-Git: https://github.com/grml/grml-console.git
+Vcs-Browser: https://github.com/grml/grml-console
 Origin: Grml
 Bugs: mailto:bugs@grml.org
 
-Package: grml-etc-core
+Package: grml-console
 Architecture: all
 Conflicts:
- grml-autoconfig (<< 0.5-7),
- grml-etc (<< 0.8-11),
- grml-scripts (<< 0.8-27),
-Replaces:
- vim-common,
+ grml-etc-core (<< 0.20.0~)
 Depends:
  ${misc:Depends},
- vim | nvi | editor,
-Recommends:
- grml-scripts-core,
-Pre-Depends:
- ${misc:Pre-Depends},
- zsh,
-Description: core etcetera files for the Grml system
- This package includes some /etc files for the
- Grml system. Whereas the main grml-etc package is
- meant for use on Grml systems this package can be
- used on plain Debian (stable/testing/unstable)
- systems as well.
+Description: Grml Console Configuration
+ Provide configuration files for zsh, vim,
+ tmux and screen for the "Grml Console"-style setup.

@@ -1,2 +1,4 @@
-etc
+skel usr/share/grml-console/
+vim usr/share/grml-console/
+zsh usr/share/grml-console/
 usr_share_grml/* usr/share/grml/
