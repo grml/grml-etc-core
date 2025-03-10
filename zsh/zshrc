@@ -2696,7 +2696,7 @@ isgrml && grmlstuff
 grmlcomp
 
 # keephack
-xsource "/etc/zsh/keephack"
+xsource "/usr/share/grml-console/zsh/keephack"
 
 # wonderful idea of using "e" glob qualifier by Peter Stephenson
 # You use it as follows:

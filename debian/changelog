@@ -1,3 +1,9 @@
+grml-console (0.20.0) unstable; urgency=medium
+
+  * Reincarnate as grml-console.
+
+ -- Chris Hofstaedtler <ch@grml.org>  Sun, 09 Mar 2025 16:23:53 +0100
+
 grml-etc-core (0.19.15) grml-testing; urgency=medium
 
   [ Chris Hofstaedtler ]
