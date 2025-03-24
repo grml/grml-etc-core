@@ -3151,6 +3151,9 @@ alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/nu
 #a2# scp with StrictHostKeyChecking=no \\&\quad and UserKnownHostsFile unset
 alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
 
+#a2# lsblk (list block devices) with the most useful columns
+alias llblk="lsblk -o +LABEL,PARTLABEL,UUID,FSTYPE,SERIAL"
+
 # useful functions
 
 #f5# Backup \kbd{file_or_folder {\rm to} file_or_folder\_timestamp}
