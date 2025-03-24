@@ -1,3 +1,9 @@
+grml-etc-core (0.19.16) grml-testing; urgency=medium
+
+  * [5188b8f] zsh: drop _hg completion
+
+ -- Chris Hofstaedtler <ch@grml.org>  Mon, 24 Mar 2025 11:13:36 +0100
+
 grml-etc-core (0.19.15) grml-testing; urgency=medium
 
   [ Chris Hofstaedtler ]
