@@ -1,3 +1,10 @@
+grml-etc-core (0.19.17) grml-testing; urgency=medium
+
+  [ Darshaka Pathirana ]
+  * [b0438a6] zshrc: Add alias llblk for lsblk with useful columns
+
+ -- Chris Hofstaedtler <ch@grml.org>  Thu, 03 Apr 2025 00:05:41 +0200
+
 grml-etc-core (0.19.16) grml-testing; urgency=medium
 
   * [5188b8f] zsh: drop _hg completion
