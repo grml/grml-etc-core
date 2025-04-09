@@ -2625,8 +2625,10 @@ if [[ -r /etc/debian_version ]] ; then
           #a3# Execute \kbd{aptitude update ; aptitude safe-upgrade}
           salias -a up="aptitude update ; aptitude safe-upgrade"
         fi
-        #a3# Execute \kbd{dpkg-buildpackage}
-        alias dbp='dpkg-buildpackage'
+        if check_com -c dpkg-buildpackage ; then
+          #a3# Execute \kbd{dpkg-buildpackage}
+          alias dbp='dpkg-buildpackage'
+        fi
         #a3# Execute \kbd{grep-excuses}
         if check_com -c grep-excuses ; then
           alias ge='grep-excuses'
@@ -2669,7 +2671,9 @@ fi
 # grmlstuff
 function grmlstuff () {
     #a1# Output version of running grml
-    alias grml-version='cat /etc/grml_version'
+    if [ -r /etc/grml_version ]; then
+      alias grml-version='cat /etc/grml_version'
+    fi
 
     if check_com -c grml-debootstrap ; then
         function debian2hd () {
@@ -2933,7 +2937,7 @@ if [[ -d /etc/init.d || -d /etc/service ]] ; then
         if [[ $service_target_ == "/usr/bin/sv" ]]; then
             # runit
             case "${action_}" in
-                start) if [[ ! -e /etc/service/$service_ ]]; then
+                start) if [[ -d /etc/service ]] && [[ ! -e /etc/service/$service_ ]]; then
                            $SUDO ln -s "/etc/sv/$service_" "/etc/service/"
                        else
                            $SUDO "/etc/init.d/$service_" "${action_}" "$param_"
@@ -3002,7 +3006,7 @@ function H-Glob () {
   chmod 644 *(.^x)      # make all plain non-executable files publically readable
   print -l *(.c|.h)     # Lists *.c and *.h
   print **/*(g:users:)  # Recursively match all files that are owned by group 'users'
-  echo /proc/*/cwd(:h:t:s/self//) # Analogous to >ps ax | awk '{print $1}'<"
+  echo /proc/*/cwd(:h:t:s/self//) # Analogous to >ps ax | awk '{print \$1}'<"
 }
 alias help-zshglob=H-Glob
 
@@ -3307,21 +3311,23 @@ fi
 #  $ awk -F ':' '{ print $2" : "$1" "$3 }' \
 #    /usr/local/lib/words/en-de.ISO-8859-1.vok > ~/.translate/de-en.ISO-8859-1.vok
 #f5# Translates a word
-function trans () {
-    emulate -L zsh
-    case "$1" in
-        -[dD]*)
-            translate -l de-en $2
-            ;;
-        -[eE]*)
-            translate -l en-de $2
-            ;;
-        *)
-            echo "Usage: $0 { -D | -E }"
-            echo "         -D == German to English"
-            echo "         -E == English to German"
-    esac
-}
+if ! check_com -c trans; then
+  function trans () {
+      emulate -L zsh
+      case "$1" in
+          -[dD]*)
+              translate -l de-en $2
+              ;;
+          -[eE]*)
+              translate -l en-de $2
+              ;;
+          *)
+              echo "Usage: $0 { -D | -E }"
+              echo "         -D == German to English"
+              echo "         -E == English to German"
+      esac
+  }
+fi
 
 # Usage: simple-extract <file>
 # Using option -d deletes the original archive file.
