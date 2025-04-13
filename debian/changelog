@@ -1,3 +1,17 @@
+grml-etc-core (0.19.18) grml-testing; urgency=medium
+
+  [ Christopher Bock ]
+  * [ae718bb] zshrc: cleanup:
+    * H-Glob(): fix output of escaped $1
+    * alias grml-version: only create if /etc/grml_version is present
+    * function trans(): only create if translate-shell:/usr/bin/trans is not
+      installed
+    * alias dbp: only create if dpkg-dev:/usr/bin/dpkg-buildpackage is
+      installed.
+    * Start(): check for existence of /etc/service.
+
+ -- Chris Hofstaedtler <ch@grml.org>  Sun, 13 Apr 2025 19:39:31 +0200
+
 grml-etc-core (0.19.17) grml-testing; urgency=medium
 
   [ Darshaka Pathirana ]
