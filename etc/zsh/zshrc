@@ -2927,32 +2927,16 @@ compdef _functions edfunc
 #m# f6 Reload() \kbd{service \em{process}}\quad\kbd{reload}
 #m# f6 Force-Reload() \kbd{service \em{process}}\quad\kbd{force-reload}
 #m# f6 Status() \kbd{service \em{process}}\quad\kbd{status}
-if [[ -d /etc/init.d || -d /etc/service ]] ; then
+if [[ -d /etc/init.d ]] ; then
     function __start_stop () {
         local action_="${1:l}"  # e.g Start/Stop/Restart
         local service_="$2"
         local param_="$3"
 
-        local service_target_="$(readlink /etc/init.d/$service_)"
-        if [[ $service_target_ == "/usr/bin/sv" ]]; then
-            # runit
-            case "${action_}" in
-                start) if [[ -d /etc/service ]] && [[ ! -e /etc/service/$service_ ]]; then
-                           $SUDO ln -s "/etc/sv/$service_" "/etc/service/"
-                       else
-                           $SUDO "/etc/init.d/$service_" "${action_}" "$param_"
-                       fi ;;
-                # there is no reload in runits sysv emulation
-                reload) $SUDO "/etc/init.d/$service_" "force-reload" "$param_" ;;
-                *) $SUDO "/etc/init.d/$service_" "${action_}" "$param_" ;;
-            esac
+        if check_com -c service ; then
+          $SUDO service "$service_" "${action_}" "$param_"
         else
-            # sysv/sysvinit-utils, upstart
-            if check_com -c service ; then
-              $SUDO service "$service_" "${action_}" "$param_"
-            else
-              $SUDO "/etc/init.d/$service_" "${action_}" "$param_"
-            fi
+          $SUDO "/etc/init.d/$service_" "${action_}" "$param_"
         fi
     }
 
