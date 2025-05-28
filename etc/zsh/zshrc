@@ -350,6 +350,7 @@ setopt unset
 NOCOR=${NOCOR:-0}
 NOETCHOSTS=${NOETCHOSTS:-0}
 NOMENU=${NOMENU:-0}
+NOPATHHELPER=${NOPATHHELPER:-0}
 NOPRECMD=${NOPRECMD:-0}
 COMMAND_NOT_FOUND=${COMMAND_NOT_FOUND:-0}
 GRML_ZSH_CNF_HANDLER=${GRML_ZSH_CNF_HANDLER:-/usr/share/command-not-found/command-not-found}
@@ -541,7 +542,7 @@ export MAIL=${MAIL:-/var/mail/$USER}
 check_com -c dircolors && eval $(dircolors -b)
 
 # Setup PATH from system defaults on macOS.
-if [[ -x /usr/libexec/path_helper ]]; then
+if [[ -x /usr/libexec/path_helper ]] && [[ "$NOPATHHELPER" -eq 0 ]] ; then
     eval $(/usr/libexec/path_helper -s)
 fi
 # Add MacPorts PATH on darwin/macOS.
