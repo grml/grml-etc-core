@@ -3253,8 +3253,10 @@ function mkcd () {
 
 #f5# Create temporary directory and \kbd{cd} to it
 function cdt () {
-    builtin cd "$(mktemp -d)"
-    builtin pwd
+       local -a cdttemplate
+       [ "$#" -eq 1 ] && cdttemplate=(-t "$1".XXXXXXX)
+       builtin cd "$(mktemp -d ${cdttemplate[@]})"
+       builtin pwd
 }
 
 #f5# List files which have been accessed within the last {\it n} days, {\it n} defaults to 1
