@@ -2449,8 +2449,8 @@ if check_com -c screen ; then
             alias screen='screen -c /etc/grml/screenrc'
         fi
     elif [[ ! -r $HOME/.screenrc ]] ; then
-        if [[ -r /etc/grml/screenrc_grml ]]; then
-            alias screen='screen -c /etc/grml/screenrc_grml'
+        if [[ -r /etc/grml/screenrc ]]; then
+            alias screen='screen -c /etc/grml/screenrc'
         else
             if [[ -r /etc/grml/screenrc ]]; then
                 alias screen='screen -c /etc/grml/screenrc'
