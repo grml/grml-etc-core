@@ -519,7 +519,7 @@ if (( ZSH_NO_DEFAULT_LOCALE == 0 )); then
     xsource "/etc/default/locale"
 fi
 
-for var in LANG LC_ALL LC_MESSAGES ; do
+for var in LANG LANGUAGE LC_ALL LC_COLLATE LC_CTYPE LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER LC_TELEPHONE LC_TIME ; do
     [[ -n ${(P)var} ]] && export $var
 done
 builtin unset -v var
