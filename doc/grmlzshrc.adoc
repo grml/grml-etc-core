@@ -784,7 +784,7 @@ ZSH_PROFILE_RC above).
 
 *salias()*::
 Creates an alias with sudo prepended, if $EUID is not zero. Run "salias -h"
-for details. See also xunfunction() below.
+for details.
 
 *simple-extract()*::
 Tries to uncompress/unpack given files with the appropriate programs. If an URI
@@ -843,25 +843,18 @@ optional and denote a search range (default: -100).
 
 *xcat()*::
 Tries to cat(1) file(s) given as parameter(s). Always returns true.
-See also xunfunction() below.
 
 *xsource()*::
 Tries to source the file(s) given as parameter(s). Always returns true.
 See zshbuiltins(1) for a detailed description of the source command.
-See also xunfunction() below.
 
 *xtrename()*::
 Changes the title of xterm window from within screen(1). Run without
 arguments for details.
 
-*xunfunction()*::
-Removes the functions salias, xcat, xsource, xunfunction and zrcautoload.
-*Deprecated.*
-
 *zrcautoload()*::
 Wrapper around the autoload builtin. Loads the definitions of functions
-from the file given as argument. Searches $fpath for the file. See also
-xunfunction() above.
+from the file given as argument. Searches $fpath for the file.
 
 *zrclocal()*::
 Sources /etc/zsh/zshrc.local and ${HOME}/.zshrc.local. These are the files
