@@ -654,7 +654,8 @@ and file attributes like mode, ownership and timestamps are preserved.
 
 *cdt()*::
 Creates a temporary directory using mktemp. Then changes current
-working directory to it.
+working directory to it. You can optionally provide a prefix which will result
+in e.g. /tmp/PREFIX.XXXXXXX.
 
 *changed()*::
 Lists files in current directory, which have been changed within the
