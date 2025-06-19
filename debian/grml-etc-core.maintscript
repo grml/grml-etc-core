@@ -1,1 +1,2 @@
+rm_conffile /etc/apt/grml/listbugs 0.19.20~
 rm_conffile /etc/network/interfaces.examples 0.19.20~
