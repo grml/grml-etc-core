@@ -1,3 +1,29 @@
+grml-etc-core (0.19.20) grml-testing; urgency=medium
+
+  [ Sebastian Boehm ]
+  * [7af6d18] tmux: Increase maximum status-right length to 64
+  * [7a47d95] tmux: Remove redundant status-right-length lines
+
+  [ Roman Volosatovs ]
+  * [765cf43] zshrc: allow disabling macOS `path_helper`
+
+  [ Christopher Bock ]
+  * [19d0e97] zshrc:cdt() use optional template directory
+  * [6f60866] doc:grmlzshrc cdt() - optional prefix
+
+  [ Chris Hofstaedtler ]
+  * [a2e22f5] Move grml-lang zsh completion to grml-live
+  * [e370d8a] zshrc: export all locale variables
+  * [6cc5e59] zshrc: remove xunfunction
+  * [5b64711] Move /etc/network/interfaces.examples to grml-live
+  * [d0ef7d1] Drop useless debian/conffiles file
+  * [1b9bec7] Unregister /etc/network/interfaces.examples as a conffile
+  * [072254f] Remove /etc/apt/grml-listbugs
+  * [d787bcc] Remove screenrc_acpi
+  * [13fa542] Move grml-tips completion to grml-tips package
+
+ -- Chris Hofstaedtler <ch@grml.org>  Fri, 20 Jun 2025 02:18:52 +0200
+
 grml-etc-core (0.19.19) grml-testing; urgency=medium
 
   [ Chris Hofstaedtler ]
