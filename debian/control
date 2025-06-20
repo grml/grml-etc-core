@@ -15,6 +15,8 @@ Bugs: mailto:bugs@grml.org
 
 Package: grml-etc-core
 Architecture: all
+Breaks:
+ grml-tips (<< 0.8.5)
 Conflicts:
  grml-autoconfig (<< 0.5-7),
  grml-etc (<< 0.8-11),
