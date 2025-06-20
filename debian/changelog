@@ -1,3 +1,10 @@
+grml-etc-core (0.19.21) grml-testing; urgency=medium
+
+  [ Christopher Bock ]
+  * [552dbb1] increase scrollback for screen and tmux to 10.000 lines
+
+ -- Chris Hofstaedtler <ch@grml.org>  Fri, 20 Jun 2025 13:48:33 +0200
+
 grml-etc-core (0.19.20) grml-testing; urgency=medium
 
   [ Sebastian Boehm ]
