@@ -1,0 +1,9 @@
+#!/bin/sh
+# Filename:      ip-screen
+# Purpose:       output ip address (IPv4 only) of configured network interfaces (useful for integration into GNU screen)
+# Authors:       grml-team (grml.org), (c) Darshaka Pathirana <dpat@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+#******************************************************************************
+
+hostname -I | sed -e 's/ [^ ]*:.*$//;s/ / | /g;s/ | $//'

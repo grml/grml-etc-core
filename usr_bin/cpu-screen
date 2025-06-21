@@ -1,0 +1,62 @@
+#!/usr/bin/perl
+# Filename:      cpu-screen
+# Purpose:       output current / available cpu frequence (useful for integration into GNU screen)
+# Authors:       grml-team (grml.org), (c) Chris Hofstaedtler <ch@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+#******************************************************************************
+
+
+use strict;
+use warnings;
+
+sub read_cpu_freq_file {
+  my ($file) = @_;
+  open my $fh, '<', $file or return 0;
+  my $cpu_freq = <$fh>;
+  $cpu_freq = int($cpu_freq) / 1000;
+  close $fh;
+  return $cpu_freq;
+}
+
+sub cpu_cur_frequency() {
+  return read_cpu_freq_file('/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq');
+}
+
+sub cpu_max_frequency() {
+  return read_cpu_freq_file('/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq');
+}
+
+sub count_cpus() {
+  # assume "1" cpu if we can't count it
+  open my $fh, '<', "/proc/stat" or return 1;
+
+  my $count = 0;
+  while (my $line = <$fh>) {
+    $count += 1 if $line =~ /^cpu\d/;
+  }
+  close $fh;
+  return $count;
+}
+
+
+my $cpu_count = count_cpus();
+my $cpu_freq = cpu_cur_frequency();
+
+if ($cpu_freq == 0) {
+  print("$cpu_count\n");
+} elsif ($cpu_count == 1) {
+  my $max_cpu_freq = cpu_max_frequency();
+  if ($cpu_freq == $max_cpu_freq) {
+    printf("$cpu_freq\n");
+  } else {
+    printf("$cpu_freq / $max_cpu_freq\n");
+  }
+} else {
+  my $max_cpu_freq = cpu_max_frequency();
+  if ($cpu_freq == $max_cpu_freq) {
+    printf("$cpu_count * $cpu_freq\n");
+  } else {
+    printf("$cpu_count * $cpu_freq / $max_cpu_freq\n");
+  }
+}

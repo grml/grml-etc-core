@@ -4,10 +4,8 @@
 %:
 	dh $@
 
-
 after_dh_auto_clean:
 	$(MAKE) -C doc clean
 
 override_dh_auto_build:
 	$(MAKE) -C doc all
-

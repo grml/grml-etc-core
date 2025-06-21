@@ -5,7 +5,7 @@ Maintainer: Michael Prokop <mika@grml.org>
 Build-Depends:
  asciidoctor,
  debhelper-compat (= 12),
-Standards-Version: 4.6.2
+Standards-Version: 4.7.0
 Rules-Requires-Root: no
 Homepage: https://github.com/grml/grml-etc-core
 Vcs-Git: https://github.com/grml/grml-etc-core.git
@@ -21,13 +21,16 @@ Conflicts:
  grml-autoconfig (<< 0.5-7),
  grml-etc (<< 0.8-11),
  grml-scripts (<< 0.8-27),
+ grml-scripts-core (<< 2.1.5~),
 Replaces:
+ grml-scripts-core (<< 2.1.5~),
  vim-common,
+Provides:
+ grml-scripts-core
 Depends:
  ${misc:Depends},
+ perl-base | perl,
  vim | nvi | editor,
-Recommends:
- grml-scripts-core,
 Pre-Depends:
  ${misc:Pre-Depends},
  zsh,
@@ -37,3 +40,5 @@ Description: core etcetera files for the Grml system
  meant for use on Grml systems this package can be
  used on plain Debian (stable/testing/unstable)
  systems as well.
+ This package also includes cpu-screen and ip-screen,
+ as they are used by the included screen configuration.
