@@ -2478,32 +2478,6 @@ if [[ -x /sbin/kexec ]] && [[ -r /proc/cmdline ]] ; then
     alias "$(uname -r)-reboot"="kexec -l --initrd=/boot/initrd.img-"$(uname -r)" --command-line=\"$(cat /proc/cmdline)\" /boot/vmlinuz-"$(uname -r)""
 fi
 
-# see http://www.cl.cam.ac.uk/~mgk25/unicode.html#term for details
-alias term2iso="echo 'Setting terminal to iso mode' ; print -n '\e%@'"
-alias term2utf="echo 'Setting terminal to utf-8 mode'; print -n '\e%G'"
-
-# make sure it is not assigned yet
-[[ -n ${aliases[utf2iso]} ]] && unalias utf2iso
-function utf2iso () {
-    if isutfenv ; then
-        local ENV
-        for ENV in $(env | command grep -i '.utf') ; do
-            eval export "$(echo $ENV | sed 's/UTF-8/iso885915/ ; s/utf8/iso885915/')"
-        done
-    fi
-}
-
-# make sure it is not assigned yet
-[[ -n ${aliases[iso2utf]} ]] && unalias iso2utf
-function iso2utf () {
-    if ! isutfenv ; then
-        local ENV
-        for ENV in $(env | command grep -i '\.iso') ; do
-            eval export "$(echo $ENV | sed 's/iso.*/UTF-8/ ; s/ISO.*/UTF-8/')"
-        done
-    fi
-}
-
 # especially for roadwarriors using GNU screen and ssh:
 if ! check_com asc &>/dev/null ; then
   function asc () { autossh -t "$@" 'screen -RdU' }

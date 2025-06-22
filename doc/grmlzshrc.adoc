@@ -748,10 +748,6 @@ Returns true, if run on grml-small, else false.
 *islinux()*::
 Returns true, if running on Linux, else false.
 
-*iso2utf()*::
-Changes every occurrence of the string iso885915 or ISO885915 in
-environment variables to UTF-8.
-
 *isopenbsd()*::
 Returns true, if running on OpenBSD, else false.
 
@@ -826,10 +822,6 @@ Translates a word from german to english (-D) or vice versa (-E).
 
 *uchange()*::
 Shows upstreams changelog of a given package in $PAGER.
-
-*utf2iso()*::
-Changes every occurrence of the string UTF-8 or utf-8 in environment
-variables to iso885915.
 
 *vim()*::
 Wrapper for vim(1). It tries to set the title and hands vim the environment
@@ -1050,14 +1042,6 @@ to /etc/grml/screenrc.
 *su* (_sudo su_)::
 If user is running a Grml live system, don't ask for any password, if she
 wants a root shell.
-
-*term2iso* (_echo 'Setting terminal to iso mode' ; print -n '\e%@'_)::
-Sets mode from UTF-8 to ISO 2022 (See:
-http://www.cl.cam.ac.uk/~mgk25/unicode.html#term[What are the issues related to UTF-8 terminal emulators?]).
-
-*term2utf* (_echo 'Setting terminal to utf-8 mode'; print -n '\e%G'_)::
-Sets mode from ISO 2022 to UTF-8 (See:
-http://www.cl.cam.ac.uk/~mgk25/unicode.html#term[What are the issues related to UTF-8 terminal emulators?]).
 
 *tlog* (_tail --follow=name /var/log/syslog_)::
 Prints syslog continuously (See tail(1)).
@@ -1281,4 +1265,3 @@ This manpage is distributed under the terms of the GPL version 2.
 Most parts of grml's zshrc are distributed under the terms of GPL v2, too,
 except for *accept-line()* which are distributed under the same conditions
 as zsh itself (which is BSD-like).
-
