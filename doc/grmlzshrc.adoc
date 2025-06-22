@@ -960,9 +960,6 @@ ssh with possible man-in-the-middle attack enabled
 *help-zshglob* (_H-Glob()_)::
 Runs the function H-Glob() to expand or explain wildcards.
 
-*j* (_jobs -l_)::
-Prints status of jobs in the current shell session in long format.
-
 *l* (_ls -l --color=auto_)::
 Lists files in long output format with indicator for filetype appended
 to filename. If the terminal supports it, with colored output.
