@@ -667,10 +667,6 @@ Returns true if given command exists either as program, function, alias,
 builtin or reserved word. If the option -c is given, only returns true,
 if command is a program.
 
-*checkhome()*::
-Changes directory to $HOME on first invocation of zsh. This is necessary on
-Grml systems with autologin.
-
 *cl()*::
 Changes current directory to the one supplied by argument and lists the files
 in it, including file names starting with ".".
