@@ -1,3 +1,15 @@
+grml-etc-core (0.19.22) grml-testing; urgency=medium
+
+  [ Chris Hofstaedtler ]
+  * [844b60e] Remove iso2utf/utf2iso and term2iso/term2utf
+  * [23ff405] doc: remove "j" alias
+  * [5c1ca32] merge grml-scripts-core
+
+  [ Christopher Bock ]
+  * [bd8fcbb] cpu-screen: fix max freq
+
+ -- Chris Hofstaedtler <ch@grml.org>  Mon, 23 Jun 2025 17:27:47 +0200
+
 grml-etc-core (0.19.21) grml-testing; urgency=medium
 
   [ Christopher Bock ]
