@@ -224,16 +224,6 @@ function isutfenv () {
 # check for user, if not running as root set $SUDO to sudo
 (( EUID != 0 )) && SUDO='sudo' || SUDO=''
 
-# change directory to home on first invocation of zsh
-# important for rungetty -> autologin
-# Thanks go to Bart Schaefer!
-isgrml && function checkhome () {
-    if [[ -z "$ALREADY_DID_CD_HOME" ]] ; then
-        export ALREADY_DID_CD_HOME=$HOME
-        cd
-    fi
-}
-
 # check for zsh v5.1+
 
 if ! [[ ${ZSH_VERSION} == 5.<1->*        \
@@ -2654,7 +2644,6 @@ function grmlstuff () {
 }
 
 # now run the functions
-isgrml && checkhome
 isgrml && grmlstuff
 grmlcomp
 
