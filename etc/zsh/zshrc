@@ -3200,10 +3200,18 @@ function mkcd () {
 
 #f5# Create temporary directory and \kbd{cd} to it
 function cdt () {
-       local -a cdttemplate
-       [ "$#" -eq 1 ] && cdttemplate=(-t "$1".XXXXXXX)
-       builtin cd "$(mktemp -d ${cdttemplate[@]})"
-       builtin pwd
+    local -a cdttemplate
+    if [ "$#" -eq 1 ]; then
+        if isfreebsd; then
+            # mktemp(1) on FreeBSD doesn't behave the same, cf.
+            # https://man.freebsd.org/cgi/man.cgi?query=mktemp#OPTIONS
+            cdttemplate=(-t "$1")
+        else
+            cdttemplate=(-t "$1".XXXXXXX)
+        fi
+    fi
+    builtin cd "$(mktemp -d ${cdttemplate[@]})"
+    builtin pwd
 }
 
 #f5# List files which have been accessed within the last {\it n} days, {\it n} defaults to 1
