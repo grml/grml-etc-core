@@ -59,7 +59,7 @@ fi
 #bindkey -M menuselect 'j' vi-down-line-or-history # bottom
 
 ## set command prediction from history, see 'man 1 zshcontrib'
-#is4 && zrcautoload predict-on && \
+#zrcautoload predict-on    && \
 #zle -N predict-on         && \
 #zle -N predict-off        && \
 #bindkey "^X^Z" predict-on && \
@@ -124,7 +124,7 @@ fi
 
 ## if a new command line being added to the history list duplicates an older
 ## one, the older command is removed from the list
-#is4 && setopt histignorealldups
+#setopt histignorealldups
 
 ## compsys related snippets ##
 
