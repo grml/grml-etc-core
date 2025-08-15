@@ -1,3 +1,16 @@
+grml-etc-core (0.19.24) grml-testing; urgency=medium
+
+  [ Moviuro ]
+  * [845158d] zshrc: add special code for cdt() for FreeBSD
+
+  [ Komeil Parseh ]
+  * [eb38a4c] Remove is4 from etc/skel/.zshrc
+
+  [ Martin Schuerrer ]
+  * [e4f7c98] Fix chpwd error when DIRSTACKSIZE is unset by Claude Code
+
+ -- Michael Prokop <mika@grml.org>  Fri, 15 Aug 2025 12:16:26 +0200
+
 grml-etc-core (0.19.23) grml-testing; urgency=medium
 
   * [b9388c6] Remove checkhome hack
