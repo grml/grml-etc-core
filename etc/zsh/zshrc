@@ -2408,13 +2408,14 @@ fi
 
 # 'hash' some often used directories
 #d# start
-hash -d deb=/var/cache/apt/archives
-hash -d doc=/usr/share/doc
-hash -d linux=/lib/modules/$(command uname -r)/build/
-hash -d log=/var/log
-hash -d slog=/var/log/syslog
-hash -d src=/usr/src
-hash -d www=/var/www
+[ -d /var/cache/apt/archives ] && hash -d deb=/var/cache/apt/archives
+[ -d /usr/share/doc ] && hash -d doc=/usr/share/doc
+[ -d /lib/modules/$(command uname -r)/build ] && hash -d linux=/lib/modules/$(command uname -r)/build
+[ -d /var/log ] && hash -d log=/var/log
+[ -d /var/log/syslog ] && hash -d slog=/var/log/syslog
+[ -d /usr/src ] && hash -d src=/usr/src
+[ -d /var/www ] && hash -d www=/var/www
+[ -d /etc/systemd ] && hash -d systemd=/etc/systemd
 #d# end
 
 # some aliases
