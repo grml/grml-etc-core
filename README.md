@@ -25,14 +25,16 @@ To use the most important files for your user, use the following commands:
     wget -O .zshrc      https://grml.org/console/zshrc
     # optional:
     # wget -O .zshrc.local https://grml.org/console/zshrc.local
+    # wget -O .screenrc_v4   https://grml.org/console/screenrc_v4
 
 Or, on operating systems without wget:
 
     # IMPORTANT: please note that you might overwrite existing
     # configuration files in the current working directory!
-    curl -L -o .screenrc   https://grml.org/console/screenrc
-    curl -L -o .tmux.conf  https://grml.org/console/tmux.conf
-    curl -L -o .vimrc      https://grml.org/console/vimrc
-    curl -L -o .zshrc      https://grml.org/console/zshrc
+    curl -sSfL -o .screenrc   https://grml.org/console/screenrc
+    curl -sSfL -o .tmux.conf  https://grml.org/console/tmux.conf
+    curl -sSfL -o .vimrc      https://grml.org/console/vimrc
+    curl -sSfL -o .zshrc      https://grml.org/console/zshrc
     # optional:
-    # wget -O .zshrc.local https://grml.org/console/zshrc.local
+    # curl -sSfL -o .zshrc.local https://grml.org/console/zshrc.local
+    # curl -sSfL -o .screenrc_v4   https://grml.org/console/screenrc_v4
