@@ -2579,8 +2579,8 @@ if [[ -r /etc/debian_version ]] ; then
           #a3# Execute \kbd{dpkg-buildpackage}
           alias dbp='dpkg-buildpackage'
         fi
-        #a3# Execute \kbd{grep-excuses}
         if check_com -c grep-excuses ; then
+          #a3# Execute \kbd{grep-excuses}
           alias ge='grep-excuses'
         fi
         if check_com -c apt-file ; then
@@ -2620,8 +2620,8 @@ fi
 
 # grmlstuff
 function grmlstuff () {
-    #a1# Output version of running grml
     if [ -r /etc/grml_version ]; then
+      #a1# Output version of running grml
       alias grml-version='cat /etc/grml_version'
     fi
 
