@@ -159,10 +159,6 @@ grmlversion(){
 isgrmlcd(){
   [ -f /etc/grml_cd ] && return 0 || return 1
 }
-
-checkgrmlsmall(){
-  grep -q small /etc/grml_version 2>/dev/null && return 0 || return 1
-}
 # }}}
 
 # {{{ filesystems (proc, pts, sys)
