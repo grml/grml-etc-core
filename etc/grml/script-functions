@@ -13,16 +13,6 @@ check4root(){
 }
 # }}}
 
-# {{{ check for (X)dialog
-setdialog(){
-  if [ -n "$DISPLAY" ] ; then
-     [ -x /usr/bin/Xdialog ] && DIALOG="Xdialog" && export XDIALOG_HIGH_DIALOG_COMPAT=1
-  else
-     [ -x /usr/bin/dialog ] && DIALOG='dialog' || ( echo 1>&2 "dialog not available" ; return 1 )
-  fi
-}
-# }}}
-
 # {{{ check for availability of program(s)
 # usage example:
 #       check4progs [-s,-q,--quiet,--silent] arg [arg .... argn]
