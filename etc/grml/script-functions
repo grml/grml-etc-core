@@ -152,10 +152,6 @@ isgrml(){
   [ -f /etc/grml_version ] && return 0 || return 1
 }
 
-grmlversion(){
- cat /etc/grml_version
-}
-
 isgrmlcd(){
   [ -f /etc/grml_cd ] && return 0 || return 1
 }
