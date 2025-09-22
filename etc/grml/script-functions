@@ -13,16 +13,6 @@ check4root(){
 }
 # }}}
 
-# {{{ check for running zsh
-iszsh(){
-  if ! [ -z "$ZSH_VERSION" ] ; then
-    return 0
-  else
-    return 1
-  fi
-}
-# }}}
-
 # {{{ check for (X)dialog
 setdialog(){
   if [ -n "$DISPLAY" ] ; then
