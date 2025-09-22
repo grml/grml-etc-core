@@ -103,16 +103,6 @@ checkbootparam(){
 }
 # }}}
 
-# {{{ check whether $1 is yes
-checkvalue(){
-  if [ "$1" = "yes" -o "$1" = "YES" ] ; then
-    return 0
-  else
-    return 1
-  fi
-}
-# }}}
-
 # {{{ grml specific checks
 isgrml(){
   [ -f /etc/grml_version ] && return 0 || return 1
