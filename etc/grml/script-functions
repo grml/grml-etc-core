@@ -157,23 +157,6 @@ isgrmlcd(){
 }
 # }}}
 
-# {{{ filesystems (proc, pts, sys)
-mount_proc(){
-  check4root || return 1
-  [ -f /proc/version ] || mount -t proc /proc /proc 2>/dev/null
-}
-
-mount_pts(){
-  check4root || return 1
-  stringinfile "/dev/pts" /proc/mounts || mount -t devpts /dev/pts /dev/pts 2>/dev/null
-}
-
-mount_sys(){
-  check4root || return 1
-  [ -d /sys/devices ] || mount -t sysfs /sys /sys 2>/dev/null
-}
-# }}}
-
 # char *reverse_list(list) {{{
 #
 #   Returns the reversed order of list
