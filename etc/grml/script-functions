@@ -13,14 +13,6 @@ check4root(){
 }
 # }}}
 
-# {{{ check for user permissions
-check4user(){
-  if [ "$(id -u 2>/dev/null)" = 0 ] ; then
-    echo 1>&2 "Error: please do not run this script with uid 0 (root)." ; return 1
-  fi
-}
-# }}}
-
 # {{{ check for running zsh
 iszsh(){
   if ! [ -z "$ZSH_VERSION" ] ; then
