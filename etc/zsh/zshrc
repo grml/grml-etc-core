@@ -2470,7 +2470,7 @@ if [[ -x /sbin/kexec ]] && [[ -r /proc/cmdline ]] ; then
 fi
 
 # especially for roadwarriors using GNU screen and ssh:
-if ! check_com asc &>/dev/null ; then
+if ! check_com -g asc && check_com -c autossh && check_com -c screen &>/dev/null ; then
   function asc () { autossh -t "$@" 'screen -RdU' }
   compdef asc=ssh
 fi
