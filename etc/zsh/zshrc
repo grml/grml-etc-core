@@ -976,6 +976,8 @@ abk=(
     'G'    '|& grep '${grep_options:+"${grep_options[*]}"}
     'H'    '| head'
     'Hl'   ' --help |& less -r'    #d (Display help in pager)
+    'J'    '| jq'
+    'K'    '| keep'
     'L'    '| less'
     'LL'   '|& less -r'
     'M'    '| most'
@@ -984,6 +986,7 @@ abk=(
     'SL'   '| sort | less'
     'S'    '| sort -u'
     'T'    '| tail'
+    'TS'   '| ts "%F %H:%M:%.S"'
     'V'    '|& vim -'
 #A# end
     'co'   './configure && make && sudo make install'
