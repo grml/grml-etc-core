@@ -2472,12 +2472,6 @@ if [[ -x /sbin/kexec ]] && [[ -r /proc/cmdline ]] ; then
     alias "$(uname -r)-reboot"="kexec -l --initrd=/boot/initrd.img-"$(uname -r)" --command-line=\"$(cat /proc/cmdline)\" /boot/vmlinuz-"$(uname -r)""
 fi
 
-# especially for roadwarriors using GNU screen and ssh:
-if ! check_com -g asc && check_com -c autossh && check_com -c screen &>/dev/null ; then
-  function asc () { autossh -t "$@" 'screen -RdU' }
-  compdef asc=ssh
-fi
-
 #f1# Hints for the use of zsh on grml
 function zsh-help () {
     print "$bg[white]$fg[black]
