@@ -641,12 +641,6 @@ If no argument is specified N is set to 1.
 *any()*::
 Lists processes matching given pattern.
 
-*asc()*::
-Login on the host provided as argument using autossh. Then reattach a GNU screen
-session if a detached session is around or detach a currently attached screen or
-else start a new screen.  This is especially useful for roadwarriors using GNU
-screen and ssh.
-
 *bk()*::
 Simple backup management of a file or directory using standard unix programs.
 The target file name is the original name plus a time stamp attached. Symlinks
