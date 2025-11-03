@@ -29,7 +29,6 @@ Provides:
  grml-scripts-core
 Depends:
  ${misc:Depends},
- perl-base | perl,
  vim | nvi | editor,
 Pre-Depends:
  ${misc:Pre-Depends},
