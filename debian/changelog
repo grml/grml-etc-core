@@ -1,3 +1,31 @@
+grml-etc-core (0.19.25) grml-testing; urgency=medium
+
+  [ Christopher Bock ]
+  * [640d384] fix refcard generation for grep-excuses & /etc/grml_version
+  * [62a8629] d/man fix missing grmlzshrc.5
+  * [ab891f7] zshrc: asc() check for existence of autossh
+  * [80a164a] zshrc: sync global aliases from zshrc.local to zshrc as abk's
+
+  [ Chris Hofstaedtler ]
+  * [7492491] script-functions: drop isgrmlhd
+  * [f31815a] script-functions: drop unused checkgrmlsmall
+  * [7c35efe] script-functions: drop unused grmlversion
+  * [f28330a] script-functions: drop unused mount_(proc|pts|sys) functions
+  * [3420bec] script-functions: drop unused reverse_list function
+  * [a8b35fd] script-functions: drop unused is_older_than function
+  * [efd9162] script-functions: drop unused setpath function
+  * [c7940d9] script-functions: drop unused check4user function
+  * [264847e] script-functions: drop unused iszsh function
+  * [51b36c5] script-functions: drop unused setdialog function
+  * [954505e] script-functions: drop unused checkvalue function
+  * [1b9cb02] zshrc: remove "asc" function.
+    Used GNU screen. Probably users switched to tmux and/or mosh.
+    Closes: https://github.com/grml/grml-etc-core/issues/230
+  * [ac77c4f] Replace FSF address with URL
+  * [8b0dd24] Stop depending on Essential perl-base
+
+ -- Chris Hofstaedtler <ch@grml.org>  Mon, 03 Nov 2025 12:43:50 +0100
+
 grml-etc-core (0.19.24) grml-testing; urgency=medium
 
   [ Moviuro ]
