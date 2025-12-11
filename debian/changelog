@@ -1,3 +1,9 @@
+grml-etc-core (0.19.26) grml-testing; urgency=medium
+
+  * [8fa76a8] Add myip function
+
+ -- Chris Hofstaedtler <ch@grml.org>  Thu, 11 Dec 2025 23:48:38 +0100
+
 grml-etc-core (0.19.25) grml-testing; urgency=medium
 
   [ Christopher Bock ]
