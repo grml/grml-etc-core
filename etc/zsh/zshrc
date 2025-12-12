@@ -982,7 +982,7 @@ abk=(
     'LL'   '|& less -r'
     'M'    '| most'
     'N'    '&>/dev/null'           #d (No Output)
-    'R'    '| tr A-z N-za-m'       #d (ROT13)
+    'R'    '| tr A-Za-z N-ZA-Mn-za-m' #d (ROT13)
     'SL'   '| sort | less'
     'S'    '| sort -u'
     'T'    '| tail'
