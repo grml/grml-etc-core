@@ -285,6 +285,7 @@ fi
 #}
 
 ## Memory overview
+# requires package: dc
 #memusage() {
 #    ps aux | awk '{if (NR > 1) print $5;
 #                   if (NR > 2) print "+"}
