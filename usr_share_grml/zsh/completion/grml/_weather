@@ -1,0 +1,15 @@
+#compdef weather
+
+local -a arguments
+
+local -a _weather_countries=(${(f)"$(weather -lc 2>/dev/null)"})
+local -a _weather_stations=(${(f)"$(weather -ls 2>/dev/null)"})
+
+arguments=(
+    '(-v --verbose)'{-v,--verbose}'[show all information for station]'
+    '(: -)'{-lc,--list-countries}'[list countries]'
+    '(-ls --list-stations)'{-ls,--list-stations}'[list stations]: :_values $_weather_countries'
+    '(: -)'{-h,--help}'[show help]'
+)
+
+_arguments -A "${arguments[@]}" '*: :_values ${_weather_stations[@]}'
