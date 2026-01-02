@@ -317,11 +317,6 @@ fi
 ## ctrl-s will no longer freeze the terminal.
 #stty erase "^?"
 
-## you want to automatically use a bigger font on big terminals?
-#if [[ "$TERM" == "xterm" ]] && [[ "$LINES" -ge 50 ]] && [[ "$COLUMNS" -ge 100 ]] && [[ -z "$SSH_CONNECTION" ]] ; then
-#    large
-#fi
-
 ## Some quick Perl-hacks aka /useful/ oneliner
 #bew() { perl -le 'print unpack "B*","'$1'"' }
 #web() { perl -le 'print pack "B*","'$1'"' }
