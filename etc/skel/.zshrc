@@ -304,7 +304,7 @@ fi
 
 ## log out? set timeout in seconds...
 ## ...and do not log out in some specific terminals:
-#if [[ "${TERM}" == ([Exa]term*|rxvt|dtterm|screen*) ]] ; then
+#if [[ "${TERM}" == ((([lu]|x)|dt|ml|[Ea])term|rxvt|tmux|screen)* ]] ; then
 #    unset TMOUT
 #else
 #    TMOUT=1800
