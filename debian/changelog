@@ -1,3 +1,18 @@
+grml-etc-core (0.19.27) grml-testing; urgency=medium
+
+  [ Michael Prokop ]
+  * [8d30868] zshrc: switch to myip.grml.org with IPv6 support, options -4 +
+    -6 to force respective protocols
+
+  [ Chris Hofstaedtler ]
+  * [f66b785] zshrc: fix ROT13 alias (abk R)
+    Thanks to damianoognissanti
+  * [22373a2] Install grml-chroot into /usr/sbin
+  * [00aef2a] Conflict with old grml-scripts
+  * [f19d738] Import grml-chroot manpage
+
+ -- Chris Hofstaedtler <chris.hofstaedtler@deduktiva.com>  Thu, 12 Feb 2026 16:14:36 +0100
+
 grml-etc-core (0.19.26) grml-testing; urgency=medium
 
   * [8fa76a8] Add myip function
