@@ -16,13 +16,15 @@ Bugs: mailto:bugs@grml.org
 Package: grml-etc-core
 Architecture: all
 Breaks:
+ grml-scripts (<< 2.15.0~),
  grml-tips (<< 0.8.5)
 Conflicts:
  grml-autoconfig (<< 0.5-7),
  grml-etc (<< 0.8-11),
- grml-scripts (<< 0.8-27),
+ grml-scripts (<< 2.15.0~),
  grml-scripts-core (<< 2.1.5~),
 Replaces:
+ grml-scripts (<< 2.15.0~),
  grml-scripts-core (<< 2.1.5~),
  vim-common,
 Provides:
@@ -41,3 +43,4 @@ Description: core etcetera files for the Grml system
  systems as well.
  This package also includes cpu-screen and ip-screen,
  as they are used by the included screen configuration.
+ This package also includes grml-chroot.
