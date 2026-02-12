@@ -1,0 +1,130 @@
+#!/bin/bash
+# Filename:      grml-chroot
+# Purpose:       Program to chroot into another system
+# Authors:       grml-team (grml.org), (c) Michael Gebetsroither <gebi@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+
+PROG_NAME_=$(basename "$0")
+DEST_=""
+MOUNTED_=""     # all mounted destinations
+
+
+function die
+{
+    echo "Error: $*" >&2
+    exit 1
+}
+
+function printUsage
+{
+    cat <<EOT
+Usage: "$PROG_NAME_" NEWROOT [COMMAND....]
+
+$PROG_NAME_ is a chroot wrapper with proc/sys/pts/dev filesystem handling
+
+EOT
+}
+
+function storeMounts
+{
+    local to_append_="$1"
+    if [[ $MOUNTED_ == "" ]]; then
+        MOUNTED_="$to_append_"
+    else
+        MOUNTED_="$MOUNTED_ $to_append_"
+    fi
+}
+
+function mountit
+{
+    local type_="$1" # type _or_ src
+    local dest_="$2"
+    local options_="$3"
+
+    local all_options_=()
+
+    if [[ $options_ == "--bind" ]]; then
+        all_options_+=(--bind "$type_")
+    else
+        all_options_+=(-t "$type_" none)
+    fi
+    mount "${all_options_[@]}" "${DEST_}/$dest_" && storeMounts "$dest_"
+}
+
+function umount_all
+{
+    local reverse
+    reverse=$(echo "$MOUNTED_" | awk '{ for (i=NF; i>1; i--) printf("%s ",$i); print $1; }')
+    for i in $reverse; do
+        umount "${DEST_}/$i"
+    done
+}
+
+
+###
+### __MAIN
+###
+
+while getopts "h" opt; do
+    case "$opt" in
+        h) printUsage; exit 0 ;;
+        ?) printUsage; exit 64 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+if (( $# < 1 )); then
+    printUsage
+    die "Wrong number of arguments."
+fi
+
+if ! command -v awk >/dev/null 2>&1 ; then
+  die "No awk binary found, required for execution."
+fi
+
+DEST_="$1"; shift
+
+if [ ! -d "$DEST_" ]; then
+    die "Target chroot does not exist: $DEST_"
+fi
+
+
+
+if [ -f "$DEST_"/proc/cmdline ] ; then
+    echo "Looks like $DEST_ already has filesystems mounted, skipping."
+else
+    mountit "proc"  "proc"
+    mountit "sysfs" "sys"
+    mountit "/dev"   "dev"   "--bind"
+    mountit "devpts" "dev/pts"
+    if [ -d /sys/firmware/efi/efivars ] ; then
+      mountit "efivarfs" "sys/firmware/efi/efivars"
+    fi
+    if [ -d "$DEST_"/run/udev ] && [ -d /run/udev ] ; then
+      mountit "/run/udev" "/run/udev" "--bind"
+    fi
+fi
+
+WROTE_DEBIAN_CHROOT=""
+if [ ! -f "$DEST_"/etc/debian_chroot ]; then
+    WROTE_DEBIAN_CHROOT="yes"
+    echo "Writing /etc/debian_chroot ..."
+    cat "$DEST_"/etc/hostname > "$DEST_"/etc/debian_chroot
+fi
+
+if (( $# < 1 )); then
+    chroot "$DEST_"
+    RC=$?
+else
+    chroot "$DEST_" "$@"
+    RC=$?
+fi
+umount_all
+
+if [ -n "$WROTE_DEBIAN_CHROOT" ]; then
+    rm "$DEST_"/etc/debian_chroot
+fi
+
+exit $RC
