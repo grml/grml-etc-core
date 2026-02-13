@@ -3,47 +3,110 @@
 
 emulate -L zsh
 
+local DIR="$HOME"/.weather
+local LOG="$DIR"/log
+local BASEURI='https://tgftp.nws.noaa.gov/data'
+local BASESTATIONS="$BASEURI"/observations/metar/decoded
+local LOCATIONSOURCE="$BASEURI"/nsd_cccc.txt
+local LOCATIONS=nsd_cccc.txt
+
+local _weather_usage() {
+    << EOU
+Usage: weather [OPTIONS(s] <station_id>'
+
+Options:
+    -h|--help                       Show this usage information.
+    -v|--verbose                    Show all information for station.
+    -lc|--list-countries            List countries from station list.
+    -ls|--list-stations [Country]   List all or only stations matching country.
+
+Files:
+    Stationlist: $DIR/$LOCATIONS
+
+  List of stations: http://en.wikipedia.org/wiki/List_of_airports_by_ICAO_code
+EOU
+}
+
+! [ -f "$DIR"/"$LOCATIONS" ] && wget -P "$DIR" -T 10 --no-verbose \
+    --output-file="$LOG" --timestamping "$BASEURI"/"$LOCATIONS"
+
+if [ -f "$DIR"/"$LOCATIONS" ]; then
+        local -a COUNTRIES=( ${(f)"$(awk -F';' \
+                '($6!="") && ($6!="4") {print $6|"sort | uniq"}' \
+        "$DIR"/"$LOCATIONS")"} )
+fi
+
+while [[ $1 == -* ]]; do
+    case $1 in
+    (-h|--help)
+        _weather_usage
+        return 0
+        ;;
+    (-v|--verbose)
+        local VERBOSE=1
+        shift
+        ;;
+    (-lc|--list-countries)
+        printf 'Listing Countries\n' 1>&2
+        print -l $COUNTRIES
+        return 0
+        ;;
+    (-ls|--list-stations)
+        if ! [ -n "$2" ]; then
+            printf 'Listing all Stations:\n' 1>&2
+            COUNTRY="."
+        elif [ -n "$2" ] && [ -n "${COUNTRIES[(r)$2]}" ]; then
+            printf 'Listing Stations for country: "%s"\n' "$2" 1>&2
+            local COUNTRY="$2"
+        else
+            printf 'Could not find any stations for country: "%s"\n' "$2" 1>&2
+            return 1
+        fi
+        awk -F';' -v country="$COUNTRY" \
+                    '($6~country) {print $1, $4|"sort -k2"}' \
+                    "$DIR"/"$LOCATIONS"
+        return 0
+        ;;
+    (*)
+        _weather_usage 1>&2
+        return 1
+        ;;
+    esac
+done
+
 if [[ -z "$1" ]]; then
-    print 'Usage: weather <station_id>'
-    print \
-  'List of stations: http://en.wikipedia.org/wiki/List_of_airports_by_ICAO_code'
-    return 0
+    _weather_usage
+    return 1
 fi
 
-local VERBOSE="yes"    # TODO: Make this a command line switch
-
-local ODIR=`pwd`
 local PLACE="${1:u}"
-local DIR="${HOME}/.weather"
-local LOG="${DIR}/log"
 
-if ! [[ -d ${DIR} ]]; then
-    print -n "Creating ${DIR}: "
-    mkdir ${DIR}
-    print 'done'
+if ! [[ -d "$DIR" ]]; then
+    print -n "Creating ${DIR}: " >&2
+    mkdir "$DIR"
+    print 'done' >&2
 fi
 
-print "Retrieving information for ${PLACE}:"
-print
-cd ${DIR} && \
-  wget -T 10 --no-verbose --output-file=$LOG --timestamping \
-       https://tgftp.nws.noaa.gov/data/observations/metar/decoded/$PLACE.TXT
+print "Retrieving information for ${PLACE}:" >&2
+wget -P "$DIR" -T 10 --no-verbose --output-file="$LOG" --timestamping \
+       "$BASESTATIONS"/"$PLACE".TXT
 
 if [[ $? -eq 0 ]]; then
     if [[ -n "$VERBOSE" ]] ; then
-        cat ${PLACE}.TXT
+        cat "$DIR"/"$PLACE".TXT
     else
-        DATE=$(grep 'UTC' ${PLACE}.TXT | sed 's#.* /##')
-        TEMPERATURE=$(awk '/Temperature/ {
-                             print $4" degree Celcius / " $2" degree Fahrenheit"
-                           }' ${PLACE}.TXT | tr -d '(')
-        echo "date: $DATE"
-        echo "temp:  $TEMPERATURE"
+        DATE="$(date --date="$(awk -F / \
+            '/UTC/ {gsub(/\./, "-");print $2}' "$DIR"/"$PLACE".TXT)")"
+        STATION="$(awk -F '[()]' -v station="$PLACE" \
+            '$2 ~ station { print $1}' "$DIR"/"$PLACE".TXT)"
+        TEMPERATURE=$(awk -F '[( ]' '/Temperature/ {
+            print $5" degree Celcius / " $2" degree Fahrenheit"}' \
+                "$DIR"/"$PLACE".TXT)
+        printf 'station: %s\ndate: %s\ntemp: %s\n' \
+            "$STATION" "$DATE" "$TEMPERATURE"
     fi
 else
     print "There was an error retrieving the weather information for $PLACE" >&2
-    cat $LOG
-    cd $ODIR
+    cat "$DIR"/"$LOG"
     return 1
 fi
-cd $ODIR
