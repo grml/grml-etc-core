@@ -107,6 +107,6 @@ if [[ $? -eq 0 ]]; then
     fi
 else
     print "There was an error retrieving the weather information for $PLACE" >&2
-    cat "$LOG"
+    cat "$DIR"/"$LOG"
     return 1
 fi
