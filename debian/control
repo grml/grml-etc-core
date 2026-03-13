@@ -3,8 +3,8 @@ Section: grml
 Priority: optional
 Maintainer: Michael Prokop <mika@grml.org>
 Build-Depends:
- asciidoctor,
  debhelper-compat (= 12),
+ asciidoctor,
 Standards-Version: 4.7.0
 Rules-Requires-Root: no
 Homepage: https://github.com/grml/grml-etc-core
@@ -12,12 +12,13 @@ Vcs-Git: https://github.com/grml/grml-etc-core.git
 Vcs-Browser: https://github.com/grml/grml-etc-core
 Origin: Grml
 Bugs: mailto:bugs@grml.org
+X-Style: black
 
 Package: grml-etc-core
 Architecture: all
 Breaks:
  grml-scripts (<< 2.15.0~),
- grml-tips (<< 0.8.5)
+ grml-tips (<< 0.8.5),
 Conflicts:
  grml-autoconfig (<< 0.5-7),
  grml-etc (<< 0.8-11),
@@ -28,13 +29,13 @@ Replaces:
  grml-scripts-core (<< 2.1.5~),
  vim-common,
 Provides:
- grml-scripts-core
+ grml-scripts-core,
 Depends:
- ${misc:Depends},
  vim | nvi | editor,
+ ${misc:Depends},
 Pre-Depends:
- ${misc:Pre-Depends},
  zsh,
+ ${misc:Pre-Depends},
 Description: core etcetera files for the Grml system
  This package includes some /etc files for the
  Grml system. Whereas the main grml-etc package is
