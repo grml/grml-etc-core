@@ -2345,6 +2345,14 @@ setopt transient_rprompt
 
 # Terminal-title wizardry
 
+function inside_multiplexer () {
+    case "$TERM" in
+        screen|screen-*) return 0 ;;
+        tmux|tmux-*)     return 0 ;;
+    esac
+    return 1
+}
+
 function ESC_print () {
     info_print $'\ek' $'\e\\' "$@"
 }
@@ -2374,7 +2382,7 @@ function grml_reset_screen_title () {
 }
 
 function grml_vcs_to_screen_title () {
-    if [[ $TERM == screen* ]] ; then
+    if inside_multiplexer ; then
         if [[ -n ${vcs_info_msg_1_} ]] ; then
             ESC_print ${vcs_info_msg_1_}
         else
@@ -2384,9 +2392,9 @@ function grml_vcs_to_screen_title () {
 }
 
 function grml_cmd_to_screen_title () {
-    # get the name of the currently running program to set screen window title
-    # if running in a screen.
-    if [[ "$TERM" == screen* ]] ; then
+    # get the name of the currently running program to set multiplexer window title
+    # if running in a terminal multiplexer (screen/tmux).
+    if inside_multiplexer ; then
         local CMD="${1[(wr)^(*=*|sudo|ssh|-*)]}"
         ESC_print ${CMD}
     fi
@@ -2518,7 +2526,8 @@ the zsh yet. :)
   "NOCOR=1    zsh" => deactivate automatic correction
   "NOMENU=1   zsh" => do not use auto menu completion
                       (note: use ctrl-d for completion instead!)
-  "NOPRECMD=1 zsh" => disable the precmd + preexec commands (set GNU screen title)
+  "NOPRECMD=1 zsh" => disable the precmd + preexec commands
+                      (would set GNU screen/tmux title)
   "NOTITLE=1  zsh" => disable setting the title of xterms without disabling
                       preexec() and precmd() completely
   "GRML_DISPLAY_BATTERY=1  zsh"
