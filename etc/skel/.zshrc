@@ -267,24 +267,8 @@ fi
 #    fi
 #}
 
-## Download a file and display it locally
-#uopen() {
-#    emulate -L zsh
-#    if ! [[ -n "$1" ]] ; then
-#        print "Usage: uopen \$URL/\$file">&2
-#        return 1
-#    else
-#        FILE=$1
-#        MIME=$(curl --head $FILE | \
-#               grep Content-Type | \
-#               cut -d ' ' -f 2 | \
-#               cut -d\; -f 1)
-#        MIME=${MIME%$'\r'}
-#        curl $FILE | see ${MIME}:-
-#    fi
-#}
-
 ## Memory overview
+# requires package: dc
 #memusage() {
 #    ps aux | awk '{if (NR > 1) print $5;
 #                   if (NR > 2) print "+"}
@@ -304,7 +288,7 @@ fi
 
 ## log out? set timeout in seconds...
 ## ...and do not log out in some specific terminals:
-#if [[ "${TERM}" == ([Exa]term*|rxvt|dtterm|screen*) ]] ; then
+#if [[ "${TERM}" == ((([lu]|x)|dt|ml|[Ea])term|rxvt|tmux|screen)* ]] ; then
 #    unset TMOUT
 #else
 #    TMOUT=1800
@@ -316,11 +300,6 @@ fi
 
 ## ctrl-s will no longer freeze the terminal.
 #stty erase "^?"
-
-## you want to automatically use a bigger font on big terminals?
-#if [[ "$TERM" == "xterm" ]] && [[ "$LINES" -ge 50 ]] && [[ "$COLUMNS" -ge 100 ]] && [[ -z "$SSH_CONNECTION" ]] ; then
-#    large
-#fi
 
 ## Some quick Perl-hacks aka /useful/ oneliner
 #bew() { perl -le 'print unpack "B*","'$1'"' }
