@@ -1,0 +1,35 @@
+= GRML-CHROOT(8)
+:doctype: manpage
+
+== Name
+
+grml-chroot - Wrapper around chroot with proc/sys/pts/dev filesystem handling
+
+== Synopsis
+
+*grml-chroot* _NEWROOT_ [_COMMAND_...]
+
+== Description
+
+*grml-chroot* is a wrapper around plain chroot with integrated
+proc/sys/pts/dev filesystem handling. After _COMMAND_ exits, mounts are
+cleaned up properly.
+
+== Options
+
+*-h, help*::
+Show summary of options.
+
+== Examples
+
+*grml-chroot* _/mnt/hda1_::
+Mounts proc/sys/pts/dev into /mnt/hda1/{proc/sys/dev} and gives you a
+chrooted shell.
+
+== See also
+
+chroot(8)
+
+== Author
+
+grml-chroot and this manpage were written by Michael Gebetsroither <gebi@grml.org>.

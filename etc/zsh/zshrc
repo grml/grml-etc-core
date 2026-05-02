@@ -3443,9 +3443,14 @@ function _simple_extract () {
 compdef _simple_extract simple-extract
 [[ -n "$GRML_NO_SMALL_ALIASES" ]] || alias se=simple-extract
 
-#f5# Show "public" IPv4 address of current system on stdout. Requires network access and curl(1).
+#f5# Show "public" IP address of current system on stdout. Requires network access and curl(1).
 function myip () {
-    curl http://v4.showip.spamt.net/ -H 'User-Agent: grml-etc-core-zshrc'
+    if [[ $# == 0 ]] || [[ $# == 1 && $1 == "-4" ]] || [[ $# == 1 && $1 == "-6" ]] ; then
+        curl "$@" https://myip.grml.org -H 'User-Agent: grml-etc-core-zshrc'
+    else
+        printf 'usage: myip [-4|-6]\n' >&2
+        return 1
+    fi
 }
 
 #f5# Change the xterm title from within GNU-screen

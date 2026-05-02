@@ -1,3 +1,4 @@
 etc
 usr_bin/* usr/bin/
+usr_sbin/* usr/sbin/
 usr_share_grml/* usr/share/grml/
