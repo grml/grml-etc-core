@@ -21,7 +21,6 @@
 # defsilence            off             # default: off
 # hardcopy_append       on              # default: off
   hardcopy_append       off             # default: off
-  nethack               on              # default: off
 # don't display the copyright page
   startup_message       off             # default: on
 # no annoying audible bell, please
