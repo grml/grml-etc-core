@@ -38,11 +38,6 @@
 
 # shell                 /bin/zsh
 
-# "sorendition": set the colors for
-# the "messages" and "text marking"
-# (ie text you mark in copy mode):
-  sorendition 10 99 # default!
-
 # use %n to display the window number and %t for its title:
   activity              "activity in %n (%t) [%w:%s]~"
 
