@@ -5,14 +5,15 @@
 # License:       This file is licensed under the GPL v2.
 ################################################################################
 
-  backtick 1 0 60   /usr/bin/cpu-screen
-  backtick 2 0 60   /usr/bin/ip-screen
-  caption always "%{+b rk}$USER@%{wk}%H | %{yk}(load: %l |%{rk} cpu: %1` | %{Gk}net: %2`)  %-21=%{wk}%D %Y-%m-%d %0c"
-  hardstatus alwayslastline "%{wr}%n%f %t %{kw} | %?%-Lw%?%{wb}%n*%f %t%?(%u)%?%{kw}%?%+Lw%? %{wk}"
+  backtick 1 0 60   /usr/bin/loadavg-screen
+  backtick 2 0 60   /usr/bin/cpu-screen
+  backtick 3 0 60   /usr/bin/ip-screen
+  caption always "%{b1;0}$USER@%{b7;0}%H | %{b3;0}(load:%1` |%{b1;0} cpu: %2` | %{b2;0}net: %3`) %=%{b7;0}%D %Y-%m-%d %0c "
+  hardstatus alwayslastline "%{1;7}%n%f %t %{7;0} | %-Lw%{4;7}%n%f %t%?(%u)%?%{7;0}%+Lw%="
 
 # switch order of caption and hardstatus:
-#  hardstatus alwayslastline "%{+b kr}$USER@%{kw}%H | %{ky}(load: %l |%{kr} cpu: %1` | %{kG}net: %2`)  %-21=%{kw}%D %Y-%m-%d %0c"
-#  caption always "%{rw}%n%f %t %{wk} | %?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{wk}%?%+Lw%? %{wk}"
+#  hardstatus alwayslastline "%{b1;0}$USER@%{b7;0}%H | %{b3;0}(load:%1` |%{b1;0} cpu: %2` | %{b2;0}net: %3`) %=%{b7;0}%D %Y-%m-%d %0c "
+#  caption always "%{1;7}%n%f %t %{7;0} | %-Lw%{4;7}%n%f %t%?(%u)%?%{7;0}%+Lw%="
 
 # detach on hangup
   autodetach            on              # default: on
