@@ -4,7 +4,7 @@
 emulate -L zsh
 
 local DIR="$HOME"/.weather
-local LOG="$DIR"/log
+local LOG="$DIR"/grml_weather_log
 local BASEURI='https://tgftp.nws.noaa.gov/data'
 local BASESTATIONS="$BASEURI"/observations/metar/decoded
 local LOCATIONSOURCE="$BASEURI"/nsd_cccc.txt
@@ -27,12 +27,13 @@ Files:
 EOU
 }
 
+! [ -d "$DIR" ] && mkdir -p "$DIR" 
 ! [ -f "$DIR"/"$LOCATIONS" ] && wget -P "$DIR" -T 10 --no-verbose \
     --output-file="$LOG" --timestamping "$BASEURI"/"$LOCATIONS"
 
 if [ -f "$DIR"/"$LOCATIONS" ]; then
-        local -a COUNTRIES=( ${(f)"$(awk -F';' \
-                '($6!="") && ($6!="4") {print $6|"sort | uniq"}' \
+        local -a COUNTRIES=( ${(fun)"$(awk -F';' \
+                '($6!="") && ($6!="4") {print $6}' \
         "$DIR"/"$LOCATIONS")"} )
 fi
 
@@ -107,6 +108,6 @@ if [[ $? -eq 0 ]]; then
     fi
 else
     print "There was an error retrieving the weather information for $PLACE" >&2
-    cat "$DIR"/"$LOG"
+    cat "$LOG" >&2
     return 1
 fi

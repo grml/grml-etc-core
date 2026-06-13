@@ -2,8 +2,8 @@
 
 local -a arguments
 
-local -a _weather_countries=(${(f)"$(weather -lc 2>/dev/null)"})
-local -a _weather_stations=(${(f)"$(weather -ls 2>/dev/null)"})
+local -a _weather_countries=(${${(f)"$(_call_program commands weather -lc)"}/ /:})
+local -a _weather_stations=(${(f)"$(_call_program commands weather -ls)"})
 
 arguments=(
     '(-v --verbose)'{-v,--verbose}'[show all information for station]'
