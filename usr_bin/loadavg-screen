@@ -1,0 +1,9 @@
+#!/bin/sh
+# Filename:      loadavg-screen
+# Purpose:       output load average (replacement for GNU screen 4.x %l escape)
+# Authors:       grml-team (grml.org), (c) Chris Hofstaedtler <ch@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+#******************************************************************************
+
+uptime | cut -f 4- -d':' -

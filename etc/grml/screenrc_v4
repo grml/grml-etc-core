@@ -1,16 +1,18 @@
-# Filename:      /etc/grml/screenrc_generic
-# Purpose:       generic configuration file for GNU screen
+# Filename:      /etc/grml/screenrc
+# Purpose:       main configuration file for GNU screen 4.x
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
 ################################################################################
 
-  caption always "%{b1;0}$USER@%{b7;0}%H | %=%{b7;0}%D %Y-%m-%d %0c "
-  hardstatus alwayslastline "%{1;7}%n%f %t %{7;0} | %-Lw%{4;7}%n%f %t%?(%u)%?%{7;0}%+Lw%="
+  backtick 1 0 60   /usr/bin/cpu-screen
+  backtick 2 0 60   /usr/bin/ip-screen
+  caption always "%{+b rk}$USER@%{wk}%H | %{yk}(load: %l |%{rk} cpu: %1` | %{Gk}net: %2`)  %-21=%{wk}%D %Y-%m-%d %0c"
+  hardstatus alwayslastline "%{wr}%n%f %t %{kw} | %?%-Lw%?%{wb}%n*%f %t%?(%u)%?%{kw}%?%+Lw%? %{wk}"
 
 # switch order of caption and hardstatus:
-#  hardstatus alwayslastline "%{b1;0}$USER@%{b7;0}%H | %=%{b7;0}%D %Y-%m-%d %0c "
-#  caption always "%{1;7}%n%f %t %{7;0} | %-Lw%{4;7}%n%f %t%?(%u)%?%{7;0}%+Lw%="
+#  hardstatus alwayslastline "%{+b kr}$USER@%{kw}%H | %{ky}(load: %l |%{kr} cpu: %1` | %{kG}net: %2`)  %-21=%{kw}%D %Y-%m-%d %0c"
+#  caption always "%{rw}%n%f %t %{wk} | %?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{wk}%?%+Lw%? %{wk}"
 
 # detach on hangup
   autodetach            on              # default: on
@@ -54,8 +56,12 @@
 # them to "nothing" (empty right-hand-side):
 # bind .  dumptermcap # default
   bind .
-  bind ^\
-  bind \\
+# bind ^\
+# bind \\
+  bind .
+  bind k
+  bind ^k
+  bind ^h
 
 # 040126 To be able to select windows with n > 9 ->
 # press "C-a - #" instead of just "C-a #"
@@ -88,13 +94,6 @@
 #  bindkey -k F1 prev
 #  bindkey -k F2 next
 
-# remove some stupid / dangerous key bindings
-  bind k
-  bind ^k
-  bind .
-  bind ^\
-  bind \\
-  bind ^h
   bind h  hardcopy
 # make them better
   bind 'K' kill
@@ -134,7 +133,7 @@
 # To get screen to add lines to xterm's scrollback buffer, uncomment the
 # following termcapinfo line which tells xterm to use the normal screen buffer
 # (which has scrollback), not the alternate screen buffer.
-  termcapinfo xterm|xterm-256color|xterms|xs|rxvt ti@:te@
+  termcapinfo xterm|xterms|xs|rxvt ti@:te@
 
 # Welcome the user:
   echo "welcome BoFH!"
