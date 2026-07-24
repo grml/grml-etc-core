@@ -2540,7 +2540,7 @@ Enjoy your grml system with the zsh!$reset_color"
 }
 
 # debian stuff
-if [[ -r /etc/debian_version ]] ; then
+if grep -q -e '^ID=debian$' -e '^ID_LIKE=.*debian' /etc/os-release 2>/dev/null ; then
     if [[ -z "$GRML_NO_APT_ALIASES" ]]; then
         #a3# Execute \kbd{apt-cache policy}
         alias acp='apt-cache policy'
