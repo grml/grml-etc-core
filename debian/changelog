@@ -1,3 +1,24 @@
+grml-etc-core (0.20.0) grml-testing; urgency=medium
+
+  This release assumes GNU screen 5.00 from Debian.
+  GNU screen 4 config files are still provided but in a non-default
+  path ("screenrc_v4").
+
+  [ Chris Hofstaedtler ]
+  * [e9cc5e3] screenrc: remove default setting "sorendition 10 99"
+  * [0356c6d] screenrc: remove setting "nethack on"
+  * [a2602ad] screenrc: add *_v4 files for screen 4.x
+  * [16cda7e] screenrc: update for screen v5
+
+  [ Paul B ]
+  * [e21180d] zshrc: dirstack: fix chpwd math expression for unset DIRSTACKSIZE
+
+  [ Michael Prokop ]
+  * [78c7b6b] zshrc: check for /etc/os-release instead of /etc/debian_version.
+    Thanks to Chris Hofstaedtler + cacin
+
+ -- Chris Hofstaedtler <ch@grml.org>  Fri, 31 Jul 2026 10:15:06 +0200
+
 grml-etc-core (0.19.28) grml-testing; urgency=medium
 
   * [0426527] tmux: show username, make user/host part bold
