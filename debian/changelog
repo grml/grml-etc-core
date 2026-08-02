@@ -1,3 +1,10 @@
+grml-etc-core (0.20.1) grml-testing; urgency=medium
+
+  [ Dr. András Korn ]
+  * [22f0884] loadavg-screen: obtain load average numbers in a portable(*) way
+
+ -- Chris Hofstaedtler <ch@grml.org>  Sun, 02 Aug 2026 14:11:21 +0200
+
 grml-etc-core (0.20.0) grml-testing; urgency=medium
 
   This release assumes GNU screen 5.00 from Debian.
