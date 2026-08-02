@@ -6,4 +6,4 @@
 # License:       This file is licensed under the GPL v2.
 #******************************************************************************
 
-cut -d' ' -f1-3 /proc/loadavg
+LC_ALL=C uptime | sed 's/.*: //'
