@@ -6,4 +6,4 @@
 # License:       This file is licensed under the GPL v2.
 #******************************************************************************
 
-uptime | cut -f 4- -d':' -
+LC_ALL=C uptime | sed 's/.*: //'
