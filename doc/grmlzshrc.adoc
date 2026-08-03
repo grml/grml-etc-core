@@ -683,6 +683,9 @@ heavily.
 *dnews()*::
 Shows the NEWS file for the given package in $PAGER.
 
+*dreadme()*::
+Shows the README file for the given package in $PAGER.
+
 *edalias()*::
 Edit given alias.
 
