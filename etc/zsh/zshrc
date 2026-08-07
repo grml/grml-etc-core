@@ -2782,7 +2782,11 @@ if check_com -c $PAGER ; then
         fi
 
         for package in "$@" ; do
-            if [[ -r /usr/share/doc/${package}/changelog.Debian.gz ]] ; then
+            if [[ -r /usr/share/doc/$1 ]] ; then
+                # Allow opening specific changelog file.
+                # example: dchange $PACKAGE/changelog.md.gz
+                $viewer /usr/share/doc/$1
+            elif [[ -r /usr/share/doc/${package}/changelog.Debian.gz ]] ; then
                 $viewer /usr/share/doc/${package}/changelog.Debian.gz
             elif [[ -r /usr/share/doc/${package}/changelog.gz ]] ; then
                 $viewer /usr/share/doc/${package}/changelog.gz
@@ -2801,7 +2805,7 @@ if check_com -c $PAGER ; then
             fi
         done
     }
-    function _dchange () { _files -W /usr/share/doc -/ }
+    function _dchange () { _files -W /usr/share/doc -g "*changelog*" }
     compdef _dchange dchange
 
     #f3# View Debian's NEWS of a given package
