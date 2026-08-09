@@ -2421,17 +2421,13 @@ hash -d www=/var/www
 
 # some aliases
 if check_com -c screen ; then
-    if [[ $UID -eq 0 ]] ; then
-        if [[ -r /etc/grml/screenrc ]]; then
-            alias screen='screen -c /etc/grml/screenrc'
-        fi
-    elif [[ ! -r $HOME/.screenrc ]] ; then
-        if [[ -r /etc/grml/screenrc_grml ]]; then
-            alias screen='screen -c /etc/grml/screenrc_grml'
-        else
-            if [[ -r /etc/grml/screenrc ]]; then
-                alias screen='screen -c /etc/grml/screenrc'
-            fi
+    SCREENRC=screenrc
+    if [ "${${${$(screen -v)#*version* }%% *}%%.*}" = 4 ]; then
+        SCREENRC=screenrc_v4
+    fi
+    if [[ ! -r "$HOME"/.screenrc ]]; then
+        if [[ -r /etc/grml/"$SCREENRC" ]]; then
+            alias screen="screen -c /etc/grml/$SCREENRC"
         fi
     fi
 fi

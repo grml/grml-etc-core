@@ -1021,10 +1021,9 @@ Executes the commands on the versioned patch queue from current repository.
 rmdir current working directory
 
 *screen* (_screen -c file_)::
-If invoking user is root, starts screen session with /etc/grml/screenrc
-as config file. If invoked by a regular user and users .screenc does not exist,
-starts screen with /etc/grml/screenrc_grml config if it exists, else fallbacks
-to /etc/grml/screenrc.
+Unless $HOME/.screenrc exists start a screen session with /etc/grml/screenrc
+as config file. If we detect screen to be an older release start the session
+with /etc/grml/screenrc_v4 instead.
 
 *su* (_sudo su_)::
 If user is running a Grml live system, don't ask for any password, if she
