@@ -2821,6 +2821,25 @@ if check_com -c $PAGER ; then
     function _dnews () { _files -W /usr/share/doc -/ }
     compdef _dnews dnews
 
+    #f3# View Debian's README of a given package
+    function dreadme () {
+        emulate -L zsh
+        if [[ -r /usr/share/doc/$1 ]] ; then
+            # Allow opening specific file. 
+            # example: dreadme $PACKAGE/README.md.gz
+            $PAGER /usr/share/doc/$1
+        elif [[ -r /usr/share/doc/$1/README.Debian ]] ; then
+            $PAGER /usr/share/doc/$1/README.Debian
+        elif [[ -r /usr/share/doc/$1/README.gz ]] ; then
+            $PAGER /usr/share/doc/$1/README.gz
+        else
+            echo "No README file for package $1 found, sorry."
+            return 1
+        fi
+    }
+    function _dreadme () { _files -W /usr/share/doc -g "*README*" }
+    compdef _dreadme dreadme
+
     #f3# View Debian's copyright of a given package
     function dcopyright () {
         emulate -L zsh
