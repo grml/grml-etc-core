@@ -2778,10 +2778,10 @@ if check_com -c $PAGER ; then
         fi
 
         for package in "$@" ; do
-            if [[ -r /usr/share/doc/$1 ]] ; then
+            if [[ -f /usr/share/doc/${package} ]] ; then
                 # Allow opening specific changelog file.
                 # example: dchange $PACKAGE/changelog.md.gz
-                $viewer /usr/share/doc/$1
+                $viewer /usr/share/doc/${package}
             elif [[ -r /usr/share/doc/${package}/changelog.Debian.gz ]] ; then
                 $viewer /usr/share/doc/${package}/changelog.Debian.gz
             elif [[ -r /usr/share/doc/${package}/changelog.gz ]] ; then
@@ -2824,7 +2824,7 @@ if check_com -c $PAGER ; then
     #f3# View Debian's README of a given package
     function dreadme () {
         emulate -L zsh
-        if [[ -r /usr/share/doc/$1 ]] ; then
+        if [[ -f /usr/share/doc/$1 ]] ; then
             # Allow opening specific file. 
             # example: dreadme $PACKAGE/README.md.gz
             $PAGER /usr/share/doc/$1
