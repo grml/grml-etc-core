@@ -720,9 +720,6 @@ Use GNU diff with options -ubwd for mercurial.
 Displays diffstat between the revision given as argument and tip (no
 argument means last revision).
 
-*hidiff()*::
-Outputs highlighted diff; needs highstring(1).
-
 *isdarwin()*::
 Returns true, if running on darwin, else false.
 
