@@ -190,7 +190,7 @@ fi
 #alias -g LL='|& less -r'
 #alias -g M='|most'
 #alias -g N='&>/dev/null'
-#alias -g R='| tr A-z N-za-m'
+#alias -g R='| tr A-Za-z N-ZA-Mn-za-m'
 #alias -g SL='| sort | less'
 #alias -g S='| sort'
 #alias -g T='|tail'
