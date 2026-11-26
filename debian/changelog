@@ -1,3 +1,24 @@
+grml-etc-core (0.21.0) grml-testing; urgency=medium
+
+  [ Christopher Bock ]
+  * [6ba8857] grmlzshrc.doc: remove hidiff()
+  * [b917ef1] tmux.conf: use brackets for if-shell commands
+  * [5d32bb4] README - update curl commands
+
+  [ Tom Hoover ]
+  * [87b82df] tmux.conf: add 'notes' to bind-key commands
+
+  [ Chris Hofstaedtler ]
+  * [b859414] tmux.conf: remove tmate support
+  * [5b2b0eb] zshrc: remove live-only grml-remote-support
+  * [d419957] tmux: sync colors with screen config
+  * [3962a5d] tmux: color username blue for non-root
+
+  [ Sora de Sousa Pereira ]
+  * [77ad4dc] skel/zshrc: fix ROT13 alias (R)
+
+ -- Michael Prokop <mika@grml.org>  Thu, 26 Nov 2026 10:59:28 +0100
+
 grml-etc-core (0.20.2) grml-testing; urgency=medium
 
   [ Christopher Bock ]
